@@ -2426,7 +2426,7 @@ body { color: #363B42; }
    light vector → tinted (never black) shadows, down-right. aria-hidden.
    §04: two crisp readable brochures around the heading (bleed off edge).
    §05: a faint brochure cluster behind the report content.
-   Real designations only; small trademark note under §05.  (v=164)
+   Real designations only; small trademark note under §05.  (v=165)
    ══════════════════════════════════════════════════════════════ */
 
 .std-doc { position: absolute; width: 200px; }
@@ -2435,16 +2435,23 @@ body { color: #363B42; }
   z-index: 1;
   aspect-ratio: 1 / 1.414;
   border-radius: 3px;
-  background: #FBFBF9;
+  /* paper aligned to the section it sits on: a hair off pure white so the
+     cover reads as clean paper, not a differently-tinted patch. */
+  background: #FDFDFC;
   padding: 16px 16px 14px 18px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  /* realistic object shadow: one 135° light (top-left) → cast down-right.
+     A tight, darker contact shadow grounds the sheet; progressively larger,
+     softer, fainter ambient layers give it real depth. All navy-warm tinted,
+     never black. */
   box-shadow:
-    0 1px 2px  hsl(28 14% 22% / .20),
-    0 2px 4px  hsl(28 14% 22% / .13),
-    0 12px 24px hsl(28 14% 22% / .10),
-    0 24px 48px hsl(28 14% 22% / .06);
+    0 1px 1px   hsl(28 16% 20% / .22),
+    1px 3px 4px   hsl(28 15% 22% / .15),
+    3px 7px 12px  hsl(28 14% 24% / .11),
+    7px 14px 26px hsl(28 13% 24% / .08),
+    14px 26px 46px hsl(28 12% 26% / .05);
 }
 /* spine shadow (left) + highlight top-left / shade bottom-right (135° light) */
 .std-doc-cover::before {
@@ -2476,8 +2483,9 @@ body { color: #363B42; }
   z-index: 0;
   border-radius: 3px;
   transform: translate(2px, 2px) rotate(.2deg);
-  background: repeating-linear-gradient(to bottom, #FAF8F2 0 1px, #ECE8DE 1px 2px);
-  box-shadow: 0 1px 2px hsl(28 14% 22% / .16);
+  /* neutral leaf-edge (was warm/tan) so the page block aligns with the paper */
+  background: repeating-linear-gradient(to bottom, #F6F5F2 0 1px, #E9E8E3 1px 2px);
+  box-shadow: 1px 2px 3px hsl(28 14% 22% / .16);
 }
 .std-doc-accent {
   position: absolute;
@@ -2539,8 +2547,9 @@ body { color: #363B42; }
 .params-decor .std-doc { width: 184px; }
 /* left:100% = container's right edge; the negative margin pulls each brochure
    back just to the intro's right whitespace, the rest bleeds off-screen. */
-.params-decor .d-en   { top: 150px; left: 100%; margin-left: -60px; transform: rotate(6deg); }
-.params-decor .d-iec  { top: 58px;  left: 100%; margin-left: -34px; transform: rotate(-9deg); }
+/* lowered to the section's vertical centre; the cluster is centred on top:50% */
+.params-decor .d-en   { top: 50%; margin-top: -92px;  left: 100%; margin-left: -30px; transform: rotate(6deg); }
+.params-decor .d-iec  { top: 50%; margin-top: -178px; left: 100%; margin-left: -8px;  transform: rotate(-9deg); }
 
 /* — §05 placement: faint brochure cluster behind the report — */
 .report { position: relative; overflow: hidden; }
