@@ -2426,7 +2426,7 @@ body { color: #363B42; }
    light vector → tinted (never black) shadows, down-right. aria-hidden.
    §04: two crisp readable brochures around the heading (bleed off edge).
    §05: a faint brochure cluster behind the report content.
-   Real designations only; small trademark note under §05.  (v=166)
+   Real designations only; small trademark note under §05.  (v=167)
    ══════════════════════════════════════════════════════════════ */
 
 .std-doc { position: absolute; width: 200px; }
@@ -2550,37 +2550,18 @@ body { color: #363B42; }
 .params-decor .d-en   { top: 50%; margin-top: -92px;  left: 100%; margin-left: -30px; transform: rotate(6deg); }
 .params-decor .d-iec  { top: 50%; margin-top: -178px; left: 100%; margin-left: -8px;  transform: rotate(-9deg); }
 
-/* — §05 placement: faint brochure cluster behind the report — */
-.report { position: relative; overflow: hidden; }
-.report .container { position: relative; z-index: 1; }
-.report-decor {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  opacity: .17;
-  pointer-events: none;
-}
-.report-decor .std-doc { width: 208px; }
-.report-decor .r1 { left: 34px;  bottom: 12px;  transform: rotate(-8deg); }
-.report-decor .r2 { left: 156px; bottom: 74px;  transform: rotate(4deg);  }
-.report-decor .r3 { left: -20px; bottom: 104px; transform: rotate(-3deg); }
-
-/* trademark note (real designations shown) */
+/* trademark note under §04 (real designations shown) */
 .std-note {
   margin-top: 40px;
   max-width: 760px;
   font-size: 10.5px;
   line-height: 1.5;
-  color: #6B665D;   /* muted, clears WCAG AA (4.5:1) on the warm #F5F4F0 section */
+  color: #6B665D;   /* muted; clears WCAG AA (4.5:1) on the white §04 section */
 }
 
-/* — responsive: keep both calm; hide the corner brochures where they
-     would crowd the text, keep the faint §05 cluster off mobile — */
+/* — responsive: hide the corner brochures where they would crowd the text — */
 @media (max-width: 1199px) {
   .params-decor { display: none; }
-}
-@media (max-width: 767px) {
-  .report-decor { display: none; }
 }
 @media (prefers-reduced-motion: no-preference) {
   /* opacity-only fade — never touches each brochure's own rotate transform */
