@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="hy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PowerTech | Էլեկտրաէներգիայի որակի մոնիթորինգ</title>
+<meta name="robots" content="noindex,nofollow">
+</head>
+<body>
+<style>
+@font-face{font-family:'Noto Sans Armenian';font-weight:400;font-display:swap;src:url(../fonts/noto-sans-armenian-400-armenian.woff2) format('woff2');}
+@font-face{font-family:'Noto Sans Armenian';font-weight:400;font-display:swap;src:url(../fonts/noto-sans-armenian-400-latin.woff2) format('woff2');}
+@font-face{font-family:'Noto Sans Armenian';font-weight:600;font-display:swap;src:url(../fonts/noto-sans-armenian-600-armenian.woff2) format('woff2');}
+@font-face{font-family:'Noto Sans Armenian';font-weight:600;font-display:swap;src:url(../fonts/noto-sans-armenian-600-latin.woff2) format('woff2');}
+@font-face{font-family:'Noto Sans Armenian';font-weight:700;font-display:swap;src:url(../fonts/noto-sans-armenian-700-armenian.woff2) format('woff2');}
+@font-face{font-family:'Noto Sans Armenian';font-weight:700;font-display:swap;src:url(../fonts/noto-sans-armenian-700-latin.woff2) format('woff2');}
+@font-face{font-family:'Martian Mono';font-weight:600;font-display:swap;src:url(../fonts/martian-mono-600-latin.woff2) format('woff2');}
+:root{--brand:#C8603D;--e:cubic-bezier(.16,1,.3,1);
+--bg:#EFEDEA;--panel:#FFFFFF;--fg:#0D0E13;--fg-mid:rgba(13,14,19,.64);--fg-soft:rgba(13,14,19,.40);--hair:rgba(13,14,19,.13);--hair2:rgba(13,14,19,.07);--inv:#0D0E13;--inv-fg:#EFEDEA;}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'Noto Sans Armenian','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+/* paper grain — one fixed layer, no blend mode, 3% */
+body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+/* the grain motif — one tiny square, rhymed across the page */
+.eyebrow::before{content:"";width:5px;height:5px;background:var(--brand);flex:0 0 auto;}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;}
+h1,h2,h3{font-family:'Noto Sans Armenian',sans-serif;font-weight:700;margin:0;line-height:1.12;letter-spacing:0;}
+p{margin:0;}a{color:inherit;text-decoration:none;}button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+.mono{font-family:'Martian Mono','Noto Sans Armenian',monospace;}
+.wrap{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,56px);}
+.cnt{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.22em;color:var(--fg-soft);display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+.cnt::after{content:"";flex:1;height:1px;background:var(--hair2);max-width:190px;}
+.eyebrow{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--brand);}
+.lede{max-width:46ch;font-size:16px;line-height:1.75;color:var(--fg-mid);margin-top:24px;}
+.rv{opacity:0;transform:translateY(20px);transition:opacity .9s var(--e),transform .9s var(--e);}
+.rv.in{opacity:1;transform:none;}
+
+/* header */
+header{position:fixed;top:0;left:0;right:0;z-index:60;transition:.45s var(--e);}
+header.scr{background:rgba(239,237,234,.86);backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--hair2);}
+header .in{display:flex;align-items:center;justify-content:space-between;height:74px;gap:14px;}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px;letter-spacing:-.01em;flex:0 0 auto;}
+.brand .m{width:27px;height:27px;background:var(--brand);display:grid;place-items:center;border-radius:6px;}
+.brand .m svg{width:18px;height:18px;overflow:visible;}
+nav{display:flex;align-items:center;gap:27px;font-size:13.5px;color:var(--fg-mid);}
+nav a{position:relative;padding:2px 0;white-space:nowrap;}
+nav a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:var(--brand);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--e);}
+nav a:hover{color:var(--fg);}nav a:hover::after{transform:scaleX(1);}
+nav .lang{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:11px;letter-spacing:.1em;}
+.btn{display:inline-flex;align-items:center;gap:9px;background:var(--inv);color:var(--inv-fg);font-size:13.5px;font-weight:600;padding:13px 20px;position:relative;overflow:hidden;isolation:isolate;border-radius:2px;}
+.btn span{position:relative;z-index:1;transition:color .4s var(--e);}
+.btn::before{content:"";position:absolute;inset:0;background:var(--brand);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--e);}
+.btn:hover::before{transform:scaleX(1);}.btn:hover span{color:#fff;}
+.btn.gh{background:transparent;color:var(--fg);box-shadow:inset 0 0 0 1px var(--hair);}
+.btn.lt{background:var(--bg);color:var(--fg);}
+.btn.lt:hover span{color:#fff;}
+
+/* hero */
+.hero{min-height:100svh;display:grid;grid-template-columns:1.04fr .96fr;align-items:center;gap:clamp(20px,4vw,56px);padding:108px 0 44px;overflow:hidden;}
+h1{font-size:clamp(30px,4.4vw,62px);margin-top:18px;text-wrap:balance;}
+h1 em{font-style:normal;color:var(--brand);}
+.hero p{max-width:40ch;font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.74;color:var(--fg-mid);margin-top:26px;}
+.acts{display:flex;gap:11px;margin-top:28px;flex-wrap:wrap;}
+.stage{position:relative;aspect-ratio:1;width:100%;max-width:620px;justify-self:end;}
+.stage::before{content:"";position:absolute;inset:-8%;border-radius:50%;background:radial-gradient(circle,rgba(200,96,61,.075),transparent 62%);pointer-events:none;}
+#star{position:absolute;inset:0;width:100%;height:100%;}
+.rd{position:absolute;left:0;bottom:2px;font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;color:var(--fg-soft);line-height:1.95;}
+.rd b{color:var(--fg);font-variant-numeric:tabular-nums;font-weight:600;}
+.rd .st{color:var(--brand);}
+
+/* junction traces */
+.joint{display:block;width:100%;height:clamp(110px,15vw,200px);overflow:visible;color:var(--fg);}
+.joint .base{fill:none;stroke-width:1;}
+.joint .pulse{fill:none;stroke:var(--brand);stroke-width:1.6;stroke-linecap:round;}
+
+/* pixel scatter band */
+.band{position:relative;width:100%;height:clamp(90px,11vw,140px);margin:clamp(26px,4vw,54px) 0;pointer-events:none;overflow:hidden;}
+.band i{position:absolute;background:var(--brand);transform:scale(0);transform-origin:center;will-change:transform;transition:transform .55s var(--e);}
+.band i.on{transform:scale(1);}
+
+/* sections */
+.sec{padding:clamp(56px,7vw,104px) 0 clamp(64px,8vw,120px);}
+h2{font-size:clamp(24px,3.4vw,48px);text-wrap:balance;}
+.thesis h2{max-width:24ch;}
+.alink{display:inline-flex;align-items:center;gap:9px;margin-top:26px;font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);}
+.alink:hover{text-decoration:underline;text-underline-offset:4px;}
+
+/* sticky sequence */
+.seq{height:300vh;padding:0;}
+.seq .pin{position:sticky;top:0;height:100svh;display:grid;grid-template-columns:.8fr 1fr;gap:44px;align-items:center;}
+.seq .big{font-family:'Noto Sans Armenian',sans-serif;font-weight:700;font-size:clamp(100px,19vw,270px);line-height:.8;letter-spacing:-.02em;}
+.rail{position:relative;height:1px;background:var(--hair2);margin:24px 0 0;}
+.rail i{position:absolute;left:0;top:0;bottom:0;width:100%;background:var(--brand);transform:scaleX(0);transform-origin:left;will-change:transform;}
+.rail em{position:absolute;top:-3px;width:7px;height:7px;background:var(--brand);transform:translateX(-50%);transition:left .35s var(--e);}
+.seq .ctx{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-soft);max-width:34ch;line-height:1.8;margin-bottom:18px;}
+.slist .srow{display:flex;gap:16px;align-items:baseline;padding:15px 0;opacity:.34;transition:opacity .5s var(--e);}
+.slist .srow+.srow{border-top:1px solid var(--hair2);}
+.slist .srow.on{opacity:1;}
+.slist .srow .n{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.14em;color:var(--brand);flex:0 0 auto;}
+.slist .srow .t{font-size:clamp(17px,1.9vw,24px);font-weight:600;line-height:1.35;}
+
+/* industries grid */
+.grid{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:minmax(150px,auto);gap:10px;margin-top:42px;}
+.tile{position:relative;background:var(--panel);padding:21px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;overflow:hidden;box-shadow:inset 0 0 0 1px var(--hair2);transition:box-shadow .45s var(--e),transform .5s var(--e);border-radius:2px;}
+.tile:hover{box-shadow:inset 0 0 0 1px var(--hair);transform:translateY(-3px);}
+.tile .no{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.14em;color:var(--fg-soft);}
+.tile h3{font-size:clamp(19px,2vw,27px);margin:14px 0;}
+.tile .go{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:9.5px;letter-spacing:.1em;color:var(--brand);opacity:0;transform:translateY(5px);transition:.4s var(--e);text-transform:uppercase;}
+.tile:hover .go{opacity:1;transform:none;}
+.tile.b{grid-column:span 3;grid-row:span 2;}.tile.b h3{font-size:clamp(26px,3vw,42px);}
+.tile.w{grid-column:span 3;}.tile.t{grid-row:span 2;}.tile.s{grid-column:span 2;}
+.other{margin-top:10px;background:var(--inv);color:var(--inv-fg);padding:clamp(26px,3.4vw,44px);display:flex;justify-content:space-between;align-items:center;gap:26px;flex-wrap:wrap;border-radius:2px;}
+.other .no{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.14em;color:rgba(239,237,234,.5);}
+.other h3{font-size:clamp(21px,2.4vw,32px);margin:12px 0 10px;}
+.other p{color:rgba(239,237,234,.66);font-size:15px;line-height:1.7;max-width:52ch;}
+.other .btn{background:var(--brand);color:#fff;}
+.other .btn::before{background:var(--bg);}
+.other .btn:hover span{color:var(--fg);}
+
+/* services */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:40px 0 10px;}
+.stat{background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);padding:22px;border-radius:2px;}
+.stat b{display:block;font-family:'Noto Sans Armenian',sans-serif;font-weight:700;font-size:clamp(36px,4.6vw,62px);line-height:1;}
+.stat span{display:block;margin-top:8px;font-size:13.5px;color:var(--fg-mid);line-height:1.5;}
+.display{font-family:'Noto Sans Armenian',sans-serif;font-weight:700;font-size:clamp(34px,6vw,84px);line-height:.96;color:var(--fg);margin:clamp(36px,5vw,64px) 0;}
+.display i{font-style:normal;color:var(--brand);}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.4vw,30px);margin-top:10px;}
+.step .no{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.16em;color:var(--brand);}
+.step h3{font-size:clamp(18px,1.8vw,24px);margin:12px 0 10px;}
+.step p{font-size:14.5px;line-height:1.7;color:var(--fg-mid);}
+
+/* report */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);align-items:start;}
+.list{background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);padding:clamp(22px,2.6vw,36px);border-radius:2px;}
+.list div{display:flex;gap:14px;align-items:baseline;padding:12px 0;font-size:15px;line-height:1.6;color:var(--fg);}
+.list div+div{border-top:1px solid var(--hair2);}
+.list em{font-style:normal;width:6px;height:6px;background:var(--brand);flex:0 0 auto;transform:translateY(-1px);}
+.note{font-size:13.5px;line-height:1.75;color:var(--fg-soft);margin-top:26px;max-width:52ch;}
+
+/* assignments */
+.asg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:42px;}
+.asg .card{background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);padding:clamp(22px,2.6vw,34px);border-radius:2px;}
+.asg .hd{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+.asg .no{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.14em;color:var(--fg-soft);}
+.asg .tag{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:9.5px;letter-spacing:.16em;color:var(--brand);text-transform:uppercase;}
+.asg h3{font-size:clamp(19px,2vw,26px);margin:14px 0 10px;}
+.asg p{font-size:14.5px;line-height:1.7;color:var(--fg-mid);}
+
+/* measure chips */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:34px;}
+.chips span{box-shadow:inset 0 0 0 1px var(--hair);padding:11px 16px;font-size:14px;color:var(--fg);border-radius:2px;background:var(--panel);}
+
+/* company */
+.pr{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,30px);margin-top:44px;}
+.pr .p .no{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.16em;color:var(--brand);}
+.pr .p h3{font-size:clamp(18px,1.9vw,25px);margin:12px 0 9px;}
+.pr .p p{font-size:14.5px;line-height:1.7;color:var(--fg-mid);}
+.sub{margin-top:clamp(50px,7vw,90px);}
+.sub h3{font-size:clamp(24px,3vw,40px);}
+.stages{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:30px;}
+.stage2{background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);padding:22px;border-radius:2px;}
+.stage2 .tag{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10px;letter-spacing:.16em;color:var(--brand);text-transform:uppercase;}
+.stage2 p{margin-top:10px;font-size:14.5px;line-height:1.65;color:var(--fg-mid);}
+
+/* contact plate */
+.plate{background:linear-gradient(180deg,#0D0E13 0%,#111318 58%,#15171E 100%);color:var(--inv-fg);}
+.plate .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(28px,5vw,70px);align-items:center;padding-top:clamp(70px,9vw,130px);padding-bottom:clamp(70px,9vw,130px);}
+.plate h2{color:var(--inv-fg);}
+.plate p{color:rgba(239,237,234,.68);font-size:16px;line-height:1.75;max-width:46ch;margin-top:22px;}
+.plate .btn{background:var(--brand);color:#fff;margin-top:30px;}
+.plate .btn::before{background:var(--bg);}
+.plate .btn:hover span{color:var(--fg);}
+.chart{position:relative;}
+.chart svg{width:100%;height:auto;display:block;}
+.chart .cap{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:9.5px;letter-spacing:.14em;color:rgba(239,237,234,.45);margin-bottom:12px;}
+footer{border-top:1px solid var(--hair2);padding:32px 0;font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:11px;color:var(--fg-soft);}
+footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wrap;line-height:1.9;}
+
+/* modals */
+.ovl{position:fixed;inset:0;z-index:120;background:rgba(9,10,13,.66);backdrop-filter:blur(4px);display:none;justify-content:center;padding:34px 18px;overflow-y:auto;}
+.ovl.open{display:flex;}
+.md{background:var(--bg);color:var(--fg);max-width:760px;width:100%;margin:auto;position:relative;border-radius:4px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.4);}
+.md .x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(13,14,19,.08);z-index:5;font-size:14px;}
+.md .x:hover{background:var(--brand);color:#fff;}
+/* industry modal */
+#imd .top{display:grid;grid-template-columns:240px 1fr;}
+#imd .ph{background:#DDD9D2;min-height:230px;}
+#imd .ph img{width:100%;height:100%;object-fit:cover;display:block;}
+#imd .ti{padding:30px 34px;display:flex;flex-direction:column;justify-content:center;}
+#imd .no{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.16em;color:var(--brand);}
+#imd h3{font-size:clamp(24px,3vw,36px);margin-top:10px;}
+#imd .bd{padding:30px 34px 38px;background:var(--panel);}
+#imd .p1{font-size:15px;line-height:1.75;margin-bottom:24px;}
+#imd .lb{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);margin-bottom:12px;}
+#imd .fi{display:flex;gap:13px;align-items:baseline;font-size:14px;line-height:1.7;color:var(--fg);padding:9px 0;}
+#imd .fi+.fi{border-top:1px solid var(--hair2);}
+#imd .fi em{font-style:normal;width:6px;height:6px;background:var(--brand);flex:0 0 auto;transform:translateY(-1px);}
+#imd .st{margin-top:26px;padding-top:22px;border-top:1px solid var(--hair2);}
+#imd .stat{font-family:'Noto Sans Armenian',sans-serif;font-weight:700;font-size:44px;line-height:1;padding:0;background:none;box-shadow:none;}
+#imd .sx{display:flex;gap:18px;align-items:center;}
+#imd .stx{font-size:14px;line-height:1.65;color:var(--fg-mid);}
+#imd .ss{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10px;color:var(--fg-soft);margin-top:8px;}
+/* form modal */
+#fmd .in{padding:clamp(26px,4vw,46px);}
+#fmd h3{font-size:clamp(23px,2.8vw,30px);margin-bottom:10px;}
+#fmd h3 i{font-style:normal;color:var(--brand);}
+#fmd .intro{font-size:14px;line-height:1.7;color:var(--fg-mid);margin-bottom:28px;max-width:56ch;}
+#fmd .gl{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-soft);margin:22px 0 12px;}
+#fmd .gl em{font-style:normal;color:var(--brand);}
+#fmd .gl small{font-weight:400;text-transform:none;letter-spacing:0;color:var(--fg-soft);font-size:10.5px;}
+#fmd .fr{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+#fmd label{display:block;font-size:12px;font-weight:600;margin-bottom:7px;}
+#fmd label em{font-style:normal;color:var(--brand);}
+#fmd input[type=text],#fmd input[type=email],#fmd input[type=tel],#fmd textarea{width:100%;background:var(--panel);border:1px solid var(--hair);border-radius:2px;padding:13px 15px;font-size:14px;font-family:inherit;outline:none;color:var(--fg);}
+#fmd input:focus,#fmd textarea:focus{border-color:var(--brand);}
+#fmd input.err,#fmd textarea.err{border-color:#C5280D;}
+#fmd textarea{min-height:118px;line-height:1.6;resize:vertical;}
+#fmd .tps{display:flex;gap:8px;flex-wrap:wrap;}
+#fmd .tps button{font-size:13.5px;font-weight:500;padding:9px 15px;border:1px solid var(--hair);border-radius:2px;background:transparent;color:var(--fg-mid);}
+#fmd .tps button.on{background:var(--inv);color:var(--inv-fg);border-color:var(--inv);}
+#fmd .drop{border:1.5px dashed var(--hair);border-radius:2px;padding:20px;cursor:pointer;text-align:center;transition:.25s;background:var(--panel);}
+#fmd .drop.on{border-color:var(--brand);background:rgba(200,96,61,.05);}
+#fmd .drop b{display:block;font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;font-weight:600;}
+#fmd .drop span{font-size:13px;line-height:1.65;color:var(--fg-soft);}
+#fmd .att{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--hair2);border-radius:2px;padding:8px 12px;margin-top:8px;font-size:13px;}
+#fmd .att b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:400;}
+#fmd .att .sz{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:11px;color:var(--fg-soft);}
+#fmd .att button{width:22px;height:22px;border-radius:50%;background:var(--hair2);font-size:13px;line-height:1;}
+#fmd .att button:hover{background:#C5280D;color:#fff;}
+#fmd .hint{font-size:12px;color:var(--fg-soft);margin:10px 0 24px;}
+#fmd .errline{font-size:13px;color:#C5280D;margin-bottom:14px;display:none;}
+#fmd .contactline{font-size:13.5px;line-height:1.75;color:var(--fg-soft);margin-top:26px;border-top:1px solid var(--hair2);padding-top:18px;}
+#fmd .done{display:none;text-align:center;padding:36px 0;}
+#fmd .done .ok{width:52px;height:52px;border-radius:50%;background:var(--brand);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
+#fmd .done b{display:block;font-size:21px;font-weight:600;margin-bottom:9px;}
+#fmd .done p{font-size:14px;line-height:1.7;color:var(--fg-mid);max-width:40ch;margin:0 auto 26px;}
+
+@media (max-width:960px){
+  .hero{grid-template-columns:1fr;padding-top:100px;}
+  .stage{max-width:440px;justify-self:center;margin-top:18px;}
+  .rd{position:static;margin-top:12px;}
+  .seq{height:auto;}.seq .pin{position:static;height:auto;grid-template-columns:1fr;gap:14px;padding:56px 0;}
+  .seq .big,.seq .rail{display:none;}
+  .slist .srow{opacity:1;}
+  .grid{grid-template-columns:repeat(2,1fr);}.tile.b,.tile.w,.tile.s{grid-column:span 2;}.tile.b,.tile.t{grid-row:auto;}
+  .two,.asg,.pr,.plate .wrap{grid-template-columns:1fr;}
+  .stats,.steps,.stages{grid-template-columns:1fr;}
+  nav .lk{display:none;}
+  #imd .top{grid-template-columns:1fr;}
+  #imd .ph{max-height:210px;}
+  #fmd .fr{grid-template-columns:1fr;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}.rv{opacity:1;transform:none;}}
+</style>
+
+<header id="hdr"><div class="wrap in">
+  <a class="brand" href="#top"><span class="m"><svg viewBox="14 8 182 182" fill="none"><path d="M48,100 C66,56 86,56 104,100 C122,144 142,144 160,100" stroke="#fff" stroke-width="13" stroke-linecap="round"/></svg></span>Power<span style="color:var(--brand)">Tech</span></a>
+  <nav><a class="lk" href="#services">Ծառայություններ</a><a class="lk" href="#applications">Ոլորտներ</a><a class="lk" href="#company">Ընկերություն</a><a class="lang" href="./index.html">EN</a></nav>
+  <button class="btn" data-open-form><span>Նկարագրել խնդիրը ↗</span></button>
+</div></header>
+
+<section class="hero wrap" id="top">
+  <div>
+    <div class="eyebrow">ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ</div>
+    <h1>Ստուգեք, թե ինչպես է աշխատում ձեր <em>էլեկտրացանցը</em></h1>
+    <p>PowerTech-ը համակարգի աշխատանքի ընթացքում գրանցում է էլեկտրական պարամետրերն ու էլեկտրաէներգիայի որակի իրադարձությունները։ Մենք վերլուծում ենք գրանցված տվյալները և ներկայացնում հստակ ինժեներական գնահատում։</p>
+    <div class="acts"><button class="btn" data-open-form><span>Նկարագրել խնդիրը ↗</span></button><a class="btn gh" href="#services"><span>Ինչպես է իրականացվում մոնիթորինգը ↓</span></a></div>
+  </div>
+  <div class="stage"><canvas id="star"></canvas>
+    <div class="rd"><span>RMS ԼԱՐՈՒՄ · 10-ՐՈՊԵԱՆՈՑ ՄԻՏՈՒՄ</span><br><b class="hv">230.1</b> V · <b class="hz">50.00</b> Hz · <span class="st" id="stt">ԱՆՎԱՆԱԿԱՆ</span></div>
+  </div>
+</section>
+
+<div class="wrap"><svg class="joint" data-joint="0"></svg></div>
+
+<section class="sec thesis" id="why"><div class="wrap rv">
+  <div class="cnt">01</div>
+  <h2>Իրադարձությունը կարող է ավարտվել մինչև ստուգումը սկսվի</h2>
+  <p class="lede">Լարման որոշ իրադարձություններ տևում են ընդամենը միլիվայրկյաններ կամ մի քանի ցիկլ։ Ստուգման պահին չափվող արժեքները կարող են արդեն վերադարձած լինել բնականոն մակարդակի։ Մոնիթորինգը պահպանում է իրադարձության ժամանակային նշումը և դրա պահին գրանցված պայմանները։</p>
+  <a class="alink" href="#applications">Տեսնել, թե որտեղ է օգնում մոնիթորինգը ↓</a>
+</div></section>
+
+<section class="seq"><div class="wrap"><div class="pin">
+  <div>
+    <div class="ctx">Իրադարձությունը կարող է ավարտվել մինչև ստուգումը սկսվի</div>
+    <div class="big" id="seqn">01</div>
+    <div class="rail"><i id="railfill"></i><em id="raildot"></em></div>
+  </div>
+  <div class="slist" id="slist"></div>
+</div></div></section>
+
+<div class="band" id="band"></div>
+
+<section class="sec" id="applications"><div class="wrap">
+  <div class="rv"><div class="cnt">02</div><h2>Որտեղ է օգնում մոնիթորինգը</h2>
+  <p class="lede">Էլեկտրաէներգիայի որակի խնդիրները չեն սահմանափակվում մեկ ոլորտով։ Մոնիթորինգը կիրառելի է, երբ էլեկտրական պայմաններն ազդում են սարքավորումների կամ աշխատանքային գործընթացների վրա, կամ երբ ինժեներական որոշման համար անհրաժեշտ են չափված տվյալներ։</p></div>
+  <div class="grid" id="grid"></div>
+  <div class="other rv"><div><div class="no">07</div><h3>Այլ կարևոր էլեկտրական համակարգեր</h3><p>Չե՞ք գտնում ձեր ոլորտն այստեղ։ Նկարագրեք խնդիրը և դրա ազդեցությունը սարքավորման աշխատանքի վրա։</p></div><button class="btn" data-open-form><span>Նկարագրել խնդիրը ↗</span></button></div>
+</div></section>
+
+<div class="wrap"><svg class="joint" data-joint="1"></svg></div>
+
+<section class="sec" id="services"><div class="wrap">
+  <div class="rv"><div class="eyebrow">ԾԱՌԱՅՈՒԹՅՈՒՆՆԵՐ</div>
+  <h2 style="margin-top:16px">7-օրյա մոնիթորինգ</h2>
+  <p class="lede">Էլեկտրաէներգիայի որակի տվյալները գրանցվում են համակարգի փաստացի աշխատանքի ընթացքում և վերլուծվում՝ ուսումնասիրվող խնդրի համատեքստում։</p>
+  <p class="lede" style="margin-top:14px">Մոնիթորինգի տևողությունն ընտրվում է աշխատանքային պայմանների բնորոշ պատկերը ստանալու համար։ Եթե խնդիրը պարբերաբար չի դրսևորվում կամ սարքավորման աշխատանքային ցիկլն ավելի երկար է, կարող է առաջարկվել ավելի երկար ժամանակահատված։</p></div>
+  <div class="stats rv"><div class="stat"><b>7</b><span>սովորական ախտորոշման տևողություն</span></div><div class="stat"><b>24/7</b><span>անընդհատ գրանցում ամբողջ ժամանակահատվածում</span></div><div class="stat"><b>1</b><span>կառուցվածքային ինժեներական հաշվետվություն</span></div></div>
+  <div class="display rv">Չափումներ՝<br>փաստացի<br><i>բեռնվածությամբ</i></div>
+  <div class="steps rv"><div class="step"><div class="no">01</div><h3>Սահմանում ենք նպատակը</h3><p>Հստակեցնում ենք՝ ինչ պետք է ստուգվի, որ սարքավորումն է ներգրավված և ինչ որոշման պետք է աջակցեն արդյունքները։</p></div><div class="step"><div class="no">02</div><h3>Մոնիթորինգ՝ աշխատանքային ռեժիմում</h3><p>Չափումները կատարվում են էլեկտրական համակարգի աշխատանքի ընթացքում՝ բնորոշ աշխատանքային պայմաններում։</p></div><div class="step"><div class="no">03</div><h3>Ներկայացնում ենք ինժեներական գնահատում</h3><p>Արդյունքները գնահատվում են խնդրի համատեքստում և ներկայացվում տեխնիկական հաշվետվությամբ՝ գրանցված տվյալներով հիմնավորված եզրահանգումներով և առաջարկվող հաջորդ քայլերով։</p></div></div>
+  <a class="alink rv" href="#report">Տեսնել, թե ինչ կարող է բացահայտել մոնիթորինգը ↗</a>
+</div></section>
+
+<div class="wrap"><svg class="joint" data-joint="2"></svg></div>
+
+<section class="sec" id="report"><div class="wrap two">
+  <div class="rv"><div class="cnt">04</div><h2>Հաշվետվություն տեխնիկական որոշումների համար</h2>
+    <p class="lede">Հաշվետվությունում չափված փաստերը տարանջատվում են ինժեներական մեկնաբանությունից և առաջարկություններից։</p>
+    <p class="note">Էլեկտրաէներգիայի որակի պարամետրերը չափվում են ԳՕՍՏ ԻԷԿ 61000-4-30-2017 ստանդարտով սահմանված S դասի մեթոդներով։ Հարմոնիկ և միջհարմոնիկ բաղադրիչները գնահատվում են ԻԷԿ 61000-4-7-ի համաձայն, երբ կիրառելի է։ Մատակարարման կետում արդյունքները կարող են համեմատվել Հայաստանում գործող ԳՕՍՏ 32144-2013-ի նորմերի հետ՝ չափման նպատակից և չափման կետից կախված։</p></div>
+  <div class="list rv"><div><em></em><span>Չափումների շրջանակն ու կետերը</span></div><div><em></em><span>Մոնիթորինգի ժամանակահատվածն ու աշխատանքային պայմանները</span></div><div><em></em><span>Գրանցված իրադարձություններն ու միտումները</span></div><div><em></em><span>Ինժեներական մեկնաբանություն</span></div><div><em></em><span>Առկա տվյալների սահմանափակումները</span></div><div><em></em><span>Առաջարկվող հաջորդ քայլերը</span></div></div>
+</div></section>
+
+<section class="sec" id="assignments"><div class="wrap">
+  <div class="rv"><div class="cnt">05</div><h2>Տիպային աշխատանքներ</h2>
+  <p class="lede">Յուրաքանչյուր աշխատանք սահմանվում է տեխնիկական հարցով և անհրաժեշտ տվյալներով։</p></div>
+  <div class="asg rv"><div class="card"><div class="hd"><span class="no">01</span><span class="tag">ԽԱՓԱՆՈՒՄՆԵՐ</span></div><h3>Խափանումների ուսումնասիրություն</h3><p>Գնահատել՝ արդյոք սարքավորումների անջատումները, ազդանշանները կամ գործընթացի ընդհատումները համընկել են գրանցված էլեկտրական իրադարձությունների հետ։</p></div><div class="card"><div class="hd"><span class="no">02</span><span class="tag">ՀԱՆՁՆՈՒՄ</span></div><h3>Գործարկման և հանձնման գնահատում</h3><p>Գրանցել էլեկտրական համակարգի աշխատանքային պայմանները՝ ընդունման, հանձնման կամ երաշխիքային ժամկետի ավարտից առաջ կատարվող ստուգման համար։</p></div><div class="card"><div class="hd"><span class="no">03</span><span class="tag">ԱՐԵՎԱՅԻՆ</span></div><h3>Արևային կայանի միացման գնահատում</h3><p>Գնահատել լարման պայմաններն ու ինվերտորի իրադարձությունները կայանի համապատասխան կետերում և միացման կետում։</p></div><div class="card"><div class="hd"><span class="no">04</span><span class="tag">ՏԵԽՆԻԿԱԿԱՆ ԳՆԱՀԱՏՈՒՄ</span></div><h3>Չափումներ՝ տեխնիկական համալիր գնահատման համար</h3><p>Տրամադրել բեռնվածության, էլեկտրաէներգիայի որակի և դիտարկված աշխատանքային սահմանափակումների անկախ չափումներ՝ տեխնիկական համալիր գնահատման համար։</p></div></div>
+</div></section>
+
+<section class="sec" id="measure"><div class="wrap rv">
+  <div class="cnt">06</div><h2>Ինչ ենք չափում</h2>
+  <div class="chips"><span>Լարում և հոսանք</span><span>Հարմոնիկներ և միջհարմոնիկներ</span><span>Ֆլիկեր</span><span>Լարման անկումներ</span><span>Լարման անհամաչափություն</span><span>Հզորություն և էներգիա</span><span>Իրադարձություններ</span></div>
+</div></section>
+
+<div class="wrap"><svg class="joint" data-joint="3"></svg></div>
+
+<section class="sec" id="company"><div class="wrap">
+  <div class="rv"><div class="eyebrow">ԸՆԿԵՐՈՒԹՅՈՒՆ</div>
+  <h2 style="margin-top:16px">Անկախ տվյալներ<br>Հստակ ինժեներական գնահատում</h2>
+  <p class="lede">PowerTech-ը ստեղծվել է էլեկտրական խնդիրները չափելի դարձնելու համար։ Մենք գրանցում ենք, թե ինչպես են էլեկտրական համակարգերն աշխատում շահագործման ընթացքում, և գրանցված տվյալների հիման վրա ներկայացնում ենք անկախ ինժեներական գնահատում։ PowerTech-ը հիմնված է Երևանում և տեղում աշխատանքներ է իրականացնում Հայաստանում։</p></div>
+  <div class="pr rv"><div class="p"><div class="no">01</div><h3>Նպատակն է սահմանում չափումների շրջանակը</h3><p>Սկսում ենք ուսումնասիրվող խնդրից կամ այն որոշումից, որին պետք է աջակցեն տվյալները։</p></div><div class="p"><div class="no">02</div><h3>Նախ՝ տվյալները, ապա՝ եզրահանգումները</h3><p>Չափված փաստերը տարանջատվում են ինժեներական մեկնաբանությունից և առաջարկություններից։</p></div><div class="p"><div class="no">03</div><h3>Առաջարկությունները բխում են տվյալներից</h3><p>Մենք չենք սկսում նախապես ընտրված տեխնիկական լուծումից։</p></div><div class="p"><div class="no">04</div><h3>Սահմանափակումները նշվում են հստակ</h3><p>Հաշվետվությունը բացատրում է՝ ինչն են հիմնավորում գրանցված տվյալները, և ինչը պահանջում է լրացուցիչ ուսումնասիրություն։</p></div></div>
+  <div class="sub rv"><h3>Չափման վայրից մինչև հաշվետվություն</h3><p class="lede">Տեղադրումը, գրանցումը և վերլուծությունն իրականացվում են մեկ պատասխանատու ինժեների ղեկավարությամբ։</p>
+  <div class="stages"><div class="stage2"><div class="tag">01 · ՏԵՂՈՒՄ</div><p>Չափման համակարգի տեղադրումն ու միացումը ստուգվում են նախքան գրանցումը։</p></div><div class="stage2"><div class="tag">02 · ԳՐԱՆՑՈՒՄ</div><p>Էլեկտրական պայմանները գրանցվում են համաձայնեցված ժամանակահատվածում։</p></div><div class="stage2"><div class="tag">03 · ԳՆԱՀԱՏՈՒՄ</div><p>Արդյունքները մեկնաբանվում են խնդրի համատեքստում և փաստաթղթավորվում։</p></div></div></div>
+</div></section>
+
+<section class="plate" id="contact"><div class="wrap">
+  <div class="rv"><h2>Նկարագրեք խնդիրը</h2><p>Նշեք՝ ինչ է տեղի ունեցել, որ սարքավորման վրա է դա ազդել, և երբ է խնդիրը դրսևորվել կամ սովորաբար կրկնվում։ Մենք կգնահատենք՝ կարող է արդյոք մոնիթորինգը պատասխանել հարցին և չափումների ինչ շրջանակ է անհրաժեշտ։</p>
+  <button class="btn" data-open-form><span>Նկարագրել խնդիրը ↗</span></button></div>
+  <div class="chart rv"><div class="cap">RMS ԼԱՐՈՒՄ · 10-ՐՈՊԵԱՆՈՑ ՄԻՏՈՒՄ</div>
+    <svg viewBox="0 0 520 240" fill="none">
+      <line x1="0" y1="60" x2="520" y2="60" stroke="rgba(239,237,234,.14)" stroke-dasharray="3 5"/>
+      <text x="0" y="50" fill="rgba(239,237,234,.45)" font-size="10" font-family="Martian Mono,monospace" letter-spacing="1.5">ԱՆՎԱՆԱԿԱՆ</text>
+      <path d="M0,62 L150,60 C168,60 172,64 178,96 C184,130 188,132 196,132 L236,132 C244,132 248,128 254,94 C260,64 264,61 282,61 L520,60" stroke="#C8603D" stroke-width="2" stroke-linecap="round"/>
+      <rect x="178" y="150" width="76" height="1" fill="rgba(239,237,234,.3)"/>
+      <text x="178" y="172" fill="rgba(239,237,234,.55)" font-size="10" font-family="Martian Mono,monospace" letter-spacing="1.2">ԼԱՐՄԱՆ ԱՆԿՈՒՄ · 180 ՄՎՐԿ</text>
+    </svg>
+  </div>
+</div></section>
+
+<footer><div class="wrap in"><span>PowerTech</span><span>sales@powertech.am · +374 41 00 00 14</span><span>Դավթաշեն 1, 13-25, Երևան 0058, Հայաստան</span></div></footer>
+
+<div class="ovl" id="iovl"><div class="md" id="imd">
+  <button class="x" data-close>✕</button>
+  <div class="top"><div class="ph"><img id="im_img" alt=""></div>
+    <div class="ti"><div class="no" id="im_no"></div><h3 id="im_t"></h3></div></div>
+  <div class="bd">
+    <p class="p1" id="im_p1"></p>
+    <div class="lb">ԻՆՉ ՀԱՐՑԵՐԻ ԿԱՐՈՂ Է ՊԱՏԱՍԽԱՆԵԼ ՀԱՇՎԵՏՎՈՒԹՅՈՒՆԸ</div>
+    <div id="im_fi"></div>
+    <div class="st" id="im_st">
+      <div class="lb" id="im_sl"></div>
+      <div class="sx"><div class="stat" id="im_stat"></div><div><div class="stx" id="im_stx"></div><div class="ss" id="im_ss"></div></div></div>
+    </div>
+  </div>
+</div></div>
+
+<div class="ovl" id="fovl"><div class="md" id="fmd"><div class="in">
+  <button class="x" data-close>✕</button>
+  <div id="f_main">
+    <h3>Նկարագրեք <i>էլեկտրական խնդիրը</i></h3>
+    <p class="intro">Նշեք՝ ինչ է տեղի ունեցել, երբ է խնդիրը դրսևորվել կամ սովորաբար կրկնվում, և որ սարքավորման վրա է այն ազդել։ Մենք կգնահատենք՝ կարող է արդյոք մոնիթորինգը պատասխանել հարցին և ինչ տվյալներ են անհրաժեշտ։</p>
+    <div class="gl">ԿՈՆՏԱԿՏԱՅԻՆ ՏՎՅԱԼՆԵՐ</div>
+    <div class="fr">
+      <div><label>Անուն <em>*</em></label><input id="ptfName" type="text" placeholder="Ձեր անունը"></div>
+      <div><label>Ընկերություն <em>*</em></label><input id="ptfCompany" type="text" placeholder="Ընկերության անվանումը"></div>
+      <div><label>Էլ. փոստ <em>*</em></label><input id="ptfEmail" type="email" placeholder="name@company.com"></div>
+      <div><label>Հեռախոս <em>*</em></label><input id="ptfPhone" type="tel" placeholder="+374 ..."></div>
+    </div>
+    <div class="gl">ՈԼՈՐՏ</div>
+    <div class="tps" id="ptfTypes"></div>
+    <div class="gl">Ի՞ՆՉ Է ՏԵՂԻ ՈՒՆԵՑԵԼ <em>*</em></div>
+    <textarea id="ptfMsg" placeholder="Նկարագրեք անջատումը, ազդանշանը, աշխատանքի դադարեցումը կամ կրկնվող խնդիրը։ Նշեք մոտավոր ժամանակը, ազդված սարքավորումը և առկա սխալի կոդերը կամ համակարգի գրանցած իրադարձությունները։"></textarea>
+    <div class="gl">ԿՑՎՈՂ ՖԱՅԼԵՐ <small>— ըստ ցանկության</small></div>
+    <div class="drop" id="ptfDrop"><b>Գցեք ֆայլերն այստեղ կամ սեղմեք ընտրելու համար</b><span>Միագիծ սխեմա, վահանակի լուսանկար, ազդանշանի էկրանի պատկեր, ինվերտորի կամ UPS-ի գրանցումների արտահանված ֆայլ, նախորդ հաշվետվություն։</span>
+      <input id="ptfInput" type="file" multiple accept="image/*,.pdf,.csv,.txt,.log,.xls,.xlsx,.doc,.docx,.zip" style="display:none"></div>
+    <div id="ptfList"></div>
+    <div class="errline" id="ptfSizeErr">Կցված ֆայլերը գերազանցում են 10 ՄԲ սահմանը — հեռացրեք մի քանիսը։</div>
+    <div class="hint" id="ptfHint">Առավելագույնը՝ 10 ՄԲ։</div>
+    <div class="errline" id="ptfFormErr">Լրացրեք բոլոր դաշտերը՝ անուն, ընկերություն, վավեր էլ. փոստ, հեռախոս և կարճ նկարագրություն։</div>
+    <button class="btn" id="ptfSubmit"><span>Ուղարկել տվյալները ↗</span></button>
+    <div class="contactline">sales@powertech.am · +374 41 00 00 14 · Դավթաշեն 1, 13-25, Երևան 0058 · Երկ–Ուրբ 09:00–18:00 (UTC+4)</div>
+  </div>
+  <div class="done" id="f_done">
+    <div class="ok">✓</div><b>Շնորհակալություն։</b><p>Մենք կուսումնասիրենք տրամադրված տեղեկատվությունը և կկապվենք ձեզ հետ՝ չափումների շրջանակը հստակեցնելու համար։</p>
+    <button class="btn" data-close><span>Փակել</span></button>
+  </div>
+</div></div></div>
+
+<script>
+window.PT={"starLabels": ["Լարում և հոսանք", "Հարմոնիկներ և միջհարմոնիկներ", "Ֆլիկեր", "Լարման անկումներ", "Լարման անհամաչափություն", "Հզորություն և էներգիա", "Իրադարձություններ"], "canvasFont": "\"Martian Mono\",\"Noto Sans Armenian\",monospace", "rdNominal": "ԱՆՎԱՆԱԿԱՆ", "rdDip": "ԼԱՐՄԱՆ ԱՆԿՈՒՄ · 180 ՄՎՐԿ", "seq": [["01", "Բնականոն աշխատանք"], ["02", "Էլեկտրական իրադարձություն"], ["03", "Սարքավորման անջատում կամ ազդանշան"], ["04", "Համակարգի աշխատանքի վերականգնում"], ["05", "Գրանցումը պահպանվում է վերլուծության համար"]], "viewDetails": "Մանրամասներ", "hint1": " ֆայլ · ", "hintN": " ֆայլ · ", "hintSuf": " / 10 ՄԲ", "hint0": "Առավելագույնը՝ 10 ՄԲ։", "appTypes": ["Արտադրություն", "Արևային կայան", "Բժշկական կենտրոն կամ լաբորատորիա", "Տվյալների կենտրոն կամ ՏՏ ենթակառուցվածք", "Կոմերցիոն տարածք", "Ներդրումային և տեխնիկական գնահատում", "Այլ"], "cards": [{"num": "01", "title": "Արտադրություն", "img": "IMG0", "p1": "Պահուստային գեներատորը նախատեսված է այլ տևողության ընդհատումների համար։ Լարման կարճատև անկումը կարող է ազդել սարքավորման վրա մինչև սնուցումը պահուստային աղբյուրին փոխանցելը, ուստի իրադարձությունը պետք է գրանցվի հենց տեղի ունենալու պահին։", "findings": ["Գրանցված լարման անկումների ժամանակը, տևողությունը, նվազագույն RMS լարումը և այն ֆազերը, որոնցում դրանք գրանցվել են։", "Շարժիչների աշխատանքի համար նշանակալի լարման անհամաչափությունն ու հոսանքային բեռնվածությունը։", "Արդյոք ռեակտիվ հզորությունը կամ հարմոնիկ աղավաղումը պահանջում են լրացուցիչ ինժեներական ուսումնասիրություն։"], "statLabel": "ՏԵԽՆԻԿԱԿԱՆ ՆՇՈՒՄ", "statText": "Լարման անկումներն ու կարճատև ընդհատումները կարող են անջատել էլեկտրոնային և էլեկտրամեխանիկական սարքերը և կանգնեցնել արտադրական գծերը։", "statSource": "Աղբյուր՝ EPRI"}, {"num": "02", "title": "Արևային կայաններ", "img": "IMG1", "p1": "Լարման բարձրացումը կարող է պայմանավորված լինել կայանի արտադրած հզորության, ներքին դիմադրության և արտաքին ցանցի պայմանների փոխազդեցությամբ։ Համապատասխան կետերում կատարված չափումները օգնում են տարբերակել կայանի ներսում և արտաքին ցանցում առաջացող գործոնները։", "findings": ["Լարման պայմանները ինվերտորի անջատման կամ ակտիվ հզորության սահմանափակման պահին։", "Լարման և հարմոնիկ աղավաղման համապատասխանությունը միացման կիրառելի պահանջներին։", "Անկախ չափման տվյալներ՝ գործարկման ընդունման կամ EPC աշխատանքների գնահատման համար։"], "note": "Ժամանակային նշումներով անկախ չափումները հնարավորություն են տալիս սեփականատիրոջը, EPC կապալառուին և ցանցի օպերատորին կայանի և միացման կետի էլեկտրական պայմանները գնահատել նույն տվյալների հիման վրա։"}, {"num": "03", "title": "Բժշկական կենտրոններ և լաբորատորիաներ", "img": "IMG2", "p1": "Երաշխիքային կամ սպասարկման գնահատման համար կարող են պահանջվել տվյալներ այն էլեկտրասնուցման պայմանների մասին, որոնցում սարքավորումն աշխատել է։ Մեկանգամյա չափումը կարող է չգրանցել պարբերաբար ի հայտ եկող իրադարձությունները։", "findings": ["Գրանցված էլեկտրասնուցման պայմանների համեմատությունն արտադրողի պահանջների հետ։", "Տվյալներ՝ էլեկտրասնուցմամբ պայմանավորված իրադարձությունները սարքավորման խափանումներից տարբերակելու համար։", "Հաջորդ ստուգումների առաջարկվող հերթականությունը՝ ըստ տեխնիկական կարևորության և աշխատանքի վրա ազդեցության։"], "statLabel": "ՏԵԽՆԻԿԱԿԱՆ ՆՇՈՒՄ", "statText": "IEC 60601-1-2-ը ներառում է բժշկական էլեկտրասարքավորումների՝ լարման անկումների և կարճատև ընդհատումների նկատմամբ խանգարումակայունության փորձարկումներ։", "statSource": "Աղբյուր՝ IEC"}, {"num": "04", "title": "Տվյալների կենտրոններ և ՏՏ ենթակառուցվածք", "img": "IMG3", "p1": "Գեներատորի գործարկումն ու սնուցման փոխանցումը կատարվում են այլ ժամանակային մասշտաբով, քան միլիվայրկյան տևող խանգարումները։ Ժամանակային նշումներով մոնիթորինգի տվյալները կարելի է համադրել UPS-ի և ՏՏ համակարգերի գրանցած իրադարձությունների հետ։", "findings": ["UPS-ի մուտքային բեռնվածությունը՝ անվանական հզորության համեմատ։", "Վերագործարկումների, մարտկոցից սնուցման ռեժիմի և գրանցված էլեկտրասնուցման խանգարումների միջև կապը։", "Պլանավորվող ընդլայնման համար նշանակալի բեռնվածության գրաֆիկները։"], "stat": "57%", "statLabel": "ՎԻՃԱԿԱԳՐՈՒԹՅՈՒՆ", "statText": "Uptime Institute-ի 2025 թ. տարեկան հարցման մասնակիցների այն բաժինը, որոնք նշել են, որ իրենց վերջին խոշոր խափանման արժեքը գերազանցել է 100 000 ԱՄՆ դոլարը։", "statSource": "Աղբյուր՝ Uptime Institute, Annual Outage Analysis 2026"}, {"num": "05", "title": "Կոմերցիոն տարածքներ", "img": "IMG4", "p1": "Չափումները կարող են օգնել տարբերակել արտաքին մատակարարման ցանցի պայմանները շենքի ներքին ցանցում կամ վարձակալների սարքավորումներից առաջացող խանգարումներից։", "findings": ["Տվյալներ խանգարման հավանական աղբյուրը գնահատելու համար։", "Գերտաքացման կամ պաշտպանիչ սարքերի գործարկման հետ կապված էլեկտրական պայմանները։", "Հզորության գործակիցը, ռեակտիվ հզորությունը և բեռնվածության միտումները՝ վճարների կամ հասանելի հզորության գնահատման համար։"], "statLabel": "ՏԵԽՆԻԿԱԿԱՆ ՆՇՈՒՄ", "statText": "Էլեկտրաէներգիայի որակի իրադարձությունները կարող են առաջանալ սպառողի հաշվիչի երկու կողմում՝ մատակարարման կամ ներքին ցանցում։", "statSource": "Աղբյուր՝ U.S. DOE / LBNL"}, {"num": "06", "title": "Ներդրումային և տեխնիկական գնահատում", "img": "IMG5", "p1": "Ախտորոշիչ կամ շարունակական մոնիթորինգը համակարգի փաստացի աշխատանքի անկախ գրանցում է ապահովում։ Արդյունքները կարող են օգտագործվել տեխնիկական համալիր գնահատման, հանձնման, երաշխիքային ստուգման կամ աշխատանքի արդյունավետության գնահատման համար։", "findings": ["Համապատասխան կետերում դիտարկված բեռնվածությունն ու էլեկտրաէներգիայի որակը։", "Ընդհատումների կամ արտադրողականության նվազման հետ կապված գրանցված պայմանները։", "Սահմանափակումները, ռիսկերը և առաջարկվող լրացուցիչ ստուգումները։"], "note": "Հաշվետվությունը կարող է պատրաստվել հայերեն, ռուսերեն կամ անգլերեն։"}], "imgs": {"IMG0": "../uploads/img/02_manufacturing_industrial_robot.jpg", "IMG1": "../uploads/img/03_solar_power_plant.jpg", "IMG2": "../uploads/img/06_healthcare_laboratory.jpg", "IMG3": "../uploads/img/05_data_center.jpg", "IMG4": "../uploads/img/04_commercial_building.jpg", "IMG5": "../uploads/img/08_finance_investment.jpg"}};
+(function(){
+var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var PT=window.PT;
+
+/* ============ STAR ============ */
+var cv=document.getElementById('star'),cx=cv.getContext('2d');
+var N=11,W=0,H=0,R=0,CXp=0,CYp=0,dpr=1;
+var LABELS=PT.starLabels;
+var nodes=[],chords=[],rot=0,tt=0;
+var mouse={x:-9999,y:-9999,on:false};
+var EV_FIRST=3.2,EV_EVERY=7.3,EV_DUR=1.0,evNext=EV_FIRST,evT=0,evChord=0;
+function size(){
+  dpr=Math.min(2,devicePixelRatio||1);
+  var r=cv.parentElement.getBoundingClientRect();
+  W=r.width;H=r.height;
+  cv.width=Math.max(1,Math.round(W*dpr));cv.height=Math.max(1,Math.round(H*dpr));
+  cx.setTransform(dpr,0,0,dpr,0,0);
+  CXp=W/2;CYp=H/2;R=Math.min(W,H)*0.335;
+}
+function build(){
+  nodes=[];for(var i=0;i<N;i++)nodes.push({a:i/N*Math.PI*2-Math.PI/2,lab:LABELS[i%LABELS.length],vis:0,tl:0});
+  chords=[];var seen={};
+  [3,5].forEach(function(step){for(var i=0;i<N;i++){var j=(i+step)%N,k=Math.min(i,j)+'-'+Math.max(i,j);if(seen[k])continue;seen[k]=1;
+    chords.push({i:i,j:j,ox:0,oy:0,vx:0,vy:0,ph:Math.random()*Math.PI*2,fl:Math.random(),step:step});}});
+}
+function pos(n){return{x:CXp+Math.cos(n.a+rot)*R,y:CYp+Math.sin(n.a+rot)*R};}
+var batch=[],batchT=0;
+function schedLabels(dt){
+  batchT-=dt;
+  if(batchT<=0){batch.forEach(function(n){n.tl=-1;});batch=[];
+    var pick=nodes.slice().sort(function(){return Math.random()-.5;}).slice(0,4);
+    pick.forEach(function(n,k){n.tl=1;n.dly=k*0.16;});batch=pick;batchT=3.4;}
+  nodes.forEach(function(n){var target=n.tl===1?1:0;
+    if(n.tl===1&&n.dly>0){n.dly-=dt;target=0;}
+    n.vis+=(target-n.vis)*Math.min(1,dt*(target>n.vis?4.4:3.0));});
+}
+function frame(ts){
+  var dt=(ts-(frame.p||ts))/1000;if(!(dt>0)||dt>.05)dt=.016;frame.p=ts;
+  tt+=dt;rot+=dt*0.055;
+  if(tt>=evNext){evT=EV_DUR;evChord=Math.floor(Math.random()*chords.length);evNext=tt+EV_EVERY;}
+  if(evT>0)evT=Math.max(0,evT-dt);
+  var ev=evT;
+  cx.clearRect(0,0,W,H);
+  var base='13,14,19';
+  cx.beginPath();cx.arc(CXp,CYp,R,0,Math.PI*2);
+  cx.strokeStyle='rgba('+base+',.11)';cx.lineWidth=1;cx.stroke();
+  chords.forEach(function(c,ci){
+    var A=pos(nodes[c.i]),B=pos(nodes[c.j]);
+    var mx=(A.x+B.x)/2,my=(A.y+B.y)/2;
+    var dx=B.x-A.x,dy=B.y-A.y,len=Math.hypot(dx,dy)||1;
+    var nx=-dy/len,ny=dx/len;
+    var wind=Math.sin(tt*0.16*Math.PI*2*0.6+c.ph)*22*(c.step===3?1:.72);
+    var tx=nx*wind,ty=ny*wind;
+    if(mouse.on){var ddx=mx+c.ox-mouse.x,ddy=my+c.oy-mouse.y,d=Math.hypot(ddx,ddy);
+      if(d<155){var f=Math.pow(1-d/155,1.7)*46;tx+=(ddx/(d||1))*f;ty+=(ddy/(d||1))*f;}}
+    if(ev>0&&ci===evChord){var p=Math.sin((1-ev)*Math.PI);tx+=nx*p*34;ty+=ny*p*34;}
+    var ax=(tx-c.ox)*12.0-c.vx*4.8, ay=(ty-c.oy)*12.0-c.vy*4.8;
+    c.vx+=ax*dt;c.vy+=ay*dt;c.ox+=c.vx*dt;c.oy+=c.vy*dt;
+    var qx=mx+c.ox*1.95,qy=my+c.oy*1.95;
+    var dim=c.step===3?1:.6;
+    cx.beginPath();cx.moveTo(A.x,A.y);cx.quadraticCurveTo(qx,qy,B.x,B.y);
+    cx.strokeStyle='rgba('+base+','+(.15*dim).toFixed(3)+')';cx.lineWidth=1;cx.stroke();
+    var fp=(tt*0.2+c.fl)%1, seg=0.16;
+    var q=function(u){var v=1-u;return{x:v*v*A.x+2*v*u*qx+u*u*B.x,y:v*v*A.y+2*v*u*qy+u*u*B.y};};
+    for(var s=0;s<8;s++){
+      var u0=fp+(s/8)*seg,u1=fp+((s+1)/8)*seg;
+      if(u1>1)continue;
+      var p0=q(u0),p1=q(u1),al=Math.sin((s/8)*Math.PI)*(.14+.44*dim);
+      cx.beginPath();cx.moveTo(p0.x,p0.y);cx.lineTo(p1.x,p1.y);
+      cx.strokeStyle='rgba(200,96,61,'+al.toFixed(3)+')';cx.lineWidth=1.4;cx.stroke();
+    }
+    if(ev>0&&ci===evChord){
+      cx.beginPath();cx.moveTo(A.x,A.y);cx.quadraticCurveTo(qx,qy,B.x,B.y);
+      cx.strokeStyle='rgba(200,96,61,'+(ev*.85).toFixed(3)+')';cx.lineWidth=1.6;cx.stroke();
+    }
+  });
+  schedLabels(dt);
+  cx.font='600 '+(W>620?11:10)+'px '+PT.canvasFont;
+  nodes.forEach(function(n,ni){
+    var p=pos(n);
+    var hot=ev>0&&(chords[evChord].i===ni||chords[evChord].j===ni);
+    cx.beginPath();cx.arc(p.x,p.y,hot?4.4:2.8,0,Math.PI*2);
+    cx.fillStyle=hot?'rgba(200,96,61,'+(.45+ev*.55).toFixed(2)+')':'rgba('+base+',.55)';cx.fill();
+    if(n.vis>.01){
+      var ux=(p.x-CXp)/R,uy=(p.y-CYp)/R;
+      var lx=p.x+ux*26,ly=p.y+uy*26+4;
+      var al=ux>.25?'left':(ux<-.25?'right':'center');
+      cx.textAlign=al;
+      var tw=cx.measureText(n.lab).width,pad=8;
+      var left=al==='left'?lx:(al==='right'?lx-tw:lx-tw/2);
+      if(left<pad)lx+=pad-left;
+      if(left+tw>W-pad)lx-=(left+tw)-(W-pad);
+      ly=Math.max(pad+10,Math.min(H-pad,ly));
+      cx.fillStyle='rgba('+base+','+(n.vis*.55).toFixed(3)+')';
+      cx.fillText(n.lab,lx,ly);
+      cx.beginPath();cx.moveTo(p.x+ux*8,p.y+uy*8);cx.lineTo(p.x+ux*20,p.y+uy*20);
+      cx.strokeStyle='rgba('+base+','+(n.vis*.3).toFixed(3)+')';cx.lineWidth=1;cx.stroke();
+    }
+  });
+  if(!frame.hm||ts-frame.hm>360){frame.hm=ts;
+    var dip=ev>0?44*Math.sin((1-ev)*Math.PI):0;
+    var hv=document.querySelector('.hv'),hz=document.querySelector('.hz');
+    if(hv)hv.textContent=(230.0-dip+(Math.random()-.5)*.3).toFixed(1);
+    if(hz)hz.textContent=(50.00-(ev>0?.05*Math.sin((1-ev)*Math.PI):0)+(Math.random()-.5)*.02).toFixed(2);
+    var st=document.getElementById('stt');if(st)st.textContent=ev>.15?PT.rdDip:PT.rdNominal;}
+  requestAnimationFrame(frame);
+}
+size();build();
+cv.addEventListener('pointermove',function(e){var r=cv.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;mouse.on=true;});
+cv.addEventListener('pointerleave',function(){mouse.on=false;});
+if(!rm)requestAnimationFrame(frame);
+
+/* ============ JOINT TRACES ============ */
+function route(pts,r){
+  var d='M'+pts[0][0]+','+pts[0][1];
+  for(var i=1;i<pts.length-1;i++){
+    var p=pts[i-1],c=pts[i],n=pts[i+1];
+    var v1=[c[0]-p[0],c[1]-p[1]],v2=[n[0]-c[0],n[1]-c[1]];
+    var l1=Math.hypot(v1[0],v1[1])||1,l2=Math.hypot(v2[0],v2[1])||1;
+    var rr=Math.min(r,l1/2,l2/2);
+    d+=' L'+(c[0]-v1[0]/l1*rr).toFixed(1)+','+(c[1]-v1[1]/l1*rr).toFixed(1);
+    d+=' Q'+c[0]+','+c[1]+' '+(c[0]+v2[0]/l2*rr).toFixed(1)+','+(c[1]+v2[1]/l2*rr).toFixed(1);
+  }
+  var e=pts[pts.length-1];return d+' L'+e[0]+','+e[1];
+}
+var JOINTS=[
+  [[.14,0],[.14,.42],[.68,.42],[.68,1]],
+  [[.78,0],[.78,.5],[.26,.5],[.26,1]],
+  [[.34,0],[.34,.34],[.86,.34],[.86,.72],[.52,.72],[.52,1]],
+  [[.62,0],[.62,.46],[.18,.46],[.18,1]]
+];
+function buildJoints(){
+  document.querySelectorAll('.joint').forEach(function(svg,k){
+    var w=svg.clientWidth||900,h=svg.clientHeight||160;
+    var spec=JOINTS[k%JOINTS.length];
+    svg.setAttribute('viewBox','0 0 '+w+' '+h);svg.innerHTML='';
+    var ns='http://www.w3.org/2000/svg';
+    var defs=document.createElementNS(ns,'defs');
+    var gid='jg'+k;
+    var lg=document.createElementNS(ns,'linearGradient');
+    lg.setAttribute('id',gid);lg.setAttribute('x1','0');lg.setAttribute('y1','0');lg.setAttribute('x2','0');lg.setAttribute('y2','1');
+    [['0','0'],['.22','1'],['.8','1'],['1','0']].forEach(function(s){var st=document.createElementNS(ns,'stop');st.setAttribute('offset',s[0]);st.setAttribute('stop-color','currentColor');st.setAttribute('stop-opacity',s[1]==='1'?'.28':'0');lg.appendChild(st);});
+    defs.appendChild(lg);svg.appendChild(defs);
+    for(var t=0;t<2;t++){
+      var off=t*15;
+      var pts=spec.map(function(p,idx){return [p[0]*w+off,p[1]*h+(t?off*0.4:0)];});
+      var d=route(pts,20);
+      var base=document.createElementNS(ns,'path');
+      base.setAttribute('d',d);base.setAttribute('class','base');base.setAttribute('stroke','url(#'+gid+')');
+      svg.appendChild(base);
+      var pl=document.createElementNS(ns,'path');
+      pl.setAttribute('d',d);pl.setAttribute('class','pulse');
+      var L=0;try{L=base.getTotalLength();}catch(e){L=h*2;}
+      pl.setAttribute('stroke-dasharray',(L*0.11).toFixed(0)+' '+(L*0.99).toFixed(0));
+      pl.dataset.len=L;pl.dataset.tr=t;
+      svg.appendChild(pl);
+    }
+  });
+  paintJoints();
+}
+function paintJoints(){
+  var vh=innerHeight;
+  document.querySelectorAll('.joint').forEach(function(svg){
+    var r=svg.getBoundingClientRect();
+    var p=1-(r.top+r.height)/(vh+r.height);
+    p=Math.max(0,Math.min(1,p));
+    svg.querySelectorAll('.pulse').forEach(function(pl){
+      var L=+pl.dataset.len,t=+pl.dataset.tr;
+      var q=Math.max(0,Math.min(1,(p-t*0.06)/(1-t*0.06)));
+      pl.setAttribute('stroke-dashoffset',(L*0.12-q*L*1.12).toFixed(1));
+      pl.setAttribute('opacity',(q>0.005&&q<0.999?1:0));
+    });
+  });
+}
+
+/* ============ PIXEL SCATTER BAND ============ */
+var bandEl=document.getElementById('band'),bandCells=[];
+function buildBand(){
+  var w=bandEl.clientWidth||innerWidth,h=bandEl.clientHeight||120;
+  var px=w>1100?7:6, gx=px*2.4;
+  var cols=Math.floor(w/gx),rows=Math.max(4,Math.floor(h/gx));
+  bandEl.innerHTML='';bandCells=[];
+  var mid=(rows-1)/2;
+  for(var r=0;r<rows;r++){
+    var dens=Math.pow(1-Math.abs(r-mid)/(mid+0.6),1.5);
+    for(var c=0;c<cols;c++){
+      if(Math.random()>0.13+0.42*dens)continue;
+      var i=document.createElement('i');
+      var s=Math.random()<0.14?px*1.6:px;
+      i.style.width=i.style.height=s.toFixed(1)+'px';
+      i.style.left=((c+0.5)*gx-s/2+(Math.random()-0.5)*gx*0.8).toFixed(1)+'px';
+      i.style.top=((r+0.5)*gx-s/2+(Math.random()-0.5)*gx*0.8).toFixed(1)+'px';
+      i.style.opacity=(0.10+Math.random()*0.42*(0.45+0.55*dens)).toFixed(3);
+      i.style.transitionDelay=(Math.random()*260).toFixed(0)+'ms';
+      i.dataset.th=Math.random().toFixed(4);
+      bandEl.appendChild(i);bandCells.push(i);
+    }
+  }
+  paintBand();
+}
+function paintBand(){
+  if(!bandCells.length)return;
+  var r=bandEl.getBoundingClientRect(),vh=innerHeight;
+  var p=Math.max(0,Math.min(1,1-(r.top-vh*0.18)/(vh*0.62)));
+  for(var i=0;i<bandCells.length;i++){
+    var on=p>+bandCells[i].dataset.th*0.92;
+    if(on!==(bandCells[i].className==='on'))bandCells[i].className=on?'on':'';
+  }
+}
+
+/* ============ STICKY SEQUENCE ============ */
+var STEPS=PT.seq;
+var slist=document.getElementById('slist');
+STEPS.forEach(function(s,i){
+  var d=document.createElement('div');d.className='srow'+(i===0?' on':'');
+  d.innerHTML='<span class="n">'+s[0]+'</span><span class="t"></span>';
+  d.querySelector('.t').textContent=s[1];
+  slist.appendChild(d);
+});
+var seqEl=document.querySelector('.seq'),sn=document.getElementById('seqn'),rf=document.getElementById('railfill'),rdot=document.getElementById('raildot'),scur=-1;
+function seqUpd(){
+  if(!seqEl.offsetHeight)return;
+  var r=seqEl.getBoundingClientRect(),total=seqEl.offsetHeight-innerHeight;
+  var p=Math.max(0,Math.min(1,-r.top/Math.max(1,total)));
+  rf.style.transform='scaleX('+p.toFixed(4)+')';rdot.style.left=(p*100).toFixed(2)+'%';
+  var i=Math.min(STEPS.length-1,Math.floor(p*STEPS.length));
+  if(i!==scur){scur=i;sn.textContent=STEPS[i][0];
+    [].forEach.call(slist.children,function(row,j){row.classList.toggle('on',j===i);});}
+}
+seqUpd();
+
+/* ============ INDUSTRY CARDS + MODAL ============ */
+var SH=['b','t','s','w','s','s'];
+var grid=document.getElementById('grid');
+PT.cards.forEach(function(o,i){
+  var d=document.createElement('div');d.className='tile '+SH[i%SH.length];
+  d.innerHTML='<span class="no">'+o.num+'</span><div><h3>'+o.title+'</h3><span class="go">'+PT.viewDetails+' ↗</span></div>';
+  d.addEventListener('click',function(){openInd(o);});
+  grid.appendChild(d);
+});
+var iovl=document.getElementById('iovl');
+function openInd(o){
+  document.getElementById('im_img').src=PT.imgs[o.img]||'';
+  document.getElementById('im_no').textContent=o.num;
+  document.getElementById('im_t').textContent=o.title;
+  document.getElementById('im_p1').textContent=o.p1;
+  var fi=document.getElementById('im_fi');fi.innerHTML='';
+  o.findings.forEach(function(f){var r=document.createElement('div');r.className='fi';r.innerHTML='<em></em><span>'+f+'</span>';fi.appendChild(r);});
+  var st=document.getElementById('im_st');
+  if(o.note){st.style.display='';document.getElementById('im_sl').textContent='';document.getElementById('im_stat').textContent='';
+    document.getElementById('im_stx').textContent=o.note;document.getElementById('im_ss').textContent='';}
+  else if(o.statText){st.style.display='';document.getElementById('im_sl').textContent=o.statLabel||'';
+    document.getElementById('im_stat').textContent=o.stat||'';
+    document.getElementById('im_stx').textContent=o.statText;document.getElementById('im_ss').textContent=o.statSource||'';}
+  else st.style.display='none';
+  iovl.classList.add('open');document.body.style.overflow='hidden';
+}
+
+/* ============ FORM ============ */
+var fovl=document.getElementById('fovl');
+var files=[],picked=-1,sending=false;
+var tps=document.getElementById('ptfTypes');
+PT.appTypes.forEach(function(t,i){
+  var b=document.createElement('button');b.type='button';b.textContent=t;
+  b.addEventListener('click',function(){picked=i;[].forEach.call(tps.children,function(x,j){x.classList.toggle('on',j===i);});});
+  tps.appendChild(b);
+});
+function fmtSize(b){return b<1048576?Math.max(1,Math.round(b/1024))+' KB':(b/1048576).toFixed(1)+' MB';}
+function renderFiles(){
+  var list=document.getElementById('ptfList');list.innerHTML='';
+  files.forEach(function(f,i){
+    var d=document.createElement('div');d.className='att';
+    d.innerHTML='<b></b><span class="sz">'+fmtSize(f.size)+'</span>';
+    d.querySelector('b').textContent=f.name;
+    var x=document.createElement('button');x.type='button';x.textContent='×';
+    x.addEventListener('click',function(){files.splice(i,1);renderFiles();});
+    d.appendChild(x);list.appendChild(d);
+  });
+  var t=files.reduce(function(s,f){return s+f.size;},0);
+  var hint=document.getElementById('ptfHint');
+  hint.textContent=files.length?(files.length+(files.length===1?PT.hint1:PT.hintN)+fmtSize(t)+PT.hintSuf):PT.hint0;
+  hint.style.color=t>10485760?'#C5280D':'';
+  document.getElementById('ptfSizeErr').style.display=t>10485760?'block':'none';
+}
+var drop=document.getElementById('ptfDrop'),finput=document.getElementById('ptfInput');
+drop.addEventListener('click',function(){finput.click();});
+finput.addEventListener('change',function(){files=files.concat([].slice.call(finput.files));finput.value='';renderFiles();});
+['dragenter','dragover'].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.add('on');});});
+drop.addEventListener('dragleave',function(){drop.classList.remove('on');});
+drop.addEventListener('drop',function(e){e.preventDefault();drop.classList.remove('on');if(e.dataTransfer&&e.dataTransfer.files)files=files.concat([].slice.call(e.dataTransfer.files));renderFiles();});
+function gv(id){var el=document.getElementById(id);return el?el.value:'';}
+document.getElementById('ptfSubmit').addEventListener('click',function(){
+  if(sending)return;
+  var nm=gv('ptfName').trim(),co=gv('ptfCompany').trim(),em=gv('ptfEmail').trim(),ph=gv('ptfPhone').trim(),ms=gv('ptfMsg').trim();
+  var emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+  var errs={ptfName:!nm,ptfCompany:!co,ptfEmail:!emailOk,ptfPhone:!ph,ptfMsg:!ms};
+  var any=false;Object.keys(errs).forEach(function(k){document.getElementById(k).classList.toggle('err',errs[k]);if(errs[k])any=true;});
+  document.getElementById('ptfFormErr').style.display=any?'block':'none';
+  if(any)return;
+  var total=files.reduce(function(s,f){return s+f.size;},0);
+  if(total>10485760){document.getElementById('ptfSizeErr').style.display='block';return;}
+  var app=picked>=0?PT.appTypes[picked]:'';
+  var fields={name:nm,company:co,email:em,phone:ph,application:app,message:ms};
+  sending=true;
+  function done(){document.getElementById('f_main').style.display='none';document.getElementById('f_done').style.display='block';sending=false;}
+  if(files.length){
+    var fd=new FormData();
+    Object.keys(fields).forEach(function(k){fd.append(k,fields[k]);});
+    fd.append('_subject','PowerTech website request');fd.append('_captcha','false');fd.append('_template','table');
+    files.forEach(function(f){fd.append('attachment',f,f.name);});
+    fetch('https://formsubmit.co/sales@powertech.am',{method:'POST',body:fd,mode:'no-cors'}).then(done).catch(done);
+  }else{
+    var payload=Object.assign({},fields,{_subject:'PowerTech website request'});
+    fetch('https://formsubmit.co/ajax/sales@powertech.am',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)})
+      .then(function(r){if(!r.ok)throw new Error('send failed');done();})
+      .catch(function(){
+        var body=encodeURIComponent('Name: '+fields.name+'\nCompany: '+fields.company+'\nEmail: '+fields.email+'\nPhone: '+fields.phone+'\nApplication: '+fields.application+'\n\n'+fields.message);
+        location.href='mailto:sales@powertech.am?subject='+encodeURIComponent('PowerTech website request')+'&body='+body;
+        done();
+      });
+  }
+});
+['ptfName','ptfCompany','ptfEmail','ptfPhone','ptfMsg'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',function(){this.classList.remove('err');document.getElementById('ptfFormErr').style.display='none';});
+});
+
+/* ============ MODAL PLUMBING ============ */
+function closeAll(){[iovl,fovl].forEach(function(o){o.classList.remove('open');});document.body.style.overflow='';}
+document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',closeAll);});
+[iovl,fovl].forEach(function(o){o.addEventListener('click',function(e){if(e.target===o)closeAll();});});
+addEventListener('keydown',function(e){if(e.key==='Escape')closeAll();});
+document.querySelectorAll('[data-open-form]').forEach(function(b){b.addEventListener('click',function(){
+  document.getElementById('f_main').style.display='';document.getElementById('f_done').style.display='none';
+  fovl.classList.add('open');document.body.style.overflow='hidden';});});
+
+/* ============ REVEALS / SCROLL ============ */
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+var hdr=document.getElementById('hdr'),tk=false;
+/* capture-phase on document: also catches scrolling inside wrapper containers (embedded previews) */
+document.addEventListener('scroll',function(){if(tk)return;tk=true;requestAnimationFrame(function(){seqUpd();paintJoints();paintBand();hdr.classList.toggle('scr',(document.scrollingElement||document.documentElement).scrollTop>20||scrollY>20);tk=false;});},{passive:true,capture:true});
+buildJoints();buildBand();
+addEventListener('resize',function(){clearTimeout(size.t);size.t=setTimeout(function(){size();buildJoints();buildBand();},220);});
+})();
+</script>
+
+</body>
+</html>
