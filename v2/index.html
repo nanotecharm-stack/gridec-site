@@ -728,7 +728,7 @@ var suite=document.querySelector('.suite'),sprog=document.getElementById('sprog'
 PT.cards.forEach(function(o,i){
   var m=document.createElement('i');if(i===0)m.className='on';sprog.appendChild(m);
   var im=document.createElement('img');im.src=PT.imgs[o.img]||'';im.alt=o.title;if(i===0)im.className='on';
-  sphoto.insertBefore(im,sphoto.firstChild);
+  sphoto.insertBefore(im,document.getElementById('spnum'));
 });
 function renderSlide(i){
   var o=PT.cards[i];
