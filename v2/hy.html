@@ -145,6 +145,7 @@ h2{font-size:clamp(24px,3.4vw,48px);text-wrap:balance;}
 
 /* sticky sequence */
 .seq{height:300vh;padding:0;}
+.seq>.wrap{height:100%;} /* the sticky pin needs a full-height containing block */
 .seq .pin{position:sticky;top:0;height:100svh;display:grid;grid-template-columns:.8fr 1fr;gap:44px;align-items:center;}
 .seq .big{font-family:'Noto Sans Armenian',sans-serif;font-weight:700;font-size:clamp(100px,19vw,270px);line-height:.8;letter-spacing:-.02em;}
 .rail{position:relative;height:1px;background:var(--hair2);margin:24px 0 0;}
