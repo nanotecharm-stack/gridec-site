@@ -61,7 +61,7 @@ nav .lang{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:11
   background:radial-gradient(120% 90% at 78% 30%,#171A22 0%,#101218 44%,#0A0B0F 100%);}
 .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(60% 55% at 72% 44%,rgba(200,96,61,.13),transparent 68%);}
-.hgrid{position:relative;z-index:2;display:grid;grid-template-columns:1.04fr .96fr;align-items:center;gap:clamp(20px,4vw,56px);min-height:100svh;padding-top:104px;padding-bottom:44px;}
+.hgrid{position:relative;z-index:2;display:grid;grid-template-columns:.92fr 1.08fr;align-items:center;gap:clamp(16px,3vw,44px);min-height:100svh;padding-top:104px;padding-bottom:44px;}
 h1{font-size:clamp(30px,4.4vw,62px);margin-top:18px;text-wrap:balance;}
 .hero h1{color:#F4F3F1;}
 h1 em{font-style:normal;color:var(--brand);}
@@ -71,7 +71,7 @@ h1 em{font-style:normal;color:var(--brand);}
 .hero .btn::before{background:#EFEDEA;}
 .hero .btn:hover span{color:#0D0E13;}
 .hero .btn.gh{background:transparent;color:#EFEDEA;box-shadow:inset 0 0 0 1px rgba(239,237,234,.28);}
-.stage{position:relative;aspect-ratio:1;width:100%;max-width:640px;justify-self:end;}
+.stage{position:relative;aspect-ratio:1;width:100%;max-width:780px;justify-self:end;margin-right:calc(-1*clamp(0px,5vw,84px));}
 #star{position:absolute;inset:0;width:100%;height:100%;}
 .rd{position:absolute;left:0;bottom:2px;font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;color:rgba(239,237,234,.5);line-height:1.95;}
 .rd b{color:#F4F3F1;font-variant-numeric:tabular-nums;font-weight:600;}
@@ -250,7 +250,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 
 @media (max-width:960px){
   .hgrid{grid-template-columns:1fr;padding-top:96px;}
-  .stage{max-width:440px;justify-self:center;margin-top:18px;}
+  .stage{max-width:460px;justify-self:center;margin-top:18px;margin-right:0;}
   .rd{position:static;margin-top:12px;}
   .seq{height:auto;}.seq .pin{position:static;height:auto;grid-template-columns:1fr;gap:14px;padding:56px 0;}
   .seq .big,.seq .rail{display:none;}
@@ -438,7 +438,7 @@ function size(){
   W=r.width;H=r.height;
   cv.width=Math.max(1,Math.round(W*dpr));cv.height=Math.max(1,Math.round(H*dpr));
   cx.setTransform(dpr,0,0,dpr,0,0);
-  CXp=W/2;CYp=H/2;R=Math.min(W,H)*0.345;
+  CXp=W/2;CYp=H/2;R=Math.min(W,H)*0.40;
 }
 function build(){
   nodes=[];
