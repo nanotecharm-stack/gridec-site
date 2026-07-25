@@ -328,7 +328,6 @@ h2{font-size:clamp(30px,4.8vw,72px);text-wrap:balance;}
 .pr .p p{font-size:14.5px;line-height:1.7;color:var(--fg-mid);}
 .sub{margin-top:clamp(50px,7vw,90px);}
 .sub h3{font-size:clamp(24px,3vw,40px);}
-  transition:border-color .45s var(--e);}
 
 /* contact plate */
 .plate{background:linear-gradient(180deg,#0D0E13 0%,#111318 58%,#15171E 100%);color:var(--inv-fg);}
@@ -1256,6 +1255,18 @@ document.querySelectorAll('[data-open-form]').forEach(function(b){b.addEventList
 /* ============ REVEALS / SCROLL ============ */
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
 document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+/* Backstop: content must never be able to stay invisible. If the observer does
+   not fire (some embedded/background contexts starve it), scroll position alone
+   is enough to reveal anything that has reached the viewport. */
+function revealPass(){
+  var vh=innerHeight,list=document.querySelectorAll('.rv:not(.in)');
+  for(var i=0;i<list.length;i++){
+    var r=list[i].getBoundingClientRect();
+    if(r.top<vh*0.94&&r.bottom>-40)list[i].classList.add('in');
+  }
+}
+revealPass();
+addEventListener('load',revealPass);
 var hdr=document.getElementById('hdr');
 /* which section sits under the header decides the groups' theme */
 var darkSecs=[].slice.call(document.querySelectorAll('.hero,.plate2,.plate'));
@@ -1270,7 +1281,7 @@ function headerTheme(){
 headerTheme();
 /* capture-phase on document catches wrapper scrolling too; paint synchronously — no frame lag */
 document.addEventListener('scroll',function(){
-  seqUpd();paintJoints();paintRails();paintCoFlow();paintDither();navSpy();
+  seqUpd();paintJoints();paintRails();paintCoFlow();paintDither();navSpy();revealPass();
   headerTheme();
 },{passive:true,capture:true});
 buildJoints();buildRails();buildCoFlow();
