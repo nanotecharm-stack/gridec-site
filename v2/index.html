@@ -176,14 +176,17 @@ h2{font-size:clamp(30px,4.8vw,72px);text-wrap:balance;}
 .alink:hover{text-decoration:underline;text-underline-offset:4px;}
 
 /* sticky sequence */
-.seq{height:300vh;padding:0;}
-.seq>.wrap{height:100%;} /* the sticky pin needs a full-height containing block */
-.seq .pin{position:sticky;top:0;height:100svh;display:grid;grid-template-columns:.8fr 1fr;gap:44px;align-items:center;}
-.seq .big{font-family:'Big Shoulders Display',sans-serif;font-weight:700;font-size:clamp(100px,19vw,270px);line-height:.8;letter-spacing:-.02em;}
+.seqhold{height:280vh;margin-top:clamp(26px,3.4vw,52px);} /* tall track for the pin */
+.seqhold .pin{position:sticky;top:0;height:100svh;display:grid;grid-template-columns:.8fr 1fr;gap:44px;align-items:center;}
+.seqhold .big{font-family:'Big Shoulders Display',sans-serif;font-weight:700;font-size:clamp(84px,15vw,210px);line-height:.8;letter-spacing:-.02em;}
 .rail{position:relative;height:1px;background:var(--hair2);margin:24px 0 0;}
 .rail i{position:absolute;left:0;top:0;bottom:0;width:100%;background:var(--brand);transform:scaleX(0);transform-origin:left;will-change:transform;}
 .rail em{position:absolute;top:-3px;width:7px;height:7px;background:var(--brand);transform:translateX(-50%);transition:left .35s var(--e);}
-.seq .ctx{font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-soft);max-width:34ch;line-height:1.8;margin-bottom:18px;}
+.seqhold .ctx{font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--brand);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.seqhold .ctx::before{content:"";width:5px;height:5px;background:var(--brand);}
+/* the thesis and the chain are one unit: the intro keeps its air, the chain follows tight */
+.thesis .intro .lede{margin-bottom:0;}
+.thesis .alink{margin-top:clamp(24px,3vw,44px);}
 .slist{position:relative;padding-left:0;}
 .slist .srow{position:relative;display:grid;grid-template-columns:34px 18px 1fr;gap:0 14px;align-items:center;
   padding:17px 0;transition:opacity .5s var(--e),transform .55s var(--e);}
@@ -336,8 +339,8 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   .hgrid{grid-template-columns:1fr;padding-top:96px;}
   .stage{max-width:460px;justify-self:center;margin-top:18px;margin-right:0;}
   .rd{position:static;margin-top:12px;}
-  .seq{height:auto;}.seq .pin{position:static;height:auto;grid-template-columns:1fr;gap:14px;padding:56px 0;}
-  .seq .big,.seq .rail{display:none;}
+  .seqhold{height:auto;}.seqhold .pin{position:static;height:auto;grid-template-columns:1fr;gap:14px;padding:40px 0 0;}
+  .seqhold .big,.seqhold .rail{display:none;}
   .slist .srow{opacity:1;}
   .icard{flex-basis:78vw;}
   .icard.open{flex-basis:90vw;}
@@ -370,21 +373,22 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 
 <div class="dith" data-dith="#0A0B0F,#EFEDEA"></div>
 
-<section class="sec thesis" id="why" data-rail><div class="wrap rv">
-  <div class="cnt">01</div>
-  <h2>The event may be over before anyone can inspect it</h2>
-  <p class="lede">Some voltage events last only milliseconds or a few cycles. By the time the system is inspected, measured values may have returned to normal. Monitoring provides a time-stamped record of the event and the conditions around it.</p>
-  <a class="alink" href="#applications">See where monitoring helps ↓</a>
-</div></section>
-
-<section class="seq"><div class="wrap"><div class="pin">
-  <div>
-    <div class="ctx">The event may be over before anyone can inspect it</div>
-    <div class="big" id="seqn">01</div>
-    <div class="rail"><i id="railfill"></i><em id="raildot"></em></div>
+<section class="sec thesis" id="why" data-rail><div class="wrap">
+  <div class="rv intro">
+    <div class="cnt">01</div>
+    <h2>The event may be over before anyone can inspect it</h2>
+    <p class="lede">Some voltage events last only milliseconds or a few cycles. By the time the system is inspected, measured values may have returned to normal. Monitoring provides a time-stamped record of the event and the conditions around it.</p>
   </div>
-  <div class="slist" id="slist"></div>
-</div></div></section>
+  <div class="seqhold"><div class="pin">
+    <div>
+      <div class="ctx">01 &mdash; 05</div>
+      <div class="big" id="seqn">01</div>
+      <div class="rail"><i id="railfill"></i><em id="raildot"></em></div>
+    </div>
+    <div class="slist" id="slist"></div>
+  </div></div>
+  <a class="alink" href="#applications">See where monitoring helps &darr;</a>
+</div></section>
 
 <div class="wrap"><svg class="joint" data-joint="0"></svg></div>
 
@@ -808,7 +812,7 @@ STEPS.forEach(function(s,i){
   d.querySelector('.t').textContent=s[1];
   slist.appendChild(d);
 });
-var seqEl=document.querySelector('.seq'),sn=document.getElementById('seqn'),rf=document.getElementById('railfill'),rdot=document.getElementById('raildot'),scur=-1;
+var seqEl=document.querySelector('.seqhold'),sn=document.getElementById('seqn'),rf=document.getElementById('railfill'),rdot=document.getElementById('raildot'),scur=-1;
 function seqUpd(){
   if(!seqEl.offsetHeight)return;
   var r=seqEl.getBoundingClientRect(),total=seqEl.offsetHeight-innerHeight;
