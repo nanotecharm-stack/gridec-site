@@ -163,14 +163,14 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .rail-nav button:hover{background:var(--brand);color:#fff;box-shadow:none;}
 .rail-nav button[disabled]{opacity:.3;pointer-events:none;}
 .railwrap{position:relative;}
-/* 3.5 cards in view so the next one peeks; we drive the glide ourselves,
-   so no CSS snap or smooth-behaviour to fight with */
-.railwrap{position:relative;}
+/* pinned: the section is tall, the frame sticks, and the rail is paged by scroll */
+.suite{position:relative;}
+.suite .spin{position:sticky;top:0;min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(84px,11vh,120px) 0 clamp(28px,4vh,52px);}
 .hrail{--per:3.5;display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding:6px 0 26px;
-  scrollbar-width:none;-ms-overflow-style:none;cursor:grab;overscroll-behavior-x:contain;}
+  scrollbar-width:none;-ms-overflow-style:none;overscroll-behavior-x:contain;}
 .hrail::-webkit-scrollbar{display:none;}
-.hrail.drag{cursor:grabbing;}
-/* each slide carries its own gutter, so the cards read as separate plates */
+.suite .hrail{overflow-x:hidden;}                 /* movement comes from the page */
 .icard{flex:0 0 calc(100%/var(--per));padding:0 clamp(5px,.7vw,11px);}
 .icard:nth-child(7n+1){padding-top:0;}
 .icard:nth-child(7n+2){padding-top:clamp(18px,3vw,56px);}
@@ -181,27 +181,36 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .icard:nth-child(7n+7){padding-top:clamp(10px,1.8vw,32px);}
 .ic{position:relative;display:flex;flex-direction:column;min-height:clamp(360px,42vw,520px);
   background:#101218;color:#EFEDEA;border-radius:2px;overflow:hidden;cursor:pointer;
-  transition:transform .55s var(--e),box-shadow .55s var(--e);}
-.ic:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(13,14,19,.16);}
-.ic-top{display:flex;align-items:flex-start;justify-content:space-between;padding:16px 16px 0;}
+  transition:transform .7s var(--e),box-shadow .7s var(--e);}
+.ic:hover{transform:translateY(-5px);box-shadow:0 16px 44px rgba(13,14,19,.18);}
+.ic-top{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:flex-start;
+  justify-content:space-between;padding:15px;}
 .ic-tag{font-family:'Martian Mono',monospace;font-size:9.5px;letter-spacing:.16em;
-  background:rgba(239,237,234,.1);color:rgba(239,237,234,.82);padding:6px 9px;border-radius:2px;}
+  background:rgba(13,14,19,.55);color:#F4F3F1;padding:6px 9px;border-radius:2px;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
 .ic-go{width:32px;height:32px;border-radius:2px;background:#EFEDEA;color:#101218;
   display:grid;place-items:center;font-size:13px;flex:0 0 auto;
-  transition:transform .45s var(--e),background .4s var(--e);}
+  transition:transform .5s var(--e),background .4s var(--e);}
 .ic:hover .ic-go{transform:translate(2px,-2px);background:var(--brand);color:#fff;}
-/* the technical drawing that fills the upper half */
-.ic-art{position:relative;flex:1 1 auto;min-height:130px;}
-.ic-art svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;color:rgba(239,237,234,.42);}
-.ic.is-open-card .ic-art svg{color:rgba(255,251,249,.5);}
-.ic-foot{padding:0 16px 18px;}
+/* the sector photograph, easing in scale so the movement has weight */
+.ic-art{position:relative;flex:1 1 auto;min-height:150px;overflow:hidden;}
+.ic-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+  transform:scale(1.04);transform-origin:52% 45%;
+  transition:transform 1.15s cubic-bezier(.16,1,.3,1),filter .7s var(--e);
+  filter:saturate(.85) contrast(1.03);}
+.ic:hover .ic-art img{transform:scale(1.13);filter:saturate(1) contrast(1.05);}
+.ic-art::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(13,14,19,.5) 0%,rgba(13,14,19,.05) 42%,rgba(16,18,24,.92) 100%);}
+.ic-art svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;color:rgba(255,251,249,.5);}
+.ic-foot{position:relative;z-index:2;padding:0 16px 18px;margin-top:-8px;}
 .ic-foot h3{font-size:clamp(19px,1.9vw,26px);margin:0 0 8px;}
-.ic-foot p{font-size:13.5px;line-height:1.6;color:rgba(239,237,234,.66);
+.ic-foot p{font-size:13.5px;line-height:1.6;color:rgba(239,237,234,.68);
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
-/* the last card is the open invitation, so it carries the brand colour */
+/* the invitation keeps the brand colour and its drawing */
 .ic.is-open-card{background:var(--brand);}
-.ic.is-open-card .ic-tag{background:rgba(255,255,255,.16);color:#fff;}
-.ic.is-open-card .ic-foot p{color:rgba(255,251,249,.84);}
+.ic.is-open-card .ic-art::after{background:linear-gradient(180deg,rgba(200,96,61,.1) 0%,rgba(200,96,61,.92) 100%);}
+.ic.is-open-card .ic-tag{background:rgba(255,255,255,.18);color:#fff;}
+.ic.is-open-card .ic-foot p{color:rgba(255,251,249,.86);}
 .ic.is-open-card .ic-go{background:#14161C;color:#fff;}
 .rail-dots{display:flex;gap:6px;align-items:center;}
 .rail-dots button{width:22px;height:4px;background:var(--hair);border-radius:1px;transition:background .4s var(--e);}
@@ -214,7 +223,10 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .rail-head{display:flex;justify-content:space-between;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-bottom:clamp(20px,2.6vw,34px);}
 .railbar{height:2px;background:var(--hair2);position:relative;}
 .icard .bd{will-change:auto;}
-@media (max-width:991px){.hrail{--per:2.2;}}
+@media (max-width:991px){.hrail{--per:2.2;}
+  .suite{height:auto!important;}
+  .suite .spin{position:static;min-height:0;padding:0;}
+  .suite .hrail{overflow-x:auto;}}
 @media (max-width:767px){.hrail{--per:1.8;}}
 .railbar i{position:absolute;left:0;top:0;bottom:0;background:var(--brand);width:20%;transition:transform .18s linear;transform-origin:left;}
 
@@ -484,7 +496,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 
 <div class="wrap"><svg class="joint" data-joint="0"></svg></div>
 
-<section class="sec" id="applications" data-rail><div class="wrap">
+<section class="sec suite" id="applications" data-rail><div class="spin"><div class="wrap">
   <div class="rail-head">
     <div><div class="cnt">02</div><h2>Where monitoring helps</h2></div>
     <div style="max-width:40ch"><p class="lede" style="margin-top:0;font-size:14px;line-height:1.7">Power quality problems are not limited to one sector. Monitoring is useful when electrical conditions affect equipment or operations, or when an engineering decision requires measured evidence.</p>
@@ -495,7 +507,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
     <div class="hrail" id="irail"></div>
     <div class="railbar"><i id="rbar"></i></div>
   </div>
-</div></section>
+</div></div></section>
 
 
 <div class="dith" data-dith="#EFEDEA,#0D0E13,#C8603D"></div>
@@ -1194,9 +1206,12 @@ function openInd(o){
 var CARDS=PT.cards.concat([{num:'07',title:PT.otherT,p1:PT.otherP,invite:true}]);
 CARDS.forEach(function(o,i){
   var slide=document.createElement('div');slide.className='icard';
+  var visual=(o.img!==undefined&&PT.imgs[o.img])
+    ? '<img alt="" src="'+PT.imgs[o.img]+'">'
+    : cardArt(i*97+13);
   slide.innerHTML='<article class="ic'+(o.invite?' is-open-card':'')+'" tabindex="0">'+
     '<div class="ic-top"><span class="ic-tag"></span><span class="ic-go">&#8599;</span></div>'+
-    '<div class="ic-art">'+cardArt(i*97+13)+'</div>'+
+    '<div class="ic-art">'+visual+'</div>'+
     '<div class="ic-foot"><h3></h3><p></p></div></article>';
   slide.querySelector('.ic-tag').textContent='CH '+o.num;
   slide.querySelector('h3').textContent=o.title;
@@ -1208,47 +1223,53 @@ CARDS.forEach(function(o,i){
   irail.appendChild(slide);
 });
 
-/* drag-to-scroll */
-var dragging=false,dragStartX=0,dragStartL=0,dragMoved=false;
-irail.addEventListener('pointerdown',function(e){
-  dragging=true;dragMoved=false;dragStartX=e.clientX;dragStartL=irail.scrollLeft;
-  irail.classList.add('drag');
-});
-addEventListener('pointermove',function(e){
-  if(!dragging)return;
-  var d=e.clientX-dragStartX;
-  if(Math.abs(d)>4)dragMoved=true;
-  irail.scrollLeft=dragStartL-d;
-});
-addEventListener('pointerup',function(){
-  if(!dragging)return;dragging=false;irail.classList.remove('drag');
-  railTo(railIndex()*cardStride(),520);
-  setTimeout(function(){dragMoved=false;},40);
-});
-/* one card per press, glided over 800ms — the pace their suite moves at */
-var RAIL_MS=800,railTween=0,railIdle=0;
-function railEase(t){return 1-Math.pow(1-t,4);}
-function railTo(px,ms){
-  var from=irail.scrollLeft,max=irail.scrollWidth-irail.clientWidth;
-  var to=Math.max(0,Math.min(max,px));
-  if(Math.abs(to-from)<1)return;
-  if(railTween)cancelAnimationFrame(railTween);
-  if(rm){irail.scrollLeft=to;railBar();return;}
-  var t0=0,dur=ms||RAIL_MS;
-  var step=function(ts){
-    if(!t0)t0=ts;
-    var k=Math.min(1,(ts-t0)/dur);
-    irail.scrollLeft=from+(to-from)*railEase(k);
-    railBar();
-    if(k<1)railTween=requestAnimationFrame(step);else railTween=0;
-  };
-  railTween=requestAnimationFrame(step);
+var dragMoved=false;
+/* The rail is paged by the page itself: the section is tall, its frame sticks,
+   and vertical progress maps onto horizontal travel — so every card is stepped
+   through on the way past. Arrows and dots move the page, not the rail. */
+var suiteSec=document.querySelector('.suite'),suitePinned=false;
+function suiteTravel(){return Math.max(0,irail.scrollWidth-irail.clientWidth);}
+function layoutSuite(){
+  if(!suiteSec)return;
+  suitePinned=innerWidth>991;
+  if(!suitePinned){suiteSec.style.height='';irail.scrollLeft=0;railBar();return;}
+  /* a little more page than rail, so the pass feels unhurried */
+  suiteSec.style.height=(innerHeight+suiteTravel()*1.15)+'px';
+  suiteUpd();
+}
+function suiteProgress(){
+  var r=suiteSec.getBoundingClientRect();
+  var total=suiteSec.offsetHeight-innerHeight;
+  if(total<=0)return 0;
+  var p=-r.top/total;
+  return p<0?0:(p>1?1:p);
+}
+function suiteUpd(){
+  if(!suiteSec||!suitePinned)return;
+  var p=suiteProgress();
+  irail.scrollLeft=p*suiteTravel();
+  railBar();
+  /* each photo drifts a little against its card — weight, not decoration */
+  var mid=irail.clientWidth/2;
+  for(var i=0;i<irail.children.length;i++){
+    var im=irail.children[i].querySelector('.ic-art img');
+    if(!im)continue;
+    var c=irail.children[i],cx0=c.offsetLeft-irail.scrollLeft+c.offsetWidth/2;
+    var d=(cx0-mid)/mid;
+    im.style.transform='scale(1.06) translate3d('+(-d*10).toFixed(2)+'px,0,0)';
+  }
 }
 function cardStride(){var c=irail.querySelector('.icard');return c?c.offsetWidth:280;}
 function railIndex(){return Math.round(irail.scrollLeft/Math.max(1,cardStride()));}
 function railGo(i){
-  i=Math.max(0,Math.min(irail.children.length-1,i));
-  railTo(i*cardStride());
+  var n=irail.children.length;
+  i=Math.max(0,Math.min(n-1,i));
+  if(!suitePinned){irail.scrollTo({left:i*cardStride(),behavior:'smooth'});return;}
+  var travel=suiteTravel();
+  if(travel<=0)return;
+  var target=Math.min(1,(i*cardStride())/travel);
+  var top=suiteSec.getBoundingClientRect().top+scrollY;
+  scrollTo({top:top+target*(suiteSec.offsetHeight-innerHeight),behavior:'smooth'});
 }
 function railStep(dir){railGo(railIndex()+dir);}
 rprev.addEventListener('click',function(){railStep(-1);});
@@ -1263,7 +1284,7 @@ if(rdots){
   }
 }
 function railBar(){
-  var max=irail.scrollWidth-irail.clientWidth;
+  var max=suiteTravel();
   var vis=irail.clientWidth/Math.max(1,irail.scrollWidth);
   rbar.style.width=(vis*100).toFixed(2)+'%';
   var p=max>0?irail.scrollLeft/max:0;
@@ -1273,13 +1294,8 @@ function railBar(){
   if(rdots){var cur=railIndex();
     for(var i=0;i<rdots.children.length;i++)rdots.children[i].classList.toggle('on',i===cur);}
 }
-irail.addEventListener('scroll',function(){
-  railBar();
-  if(railTween||dragging)return;
-  clearTimeout(railIdle);
-  railIdle=setTimeout(function(){railTo(railIndex()*cardStride(),420);},140);
-},{passive:true});
-railBar();
+irail.addEventListener('scroll',railBar,{passive:true});
+layoutSuite();
 
 /* ============ NAV — mark the section you are in ============ */
 var navLinks=[].slice.call(document.querySelectorAll('nav a.lk')).map(function(a){
@@ -1524,14 +1540,14 @@ function headerTheme(){
 headerTheme();
 /* capture-phase on document catches wrapper scrolling too; paint synchronously — no frame lag */
 document.addEventListener('scroll',function(){
-  seqUpd();paintJoints();paintRails();paintCoFlow();paintDither();navSpy();revealPass();
+  seqUpd();suiteUpd();paintJoints();paintRails();paintCoFlow();paintDither();navSpy();revealPass();
   headerTheme();
 },{passive:true,capture:true});
 buildJoints();buildRails();buildCoFlow();
-addEventListener('resize',function(){clearTimeout(size.t);size.t=setTimeout(function(){size();buildJoints();buildWipe();buildRails();buildCoFlow();buildDither();},220);});
+addEventListener('resize',function(){clearTimeout(size.t);size.t=setTimeout(function(){size();buildJoints();buildWipe();buildRails();buildCoFlow();buildDither();layoutSuite();},220);});
 /* rails depend on final layout (fonts) */
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){buildRails();buildCoFlow();});
-addEventListener('load',function(){buildRails();buildCoFlow();});
+addEventListener('load',function(){buildRails();buildCoFlow();layoutSuite();});
 })();
 </script>
 
