@@ -154,14 +154,17 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .rail-nav button:hover{background:var(--brand);color:#fff;box-shadow:none;}
 .rail-nav button[disabled]{opacity:.3;pointer-events:none;}
 .railwrap{position:relative;}
-.hrail{display:flex;align-items:flex-start;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:4px 0 22px;scrollbar-width:none;-ms-overflow-style:none;cursor:grab;overscroll-behavior-x:contain;}
+/* 3.5 cards in view so the next one peeks; we drive the glide ourselves,
+   so no CSS snap or smooth-behaviour to fight with */
+.hrail{--per:3.5;display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding:4px 0 22px;
+  scrollbar-width:none;-ms-overflow-style:none;cursor:grab;overscroll-behavior-x:contain;}
 .hrail::-webkit-scrollbar{display:none;}
-.hrail.drag{cursor:grabbing;scroll-snap-type:none;}
-.icard{scroll-snap-align:start;flex:0 0 300px;background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);
+.hrail.drag{cursor:grabbing;}
+.icard{flex:0 0 calc(100%/var(--per));background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);
   display:flex;flex-direction:column;overflow:hidden;border-radius:2px;cursor:pointer;
   transition:flex-basis .62s var(--e),box-shadow .4s var(--e);}
 .icard:hover{box-shadow:inset 0 0 0 1px var(--hair);}
-.icard.open{flex-basis:680px;box-shadow:inset 0 0 0 1px var(--hair);cursor:default;flex-direction:row;}
+.icard.open{flex-basis:calc(230%/var(--per));box-shadow:inset 0 0 0 1px var(--hair);cursor:default;flex-direction:row;}
 .icard.open .ph{width:240px;flex:0 0 240px;aspect-ratio:auto;align-self:stretch;}
 .icard.open .bd{overflow-y:auto;max-height:none;}
 .icard .ph{position:relative;aspect-ratio:4/3;background:#DDD9D2;overflow:hidden;flex:0 0 auto;}
@@ -187,8 +190,8 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .icard .det .st .ss{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:9px;color:var(--fg-soft);margin-top:5px;}
 .railbar{height:2px;background:var(--hair2);position:relative;}
 .icard .bd{will-change:auto;}
-@media (max-width:1180px){.icard{flex-basis:268px;}.icard.open{flex-basis:560px;}}
-@media (max-width:1024px){.icard{flex-basis:240px;}.icard.open{flex-basis:500px;}}
+@media (max-width:991px){.hrail{--per:2.2;}}
+@media (max-width:767px){.hrail{--per:1.8;}}
 @media (max-width:1100px){.meas{grid-template-columns:repeat(3,1fr);}}
 .railbar i{position:absolute;left:0;top:0;bottom:0;background:var(--brand);width:20%;transition:transform .18s linear;transform-origin:left;}
 
@@ -382,8 +385,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   .seqhold .big,.seqhold .rail{display:none;}
   .slist .srow{opacity:1;}
   .meas{grid-template-columns:repeat(2,1fr);}
-  .icard{flex-basis:78vw;}
-  .icard.open{flex-basis:90vw;}
+
   .two,.asg,.pr,.plate .wrap{grid-template-columns:1fr;}
   .stats,.steps,.stages{grid-template-columns:1fr;}
   nav{display:none;}
@@ -441,7 +443,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <div class="rail-head">
     <div><div class="cnt">02</div><h2>Որտեղ է օգնում մոնիթորինգը</h2></div>
     <div style="max-width:40ch"><p class="lede" style="margin-top:0;font-size:14px;line-height:1.7">Էլեկտրաէներգիայի որակի խնդիրները չեն սահմանափակվում մեկ ոլորտով։ Մոնիթորինգը կիրառելի է, երբ էլեկտրական պայմաններն ազդում են սարքավորումների կամ աշխատանքային գործընթացների վրա, կամ երբ ինժեներական որոշման համար անհրաժեշտ են չափված տվյալներ։</p>
-      <div class="rail-nav" style="margin-top:16px"><button id="rprev" aria-label="prev">←</button><button id="rnext" aria-label="next">→</button></div>
+      <div style="display:flex;align-items:center;gap:14px;margin-top:16px"><div class="rail-dots" id="rdots"></div><div class="rail-nav"><button id="rprev" aria-label="prev">←</button><button id="rnext" aria-label="next">→</button></div></div>
     </div>
   </div>
   <div class="railwrap">
@@ -920,14 +922,51 @@ addEventListener('pointermove',function(e){
 });
 addEventListener('pointerup',function(){
   if(!dragging)return;dragging=false;irail.classList.remove('drag');
+  railTo(railIndex()*cardStride(),520);
   setTimeout(function(){dragMoved=false;},40);
 });
-function railStep(dir){
-  var c=irail.querySelector('.icard');if(!c)return;
-  irail.scrollBy({left:dir*(c.offsetWidth+10),behavior:'smooth'});
+/* one card per press, glided over 800ms — the pace cantor8 uses for its suite */
+var RAIL_MS=800,railTween=0,railIdle=0;
+function railEase(t){return 1-Math.pow(1-t,4);}   /* ease-out, settles softly */
+function railTo(px,ms){
+  var from=irail.scrollLeft,max=irail.scrollWidth-irail.clientWidth;
+  var to=Math.max(0,Math.min(max,px));
+  if(Math.abs(to-from)<1)return;
+  if(railTween)cancelAnimationFrame(railTween);
+  if(rm){irail.scrollLeft=to;railBar();return;}
+  var t0=0,dur=ms||RAIL_MS;
+  var step=function(ts){
+    if(!t0)t0=ts;
+    var k=Math.min(1,(ts-t0)/dur);
+    irail.scrollLeft=from+(to-from)*railEase(k);
+    railBar();
+    if(k<1)railTween=requestAnimationFrame(step);else railTween=0;
+  };
+  railTween=requestAnimationFrame(step);
 }
+function cardStride(){
+  var c=irail.querySelector('.icard');
+  return c?c.offsetWidth:280;                     /* gap is 0, so width is the stride */
+}
+function railIndex(){return Math.round(irail.scrollLeft/Math.max(1,cardStride()));}
+function railGo(i){
+  var n=irail.children.length;
+  i=Math.max(0,Math.min(n-1,i));
+  railTo(i*cardStride());
+}
+function railStep(dir){railGo(railIndex()+dir);}
 rprev.addEventListener('click',function(){railStep(-1);});
 rnext.addEventListener('click',function(){railStep(1);});
+/* dots — one per card, like their pagination */
+var rdots=document.getElementById('rdots');
+if(rdots){
+  for(var di=0;di<irail.children.length;di++){
+    (function(k){var b=document.createElement('button');
+      b.setAttribute('aria-label','card '+(k+1));
+      b.addEventListener('click',function(){railGo(k);});
+      rdots.appendChild(b);})(di);
+  }
+}
 function railBar(){
   var max=irail.scrollWidth-irail.clientWidth;
   var vis=irail.clientWidth/Math.max(1,irail.scrollWidth);
@@ -936,8 +975,16 @@ function railBar(){
   rbar.style.transform='translateX('+(p*(100/Math.max(vis,.0001)-100)).toFixed(2)+'%)';
   rprev.disabled=irail.scrollLeft<4;
   rnext.disabled=irail.scrollLeft>max-4;
+  if(rdots){var cur=railIndex();
+    for(var i=0;i<rdots.children.length;i++)rdots.children[i].classList.toggle('on',i===cur);}
 }
-irail.addEventListener('scroll',railBar,{passive:true});
+irail.addEventListener('scroll',function(){
+  railBar();
+  /* wheel or trackpad: settle onto the nearest card once movement stops */
+  if(railTween||dragging)return;
+  clearTimeout(railIdle);
+  railIdle=setTimeout(function(){railTo(railIndex()*cardStride(),420);},140);
+},{passive:true});
 railBar();
 
 /* ============ NAV — mark the section you are in ============ */
