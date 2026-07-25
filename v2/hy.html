@@ -203,7 +203,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .icard:nth-child(7n+5){padding-top:clamp(4px,.8vw,14px);}
 .icard:nth-child(7n+6){padding-top:clamp(16px,2.6vw,48px);}
 .icard:nth-child(7n+7){padding-top:clamp(10px,1.8vw,32px);}
-.ic{position:relative;display:flex;flex-direction:column;min-height:clamp(360px,42vw,520px);
+.ic{position:relative;display:flex;flex-direction:column;min-height:var(--cardh,clamp(300px,38vw,470px));
   background:#101218;color:#EFEDEA;border-radius:2px;overflow:hidden;cursor:pointer;
   transition:transform .7s var(--e),box-shadow .7s var(--e);}
 .ic:hover{transform:translateY(-5px);box-shadow:0 16px 44px rgba(13,14,19,.18);}
@@ -1264,6 +1264,19 @@ function layoutSuite(){
   if(!suiteSec)return;
   suitePinned=innerWidth>991;
   if(!suitePinned){suiteSec.style.height='';railCur=0;railTarget=0;irail.scrollLeft=0;railBar();return;}
+  /* the plates must fit inside the pinned frame: take the height that is left
+     once the head block, the frame padding and the deepest step are accounted
+     for — the Armenian intro is taller, so this has to be measured, not fixed */
+  var spin=suiteSec.querySelector('.spin'),head=suiteSec.querySelector('.rail-head');
+  if(spin&&head){
+    var sp=getComputedStyle(spin),rp=getComputedStyle(irail);
+    var step=0;
+    for(var si=0;si<irail.children.length;si++)
+      step=Math.max(step,parseFloat(getComputedStyle(irail.children[si]).paddingTop)||0);
+    var used=parseFloat(sp.paddingTop)+parseFloat(sp.paddingBottom)
+            +head.offsetHeight+parseFloat(rp.paddingTop)+parseFloat(rp.paddingBottom)+step;
+    irail.style.setProperty('--cardh',Math.max(280,Math.round(innerHeight-used))+'px');
+  }
   /* line the first plate up with the heading, measured from the real column */
   var w=suiteSec.querySelector('.spin > .wrap'),card=irail.querySelector('.icard');
   if(w&&card){
