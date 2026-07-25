@@ -165,38 +165,53 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .railwrap{position:relative;}
 /* 3.5 cards in view so the next one peeks; we drive the glide ourselves,
    so no CSS snap or smooth-behaviour to fight with */
-.hrail{--per:3.5;display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding:4px 0 22px;
+.railwrap{position:relative;}
+.hrail{--per:3.5;display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding:6px 0 26px;
   scrollbar-width:none;-ms-overflow-style:none;cursor:grab;overscroll-behavior-x:contain;}
 .hrail::-webkit-scrollbar{display:none;}
 .hrail.drag{cursor:grabbing;}
-.icard{flex:0 0 calc(100%/var(--per));background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);
-  display:flex;flex-direction:column;overflow:hidden;border-radius:2px;cursor:pointer;
-  transition:flex-basis .62s var(--e),box-shadow .4s var(--e);}
-.icard:hover{box-shadow:inset 0 0 0 1px var(--hair);}
-.icard.open{flex-basis:calc(230%/var(--per));box-shadow:inset 0 0 0 1px var(--hair);cursor:default;flex-direction:row;}
-.icard.open .ph{width:240px;flex:0 0 240px;aspect-ratio:auto;align-self:stretch;}
-.icard.open .bd{overflow-y:auto;max-height:none;}
-.icard .ph{position:relative;aspect-ratio:4/3;background:#DDD9D2;overflow:hidden;flex:0 0 auto;}
-.icard .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--e),filter .5s var(--e);filter:saturate(.86);}
-.icard:hover .ph img{transform:scale(1.035);}
-.icard.open .ph img{filter:saturate(1);}
-.icard .ph .n{position:absolute;left:12px;bottom:4px;z-index:1;font-family:'Big Shoulders Display',sans-serif;font-weight:700;font-size:52px;line-height:1;color:#fff;mix-blend-mode:difference;}
-.icard .bd{padding:18px 20px 20px;display:flex;flex-direction:column;flex:1 1 auto;min-width:0;}
-.icard h3{font-size:clamp(19px,1.9vw,25px);}
-.icard .more{margin-top:auto;padding-top:16px;font-family:'Martian Mono',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);display:flex;align-items:center;gap:8px;}
-.icard .more i{font-style:normal;width:5px;height:5px;background:var(--brand);}
-.icard.open .more{display:none;}
-.icard .det{max-height:0;opacity:0;overflow:hidden;transition:max-height .62s var(--e),opacity .4s ease,margin-top .5s var(--e);}
-.icard.open .det{max-height:420px;opacity:1;margin-top:12px;overflow-y:auto;}
-.icard .det .p1{font-size:14.5px;line-height:1.72;color:var(--fg-mid);}
-.icard .det .lb{font-family:'Martian Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);margin:16px 0 6px;}
-.icard .det .fi{display:flex;gap:11px;align-items:baseline;font-size:13.5px;line-height:1.6;padding:7px 0;}
-.icard .det .fi+.fi{border-top:1px solid var(--hair2);}
-.icard .det .fi em{font-style:normal;width:6px;height:6px;background:var(--brand);flex:0 0 auto;transform:translateY(-1px);}
-.icard .det .st{margin-top:14px;padding-top:13px;border-top:1px solid var(--hair2);display:flex;gap:16px;align-items:center;}
-.icard .det .st .big{font-family:'Big Shoulders Display',sans-serif;font-weight:700;font-size:34px;line-height:1;}
-.icard .det .st .stx{font-size:13px;line-height:1.58;color:var(--fg-mid);}
-.icard .det .st .ss{font-family:'Martian Mono',monospace;font-size:9px;color:var(--fg-soft);margin-top:5px;}
+/* each slide carries its own gutter, so the cards read as separate plates */
+.icard{flex:0 0 calc(100%/var(--per));padding:0 clamp(5px,.7vw,11px);}
+.icard:nth-child(7n+1){padding-top:0;}
+.icard:nth-child(7n+2){padding-top:clamp(18px,3vw,56px);}
+.icard:nth-child(7n+3){padding-top:clamp(8px,1.4vw,26px);}
+.icard:nth-child(7n+4){padding-top:clamp(24px,3.8vw,72px);}
+.icard:nth-child(7n+5){padding-top:clamp(4px,.8vw,14px);}
+.icard:nth-child(7n+6){padding-top:clamp(16px,2.6vw,48px);}
+.icard:nth-child(7n+7){padding-top:clamp(10px,1.8vw,32px);}
+.ic{position:relative;display:flex;flex-direction:column;min-height:clamp(360px,42vw,520px);
+  background:#101218;color:#EFEDEA;border-radius:2px;overflow:hidden;cursor:pointer;
+  transition:transform .55s var(--e),box-shadow .55s var(--e);}
+.ic:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(13,14,19,.16);}
+.ic-top{display:flex;align-items:flex-start;justify-content:space-between;padding:16px 16px 0;}
+.ic-tag{font-family:'Martian Mono',monospace;font-size:9.5px;letter-spacing:.16em;
+  background:rgba(239,237,234,.1);color:rgba(239,237,234,.82);padding:6px 9px;border-radius:2px;}
+.ic-go{width:32px;height:32px;border-radius:2px;background:#EFEDEA;color:#101218;
+  display:grid;place-items:center;font-size:13px;flex:0 0 auto;
+  transition:transform .45s var(--e),background .4s var(--e);}
+.ic:hover .ic-go{transform:translate(2px,-2px);background:var(--brand);color:#fff;}
+/* the technical drawing that fills the upper half */
+.ic-art{position:relative;flex:1 1 auto;min-height:130px;}
+.ic-art svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;color:rgba(239,237,234,.42);}
+.ic.is-open-card .ic-art svg{color:rgba(255,251,249,.5);}
+.ic-foot{padding:0 16px 18px;}
+.ic-foot h3{font-size:clamp(19px,1.9vw,26px);margin:0 0 8px;}
+.ic-foot p{font-size:13.5px;line-height:1.6;color:rgba(239,237,234,.66);
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+/* the last card is the open invitation, so it carries the brand colour */
+.ic.is-open-card{background:var(--brand);}
+.ic.is-open-card .ic-tag{background:rgba(255,255,255,.16);color:#fff;}
+.ic.is-open-card .ic-foot p{color:rgba(255,251,249,.84);}
+.ic.is-open-card .ic-go{background:#14161C;color:#fff;}
+.rail-dots{display:flex;gap:6px;align-items:center;}
+.rail-dots button{width:22px;height:4px;background:var(--hair);border-radius:1px;transition:background .4s var(--e);}
+.rail-dots button.on{background:var(--brand);}
+.rail-nav{display:flex;gap:6px;}
+.rail-nav button{width:38px;height:38px;border-radius:2px;box-shadow:inset 0 0 0 1px var(--hair);
+  display:grid;place-items:center;font-size:14px;transition:.3s var(--e);}
+.rail-nav button:hover:not(:disabled){background:var(--fg);color:var(--bg);}
+.rail-nav button:disabled{opacity:.3;cursor:default;}
+.rail-head{display:flex;justify-content:space-between;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-bottom:clamp(20px,2.6vw,34px);}
 .railbar{height:2px;background:var(--hair2);position:relative;}
 .icard .bd{will-change:auto;}
 @media (max-width:991px){.hrail{--per:2.2;}}
@@ -357,6 +372,22 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 .md{background:var(--bg);color:var(--fg);max-width:760px;width:100%;margin:auto;position:relative;border-radius:4px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.4);}
 .md .x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(13,14,19,.08);z-index:5;font-size:14px;}
 .md .x:hover{background:var(--brand);color:#fff;}
+/* the industry detail: the card opens into a full plate */
+#imd{max-width:880px;}
+#imd .ph{position:relative;aspect-ratio:16/7;background:#DDD9D2;overflow:hidden;}
+#imd .ph img{width:100%;height:100%;object-fit:cover;display:block;}
+#imd .ph .num{position:absolute;left:18px;bottom:8px;font-family:'Big Shoulders Display',sans-serif;font-weight:700;font-size:clamp(38px,5vw,64px);color:#fff;mix-blend-mode:difference;line-height:1;}
+#imd .bd{padding:clamp(22px,3vw,38px);}
+#imd .tag{font-family:'Martian Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:var(--brand);}
+#imd h3{font-size:clamp(24px,3vw,38px);margin:10px 0 14px;}
+#imd .p1{font-size:15.5px;line-height:1.75;color:var(--fg-mid);max-width:62ch;}
+#imd .lb{font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);margin:26px 0 4px;}
+#imd .fi{display:flex;gap:12px;align-items:baseline;font-size:14.5px;line-height:1.65;padding:11px 0;border-top:1px solid var(--hair2);}
+#imd .fi em{font-style:normal;width:6px;height:6px;background:var(--brand);flex:0 0 auto;transform:translateY(-1px);}
+#imd .st{margin-top:24px;padding-top:18px;border-top:1px solid var(--hair2);display:flex;gap:22px;align-items:baseline;flex-wrap:wrap;}
+#imd .st .big{font-family:'Big Shoulders Display',sans-serif;font-weight:700;font-size:clamp(32px,4vw,48px);line-height:1;}
+#imd .st .sx{font-size:14px;line-height:1.62;color:var(--fg-mid);max-width:48ch;}
+#imd .st .ss{font-family:'Martian Mono',monospace;font-size:9.5px;color:var(--fg-soft);margin-top:7px;}
 /* form modal */
 #fmd .in{padding:clamp(26px,4vw,46px);}
 #fmd h3{font-size:clamp(23px,2.8vw,30px);margin-bottom:10px;}
@@ -466,9 +497,6 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   </div>
 </div></section>
 
-<section class="sec" id="other-strip" style="padding-top:0"><div class="wrap">
-  <div class="other rv"><div><div class="no">07</div><h3>Other Critical Electrical Systems</h3><p>Do not see your sector here? Describe the issue and the equipment affected. Monitoring is defined by the technical question, not by the sector alone.</p></div><button class="btn" data-open-form><span>Describe the issue ↗</span></button></div>
-</div></section>
 
 <div class="dith" data-dith="#EFEDEA,#0D0E13,#C8603D"></div>
 
@@ -533,6 +561,19 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 
 <footer><div class="wrap in"><span>PowerTech</span><span>sales@powertech.am · +374 41 00 00 14</span><span>Davtashen 1, 13-25, Yerevan 0058, Armenia</span></div></footer>
 
+<div class="ovl" id="iovl"><div class="md" id="imd">
+  <button class="x" data-close>&times;</button>
+  <div class="ph"><img id="im_img" alt=""><span class="num" id="im_num"></span></div>
+  <div class="bd">
+    <div class="tag" id="im_tag"></div>
+    <h3 id="im_t"></h3>
+    <p class="p1" id="im_p1"></p>
+    <div class="lb" id="im_lb">What the report can address</div>
+    <div id="im_fi"></div>
+    <div class="st" id="im_st"><div class="big" id="im_big"></div><div><div class="sx" id="im_sx"></div><div class="ss" id="im_ss"></div></div></div>
+  </div>
+</div></div>
+
 <div class="ovl" id="fovl"><div class="md" id="fmd"><div class="in">
   <button class="x" data-close>✕</button>
   <div id="f_main">
@@ -566,7 +607,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 </div></div></div>
 
 <script>
-window.PT={"starLabels": ["Voltage & Current", "Harmonics & Interharmonics", "Flicker", "Voltage Dips", "Unbalance", "Power & Energy", "Events"], "canvasFont": "\"Martian Mono\",monospace", "rdNominal": "NOMINAL", "rdDip": "VOLTAGE DIP · 180 MS", "seq": [["01", "Normal operation"], ["02", "Electrical event"], ["03", "Equipment trip or alarm"], ["04", "System returns to normal"], ["05", "The event record remains available for analysis"]], "viewDetails": "View details", "hint1": " file · ", "hintN": " files · ", "hintSuf": " of 10 MB", "hint0": "Up to 10 MB total.", "appTypes": ["Manufacturing", "Solar PV", "Healthcare or laboratory", "Data center or IT infrastructure", "Commercial building", "Investment and Technical Review", "Other"], "cards": [{"num": "01", "title": "Manufacturing", "img": "IMG0", "p1": "Backup generation is designed for interruptions on a different time scale. A short voltage dip may affect equipment before transfer occurs, so the event must be recorded while it happens.", "findings": ["Timestamp, duration, minimum RMS voltage and affected phases of recorded dips.", "Voltage unbalance and current loading relevant to motor operation.", "Whether reactive power or harmonic distortion requires further engineering review."], "statLabel": "Technical note", "statText": "Voltage sags and momentary interruptions can trip electronic and electromechanical devices and stop production lines.", "statSource": "Source: EPRI"}, {"num": "02", "title": "Solar PV", "img": "IMG1", "p1": "Voltage rise can reflect the interaction of plant output, internal impedance and upstream network conditions. Measurements at relevant points can help distinguish plant-side from network-side factors.", "findings": ["Voltage conditions during inverter disconnection or active-power limitation.", "Voltage and harmonic distortion against applicable connection requirements.", "Independent measurement evidence for commissioning or EPC review."], "note": "Independent, time-aligned measurements give the owner, EPC contractor and network operator a common record of operating conditions."}, {"num": "03", "title": "Healthcare and Laboratories", "img": "IMG2", "p1": "Warranty or service review may require evidence of the supply conditions present while the equipment was operating. A spot measurement may miss intermittent events.", "findings": ["Recorded supply conditions compared with manufacturer requirements.", "Evidence relevant to distinguishing supply-related events from equipment faults.", "Recommended next checks prioritized by technical criticality and operational impact."], "statLabel": "Technical note", "statText": "IEC 60601-1-2 includes immunity testing for voltage dips and short interruptions in medical electrical equipment.", "statSource": "Source: IEC"}, {"num": "04", "title": "Data Centers and IT Infrastructure", "img": "IMG3", "p1": "Generators start and transfer on a different time scale from millisecond-level disturbances. Time-stamped monitoring records can be compared with UPS and IT logs.", "findings": ["UPS input loading relative to rated capacity.", "Correlation between restarts, battery operation and recorded supply disturbances.", "Load profiles relevant to planned expansion."], "stat": "57%", "statLabel": "Statistic", "statText": "of respondents to Uptime's 2025 annual survey said their most recent major outage cost more than USD 100,000.", "statSource": "Source: Uptime Institute, Annual Outage Analysis 2026"}, {"num": "05", "title": "Commercial Buildings", "img": "IMG4", "p1": "Measurements can help distinguish upstream supply conditions from disturbances generated within the building or by tenant equipment.", "findings": ["Evidence relevant to the likely source of a disturbance.", "Electrical conditions associated with overheating or protective-device operation.", "Power factor, reactive power and load trends relevant to billing or capacity."], "statLabel": "Technical note", "statText": "Power-quality events can originate on either side of the customer meter.", "statSource": "Source: U.S. DOE / LBNL"}, {"num": "06", "title": "Investment and Technical Review", "img": "IMG5", "p1": "Diagnostic or continuous monitoring provides an independent record under actual operation. The findings can support technical due diligence, handover, warranty review or performance assessment.", "findings": ["Observed loading and power quality at relevant points.", "Recorded conditions associated with interruptions or reduced output.", "Limitations, risks and recommended further checks."], "note": "Reports can be prepared in Armenian, Russian or English."}], "imgs": {"IMG0": "../uploads/img/02_manufacturing_industrial_robot.jpg", "IMG1": "../uploads/img/03_solar_power_plant.jpg", "IMG2": "../uploads/img/06_healthcare_laboratory.jpg", "IMG3": "../uploads/img/05_data_center.jpg", "IMG4": "../uploads/img/04_commercial_building.jpg", "IMG5": "../uploads/img/08_finance_investment.jpg", "METAL": "../uploads/img/hero_metal.webp"}};
+window.PT={"starLabels": ["Voltage & Current", "Harmonics & Interharmonics", "Flicker", "Voltage Dips", "Unbalance", "Power & Energy", "Events"], "canvasFont": "\"Martian Mono\",monospace", "rdNominal": "NOMINAL", "rdDip": "VOLTAGE DIP · 180 MS", "seq": [["01", "Normal operation"], ["02", "Electrical event"], ["03", "Equipment trip or alarm"], ["04", "System returns to normal"], ["05", "The event record remains available for analysis"]], "viewDetails": "View details", "hint1": " file · ", "hintN": " files · ", "hintSuf": " of 10 MB", "hint0": "Up to 10 MB total.", "appTypes": ["Manufacturing", "Solar PV", "Healthcare or laboratory", "Data center or IT infrastructure", "Commercial building", "Investment and Technical Review", "Other"], "cards": [{"num": "01", "title": "Manufacturing", "img": "IMG0", "p1": "Backup generation is designed for interruptions on a different time scale. A short voltage dip may affect equipment before transfer occurs, so the event must be recorded while it happens.", "findings": ["Timestamp, duration, minimum RMS voltage and affected phases of recorded dips.", "Voltage unbalance and current loading relevant to motor operation.", "Whether reactive power or harmonic distortion requires further engineering review."], "statLabel": "Technical note", "statText": "Voltage sags and momentary interruptions can trip electronic and electromechanical devices and stop production lines.", "statSource": "Source: EPRI"}, {"num": "02", "title": "Solar PV", "img": "IMG1", "p1": "Voltage rise can reflect the interaction of plant output, internal impedance and upstream network conditions. Measurements at relevant points can help distinguish plant-side from network-side factors.", "findings": ["Voltage conditions during inverter disconnection or active-power limitation.", "Voltage and harmonic distortion against applicable connection requirements.", "Independent measurement evidence for commissioning or EPC review."], "note": "Independent, time-aligned measurements give the owner, EPC contractor and network operator a common record of operating conditions."}, {"num": "03", "title": "Healthcare and Laboratories", "img": "IMG2", "p1": "Warranty or service review may require evidence of the supply conditions present while the equipment was operating. A spot measurement may miss intermittent events.", "findings": ["Recorded supply conditions compared with manufacturer requirements.", "Evidence relevant to distinguishing supply-related events from equipment faults.", "Recommended next checks prioritized by technical criticality and operational impact."], "statLabel": "Technical note", "statText": "IEC 60601-1-2 includes immunity testing for voltage dips and short interruptions in medical electrical equipment.", "statSource": "Source: IEC"}, {"num": "04", "title": "Data Centers and IT Infrastructure", "img": "IMG3", "p1": "Generators start and transfer on a different time scale from millisecond-level disturbances. Time-stamped monitoring records can be compared with UPS and IT logs.", "findings": ["UPS input loading relative to rated capacity.", "Correlation between restarts, battery operation and recorded supply disturbances.", "Load profiles relevant to planned expansion."], "stat": "57%", "statLabel": "Statistic", "statText": "of respondents to Uptime's 2025 annual survey said their most recent major outage cost more than USD 100,000.", "statSource": "Source: Uptime Institute, Annual Outage Analysis 2026"}, {"num": "05", "title": "Commercial Buildings", "img": "IMG4", "p1": "Measurements can help distinguish upstream supply conditions from disturbances generated within the building or by tenant equipment.", "findings": ["Evidence relevant to the likely source of a disturbance.", "Electrical conditions associated with overheating or protective-device operation.", "Power factor, reactive power and load trends relevant to billing or capacity."], "statLabel": "Technical note", "statText": "Power-quality events can originate on either side of the customer meter.", "statSource": "Source: U.S. DOE / LBNL"}, {"num": "06", "title": "Investment and Technical Review", "img": "IMG5", "p1": "Diagnostic or continuous monitoring provides an independent record under actual operation. The findings can support technical due diligence, handover, warranty review or performance assessment.", "findings": ["Observed loading and power quality at relevant points.", "Recorded conditions associated with interruptions or reduced output.", "Limitations, risks and recommended further checks."], "note": "Reports can be prepared in Armenian, Russian or English."}], "otherT": "Other Critical Electrical Systems", "otherP": "Do not see your sector here? Describe the issue and the equipment affected. Monitoring is defined by the technical question, not by the sector alone.", "imgs": {"IMG0": "../uploads/img/02_manufacturing_industrial_robot.jpg", "IMG1": "../uploads/img/03_solar_power_plant.jpg", "IMG2": "../uploads/img/06_healthcare_laboratory.jpg", "IMG3": "../uploads/img/05_data_center.jpg", "IMG4": "../uploads/img/04_commercial_building.jpg", "IMG5": "../uploads/img/08_finance_investment.jpg", "METAL": "../uploads/img/hero_metal.webp"}};
 (function(){
 var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
 var PT=window.PT;
@@ -1084,41 +1125,90 @@ function seqUpd(){
 }
 seqUpd();
 
-/* ============ INDUSTRIES — horizontal rail, detail on click ============ */
+/* ============ INDUSTRIES — a stepped rail of card plates ============ */
 var irail=document.getElementById('irail'),rbar=document.getElementById('rbar'),
     rprev=document.getElementById('rprev'),rnext=document.getElementById('rnext');
-PT.cards.forEach(function(o,i){
-  var c=document.createElement('div');c.className='icard';c.tabIndex=0;
-  var fis=o.findings.map(function(){return '<div class="fi"><em></em><span></span></div>';}).join('');
-  c.innerHTML='<div class="ph"><img alt=""><span class="n"></span></div>'+
-    '<div class="bd"><h3></h3>'+
-      '<div class="det"><p class="p1"></p><div class="lb">What the report can address</div>'+fis+
-      '<div class="st"><div class="big"></div><div><div class="stx"></div><div class="ss"></div></div></div></div>'+
-      '<div class="more"><i></i><span></span></div>'+
-    '</div>';
-  var im=c.querySelector('img');im.src=PT.imgs[o.img]||'';im.alt=o.title;
-  c.querySelector('.ph .n').textContent=o.num;
-  c.querySelector('h3').textContent=o.title;
-  c.querySelector('.p1').textContent=o.p1;
-  [].forEach.call(c.querySelectorAll('.fi span'),function(sp,k){sp.textContent=o.findings[k];});
-  c.querySelector('.big').textContent=o.stat||'';
-  c.querySelector('.stx').textContent=o.note||o.statText||'';
-  c.querySelector('.ss').textContent=o.note?'':(o.statSource||'');
-  c.querySelector('.more span').textContent=PT.viewDetails;
-  var open=function(){
-    if(c.classList.contains('open')){c.classList.remove('open');return;}
-    [].forEach.call(irail.children,function(x){x.classList.remove('open');});
-    c.classList.add('open');
-    setTimeout(function(){
-      var cl=c.getBoundingClientRect(),rl=irail.getBoundingClientRect();
-      irail.scrollBy({left:cl.left-rl.left-16,behavior:'smooth'});
-    },80);
-  };
-  c.addEventListener('click',function(e){if(!dragMoved)open();});
-  c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
-  irail.appendChild(c);
+
+/* Each card carries its own technical drawing: orthogonal runs leaving a core,
+   with pads along the way. Deterministic per card, so it never reshuffles. */
+function cardArt(seed){
+  function rnd(n){seed=(seed*1103515245+12345)&0x7fffffff;return seed%n;}
+  var W=100,H=100,parts=[];
+  var cw=20+rnd(10),ch=16+rnd(10),cx0=(W-cw)/2,cy0=(H-ch)/2;
+  parts.push('<rect x="'+cx0+'" y="'+cy0+'" width="'+cw+'" height="'+ch+'" fill="none" stroke="currentColor" stroke-width=".8"/>');
+  var runs=5+rnd(3);
+  for(var i=0;i<runs;i++){
+    var side=i%4,lane=6+rnd(16),reach=26+rnd(30),pad=rnd(2);
+    var d,px,py;
+    if(side===0){
+      var y0=cy0+2+rnd(Math.max(2,ch-4));
+      d='M'+(cx0+cw)+','+y0+' H'+(cx0+cw+lane)+' V'+(y0-reach/2)+' H'+(W+4);
+      px=cx0+cw+lane;py=y0-reach/2;
+    }else if(side===1){
+      var y1=cy0+2+rnd(Math.max(2,ch-4));
+      d='M'+cx0+','+y1+' H'+(cx0-lane)+' V'+(y1+reach/2)+' H-4';
+      px=cx0-lane;py=y1+reach/2;
+    }else if(side===2){
+      var x2=cx0+2+rnd(Math.max(2,cw-4));
+      d='M'+x2+','+cy0+' V'+(cy0-lane)+' H'+(x2+reach/2)+' V-4';
+      px=x2+reach/2;py=cy0-lane;
+    }else{
+      var x3=cx0+2+rnd(Math.max(2,cw-4));
+      d='M'+x3+','+(cy0+ch)+' V'+(cy0+ch+lane)+' H'+(x3-reach/2)+' V'+(H+4);
+      px=x3-reach/2;py=cy0+ch+lane;
+    }
+    parts.push('<path d="'+d+'" fill="none" stroke="currentColor" stroke-width=".8" stroke-opacity=".5"/>');
+    if(pad)parts.push('<rect x="'+(px-1.6)+'" y="'+(py-1.6)+'" width="3.2" height="3.2" fill="currentColor" fill-opacity=".55"/>');
+  }
+  return '<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'+parts.join('')+'</svg>';
+}
+
+var iovl=document.getElementById('iovl');
+function openInd(o){
+  var img=document.getElementById('im_img'),ph=img.parentElement;
+  if(o.img!==undefined&&PT.imgs[o.img]){img.src=PT.imgs[o.img];ph.style.display='';}
+  else ph.style.display='none';
+  document.getElementById('im_num').textContent=o.num||'';
+  document.getElementById('im_tag').textContent=o.num?('CH '+o.num):'';
+  document.getElementById('im_t').textContent=o.title;
+  document.getElementById('im_p1').textContent=o.p1;
+  var fi=document.getElementById('im_fi');fi.innerHTML='';
+  var hasF=o.findings&&o.findings.length;
+  document.getElementById('im_lb').style.display=hasF?'':'none';
+  if(hasF)o.findings.forEach(function(f){
+    var d=document.createElement('div');d.className='fi';
+    d.innerHTML='<em></em><span></span>';
+    d.querySelector('span').textContent=f;fi.appendChild(d);});
+  var st=document.getElementById('im_st');
+  var txt=o.note||o.statText||'';
+  if(o.stat||txt){
+    st.style.display='';
+    document.getElementById('im_big').textContent=o.stat||'';
+    document.getElementById('im_sx').textContent=txt;
+    document.getElementById('im_ss').textContent=o.note?'':(o.statSource||'');
+  }else st.style.display='none';
+  iovl.classList.add('open');document.body.style.overflow='hidden';
+}
+
+/* the six sectors, then the open invitation as the seventh plate */
+var CARDS=PT.cards.concat([{num:'07',title:PT.otherT,p1:PT.otherP,invite:true}]);
+CARDS.forEach(function(o,i){
+  var slide=document.createElement('div');slide.className='icard';
+  slide.innerHTML='<article class="ic'+(o.invite?' is-open-card':'')+'" tabindex="0">'+
+    '<div class="ic-top"><span class="ic-tag"></span><span class="ic-go">&#8599;</span></div>'+
+    '<div class="ic-art">'+cardArt(i*97+13)+'</div>'+
+    '<div class="ic-foot"><h3></h3><p></p></div></article>';
+  slide.querySelector('.ic-tag').textContent='CH '+o.num;
+  slide.querySelector('h3').textContent=o.title;
+  slide.querySelector('.ic-foot p').textContent=o.p1;
+  var card=slide.querySelector('.ic');
+  var act=function(){if(dragMoved)return;if(o.invite)openForm();else openInd(o);};
+  card.addEventListener('click',act);
+  card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();act();}});
+  irail.appendChild(slide);
 });
-/* drag-to-scroll + arrows + progress */
+
+/* drag-to-scroll */
 var dragging=false,dragStartX=0,dragStartL=0,dragMoved=false;
 irail.addEventListener('pointerdown',function(e){
   dragging=true;dragMoved=false;dragStartX=e.clientX;dragStartL=irail.scrollLeft;
@@ -1135,9 +1225,9 @@ addEventListener('pointerup',function(){
   railTo(railIndex()*cardStride(),520);
   setTimeout(function(){dragMoved=false;},40);
 });
-/* one card per press, glided over 800ms — the pace cantor8 uses for its suite */
+/* one card per press, glided over 800ms — the pace their suite moves at */
 var RAIL_MS=800,railTween=0,railIdle=0;
-function railEase(t){return 1-Math.pow(1-t,4);}   /* ease-out, settles softly */
+function railEase(t){return 1-Math.pow(1-t,4);}
 function railTo(px,ms){
   var from=irail.scrollLeft,max=irail.scrollWidth-irail.clientWidth;
   var to=Math.max(0,Math.min(max,px));
@@ -1154,20 +1244,15 @@ function railTo(px,ms){
   };
   railTween=requestAnimationFrame(step);
 }
-function cardStride(){
-  var c=irail.querySelector('.icard');
-  return c?c.offsetWidth:280;                     /* gap is 0, so width is the stride */
-}
+function cardStride(){var c=irail.querySelector('.icard');return c?c.offsetWidth:280;}
 function railIndex(){return Math.round(irail.scrollLeft/Math.max(1,cardStride()));}
 function railGo(i){
-  var n=irail.children.length;
-  i=Math.max(0,Math.min(n-1,i));
+  i=Math.max(0,Math.min(irail.children.length-1,i));
   railTo(i*cardStride());
 }
 function railStep(dir){railGo(railIndex()+dir);}
 rprev.addEventListener('click',function(){railStep(-1);});
 rnext.addEventListener('click',function(){railStep(1);});
-/* dots — one per card, like their pagination */
 var rdots=document.getElementById('rdots');
 if(rdots){
   for(var di=0;di<irail.children.length;di++){
@@ -1190,7 +1275,6 @@ function railBar(){
 }
 irail.addEventListener('scroll',function(){
   railBar();
-  /* wheel or trackpad: settle onto the nearest card once movement stops */
   if(railTween||dragging)return;
   clearTimeout(railIdle);
   railIdle=setTimeout(function(){railTo(railIndex()*cardStride(),420);},140);
@@ -1400,13 +1484,16 @@ document.getElementById('ptfSubmit').addEventListener('click',function(){
 });
 
 /* ============ MODAL PLUMBING ============ */
-function closeAll(){fovl.classList.remove('open');document.body.style.overflow='';}
+function closeAll(){fovl.classList.remove('open');iovl.classList.remove('open');document.body.style.overflow='';}
 document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',closeAll);});
 fovl.addEventListener('click',function(e){if(e.target===fovl)closeAll();});
+iovl.addEventListener('click',function(e){if(e.target===iovl)closeAll();});
 addEventListener('keydown',function(e){if(e.key==='Escape')closeAll();});
-document.querySelectorAll('[data-open-form]').forEach(function(b){b.addEventListener('click',function(){
+function openForm(){
   document.getElementById('f_main').style.display='';document.getElementById('f_done').style.display='none';
-  fovl.classList.add('open');document.body.style.overflow='hidden';});});
+  fovl.classList.add('open');document.body.style.overflow='hidden';
+}
+document.querySelectorAll('[data-open-form]').forEach(function(b){b.addEventListener('click',openForm);});
 
 /* ============ REVEALS / SCROLL ============ */
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
