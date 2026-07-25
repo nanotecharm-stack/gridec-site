@@ -1,0 +1,167 @@
+[
+ {
+  "slug": "montserrat-armenian",
+  "name": "Montserrat Armenian",
+  "kind": "geometric sans",
+  "faces": [
+   {
+    "w": 400,
+    "file": "montserrat-armenian-400.woff2",
+    "kb": 23.6
+   },
+   {
+    "w": 500,
+    "file": "montserrat-armenian-500.woff2",
+    "kb": 23.8
+   },
+   {
+    "w": 600,
+    "file": "montserrat-armenian-600.woff2",
+    "kb": 23.6
+   },
+   {
+    "w": 700,
+    "file": "montserrat-armenian-700.woff2",
+    "kb": 24.0
+   }
+  ],
+  "found": 29
+ },
+ {
+  "slug": "arian-amu-serif",
+  "name": "Arian AMU Serif",
+  "kind": "serif",
+  "faces": [
+   {
+    "w": 400,
+    "file": "arian-amu-serif-400.woff2",
+    "kb": 19.2
+   },
+   {
+    "w": 700,
+    "file": "arian-amu-serif-700.woff2",
+    "kb": 19.4
+   }
+  ],
+  "found": 4
+ },
+ {
+  "slug": "arian-amu",
+  "name": "Arian AMU",
+  "kind": "grotesque sans",
+  "faces": [
+   {
+    "w": 400,
+    "file": "arian-amu-400.woff2",
+    "kb": 16.0
+   },
+   {
+    "w": 700,
+    "file": "arian-amu-700.woff2",
+    "kb": 15.8
+   }
+  ],
+  "found": 4
+ },
+ {
+  "slug": "ghea-grapalat",
+  "name": "GHEA Grapalat",
+  "kind": "humanist sans (state font)",
+  "faces": [
+   {
+    "w": 400,
+    "file": "ghea-grapalat-400.woff2",
+    "kb": 23.7
+   },
+   {
+    "w": 700,
+    "file": "ghea-grapalat-700.woff2",
+    "kb": 22.7
+   }
+  ],
+  "found": 4
+ },
+ {
+  "slug": "atyan-dsegh",
+  "name": "Atyan Dsegh",
+  "kind": "display, all caps",
+  "faces": [],
+  "img": {
+   "head": {
+    "file": "atyan-dsegh-head.png",
+    "w": 520,
+    "h": 252
+   },
+   "body": {
+    "file": "atyan-dsegh-body.png",
+    "w": 470,
+    "h": 307
+   }
+  },
+  "weights": [
+   400
+  ],
+  "found": 1
+ },
+ {
+  "slug": "amrys",
+  "name": "Amrys",
+  "kind": "sans",
+  "faces": [],
+  "img": {
+   "head": {
+    "file": "amrys-head.png",
+    "w": 520,
+    "h": 296
+   },
+   "body": {
+    "file": "amrys-body.png",
+    "w": 470,
+    "h": 465
+   }
+  },
+  "weights": [
+   400,
+   500,
+   600,
+   700
+  ],
+  "found": 16
+ },
+ {
+  "slug": "weblysleek-ui",
+  "name": "WeblySleek UI",
+  "kind": "UI sans",
+  "faces": [],
+  "img": {
+   "head": {
+    "file": "weblysleek-ui-head.png",
+    "w": 520,
+    "h": 296
+   },
+   "body": {
+    "file": "weblysleek-ui-body.png",
+    "w": 470,
+    "h": 461
+   }
+  },
+  "weights": [
+   400,
+   600
+  ],
+  "found": 6
+ },
+ {
+  "slug": "parz",
+  "name": "Parz",
+  "kind": "sans",
+  "faces": [
+   {
+    "w": 400,
+    "file": "parz-400.woff2",
+    "kb": 12.5
+   }
+  ],
+  "found": 2
+ }
+]
