@@ -95,14 +95,36 @@ nav a.here{color:var(--inv-fg);background:var(--inv);}
 .lang:active,.alink:active,nav a:active,.md .x:active,.ic-go:active{transform:translateY(1px);}
 .lang,.md .x{transition:transform .16s var(--e),background .35s var(--e),color .35s var(--e);}
 /* dark surfaces: the untinted brand is the one with contrast there */
-.hero,.plate,.plate2,.other,.chart{--brand-ink:#D4714E;}
+.plate,.plate2,.other,.chart{--brand-ink:#D4714E;}
+/* ?hero=terracotta restores the earlier poster, for comparison */
+html[data-hero="terracotta"] .hero{background:#C8603D;color:#FFFBF9;--brand-ink:#D4714E;}
+html[data-hero="terracotta"] .hero::after{display:none;}
+html[data-hero="terracotta"] .hero h1,html[data-hero="terracotta"] .rd b{color:#FFFBF9;}
+html[data-hero="terracotta"] .hero h1 em,html[data-hero="terracotta"] .hero .eyebrow,
+html[data-hero="terracotta"] .rd .st{color:#2C1109;}
+html[data-hero="terracotta"] .hero .eyebrow::before{background:#2C1109;}
+html[data-hero="terracotta"] .hero .hp{color:rgba(255,251,249,.88);}
+html[data-hero="terracotta"] .rd{color:rgba(255,251,249,.88);}
+html[data-hero="terracotta"] .hero .btn{background:#14161C;color:#fff;}
+html[data-hero="terracotta"] .hero .btn::before{background:#FFFBF9;}
+html[data-hero="terracotta"] .hero .btn:hover span{color:#14161C;}
+html[data-hero="terracotta"] .hero .btn.gh{background:transparent;color:#FFFBF9;
+  box-shadow:inset 0 0 0 1px rgba(255,251,249,.44);}
+html[data-hero="terracotta"] .stage{--wv-line:255,251,249;--wv-glow:255,255,255;}
 .btn.gh{background:transparent;color:var(--fg);box-shadow:inset 0 0 0 1px var(--hair);}
 .btn.lt{background:var(--bg);color:var(--fg);}
 .btn.lt:hover span{color:#fff;}
 
 /* hero — the brand colour AS the ground: one flat plane, nothing layered on it.
    Everything reads light because there is no texture and no gradient to fight. */
-.hero{position:relative;min-height:100svh;overflow:hidden;background:#C8603D;color:#FFFBF9;}
+/* a sheet, not a poster: paper that darkens a touch towards the fold, with the
+   faintest warm breath where the field lives on the right */
+.hero{position:relative;min-height:100svh;overflow:hidden;color:var(--fg);
+  background:linear-gradient(178deg,#F7F5F2 0%,#EFEDEA 58%,#E9E6E2 100%);}
+.hero::before{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;z-index:2;
+  background:rgba(13,14,19,.10);}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(58% 52% at 78% 46%,rgba(200,96,61,.055),transparent 70%);}
 /* Two areas across the FULL width: text hard left, wave field running to the
    right edge. No side padding on the hero — the text starts on the same line as
    the logo, the waves bleed off the right edge. */
@@ -115,27 +137,24 @@ h1{font-size:clamp(48px,7.2vw,116px);margin-top:20px;text-wrap:balance;}
 /* the headline keeps its full measure: it may reach past its column into the
    quiet left part of the wave field rather than break into extra lines */
 .hcol{position:relative;z-index:3;}
-.hero h1{color:#FFFBF9;width:max-content;max-width:min(72vw,1060px);}
+.hero h1{color:var(--fg);width:max-content;max-width:min(72vw,1060px);}
 h1 em{font-style:normal;color:var(--brand-ink);}
-.hero h1 em{color:#2C1109;}
-.hero .hp{max-width:38ch;font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.76;color:rgba(255,251,249,.84);margin-top:30px;}
+.hero h1 em{color:var(--brand-ink);}
+.hero .hp{max-width:38ch;font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.76;color:var(--fg-mid);margin-top:30px;}
 .acts{display:flex;gap:11px;margin-top:26px;flex-wrap:wrap;}
-.hero .eyebrow{color:#2C1109;}
-.hero .eyebrow::before{background:#2C1109;}
-.hero .btn{background:#14161C;color:#fff;}
-.hero .btn::before{background:#FFFBF9;}
-.hero .btn:hover span{color:#14161C;}
-.hero .btn i{background:rgba(255,255,255,.2);}
-.hero .btn.gh{background:transparent;color:#FFFBF9;box-shadow:inset 0 0 0 1px rgba(255,251,249,.44);}
+.hero .eyebrow{color:var(--brand-ink);}
+.hero .eyebrow::before{background:var(--brand-ink);}
+/* on paper the hero needs no special buttons — the page's own pair is right */
 /* its own area again, so the cursor reaches the canvas and the strings react */
 .stage{position:relative;align-self:center;justify-self:end;width:min(100%,560px);aspect-ratio:1;
   margin-right:clamp(16px,6vw,104px);          /* pulled in off the right edge */
-  --wv-line:255,251,249;--wv-glow:255,255,255;}
+  /* graphite hairlines; the light that travels them is the accent */
+  --wv-line:13,14,19;--wv-glow:200,96,61;}
 #star{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;}
 .rd{position:absolute;left:0;bottom:calc(-1*clamp(30px,5vh,52px));z-index:2;
-  font-family:'Martian Mono',monospace;font-size:12px;color:rgba(255,251,249,.88);line-height:1.95;}
-.rd b{color:#FFFBF9;font-variant-numeric:tabular-nums;font-weight:600;}
-.rd .st{color:#2C1109;}
+  font-family:'Martian Mono',monospace;font-size:12px;color:var(--fg-soft);line-height:1.95;}
+.rd b{color:var(--fg);font-variant-numeric:tabular-nums;font-weight:600;}
+.rd .st{color:var(--brand-ink);}
 /* header over the dark hero: light chrome until scrolled */
 header.on-dark .brand{color:#EFEDEA;}
 header.on-dark nav{box-shadow:inset 0 0 0 1px rgba(255,251,249,.28);background:rgba(20,22,28,.42);}
@@ -522,7 +541,6 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   </div>
 </section>
 
-<div class="dith" data-dith="#C8603D,#EFEDEA,#E5825A"></div>
 
 <section class="sec thesis" id="why" data-rail><div class="wrap">
   <div class="rv intro">
@@ -684,7 +702,9 @@ var mouse={x:-9999,y:-9999,on:false};
 var EV_FIRST=2.6,EV_EVERY=7.5,EV_DUR=1.5,evNext=EV_FIRST,evT=0,evAngle=0;
 var MILK='255,251,249',GLOW='255,255,255';
 var OF={stiff:11,damp:3.9,mouseR:165,push:78,drift:27,driftHz:.13,
-  line:.11,litHi:.30,core:.34,glide:.13,band:.30};
+  line:.20,litHi:.52,core:.34,glide:.13,band:.30};
+(function(){var m=/[?&]hero=([a-z]+)/.exec(location.search);
+  if(m&&m[1]==='terracotta')document.documentElement.dataset.hero='terracotta';})();
 function readWaveTheme(){
   var cs=getComputedStyle(cv.parentElement);
   var a=(cs.getPropertyValue('--wv-line')||'').trim(),b=(cs.getPropertyValue('--wv-glow')||'').trim();
@@ -1604,7 +1624,7 @@ revealPass();
 addEventListener('load',revealPass);
 var hdr=document.getElementById('hdr');
 /* which section sits under the header decides the groups' theme */
-var darkSecs=[].slice.call(document.querySelectorAll('.hero,.plate2,.plate'));
+var darkSecs=[].slice.call(document.querySelectorAll('.plate2,.plate'));
 function headerTheme(){
   var y=38,onDark=false;
   for(var i=0;i<darkSecs.length;i++){
