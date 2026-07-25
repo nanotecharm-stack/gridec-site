@@ -203,8 +203,6 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 
 /* industries — horizontal rail, detail opens on click */
 .suite .spin>.wrap{width:100%;}
-.rail-head .lede{margin-top:0;}
-.rail-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:clamp(20px,3vw,38px);}
 .railwrap{position:relative;width:100%;}
 /* pinned: the section is tall, the frame sticks, and the rail is paged by scroll */
 .suite{position:relative;}
@@ -260,8 +258,13 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .ic.is-open-card .ic-foot p{color:rgba(255,251,249,.86);}
 .ic.is-open-card .ic-go{background:#14161C;color:#fff;}
 .suite .spin>.wrap{width:100%;}
-.rail-head .lede{margin-top:0;}
-.rail-head{display:flex;justify-content:space-between;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-bottom:clamp(20px,2.6vw,34px);}
+/* head of the card zone: heading left, intro right, in fixed columns. As a flex
+   row it used to wrap in Armenian — the longer heading pushed the intro onto its
+   own line and stole ~170px of card height. */
+.rail-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,34%);
+  align-items:end;gap:26px;margin-bottom:clamp(20px,2.6vw,34px);}
+.rail-head .lede{margin-top:0;max-width:none;}
+@media(max-width:900px){.rail-head{grid-template-columns:1fr;gap:14px;}}
 .railbar{height:2px;background:var(--hair2);position:relative;}
 .icard .bd{will-change:auto;}
 @media (max-width:991px){.hrail{--per:2.2;}
