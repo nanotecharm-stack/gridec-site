@@ -65,12 +65,12 @@ nav .lang{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:11
 /* generated dark-metal texture — quiet, never competing with the wave field */
 .hero::before{content:"";position:absolute;inset:0;pointer-events:none;
   background:url(../uploads/img/hero_metal.webp) center/cover no-repeat;
-  opacity:.30;filter:saturate(.62) contrast(1.04);
+  opacity:.20;filter:saturate(.5) contrast(1.02);
   mask-image:linear-gradient(180deg,#000 0%,#000 62%,transparent 100%);
   -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 62%,transparent 100%);}
-.hgrid{position:relative;z-index:2;display:grid;grid-template-columns:.92fr 1.08fr;align-items:center;gap:clamp(16px,3vw,44px);min-height:100svh;padding-top:104px;padding-bottom:44px;}
+.hgrid{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,.92fr) minmax(400px,1.08fr);align-items:center;gap:clamp(16px,3vw,44px);min-height:100svh;padding-top:104px;padding-bottom:44px;}
 h1{font-size:clamp(34px,5.6vw,86px);margin-top:18px;text-wrap:balance;}
-.hero h1{color:#F4F3F1;}
+.hero h1{color:#F4F3F1;overflow-wrap:break-word;}
 h1 em{font-style:normal;color:var(--brand);}
 .hero .hp{max-width:40ch;font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.74;color:rgba(239,237,234,.66);margin-top:26px;}
 .acts{display:flex;gap:11px;margin-top:28px;flex-wrap:wrap;}
@@ -78,6 +78,9 @@ h1 em{font-style:normal;color:var(--brand);}
 .hero .btn::before{background:#EFEDEA;}
 .hero .btn:hover span{color:#0D0E13;}
 .hero .btn.gh{background:transparent;color:#EFEDEA;box-shadow:inset 0 0 0 1px rgba(239,237,234,.28);}
+.stage::after{content:"";position:absolute;inset:-6% -4%;pointer-events:none;z-index:0;
+  background:radial-gradient(58% 58% at 52% 50%,rgba(8,9,12,.72),rgba(8,9,12,.28) 62%,transparent 78%);}
+#star{z-index:1;}
 .stage{position:relative;aspect-ratio:5/4;width:100%;max-width:820px;justify-self:end;margin-right:calc(-1*clamp(0px,5vw,84px));}
 #star{position:absolute;inset:0;width:100%;height:100%;}
 .rd{position:absolute;left:0;bottom:2px;font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;color:rgba(239,237,234,.5);line-height:1.95;}
@@ -99,6 +102,10 @@ header:not(.scr) .btn{background:var(--brand);color:#fff;}
 #wipe i{background:var(--brand);transform:scale(0);transform-origin:center;will-change:transform;transition:transform .32s cubic-bezier(.4,0,.2,1);}
 #wipe.go i{transform:scale(1.02);}
 #wipe.instant i{transition:none;}
+/* dithered pixel boundary: a band of squares that dissolves one section colour
+   into the next — cantor8's actual device (static dither, not an animation) */
+.dith{position:relative;height:clamp(58px,7vw,104px);display:grid;width:100%;line-height:0;}
+.dith i{display:block;}
 
 /* dark plate section (services) */
 .plate2{background:linear-gradient(180deg,#0D0E13 0%,#111318 60%,#14161C 100%);color:#EFEDEA;}
@@ -121,26 +128,28 @@ header:not(.scr) .btn{background:var(--brand);color:#fff;}
 .rail-nav button:hover{background:var(--brand);color:#fff;box-shadow:none;}
 .rail-nav button[disabled]{opacity:.3;pointer-events:none;}
 .railwrap{position:relative;}
-.hrail{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;padding:4px 0 22px;scrollbar-width:none;-ms-overflow-style:none;cursor:grab;}
+.hrail{display:flex;align-items:flex-start;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:4px 0 22px;scrollbar-width:none;-ms-overflow-style:none;cursor:grab;overscroll-behavior-x:contain;}
 .hrail::-webkit-scrollbar{display:none;}
 .hrail.drag{cursor:grabbing;scroll-snap-type:none;}
 .icard{scroll-snap-align:start;flex:0 0 300px;background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);
   display:flex;flex-direction:column;overflow:hidden;border-radius:2px;cursor:pointer;
   transition:flex-basis .62s var(--e),box-shadow .4s var(--e);}
 .icard:hover{box-shadow:inset 0 0 0 1px var(--hair);}
-.icard.open{flex-basis:620px;box-shadow:inset 0 0 0 1px var(--hair);cursor:default;}
+.icard.open{flex-basis:680px;box-shadow:inset 0 0 0 1px var(--hair);cursor:default;flex-direction:row;}
+.icard.open .ph{width:240px;flex:0 0 240px;aspect-ratio:auto;align-self:stretch;}
+.icard.open .bd{overflow-y:auto;max-height:none;}
 .icard .ph{position:relative;aspect-ratio:4/3;background:#DDD9D2;overflow:hidden;flex:0 0 auto;}
 .icard .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .7s var(--e),filter .5s var(--e);filter:saturate(.86);}
 .icard:hover .ph img{transform:scale(1.035);}
 .icard.open .ph img{filter:saturate(1);}
-.icard .ph .n{position:absolute;left:12px;bottom:4px;font-family:'PT HY Display','Noto Sans Armenian',sans-serif;font-weight:700;font-size:52px;line-height:1;color:#fff;mix-blend-mode:difference;}
+.icard .ph .n{position:absolute;left:12px;bottom:4px;z-index:1;font-family:'PT HY Display','Noto Sans Armenian',sans-serif;font-weight:700;font-size:52px;line-height:1;color:#fff;mix-blend-mode:difference;}
 .icard .bd{padding:18px 20px 20px;display:flex;flex-direction:column;flex:1 1 auto;min-width:0;}
 .icard h3{font-size:clamp(19px,1.9vw,25px);}
 .icard .more{margin-top:auto;padding-top:16px;font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);display:flex;align-items:center;gap:8px;}
 .icard .more i{font-style:normal;width:5px;height:5px;background:var(--brand);}
 .icard.open .more{display:none;}
 .icard .det{max-height:0;opacity:0;overflow:hidden;transition:max-height .62s var(--e),opacity .4s ease,margin-top .5s var(--e);}
-.icard.open .det{max-height:520px;opacity:1;margin-top:14px;}
+.icard.open .det{max-height:420px;opacity:1;margin-top:12px;overflow-y:auto;}
 .icard .det .p1{font-size:14.5px;line-height:1.72;color:var(--fg-mid);}
 .icard .det .lb{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);margin:16px 0 6px;}
 .icard .det .fi{display:flex;gap:11px;align-items:baseline;font-size:13.5px;line-height:1.6;padding:7px 0;}
@@ -158,7 +167,7 @@ header:not(.scr) .btn{background:var(--brand);color:#fff;}
 
 /* measure — display specimen strip */
 #measure .chips{gap:14px 26px;margin-top:30px;align-items:center;}
-#measure .chips span{background:none;box-shadow:none;padding:0;font-family:'PT HY Display','Noto Sans Armenian',sans-serif;font-weight:700;font-size:clamp(24px,3.6vw,52px);line-height:1.1;color:var(--fg);display:inline-flex;align-items:center;gap:26px;}
+#measure .chips span{background:none;box-shadow:none;padding:0;font-family:'PT HY Display','Noto Sans Armenian',sans-serif;font-weight:700;font-size:clamp(24px,3.6vw,52px);line-height:1.1;color:#F4F3F1;display:inline-flex;align-items:center;gap:26px;}
 #measure .chips span::after{content:"";width:7px;height:7px;background:var(--brand);}
 #measure .chips span:last-child::after{display:none;}
 
@@ -238,9 +247,13 @@ h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
 
 /* assignments */
 .asg .card{transition:box-shadow .45s var(--e),transform .5s var(--e);}
-.asg .card:hover{box-shadow:inset 0 0 0 1px var(--hair);transform:translateY(-3px);}
+.asg .card:hover{transform:none;}
 .asg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:42px;}
-.asg .card{background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);padding:clamp(22px,2.6vw,34px);border-radius:2px;}
+.asg .card{position:relative;background:none;box-shadow:none;border-top:1px solid var(--hair);
+  padding:clamp(20px,2.4vw,30px) clamp(18px,2vw,26px) clamp(24px,2.6vw,34px) 0;border-radius:0;}
+.asg .card::before{content:"";position:absolute;top:-1px;left:0;width:44px;height:1px;background:var(--brand);
+  transition:width .55s var(--e);}
+.asg .card:hover::before{width:100%;}
 .asg .hd{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
 .asg .no{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.14em;color:var(--fg-soft);}
 .asg .tag{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:9.5px;letter-spacing:.16em;color:var(--brand);text-transform:uppercase;}
@@ -253,13 +266,17 @@ h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
 
 /* company */
 .pr{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,30px);margin-top:44px;}
+.pr .p{border-top:1px solid var(--hair2);padding-top:16px;}
 .pr .p .no{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.16em;color:var(--brand);}
 .pr .p h3{font-size:clamp(18px,1.9vw,25px);margin:12px 0 9px;}
 .pr .p p{font-size:14.5px;line-height:1.7;color:var(--fg-mid);}
 .sub{margin-top:clamp(50px,7vw,90px);}
 .sub h3{font-size:clamp(24px,3vw,40px);}
 .stages{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:30px;}
-.stage2{background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);padding:22px;border-radius:2px;}
+.stage2{position:relative;background:none;box-shadow:none;border-top:1px solid var(--hair);padding:18px 0 0;border-radius:0;
+  transition:border-color .45s var(--e);}
+.stage2::before{content:"";position:absolute;top:-1px;left:0;width:34px;height:1px;background:var(--brand);}
+.stage2:hover{border-color:var(--fg-soft);}
 .stage2 .tag{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10px;letter-spacing:.16em;color:var(--brand);text-transform:uppercase;}
 .stage2 p{margin-top:10px;font-size:14.5px;line-height:1.65;color:var(--fg-mid);}
 
@@ -354,6 +371,8 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   </div>
 </div></section>
 
+<div class="dith" data-dith="#0A0B0F,#EFEDEA"></div>
+
 <div class="wrap"><svg class="joint" data-joint="0"></svg></div>
 
 <section class="sec thesis" id="why" data-rail><div class="wrap rv">
@@ -389,7 +408,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <div class="other rv"><div><div class="no">07</div><h3>Այլ կարևոր էլեկտրական համակարգեր</h3><p>Չե՞ք գտնում ձեր ոլորտն այստեղ։ Նկարագրեք խնդիրը և դրա ազդեցությունը սարքավորման աշխատանքի վրա։</p></div><button class="btn" data-open-form><span>Նկարագրել խնդիրը ↗</span></button></div>
 </div></section>
 
-<div class="wrap"><svg class="joint" data-joint="1"></svg></div>
+<div class="dith" data-dith="#EFEDEA,#0D0E13"></div>
 
 <section class="sec plate2" id="services" data-rail><div class="wrap">
   <div class="rv"><div class="eyebrow">ԾԱՌԱՅՈՒԹՅՈՒՆՆԵՐ</div>
@@ -402,7 +421,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <a class="alink rv" href="#report">Տեսնել, թե ինչ կարող է բացահայտել մոնիթորինգը ↗</a>
 </div></section>
 
-<div class="wrap"><svg class="joint" data-joint="2"></svg></div>
+<div class="dith" data-dith="#14161C,#EFEDEA"></div>
 
 <section class="sec" id="report" data-rail><div class="wrap two">
   <div class="rv"><div class="cnt">04</div><h2>Հաշվետվություն տեխնիկական որոշումների համար</h2>
@@ -419,12 +438,14 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <div class="asg rv"><div class="card"><div class="hd"><span class="no">01</span><span class="tag">ԽԱՓԱՆՈՒՄՆԵՐ</span></div><h3>Խափանումների ուսումնասիրություն</h3><p>Գնահատել՝ արդյոք սարքավորումների անջատումները, ազդանշանները կամ գործընթացի ընդհատումները համընկել են գրանցված էլեկտրական իրադարձությունների հետ։</p></div><div class="card"><div class="hd"><span class="no">02</span><span class="tag">ՀԱՆՁՆՈՒՄ</span></div><h3>Գործարկման և հանձնման գնահատում</h3><p>Գրանցել էլեկտրական համակարգի աշխատանքային պայմանները՝ ընդունման, հանձնման կամ երաշխիքային ժամկետի ավարտից առաջ կատարվող ստուգման համար։</p></div><div class="card"><div class="hd"><span class="no">03</span><span class="tag">ԱՐԵՎԱՅԻՆ</span></div><h3>Արևային կայանի միացման գնահատում</h3><p>Գնահատել լարման պայմաններն ու ինվերտորի իրադարձությունները կայանի համապատասխան կետերում և միացման կետում։</p></div><div class="card"><div class="hd"><span class="no">04</span><span class="tag">ՏԵԽՆԻԿԱԿԱՆ ԳՆԱՀԱՏՈՒՄ</span></div><h3>Չափումներ՝ տեխնիկական համալիր գնահատման համար</h3><p>Տրամադրել բեռնվածության, էլեկտրաէներգիայի որակի և դիտարկված աշխատանքային սահմանափակումների անկախ չափումներ՝ տեխնիկական համալիր գնահատման համար։</p></div></div>
 </div></section>
 
+<div class="dith" data-dith="#EFEDEA,#0D0E13"></div>
+
 <section class="sec plate2" id="measure"><div class="wrap rv">
   <div class="cnt">06</div><h2>Ինչ ենք չափում</h2>
   <div class="chips"><span>Լարում և հոսանք</span><span>Հարմոնիկներ և միջհարմոնիկներ</span><span>Ֆլիկեր</span><span>Լարման անկումներ</span><span>Լարման անհամաչափություն</span><span>Հզորություն և էներգիա</span><span>Իրադարձություններ</span></div>
 </div></section>
 
-<div class="wrap"><svg class="joint" data-joint="4"></svg></div>
+<div class="dith" data-dith="#14161C,#EFEDEA"></div>
 
 <section class="sec" id="company" data-rail><div class="wrap">
   <div class="rv"><div class="eyebrow">ԸՆԿԵՐՈՒԹՅՈՒՆ</div>
@@ -434,6 +455,8 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <div class="sub rv"><h3>Չափման վայրից մինչև հաշվետվություն</h3><p class="lede">Տեղադրումը, գրանցումը և վերլուծությունն իրականացվում են մեկ պատասխանատու ինժեների ղեկավարությամբ։</p>
   <div class="stages"><div class="stage2"><div class="tag">01 · ՏԵՂՈՒՄ</div><p>Չափման համակարգի տեղադրումն ու միացումը ստուգվում են նախքան գրանցումը։</p></div><div class="stage2"><div class="tag">02 · ԳՐԱՆՑՈՒՄ</div><p>Էլեկտրական պայմանները գրանցվում են համաձայնեցված ժամանակահատվածում։</p></div><div class="stage2"><div class="tag">03 · ԳՆԱՀԱՏՈՒՄ</div><p>Արդյունքները մեկնաբանվում են խնդրի համատեքստում և փաստաթղթավորվում։</p></div></div></div>
 </div></section>
+
+<div class="dith" data-dith="#EFEDEA,#0D0E13"></div>
 
 <section class="plate" id="contact"><div class="wrap">
   <div class="rv"><h2>Նկարագրեք խնդիրը</h2><p>Նշեք՝ ինչ է տեղի ունեցել, որ սարքավորման վրա է դա ազդել, և երբ է խնդիրը դրսևորվել կամ սովորաբար կրկնվում։ Մենք կգնահատենք՝ կարող է արդյոք մոնիթորինգը պատասխանել հարցին և չափումների ինչ շրջանակ է անհրաժեշտ։</p>
@@ -501,7 +524,7 @@ var mouse={x:-9999,y:-9999,on:false};
 var EV_FIRST=2.4,EV_EVERY=7.0,EV_DUR=1.35,evNext=EV_FIRST,evT=0;
 var MILK='244,243,241',CORAL='224,116,74';
 var WF={stiff:9.5,damp:4.4,mouseR:150,push:2600,glide:.115,band:.34,
-  dimLo:.05,litHi:.5,core:.3};
+  dimLo:.10,litHi:.72,core:.5};
 function size(){
   dpr=Math.min(2,devicePixelRatio||1);
   var r=cv.parentElement.getBoundingClientRect();
@@ -601,22 +624,22 @@ function frame(ts){
     /* base trace */
     cx.beginPath();cx.moveTo(pts[0][0],pts[0][1]);
     for(var s2=1;s2<pts.length;s2++)cx.lineTo(pts[s2][0],pts[s2][1]);
-    cx.strokeStyle='rgba('+MILK+','+(WF.dimLo+0.09*t.lit).toFixed(3)+')';
-    cx.lineWidth=1;cx.stroke();
+    cx.strokeStyle='rgba('+MILK+','+(WF.dimLo+0.16*t.lit).toFixed(3)+')';
+    cx.lineWidth=1.15;cx.stroke();
     /* travelling light — one horizontal gradient, sampled along the trace */
     var g=cx.createLinearGradient(0,0,W,0);
     for(var gi=0;gi<=10;gi++){
       var gu=gi/10,a=lightAt(gu,head,WF.band)*WF.litHi*t.lit;
       g.addColorStop(gu,'rgba('+CORAL+','+a.toFixed(4)+')');
     }
-    cx.strokeStyle=g;cx.lineWidth=1.7;cx.stroke();
+    cx.strokeStyle=g;cx.lineWidth=2;cx.stroke();
     /* hot core inside the light */
     var g2=cx.createLinearGradient(0,0,W,0);
     for(var gj=0;gj<=10;gj++){
       var gu2=gj/10,a2=Math.pow(lightAt(gu2,head,WF.band*.6),1.6)*WF.core*t.lit;
       g2.addColorStop(gu2,'rgba(255,240,230,'+a2.toFixed(4)+')');
     }
-    cx.strokeStyle=g2;cx.lineWidth=.8;cx.stroke();
+    cx.strokeStyle=g2;cx.lineWidth=1;cx.stroke();
     /* event tint on the affected traces */
     if(evT>0&&evP>0.02){
       cx.strokeStyle='rgba('+CORAL+','+(evP*.30*t.lit).toFixed(3)+')';
@@ -632,14 +655,18 @@ function frame(ts){
   }
   /* parameter labels at the right end of selected traces */
   schedLabels(dt);
-  cx.font='600 '+(W>620?11:10)+'px '+PT.canvasFont;
+  cx.font='600 '+(W>620?12:10.5)+'px '+PT.canvasFont;
   cx.textAlign='right';
   labelSlots.forEach(function(s){
     if(s.vis<=.01)return;
     var t=traces[s.i],baseY=padY+s.i*gap;
-    var y=baseY+t.disp-7;
-    cx.fillStyle='rgba('+MILK+','+(s.vis*.6).toFixed(3)+')';
-    cx.fillText(s.lab,W-10,Math.max(14,Math.min(H-6,y)));
+    var y=Math.max(16,Math.min(H-8,baseY+t.disp-9));
+    var tw=cx.measureText(s.lab).width,pad=6,x=W-12;
+    /* a dark pad keeps the label readable wherever the traces run */
+    cx.fillStyle='rgba(10,11,15,'+(s.vis*.7).toFixed(3)+')';
+    cx.fillRect(x-tw-pad,y-11,tw+pad*2,17);
+    cx.fillStyle='rgba('+MILK+','+(s.vis*.92).toFixed(3)+')';
+    cx.fillText(s.lab,x-pad,y);
   });
   /* readout follows the same event */
   if(!frame.hm||ts-frame.hm>360){frame.hm=ts;
@@ -867,6 +894,30 @@ function railBar(){
 irail.addEventListener('scroll',railBar,{passive:true});
 railBar();
 
+/* ============ DITHER BANDS — pixel dissolve between dark and light ============ */
+function buildDither(){
+  document.querySelectorAll('.dith').forEach(function(band){
+    var pair=(band.dataset.dith||'').split(',');
+    if(pair.length<2)return;
+    var top=pair[0].trim(),bot=pair[1].trim();
+    var cs=Math.max(14,Math.round(innerWidth/64));
+    var cols=Math.ceil(innerWidth/cs),rows=Math.max(4,Math.round(band.offsetHeight/cs));
+    band.style.gridTemplateColumns='repeat('+cols+',1fr)';
+    band.style.gridTemplateRows='repeat('+rows+',1fr)';
+    var html='';
+    for(var r=0;r<rows;r++){
+      /* probability of the lower colour grows down the band → a dithered dissolve */
+      var p=(r+0.5)/rows;
+      p=p*p*(3-2*p);                       /* smoothstep, so the edges stay clean */
+      for(var c=0;c<cols;c++){
+        html+='<i style="background:'+(Math.random()<p?bot:top)+'"></i>';
+      }
+    }
+    band.innerHTML=html;
+  });
+}
+buildDither();
+
 /* ============ PIXEL TRANSITION — a real page transition ============ */
 /* Covers the viewport with brand squares, then navigates; the incoming page
    reveals from the covered state. Only for cross-document links (language). */
@@ -1017,7 +1068,7 @@ document.addEventListener('scroll',function(){
   hdr.classList.toggle('scr',(document.scrollingElement||document.documentElement).scrollTop>20||scrollY>20);
 },{passive:true,capture:true});
 buildJoints();buildRails();
-addEventListener('resize',function(){clearTimeout(size.t);size.t=setTimeout(function(){size();buildJoints();buildWipe();buildRails();},220);});
+addEventListener('resize',function(){clearTimeout(size.t);size.t=setTimeout(function(){size();buildJoints();buildWipe();buildRails();buildDither();},220);});
 /* rails depend on final layout (fonts) */
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){buildRails();});
 addEventListener('load',function(){buildRails();});
