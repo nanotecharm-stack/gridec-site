@@ -135,11 +135,8 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 #wipe.instant i{transition:none;}
 /* dithered pixel boundary: a band of squares that dissolves one section colour
    into the next — cantor8's actual device (static dither, not an animation) */
-.dith{position:relative;height:clamp(58px,7vw,104px);display:grid;width:100%;line-height:0;}
+.dith{position:relative;display:grid;width:100%;line-height:0;}
 .dith i{display:block;}
-/* once the band is fully behind us it is one flat plane — no per-cell work */
-.dith.is-solid{background:var(--dbot);}
-.dith.is-solid i{visibility:hidden;}
 
 /* dark plate section (services) */
 .plate2{position:relative;overflow:hidden;background:linear-gradient(180deg,#0D0E13 0%,#111318 60%,#14161C 100%);color:#EFEDEA;}
@@ -440,7 +437,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   </div>
 </section>
 
-<div class="dith" data-dith="#C8603D,#EFEDEA"></div>
+<div class="dith" data-dith="#C8603D,#EFEDEA,#E5825A"></div>
 
 <section class="sec thesis" id="why" data-rail><div class="wrap">
   <div class="rv intro">
@@ -473,7 +470,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <div class="other rv"><div><div class="no">07</div><h3>Other Critical Electrical Systems</h3><p>Do not see your sector here? Describe the issue and the equipment affected. Monitoring is defined by the technical question, not by the sector alone.</p></div><button class="btn" data-open-form><span>Describe the issue ↗</span></button></div>
 </div></section>
 
-<div class="dith" data-dith="#EFEDEA,#0D0E13"></div>
+<div class="dith" data-dith="#EFEDEA,#0D0E13,#C8603D"></div>
 
 <section class="sec plate2" id="services" data-rail><div class="wrap">
   <div class="rv"><div class="eyebrow">SERVICES</div>
@@ -486,7 +483,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <a class="alink rv" href="#report">See what monitoring can reveal ↗</a>
 </div></section>
 
-<div class="dith" data-dith="#14161C,#EFEDEA"></div>
+<div class="dith" data-dith="#14161C,#EFEDEA,#C8603D"></div>
 
 <section class="sec" id="report" data-rail><div class="wrap two">
   <div class="rv"><div class="cnt">04</div><h2>A report built for technical decisions</h2>
@@ -503,14 +500,14 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <div class="asg rv"><div class="card"><div class="hd"><span class="no">01</span><span class="tag">INCIDENTS</span></div><h3>Incident Investigation</h3><p>Assess whether equipment trips, alarms or process interruptions coincide with recorded electrical events.</p></div><div class="card"><div class="hd"><span class="no">02</span><span class="tag">HANDOVER</span></div><h3>Commissioning and Handover Assessment</h3><p>Record electrical operating conditions to support acceptance, handover or end-of-warranty review.</p></div><div class="card"><div class="hd"><span class="no">03</span><span class="tag">SOLAR</span></div><h3>Solar PV Connection Assessment</h3><p>Assess voltage conditions and inverter events at relevant points within the plant and at the point of connection.</p></div><div class="card"><div class="hd"><span class="no">04</span><span class="tag">DUE DILIGENCE</span></div><h3>Technical Due Diligence Measurements</h3><p>Provide independent measurements of loading, power quality and observed operating constraints to support technical due diligence.</p></div></div>
 </div></section>
 
-<div class="dith" data-dith="#EFEDEA,#0D0E13"></div>
+<div class="dith" data-dith="#EFEDEA,#0D0E13,#C8603D"></div>
 
 <section class="sec plate2" id="measure"><div class="wrap rv">
   <div class="cnt">06</div><h2>What we measure</h2>
   <div class="meas"><div class="mi"><span class="ix">01</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 15C4 7 6 7 8 15s4 8 6 0 4-8 6 0 4 8 6 0 4-8 6 0" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2 15c2 8 4 8 6 0s4-8 6 0 4 8 6 0 4-8 6 0 4 8 6 0" fill="none" stroke="var(--brand)" stroke-width="1.3" opacity=".85"/></svg><span class="lb2">Voltage & Current</span></div><div class="mi"><span class="ix">02</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 26h40" stroke="currentColor" stroke-width="1" opacity=".45"/><g stroke="currentColor" stroke-width="2.6" stroke-linecap="square"><path d="M6 26V6"/><path d="M13 26V13" opacity=".8"/><path d="M20 26V17" opacity=".62"/><path d="M27 26V20" opacity=".48"/><path d="M34 26V22" opacity=".36"/></g><path d="M6 26V6" stroke="var(--brand)" stroke-width="2.6" stroke-linecap="square"/></svg><span class="lb2">Harmonics & Interharmonics</span></div><div class="mi"><span class="ix">03</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 8c8 0 14 4 20 4s12-4 20-4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35" stroke-dasharray="3 3"/><path d="M2 22c8 0 14-4 20-4s12 4 20 4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35" stroke-dasharray="3 3"/><path d="M4 15c2 4 4 4 6 0s4-6 6 0 4 8 6 0 4-6 6 0 4 4 6 0" fill="none" stroke="var(--brand)" stroke-width="1.4"/></svg><span class="lb2">Flicker</span></div><div class="mi"><span class="ix">04</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 10h12v12h12V10h14" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M14 22h12" stroke="var(--brand)" stroke-width="2.4"/></svg><span class="lb2">Voltage Dips</span></div><div class="mi"><span class="ix">05</span><svg viewBox="0 0 44 30" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M22 17V4"/><path d="M22 17l11 7"/></g><path d="M22 17l-10 6" stroke="var(--brand)" stroke-width="1.4" stroke-linecap="round"/><circle cx="22" cy="17" r="1.8" fill="currentColor"/></svg><span class="lb2">Unbalance</span></div><div class="mi"><span class="ix">06</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 26c8 0 10-14 18-14s10 8 22 4v10z" fill="currentColor" opacity=".18"/><path d="M2 26c8 0 10-14 18-14s10 8 22 4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2 26h40" stroke="var(--brand)" stroke-width="1.4"/></svg><span class="lb2">Power & Energy</span></div><div class="mi"><span class="ix">07</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 17h14l4-11 4 22 3-11h13" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="18" y="4" width="4" height="4" fill="var(--brand)"/></svg><span class="lb2">Events</span></div></div>
 </div></section>
 
-<div class="dith" data-dith="#14161C,#EFEDEA"></div>
+<div class="dith" data-dith="#14161C,#EFEDEA,#C8603D"></div>
 
 <section class="sec" id="company" data-rail><div class="wrap">
   <div class="rv"><div class="eyebrow">COMPANY</div>
@@ -1113,20 +1110,18 @@ navSpy();
    solid once passed). Same idea here: at p=0 the band still reads as the section
    above, at p=1 it is solid with the section below, so the boundary dissolves. */
 var dBands=[];
-/* Ordered dither, not noise: cells fill in a fixed Bayer sequence, so the
-   pattern reads as designed and is identical on every load. Two counters walk
-   that sequence as the band crosses the screen, and once it is past, the band
-   becomes a single flat plane (one class, like cantor8's is-solid). */
-var BAYER=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+/* The band is the seam between two sections, so it must stay ragged for as long
+   as it is on screen: big cells, a shuffled order, and a range that only
+   completes once the band has left the viewport entirely. */
 function buildDither(){
   dBands=[];
   document.querySelectorAll('.dith').forEach(function(band){
     var pair=(band.dataset.dith||'').split(',');
     if(pair.length<2)return;
-    var top=pair[0].trim(),bot=pair[1].trim();
-    band.style.setProperty('--dbot',bot);
-    var cs=Math.max(14,Math.round(innerWidth/64));
-    var cols=Math.ceil(innerWidth/cs),rows=Math.max(4,Math.round(band.offsetHeight/cs));
+    var top=pair[0].trim(),bot=pair[1].trim(),acc=(pair[2]||'').trim();
+    var cell=Math.max(44,Math.min(78,Math.round(innerWidth/19)));
+    var cols=Math.ceil(innerWidth/cell),rows=4;
+    band.style.height=(rows*cell)+'px';
     band.style.gridTemplateColumns='repeat('+cols+',1fr)';
     band.style.gridTemplateRows='repeat('+rows+',1fr)';
     band.innerHTML='';
@@ -1134,15 +1129,20 @@ function buildDither(){
     for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){
       var i=document.createElement('i');
       i.style.background=top;
-      var idx=cells.length;
-      cells.push({el:i,on:false});
-      /* rows nearest the next section go first, Bayer breaks the ties */
-      order.push({idx:idx,key:(rows-1-r)*16+BAYER[r%4][c%4]});
+      /* a few cells flip to an accent instead of the plain incoming colour */
+      var isAcc=acc&&Math.random()<0.07;
+      cells.push({el:i,to:isAcc?acc:bot});
+      order.push(cells.length-1);
       band.appendChild(i);
     }
-    order.sort(function(x,y){return x.key-y.key;});
-    dBands.push({el:band,cells:cells,top:top,bot:bot,
-      order:order.map(function(o){return o.idx;}),count:0,solid:false});
+    /* rows nearest the incoming section go earlier, but the order inside the
+       band is shuffled, so the edge breaks up unevenly rather than in stripes */
+    order.sort(function(x,y){
+      var rx=Math.floor(x/cols),ry=Math.floor(y/cols);
+      var kx=(rows-1-rx)+Math.random()*2.2,ky=(rows-1-ry)+Math.random()*2.2;
+      return kx-ky;
+    });
+    dBands.push({el:band,cells:cells,top:top,order:order,count:0});
   });
   paintDither();
 }
@@ -1150,18 +1150,13 @@ function paintDither(){
   var vh=innerHeight;
   for(var b=0;b<dBands.length;b++){
     var band=dBands[b],r=band.el.getBoundingClientRect();
-    /* their range: from the band's bottom meeting the viewport bottom, to its
-       top meeting the viewport top — the whole travel, so the fill is calm */
-    var span=r.height+vh;
-    var p=(vh-r.top)/span;
+    /* 0 when the band's top reaches the bottom of the screen, 1 only once the
+       band has fully passed above it — so pixels persist while it is in view */
+    var p=(vh-r.top)/(r.height+vh);
     p=p<0?0:(p>1?1:p);
-    var solid=r.bottom<=0;                       /* fully behind us */
-    if(solid!==band.solid){band.solid=solid;band.el.classList.toggle('is-solid',solid);}
-    if(solid)continue;
     var want=Math.round(p*band.cells.length);
     if(want===band.count)continue;
-    /* walk the fixed sequence forwards or backwards — only the delta is touched */
-    while(band.count<want){var c1=band.cells[band.order[band.count]];c1.el.style.background=band.bot;band.count++;}
+    while(band.count<want){var c1=band.cells[band.order[band.count]];c1.el.style.background=c1.to;band.count++;}
     while(band.count>want){band.count--;var c2=band.cells[band.order[band.count]];c2.el.style.background=band.top;}
   }
 }
