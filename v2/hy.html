@@ -16,6 +16,7 @@
 @font-face{font-family:'Noto Sans Armenian';font-weight:700;font-display:swap;src:url(../fonts/noto-sans-armenian-700-latin.woff2) format('woff2');}
 @font-face{font-family:'Martian Mono';font-weight:600;font-display:swap;src:url(../fonts/martian-mono-600-latin.woff2) format('woff2');}
 :root{--brand:#C8603D;--e:cubic-bezier(.16,1,.3,1);--metal:url(../uploads/img/hero_metal.webp);
+  --gut:clamp(18px,4vw,56px);--inset:calc(max(0px,(100vw - 1280px)/2) + clamp(18px,4vw,56px));
 --bg:#EFEDEA;--panel:#FFFFFF;--fg:#0D0E13;--fg-mid:rgba(13,14,19,.64);--fg-soft:rgba(13,14,19,.40);--hair:rgba(13,14,19,.13);--hair2:rgba(13,14,19,.07);--inv:#0D0E13;--inv-fg:#EFEDEA;}
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -160,21 +161,25 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .plate2 h2 i,.plate2 .lede i{color:rgba(239,237,234,.4);}
 
 /* industries — horizontal rail, detail opens on click */
+.suite .spin>.wrap{width:100%;}
 .rail-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:clamp(20px,3vw,38px);}
 .rail-nav{display:flex;gap:6px;align-items:center;}
 .rail-nav button{width:40px;height:40px;box-shadow:inset 0 0 0 1px var(--hair);display:grid;place-items:center;font-size:15px;transition:.3s var(--e);border-radius:2px;}
 .rail-nav button:hover{background:var(--brand);color:#fff;box-shadow:none;}
 .rail-nav button[disabled]{opacity:.3;pointer-events:none;}
-.railwrap{position:relative;}
+.railwrap{position:relative;width:100%;}
 /* pinned: the section is tall, the frame sticks, and the rail is paged by scroll */
 .suite{position:relative;}
 .suite .spin{position:sticky;top:0;min-height:100svh;display:flex;flex-direction:column;justify-content:center;
   padding:clamp(84px,11vh,120px) 0 clamp(28px,4vh,52px);}
-.hrail{--per:3.5;display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding:6px 0 26px;
+/* the zone runs the full width: the first card lines up with the heading above,
+   the rest carry on past the right edge */
+.hrail{--per:3.5;display:flex;align-items:flex-start;gap:0;overflow-x:auto;
+  padding:6px var(--inset,56px) 26px;
   scrollbar-width:none;-ms-overflow-style:none;overscroll-behavior-x:contain;}
 .hrail::-webkit-scrollbar{display:none;}
 .suite .hrail{overflow-x:hidden;}                 /* movement comes from the page */
-.icard{flex:0 0 calc(100%/var(--per));padding:0 clamp(5px,.7vw,11px);}
+.icard{flex:0 0 calc((var(--vw,100vw) - var(--inset,0px))/var(--per));padding:0 clamp(5px,.7vw,11px);}
 .icard:nth-child(7n+1){padding-top:0;}
 .icard:nth-child(7n+2){padding-top:clamp(18px,3vw,56px);}
 .icard:nth-child(7n+3){padding-top:clamp(8px,1.4vw,26px);}
@@ -223,6 +228,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   display:grid;place-items:center;font-size:14px;transition:.3s var(--e);}
 .rail-nav button:hover:not(:disabled){background:var(--fg);color:var(--bg);}
 .rail-nav button:disabled{opacity:.3;cursor:default;}
+.suite .spin>.wrap{width:100%;}
 .rail-head{display:flex;justify-content:space-between;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-bottom:clamp(20px,2.6vw,34px);}
 .railbar{height:2px;background:var(--hair2);position:relative;}
 .icard .bd{will-change:auto;}
@@ -506,11 +512,12 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
       <div style="display:flex;align-items:center;gap:14px;margin-top:16px"><div class="rail-dots" id="rdots"></div><div class="rail-nav"><button id="rprev" aria-label="prev">←</button><button id="rnext" aria-label="next">→</button></div></div>
     </div>
   </div>
+</div>
   <div class="railwrap">
     <div class="hrail" id="irail"></div>
-    <div class="railbar"><i id="rbar"></i></div>
   </div>
-</div></div></section>
+  <div class="wrap"><div class="railbar"><i id="rbar"></i></div></div>
+</div></section>
 
 
 <div class="dith" data-dith="#EFEDEA,#0D0E13,#C8603D"></div>
@@ -1235,7 +1242,17 @@ function suiteTravel(){return Math.max(0,irail.scrollWidth-irail.clientWidth);}
 function layoutSuite(){
   if(!suiteSec)return;
   suitePinned=innerWidth>991;
-  if(!suitePinned){suiteSec.style.height='';irail.scrollLeft=0;railBar();return;}
+  if(!suitePinned){suiteSec.style.height='';railCur=0;railTarget=0;irail.scrollLeft=0;railBar();return;}
+  /* line the first plate up with the heading, measured from the real column */
+  var w=suiteSec.querySelector('.spin > .wrap'),card=irail.querySelector('.icard');
+  if(w&&card){
+    var gut=w.getBoundingClientRect().left+parseFloat(getComputedStyle(w).paddingLeft);
+    var pad=parseFloat(getComputedStyle(card).paddingLeft)||0;
+    irail.style.setProperty('--vw',document.documentElement.clientWidth+'px');
+    irail.style.setProperty('--inset',gut+'px');
+    irail.style.paddingLeft=(gut-pad)+'px';
+    irail.style.paddingRight=gut+'px';
+  }
   /* a little more page than rail, so the pass feels unhurried */
   suiteSec.style.height=(innerHeight+suiteTravel()*1.15)+'px';
   suiteUpd();
@@ -1247,20 +1264,38 @@ function suiteProgress(){
   var p=-r.top/total;
   return p<0?0:(p>1?1:p);
 }
-function suiteUpd(){
-  if(!suiteSec||!suitePinned)return;
-  var p=suiteProgress();
-  irail.scrollLeft=p*suiteTravel();
+/* Their page scrolls through Lenis at lerp 0.1, which is why anything tied to
+   scroll feels soft there. Mapping scroll straight onto the rail felt stepped,
+   so the rail now chases its target with the same easing, frame-rate normalised. */
+var railTarget=0,railCur=0,railRAF=0,railLast=0;
+function railChase(ts){
+  var dt=railLast?Math.min(.05,(ts-railLast)/1000):.016;railLast=ts;
+  var k=1-Math.pow(1-0.18,dt*60);             /* stiffer than their page lerp:
+                                                 here only the rail eases, so it
+                                                 must stay attached to the scroll */
+  railCur+=(railTarget-railCur)*k;
+  if(Math.abs(railTarget-railCur)<0.4){railCur=railTarget;railRAF=0;railLast=0;}
+  else railRAF=requestAnimationFrame(railChase);
+  paintRail();
+}
+function paintRail(){
+  irail.scrollLeft=railCur;
   railBar();
-  /* each photo drifts a little against its card — weight, not decoration */
+  /* each photo drifts against its card — weight, not decoration */
   var mid=irail.clientWidth/2;
   for(var i=0;i<irail.children.length;i++){
     var im=irail.children[i].querySelector('.ic-art img');
     if(!im)continue;
-    var c=irail.children[i],cx0=c.offsetLeft-irail.scrollLeft+c.offsetWidth/2;
+    var c=irail.children[i],cx0=c.offsetLeft-railCur+c.offsetWidth/2;
     var d=(cx0-mid)/mid;
-    im.style.transform='scale(1.06) translate3d('+(-d*10).toFixed(2)+'px,0,0)';
+    im.style.transform='scale(1.06) translate3d('+(-d*12).toFixed(2)+'px,0,0)';
   }
+}
+function suiteUpd(){
+  if(!suiteSec||!suitePinned)return;
+  railTarget=suiteProgress()*suiteTravel();
+  if(rm){railCur=railTarget;paintRail();return;}
+  if(!railRAF){railLast=0;railRAF=requestAnimationFrame(railChase);}
 }
 function cardStride(){var c=irail.querySelector('.icard');return c?c.offsetWidth:280;}
 function railIndex(){return Math.round(irail.scrollLeft/Math.max(1,cardStride()));}
