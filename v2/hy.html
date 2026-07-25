@@ -82,11 +82,11 @@ nav a.here{color:var(--inv-fg);background:var(--inv);}
 .hero{position:relative;min-height:100svh;overflow:hidden;color:#EFEDEA;
   background:radial-gradient(120% 90% at 78% 30%,#171A22 0%,#101218 44%,#0A0B0F 100%);}
 .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(60% 55% at 72% 44%,rgba(200,96,61,.13),transparent 68%);}
+  background:radial-gradient(56% 52% at 74% 46%,rgba(200,96,61,.085),transparent 70%);}
 /* generated dark-metal texture — quiet, never competing with the wave field */
 .hero::before{content:"";position:absolute;inset:0;pointer-events:none;
   background:var(--metal) center/cover no-repeat;
-  opacity:.20;filter:saturate(.5) contrast(1.02);
+  opacity:.12;filter:saturate(.42) contrast(1.02);
   mask-image:linear-gradient(180deg,#000 0%,#000 62%,transparent 100%);
   -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 62%,transparent 100%);}
 /* Two areas across the FULL width: text hard left, wave field running to the
@@ -97,24 +97,24 @@ nav a.here{color:var(--inv-fg);background:var(--inv);}
   align-items:center;gap:clamp(18px,3vw,52px);
   min-height:100svh;max-width:none;margin:0;
   padding:clamp(104px,12vh,132px) 0 clamp(44px,6vh,72px) clamp(14px,2.1vw,30px);}
-h1{font-size:clamp(34px,5.6vw,86px);margin-top:18px;text-wrap:balance;}
+h1{font-size:clamp(34px,5.6vw,86px);margin-top:20px;text-wrap:balance;}
 /* the headline keeps its full measure: it may reach past its column into the
    quiet left part of the wave field rather than break into extra lines */
 .hcol{position:relative;z-index:3;}
 .hero h1{color:#F4F3F1;width:max-content;max-width:min(72vw,1060px);}
 h1 em{font-style:normal;color:var(--brand);}
-.hero .hp{max-width:42ch;font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.74;color:rgba(239,237,234,.66);margin-top:24px;}
+.hero .hp{max-width:38ch;font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.76;color:rgba(239,237,234,.62);margin-top:30px;}
 .acts{display:flex;gap:11px;margin-top:26px;flex-wrap:wrap;}
 .hero .btn{background:var(--brand);color:#fff;}
 .hero .btn::before{background:#EFEDEA;}
 .hero .btn:hover span{color:#0D0E13;}
 .hero .btn.gh{background:transparent;color:#EFEDEA;box-shadow:inset 0 0 0 1px rgba(239,237,234,.28);}
 /* its own area again, so the cursor reaches the canvas and the strings react */
-.stage{position:relative;align-self:stretch;min-height:56vh;}
+.stage{position:relative;align-self:center;height:min(42vh,380px);}
 #star{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;}
 /* keeps whatever crosses into the field readable, without dimming the waves */
 .stage::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(90deg,rgba(10,11,15,.92) 0%,rgba(10,11,15,.5) 26%,transparent 52%);}
+  background:linear-gradient(90deg,rgba(10,11,15,.72) 0%,transparent 34%);}
 .rd{position:absolute;left:0;bottom:clamp(10px,2vh,22px);z-index:2;
   font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;color:rgba(239,237,234,.55);line-height:1.95;}
 .rd b{color:#F4F3F1;font-variant-numeric:tabular-nums;font-weight:600;}
@@ -584,14 +584,14 @@ var PT=window.PT;
    oscillation with its own spring displacement; a soft light travels along it.
    Events collapse the amplitude into a visible sag, matching the readout. */
 var cv=document.getElementById('star'),cx=cv.getContext('2d');
-var LINES=26,W=0,H=0,dpr=1,tt=0;
+var LINES=12,W=0,H=0,dpr=1,tt=0;
 var LABELS=PT.starLabels;
 var traces=[];
 var mouse={x:-9999,y:-9999,on:false};
 var EV_FIRST=3.2,EV_EVERY=11.0,EV_DUR=1.35,evNext=EV_FIRST,evT=0;
 var MILK='244,243,241',CORAL='224,116,74';
-var WF={stiff:9.5,damp:4.4,mouseR:150,push:2600,glide:.07,band:.30,
-  dimLo:.10,litHi:.40,core:.24};
+var WF={stiff:9.5,damp:4.4,mouseR:130,push:2600,glide:.06,band:.30,
+  dimLo:.085,litHi:.34,core:.20};
 function size(){
   dpr=Math.min(2,devicePixelRatio||1);
   var r=cv.parentElement.getBoundingClientRect();
@@ -631,9 +631,9 @@ function frame(ts){
   if(evT>0)evT=Math.max(0,evT-dt);
   var evP=evT>0?Math.sin((1-evT/EV_DUR)*Math.PI):0;   /* 0→1→0 over the event */
   cx.clearRect(0,0,W,H);
-  var padY=H*0.10,spanY=H-padY*2,gap=spanY/(LINES-1);
+  var padY=H*0.08,spanY=H-padY*2,gap=spanY/(LINES-1);
   var SEG=64,sagX=W*(0.18+0.5*(1-evT/EV_DUR));       /* the sag travels left→right */
-  var baseAmp=gap*1.5;
+  var baseAmp=gap*1.05;
   for(var i=0;i<LINES;i++){
     var t=traces[i],baseY=padY+i*gap;
     /* spring: rest at 0, pushed by the cursor */
@@ -672,7 +672,7 @@ function frame(ts){
     cx.beginPath();cx.moveTo(pts[0][0],pts[0][1]);
     for(var s2=1;s2<pts.length;s2++)cx.lineTo(pts[s2][0],pts[s2][1]);
     cx.strokeStyle='rgba('+MILK+','+(WF.dimLo+0.16*t.lit).toFixed(3)+')';
-    cx.lineWidth=1.15;cx.stroke();
+    cx.lineWidth=.9;cx.stroke();
     /* travelling light — only on the few traces that carry it */
     if(t.carries){
       var g=cx.createLinearGradient(0,0,W,0);
@@ -680,7 +680,7 @@ function frame(ts){
         var gu=gi/10,a=lightAt(gu,head,WF.band)*WF.litHi*t.lit;
         g.addColorStop(gu,'rgba('+CORAL+','+a.toFixed(4)+')');
       }
-      cx.strokeStyle=g;cx.lineWidth=1.8;cx.stroke();
+      cx.strokeStyle=g;cx.lineWidth=1.5;cx.stroke();
       var g2=cx.createLinearGradient(0,0,W,0);
       for(var gj=0;gj<=10;gj++){
         var gu2=gj/10,a2=Math.pow(lightAt(gu2,head,WF.band*.6),1.7)*WF.core*t.lit;
