@@ -41,26 +41,29 @@ p{margin:0;}a{color:inherit;text-decoration:none;}button{font-family:inherit;cur
 /* the header itself never has a background — cantor8 keeps it fully transparent
    and tints only the floating groups */
 header{position:fixed;top:0;left:0;right:0;z-index:60;background:none;pointer-events:none;}
-header .in,header a,header button{pointer-events:auto;}
-header .in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:74px;gap:14px;}
+header a,header button,header nav,header .navr{pointer-events:auto;}
+/* spans the whole viewport, not the content column — the logo and the controls
+   sit in the corners, only a small edge margin */
+.hin{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:74px;gap:14px;
+  width:100%;padding:0 clamp(14px,2.1vw,30px);}
 .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px;letter-spacing:-.01em;flex:0 0 auto;transition:color .5s var(--e);}
 .brand .m{width:27px;height:27px;background:var(--brand);display:grid;place-items:center;border-radius:6px;}
 .brand .m svg{width:18px;height:18px;overflow:visible;}
 /* centre group — the sections, enclosed like one control */
 nav{justify-self:center;display:flex;align-items:center;gap:2px;padding:4px;font-size:13.5px;
-  border-radius:3px;box-shadow:inset 0 0 0 1px var(--hair2);background:rgba(255,255,255,.62);
-  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border-radius:3px;box-shadow:inset 0 0 0 1px rgba(13,14,19,.12);background:rgba(252,251,250,.9);
+  -webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1);
   transition:box-shadow .5s var(--e),background .5s var(--e);}
-nav a{position:relative;padding:8px 15px;white-space:nowrap;border-radius:2px;color:var(--fg-mid);
+nav a{position:relative;padding:8px 15px;white-space:nowrap;border-radius:2px;color:rgba(13,14,19,.82);
   transition:color .35s var(--e),background .35s var(--e);}
-nav a:hover{color:var(--fg);background:color-mix(in srgb,var(--fg) 7%,transparent);}
+nav a:hover{color:#0D0E13;background:rgba(13,14,19,.07);}
 nav a.here{color:var(--inv-fg);background:var(--inv);}
 /* right group — language, then the enquiry button */
 .navr{justify-self:end;display:flex;align-items:center;gap:12px;}
 .lang{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.12em;padding:9px 12px;
-  border-radius:2px;color:var(--fg-mid);box-shadow:inset 0 0 0 1px var(--hair2);background:rgba(255,255,255,.62);
-  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:.4s var(--e);}
-.lang:hover{color:var(--fg);box-shadow:inset 0 0 0 1px var(--hair);}
+  border-radius:2px;color:rgba(13,14,19,.82);box-shadow:inset 0 0 0 1px rgba(13,14,19,.12);
+  background:rgba(252,251,250,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:.4s var(--e);}
+.lang:hover{color:#0D0E13;box-shadow:inset 0 0 0 1px rgba(13,14,19,.26);}
 /* the arrow sits in its own square, flush inside the button */
 .btn i{position:relative;z-index:1;display:grid;place-items:center;width:22px;height:22px;border-radius:2px;
   background:color-mix(in srgb,var(--inv-fg) 16%,transparent);font-style:normal;font-size:11px;
@@ -105,11 +108,11 @@ h1 em{font-style:normal;color:var(--brand);}
 .rd .st{color:var(--brand);}
 /* header over the dark hero: light chrome until scrolled */
 header.on-dark .brand{color:#EFEDEA;}
-header.on-dark nav{box-shadow:inset 0 0 0 1px rgba(239,237,234,.16);background:rgba(13,14,19,.34);}
-header.on-dark nav a{color:rgba(239,237,234,.74);}
+header.on-dark nav{box-shadow:inset 0 0 0 1px rgba(239,237,234,.22);background:rgba(12,13,17,.74);}
+header.on-dark nav a{color:rgba(244,243,241,.88);}
 header.on-dark nav a:hover{color:#fff;background:rgba(239,237,234,.10);}
 header.on-dark nav a.here{color:#0D0E13;background:#EFEDEA;}
-header.on-dark .lang{color:rgba(239,237,234,.74);background:rgba(13,14,19,.34);box-shadow:inset 0 0 0 1px rgba(239,237,234,.20);}
+header.on-dark .lang{color:rgba(244,243,241,.88);background:rgba(12,13,17,.74);box-shadow:inset 0 0 0 1px rgba(239,237,234,.24);}
 header.on-dark .lang:hover{color:#fff;}
 header.on-dark .btn{background:var(--brand);color:#fff;}
 header.on-dark .btn i{background:rgba(255,255,255,.22);}
@@ -392,7 +395,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 </style>
 
 <div id="wipe"></div>
-<header id="hdr"><div class="wrap in">
+<header id="hdr"><div class="hin">
   <a class="brand" href="#top"><span class="m"><svg viewBox="14 8 182 182" fill="none"><path d="M48,100 C66,56 86,56 104,100 C122,144 142,144 160,100" stroke="#fff" stroke-width="13" stroke-linecap="round"/></svg></span>Power<span style="color:var(--brand)">Tech</span></a>
   <nav><a class="lk" href="#applications">Ոլորտներ</a><a class="lk" href="#services">Ծառայություններ</a><a class="lk" href="#company">Ընկերություն</a></nav>
   <div class="navr">
