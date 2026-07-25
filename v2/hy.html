@@ -110,7 +110,7 @@ h1 em{font-style:normal;color:var(--brand);}
 .hero .btn:hover span{color:#0D0E13;}
 .hero .btn.gh{background:transparent;color:#EFEDEA;box-shadow:inset 0 0 0 1px rgba(239,237,234,.28);}
 /* its own area again, so the cursor reaches the canvas and the strings react */
-.stage{position:relative;align-self:center;height:min(42vh,380px);}
+.stage{position:relative;align-self:center;height:min(42vh,380px);--wv-line:244,243,241;--wv-glow:224,116,74;}
 #star{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;}
 /* keeps whatever crosses into the field readable, without dimming the waves */
 .stage::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
@@ -590,9 +590,15 @@ var traces=[];
 var mouse={x:-9999,y:-9999,on:false};
 var EV_FIRST=3.2,EV_EVERY=11.0,EV_DUR=1.35,evNext=EV_FIRST,evT=0;
 var MILK='244,243,241',CORAL='224,116,74';
+function readWaveTheme(){
+  var cs=getComputedStyle(cv.parentElement);
+  var a=(cs.getPropertyValue('--wv-line')||'').trim(),b=(cs.getPropertyValue('--wv-glow')||'').trim();
+  if(a)MILK=a; if(b)CORAL=b;
+}
 var WF={stiff:9.5,damp:4.4,mouseR:130,push:2600,glide:.06,band:.30,
   dimLo:.085,litHi:.34,core:.20};
 function size(){
+  readWaveTheme();
   dpr=Math.min(2,devicePixelRatio||1);
   var r=cv.parentElement.getBoundingClientRect();
   W=r.width;H=r.height;

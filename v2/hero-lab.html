@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PowerTech — Power Quality Monitoring</title>
 <meta name="robots" content="noindex,nofollow">
+<title>PowerTech — hero ground lab</title>
 </head>
 <body>
 <style>
@@ -1273,6 +1274,82 @@ addEventListener('resize',function(){clearTimeout(size.t);size.t=setTimeout(func
 /* rails depend on final layout (fonts) */
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){buildRails();buildCoFlow();});
 addEventListener('load',function(){buildRails();buildCoFlow();});
+})();
+</script>
+
+
+<style>
+/* ---------- hero ground variants ---------- */
+/* 1 NOW — what is live: ink gradient + metal texture + coral bloom + scrim */
+
+/* 2 INK — one flat near-black ground, nothing layered on it */
+body[data-bg="ink"] .hero{background:#0C0D11;}
+body[data-bg="ink"] .hero::before,body[data-bg="ink"] .hero::after{display:none;}
+body[data-bg="ink"] .stage::after{background:linear-gradient(90deg,rgba(12,13,17,.7) 0%,transparent 30%);}
+
+/* 3 TERRA — the brand colour AS the ground, the way cantor8 uses its blue */
+body[data-bg="terra"] .hero{background:#C8603D;}
+body[data-bg="terra"] .hero::before,body[data-bg="terra"] .hero::after{display:none;}
+body[data-bg="terra"] .stage{--wv-line:250,245,242;--wv-glow:255,255,255;}
+body[data-bg="terra"] .stage::after{background:linear-gradient(90deg,rgba(200,96,61,.78) 0%,transparent 32%);}
+body[data-bg="terra"] .hero h1{color:#FFFBF9;}
+body[data-bg="terra"] .hero h1 em{color:#2A1008;}
+body[data-bg="terra"] .hero .hp{color:rgba(255,251,249,.82);}
+body[data-bg="terra"] .hero .eyebrow{color:#2A1008;}
+body[data-bg="terra"] .hero .eyebrow::before{background:#2A1008;}
+body[data-bg="terra"] .hero .btn{background:#14161C;color:#fff;}
+body[data-bg="terra"] .hero .btn.gh{box-shadow:inset 0 0 0 1px rgba(255,251,249,.42);color:#FFFBF9;}
+body[data-bg="terra"] .rd{color:rgba(255,251,249,.72);}
+body[data-bg="terra"] .rd b{color:#FFFBF9;}
+body[data-bg="terra"] .rd .st{color:#2A1008;}
+body[data-bg="terra"] header.on-dark nav{background:rgba(20,22,28,.5);}
+
+/* 4 MILK — the site's own paper ground: lightest of all, ink text, terracotta lines */
+body[data-bg="milk"] .hero{background:#EFEDEA;color:#0D0E13;}
+body[data-bg="milk"] .hero::before,body[data-bg="milk"] .hero::after{display:none;}
+body[data-bg="milk"] .stage{--wv-line:13,14,19;--wv-glow:200,96,61;}
+body[data-bg="milk"] .stage::after{background:linear-gradient(90deg,rgba(239,237,234,.86) 0%,transparent 32%);}
+body[data-bg="milk"] .hero h1{color:#0D0E13;}
+body[data-bg="milk"] .hero .hp{color:rgba(13,14,19,.66);}
+body[data-bg="milk"] .hero .btn{background:#0D0E13;color:#EFEDEA;}
+body[data-bg="milk"] .hero .btn.gh{background:transparent;color:#0D0E13;box-shadow:inset 0 0 0 1px rgba(13,14,19,.22);}
+body[data-bg="milk"] .rd{color:rgba(13,14,19,.5);}
+body[data-bg="milk"] .rd b{color:#0D0E13;}
+body[data-bg="milk"] header.on-dark .brand{color:#0D0E13;}
+body[data-bg="milk"] header.on-dark nav{background:rgba(252,251,250,.9);box-shadow:inset 0 0 0 1px rgba(13,14,19,.12);}
+body[data-bg="milk"] header.on-dark nav a{color:rgba(13,14,19,.82);}
+body[data-bg="milk"] header.on-dark nav a.here{color:#EFEDEA;background:#0D0E13;}
+body[data-bg="milk"] header.on-dark .lang{color:rgba(13,14,19,.82);background:rgba(252,251,250,.9);box-shadow:inset 0 0 0 1px rgba(13,14,19,.12);}
+
+/* ---------- picker ---------- */
+#lab{position:fixed;z-index:900;left:50%;transform:translateX(-50%);bottom:18px;display:flex;gap:2px;
+  background:rgba(13,14,19,.92);backdrop-filter:blur(12px);padding:5px;box-shadow:0 10px 34px rgba(0,0,0,.4);}
+#lab button{font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.6);padding:9px 14px;border:0;background:none;cursor:pointer;transition:.25s;}
+#lab button.on{background:#C8603D;color:#fff;}
+#lab button:hover:not(.on){color:#fff;}
+#lab span{color:rgba(255,255,255,.35);font-family:'Martian Mono',monospace;font-size:9.5px;
+  padding:9px 10px 9px 14px;letter-spacing:.1em;}
+</style>
+<div id="lab">
+  <span>HERO GROUND</span>
+  <button data-bg="now" class="on">1 · now</button>
+  <button data-bg="ink">2 · flat ink</button>
+  <button data-bg="terra">3 · terracotta</button>
+  <button data-bg="milk">4 · milk</button>
+</div>
+<script>
+(function(){
+  document.body.dataset.bg='now';
+  document.querySelectorAll('#lab button').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.body.dataset.bg=b.dataset.bg;
+      document.querySelectorAll('#lab button').forEach(function(x){x.classList.toggle('on',x===b);});
+      /* the wave field re-reads its colours from the new ground */
+      window.dispatchEvent(new Event('resize'));
+      window.scrollTo(0,0);
+    });
+  });
 })();
 </script>
 
