@@ -69,7 +69,8 @@ nav{justify-self:center;display:flex;align-items:center;gap:2px;padding:4px;font
   border-radius:3px;box-shadow:inset 0 0 0 1px rgba(13,14,19,.12);background:rgba(252,251,250,.9);
   -webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1);
   transition:box-shadow .5s var(--e),background .5s var(--e);}
-nav a{position:relative;padding:8px 15px;white-space:nowrap;border-radius:2px;color:rgba(13,14,19,.82);
+/* section names carry the label voice — the serif in Armenian, the body face in English */
+nav a{font-family:inherit;position:relative;padding:8px 15px;white-space:nowrap;border-radius:2px;color:rgba(13,14,19,.82);
   transition:color .35s var(--e),background .35s var(--e);}
 nav a:hover{color:#0D0E13;background:rgba(13,14,19,.07);}
 nav a.here{color:var(--inv-fg);background:var(--inv);}
