@@ -118,9 +118,9 @@ header:not(.scr) .btn{background:var(--brand);color:#fff;}
 .rail-nav button:hover{background:var(--brand);color:#fff;box-shadow:none;}
 .rail-nav button[disabled]{opacity:.3;pointer-events:none;}
 .railwrap{position:relative;}
-.rail{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;padding:4px 0 22px;scrollbar-width:none;-ms-overflow-style:none;cursor:grab;}
-.rail::-webkit-scrollbar{display:none;}
-.rail.drag{cursor:grabbing;scroll-snap-type:none;}
+.hrail{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x proximity;padding:4px 0 22px;scrollbar-width:none;-ms-overflow-style:none;cursor:grab;}
+.hrail::-webkit-scrollbar{display:none;}
+.hrail.drag{cursor:grabbing;scroll-snap-type:none;}
 .icard{scroll-snap-align:start;flex:0 0 300px;background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);
   display:flex;flex-direction:column;overflow:hidden;border-radius:2px;cursor:pointer;
   transition:flex-basis .62s var(--e),box-shadow .4s var(--e);}
@@ -377,7 +377,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
     </div>
   </div>
   <div class="railwrap">
-    <div class="rail" id="irail"></div>
+    <div class="hrail" id="irail"></div>
     <div class="railbar"><i id="rbar"></i></div>
   </div>
 </div></section>
