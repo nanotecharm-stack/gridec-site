@@ -198,8 +198,9 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .icard:nth-child(7n+7){padding-top:clamp(10px,1.8vw,32px);}
 .ic{position:relative;display:flex;flex-direction:column;min-height:var(--cardh,clamp(300px,38vw,470px));
   background:#101218;color:#EFEDEA;border-radius:2px;overflow:hidden;cursor:pointer;
-  transition:transform .7s var(--e),box-shadow .7s var(--e);}
-.ic:hover{transform:translateY(-5px);box-shadow:0 16px 44px rgba(13,14,19,.18);}
+  transform:translateY(var(--ty,0px)) scale(var(--s,1));transform-origin:50% 100%;
+  transition:box-shadow .7s var(--e),--ty .7s var(--e);}
+.ic:hover{--ty:-6px;box-shadow:0 16px 44px rgba(13,14,19,.18);}
 .ic-top{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:flex-start;
   justify-content:space-between;padding:15px;}
 .ic-tag{font-family:'Martian Mono',monospace;font-size:9.5px;letter-spacing:.16em;
@@ -1320,13 +1321,23 @@ function railChase(ts){
 function paintRail(){
   irail.scrollLeft=railCur;
   railBar();
-  /* each photo drifts against its card — weight, not decoration */
-  var mid=irail.clientWidth/2;
+  /* Their suite reads as if the cards resize, but their slides carry no
+     transform — the impression comes from the clipped card at the edge. Since
+     our rail is scroll-driven we can do it for real: a plate grows as it
+     travels toward the reading edge, and its photo drifts against it. */
+  var mid=irail.clientWidth/2,focus=parseFloat(getComputedStyle(irail).paddingLeft)||0;
+  var span=Math.max(1,irail.clientWidth-focus);
   for(var i=0;i<irail.children.length;i++){
-    var im=irail.children[i].querySelector('.ic-art img');
+    var c=irail.children[i],plate=c.querySelector('.ic');
+    var left=c.offsetLeft-railCur;
+    if(plate){
+      var t=(left-focus)/span;                 /* 0 at the reading edge, 1 off-screen right */
+      t=t<0?0:(t>1?1:t);
+      plate.style.setProperty('--s',(1-0.055*t).toFixed(4));
+    }
+    var im=c.querySelector('.ic-art img');
     if(!im)continue;
-    var c=irail.children[i],cx0=c.offsetLeft-railCur+c.offsetWidth/2;
-    var d=(cx0-mid)/mid;
+    var d=(left+c.offsetWidth/2-mid)/mid;
     im.style.transform='scale(1.06) translate3d('+(-d*12).toFixed(2)+'px,0,0)';
   }
 }
