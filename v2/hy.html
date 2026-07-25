@@ -40,15 +40,28 @@ p{margin:0;}a{color:inherit;text-decoration:none;}button{font-family:inherit;cur
 /* header */
 header{position:fixed;top:0;left:0;right:0;z-index:60;transition:.45s var(--e);}
 header.scr{background:rgba(239,237,234,.86);backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--hair2);}
-header .in{display:flex;align-items:center;justify-content:space-between;height:74px;gap:14px;}
+header .in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:74px;gap:14px;}
 .brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px;letter-spacing:-.01em;flex:0 0 auto;}
 .brand .m{width:27px;height:27px;background:var(--brand);display:grid;place-items:center;border-radius:6px;}
 .brand .m svg{width:18px;height:18px;overflow:visible;}
-nav{display:flex;align-items:center;gap:27px;font-size:13.5px;color:var(--fg-mid);}
-nav a{position:relative;padding:2px 0;white-space:nowrap;}
-nav a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:var(--brand);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--e);}
-nav a:hover{color:var(--fg);}nav a:hover::after{transform:scaleX(1);}
-nav .lang{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:11px;letter-spacing:.1em;}
+/* centre group — the sections, enclosed like one control */
+nav{justify-self:center;display:flex;align-items:center;gap:2px;padding:4px;font-size:13.5px;
+  border-radius:3px;box-shadow:inset 0 0 0 1px var(--hair2);background:color-mix(in srgb,var(--bg) 45%,transparent);
+  transition:box-shadow .45s var(--e),background .45s var(--e);}
+nav a{position:relative;padding:8px 15px;white-space:nowrap;border-radius:2px;color:var(--fg-mid);
+  transition:color .35s var(--e),background .35s var(--e);}
+nav a:hover{color:var(--fg);background:color-mix(in srgb,var(--fg) 7%,transparent);}
+nav a.here{color:var(--inv-fg);background:var(--inv);}
+/* right group — language, then the enquiry button */
+.navr{justify-self:end;display:flex;align-items:center;gap:12px;}
+.lang{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.12em;padding:9px 12px;
+  border-radius:2px;color:var(--fg-mid);box-shadow:inset 0 0 0 1px var(--hair2);transition:.35s var(--e);}
+.lang:hover{color:var(--fg);box-shadow:inset 0 0 0 1px var(--hair);}
+/* the arrow sits in its own square, flush inside the button */
+.btn i{position:relative;z-index:1;display:grid;place-items:center;width:22px;height:22px;border-radius:2px;
+  background:color-mix(in srgb,var(--inv-fg) 16%,transparent);font-style:normal;font-size:11px;
+  transition:transform .45s var(--e),background .4s var(--e);}
+.btn:hover i{transform:translate(2px,-2px);background:rgba(255,255,255,.22);}
 .btn{display:inline-flex;align-items:center;gap:9px;background:var(--inv);color:var(--inv-fg);font-size:13.5px;font-weight:600;padding:13px 20px;position:relative;overflow:hidden;isolation:isolate;border-radius:2px;}
 .btn span{position:relative;z-index:1;transition:color .4s var(--e);}
 .btn::before{content:"";position:absolute;inset:0;background:var(--brand);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--e);}
@@ -87,9 +100,15 @@ h1 em{font-style:normal;color:var(--brand);}
 .rd b{color:#F4F3F1;font-variant-numeric:tabular-nums;font-weight:600;}
 .rd .st{color:var(--brand);}
 /* header over the dark hero: light chrome until scrolled */
-header:not(.scr) .brand,header:not(.scr) nav{color:#EFEDEA;}
-header:not(.scr) nav a:hover{color:#fff;}
+header:not(.scr) .brand{color:#EFEDEA;}
+header:not(.scr) nav{box-shadow:inset 0 0 0 1px rgba(239,237,234,.16);background:rgba(239,237,234,.06);}
+header:not(.scr) nav a{color:rgba(239,237,234,.72);}
+header:not(.scr) nav a:hover{color:#fff;background:rgba(239,237,234,.10);}
+header:not(.scr) nav a.here{color:#0D0E13;background:#EFEDEA;}
+header:not(.scr) .lang{color:rgba(239,237,234,.72);box-shadow:inset 0 0 0 1px rgba(239,237,234,.20);}
+header:not(.scr) .lang:hover{color:#fff;}
 header:not(.scr) .btn{background:var(--brand);color:#fff;}
+header:not(.scr) .btn i{background:rgba(255,255,255,.22);}
 
 /* junction traces */
 .joint{display:block;width:100%;height:clamp(110px,15vw,200px);overflow:visible;color:var(--fg);}
@@ -360,7 +379,9 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   .icard.open{flex-basis:90vw;}
   .two,.asg,.pr,.plate .wrap{grid-template-columns:1fr;}
   .stats,.steps,.stages{grid-template-columns:1fr;}
-  nav .lk{display:none;}
+  nav{display:none;}
+  .navr{gap:8px;}
+  .btn{padding:11px 14px;font-size:12.5px;}
       #fmd .fr{grid-template-columns:1fr;}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}.rv{opacity:1;transform:none;}}
@@ -369,8 +390,11 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 <div id="wipe"></div>
 <header id="hdr"><div class="wrap in">
   <a class="brand" href="#top"><span class="m"><svg viewBox="14 8 182 182" fill="none"><path d="M48,100 C66,56 86,56 104,100 C122,144 142,144 160,100" stroke="#fff" stroke-width="13" stroke-linecap="round"/></svg></span>Power<span style="color:var(--brand)">Tech</span></a>
-  <nav><a class="lk" href="#services">Ծառայություններ</a><a class="lk" href="#applications">Ոլորտներ</a><a class="lk" href="#company">Ընկերություն</a><a class="lang" href="./index.html">EN</a></nav>
-  <button class="btn" data-open-form><span>Նկարագրել խնդիրը ↗</span></button>
+  <nav><a class="lk" href="#applications">Ոլորտներ</a><a class="lk" href="#services">Ծառայություններ</a><a class="lk" href="#company">Ընկերություն</a></nav>
+  <div class="navr">
+    <a class="lang" href="./index.html">EN</a>
+    <button class="btn" data-open-form><span>Նկարագրել խնդիրը</span><i>&#8599;</i></button>
+  </div>
 </div></header>
 
 <section class="hero" id="top"><div class="wrap hgrid">
@@ -909,6 +933,20 @@ function railBar(){
 irail.addEventListener('scroll',railBar,{passive:true});
 railBar();
 
+/* ============ NAV — mark the section you are in ============ */
+var navLinks=[].slice.call(document.querySelectorAll('nav a.lk')).map(function(a){
+  return {a:a,sec:document.querySelector(a.getAttribute('href'))};
+}).filter(function(x){return x.sec;});
+function navSpy(){
+  var probe=innerHeight*0.34,best=null;
+  navLinks.forEach(function(x){
+    var r=x.sec.getBoundingClientRect();
+    if(r.top<=probe&&r.bottom>probe)best=x;
+  });
+  navLinks.forEach(function(x){x.a.classList.toggle('here',x===best);});
+}
+navSpy();
+
 /* ============ DITHER BANDS — cubes that fill with scroll and erase the seam ============ */
 /* cantor8 drives its pixel band from ScrollTrigger progress (onUpdate → setProgress,
    solid once passed). Same idea here: at p=0 the band still reads as the section
@@ -1104,7 +1142,7 @@ document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
 var hdr=document.getElementById('hdr');
 /* capture-phase on document catches wrapper scrolling too; paint synchronously — no frame lag */
 document.addEventListener('scroll',function(){
-  seqUpd();paintJoints();paintRails();paintDither();
+  seqUpd();paintJoints();paintRails();paintDither();navSpy();
   hdr.classList.toggle('scr',(document.scrollingElement||document.documentElement).scrollTop>20||scrollY>20);
 },{passive:true,capture:true});
 buildJoints();buildRails();
