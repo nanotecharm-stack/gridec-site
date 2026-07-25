@@ -422,7 +422,9 @@ h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
 .plate p{color:rgba(239,237,234,.68);font-size:16px;line-height:1.75;max-width:46ch;margin-top:22px;}
 .plate .btn{background:var(--brand);color:#fff;margin-top:30px;}
 /* heading and call to action are one element, so the phrase is said once */
-.ct-act{margin:0;}
+/* the CTA reads as a button, so it takes a step below the section titles —
+   otherwise a long label (Armenian runs ~2.4x this one's length) stacks five deep */
+.ct-act{margin:0;font-size:clamp(24px,3.1vw,44px);line-height:1.06;max-width:22ch;}
 .ct-act button{display:inline-flex;align-items:flex-start;gap:clamp(14px,1.6vw,26px);
   font:inherit;color:inherit;text-align:left;padding:0;background:none;cursor:pointer;}
 .ct-act button span{position:relative;display:inline-block;}
@@ -430,7 +432,7 @@ h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
   background:var(--brand);transform:scaleX(0);transform-origin:left;
   transition:transform .6s var(--e);}
 .ct-act button:hover span::after,.ct-act button:focus-visible span::after{transform:scaleX(1);}
-.ct-act button i{flex:0 0 auto;align-self:center;display:grid;place-items:center;
+.ct-act button i{flex:0 0 auto;align-self:flex-end;display:grid;place-items:center;
   width:clamp(44px,4.4vw,64px);height:clamp(44px,4.4vw,64px);border-radius:2px;
   background:var(--brand);color:#fff;font-style:normal;font-family:'Arian AMU','Helvetica Neue',sans-serif;
   font-size:clamp(16px,1.6vw,22px);
@@ -627,7 +629,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 
 <section class="plate" id="contact"><div class="wrap">
   <div class="rv"><div class="cnt">08</div>
-  <h2 class="ct-act"><button data-open-form><span>Նկարագրեք խնդիրը</span><i>&#8599;</i></button></h2></div>
+  <h2 class="ct-act"><button data-open-form><span>Ներկայացրեք խնդիրը նախնական գնահատման համար</span><i>&#8599;</i></button></h2></div>
   <div class="chart rv"><div class="cap">RMS ԼԱՐՈՒՄ · 10-ՐՈՊԵԱՆՈՑ ՄԻՏՈՒՄ</div>
     <svg viewBox="0 0 520 240" fill="none">
       <line x1="0" y1="60" x2="520" y2="60" stroke="rgba(239,237,234,.14)" stroke-dasharray="3 5"/>
