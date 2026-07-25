@@ -47,6 +47,7 @@ p{margin:0;}a{color:inherit;text-decoration:none;}button{font-family:inherit;cur
 .cnt{font-family:'Martian Mono',monospace;font-size:12px;letter-spacing:.22em;color:var(--fg-soft);display:flex;align-items:center;gap:14px;margin-bottom:20px;}
 .cnt::after{content:"";flex:1;height:1px;background:var(--hair2);max-width:190px;}
 .eyebrow{font-family:'Martian Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--brand-ink);}
+.lede+.lede{margin-top:14px;}
 .lede{max-width:46ch;font-size:16px;line-height:1.75;color:var(--fg-mid);margin-top:24px;}
 .rv{opacity:0;transform:translateY(20px);transition:opacity .9s var(--e),transform .9s var(--e);}
 .rv.in{opacity:1;transform:none;}
@@ -202,6 +203,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 
 /* industries — horizontal rail, detail opens on click */
 .suite .spin>.wrap{width:100%;}
+.rail-head .lede{margin-top:0;}
 .rail-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:clamp(20px,3vw,38px);}
 .railwrap{position:relative;width:100%;}
 /* pinned: the section is tall, the frame sticks, and the rail is paged by scroll */
@@ -258,6 +260,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .ic.is-open-card .ic-foot p{color:rgba(255,251,249,.86);}
 .ic.is-open-card .ic-go{background:#14161C;color:#fff;}
 .suite .spin>.wrap{width:100%;}
+.rail-head .lede{margin-top:0;}
 .rail-head{display:flex;justify-content:space-between;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-bottom:clamp(20px,2.6vw,34px);}
 .railbar{height:2px;background:var(--hair2);position:relative;}
 .icard .bd{will-change:auto;}
@@ -561,7 +564,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 <section class="sec suite" id="applications"><div class="spin"><div class="wrap">
   <div class="rail-head">
     <div><div class="cnt">02</div><h2>Where monitoring helps</h2></div>
-    <div style="max-width:40ch"><p class="lede" style="margin-top:0;font-size:14px;line-height:1.7">Power quality problems are not limited to one sector. Monitoring is useful when electrical conditions affect equipment or operations, or when an engineering decision requires measured evidence.</p>
+    <div><p class="lede">Power quality problems are not limited to one sector. Monitoring is useful when electrical conditions affect equipment or operations, or when an engineering decision requires measured evidence.</p>
     </div>
   </div>
 </div>
@@ -578,7 +581,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <div class="rv"><div class="cnt">03</div><div class="eyebrow">SERVICES</div>
   <h2 style="margin-top:16px">Seven-day monitoring</h2>
   <p class="lede">Power quality data is recorded during actual operation and interpreted in the context of the issue being investigated.</p>
-  <p class="lede" style="margin-top:14px">The monitoring period is selected to obtain a representative record of operating conditions. A longer period may be recommended when the issue is intermittent or the operating cycle requires more time.</p></div>
+  <p class="lede">The monitoring period is selected to obtain a representative record of operating conditions. A longer period may be recommended when the issue is intermittent or the operating cycle requires more time.</p></div>
   <div class="stats rv"><div class="stat"><b>7</b><span>typical diagnostic period</span></div><div class="stat"><b>24/7</b><span>monitoring throughout the period</span></div><div class="stat"><b>1</b><span>structured engineering report</span></div></div>
   <div class="display rv">Measured<br>under actual<br><i>load</i></div>
   <div class="steps rv"><div class="step"><div class="no">01</div><h3>Define the objective</h3><p>We clarify what needs to be verified, the equipment involved and the decision the findings should support.</p></div><div class="step"><div class="no">02</div><h3>Monitor in operation</h3><p>Measurements are carried out while the electrical system operates under representative operating conditions.</p></div><div class="step"><div class="no">03</div><h3>Deliver an engineering assessment</h3><p>The findings are assessed in context and presented in a clear technical report, with conclusions supported by the recorded data and recommended next steps.</p></div></div>

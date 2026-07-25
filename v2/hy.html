@@ -47,6 +47,7 @@ p{margin:0;}a{color:inherit;text-decoration:none;}button{font-family:inherit;cur
 .cnt{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.22em;color:var(--fg-soft);display:flex;align-items:center;gap:14px;margin-bottom:20px;}
 .cnt::after{content:"";flex:1;height:1px;background:var(--hair2);max-width:190px;}
 .eyebrow{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--brand-ink);}
+.lede+.lede{margin-top:14px;}
 .lede{max-width:46ch;font-size:16px;line-height:1.75;color:var(--fg-mid);margin-top:24px;}
 .rv{opacity:0;transform:translateY(20px);transition:opacity .9s var(--e),transform .9s var(--e);}
 .rv.in{opacity:1;transform:none;}
@@ -202,6 +203,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 
 /* industries — horizontal rail, detail opens on click */
 .suite .spin>.wrap{width:100%;}
+.rail-head .lede{margin-top:0;}
 .rail-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:clamp(20px,3vw,38px);}
 .railwrap{position:relative;width:100%;}
 /* pinned: the section is tall, the frame sticks, and the rail is paged by scroll */
@@ -258,6 +260,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .ic.is-open-card .ic-foot p{color:rgba(255,251,249,.86);}
 .ic.is-open-card .ic-go{background:#14161C;color:#fff;}
 .suite .spin>.wrap{width:100%;}
+.rail-head .lede{margin-top:0;}
 .rail-head{display:flex;justify-content:space-between;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-bottom:clamp(20px,2.6vw,34px);}
 .railbar{height:2px;background:var(--hair2);position:relative;}
 .icard .bd{will-change:auto;}
@@ -561,7 +564,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 <section class="sec suite" id="applications"><div class="spin"><div class="wrap">
   <div class="rail-head">
     <div><div class="cnt">02</div><h2>Որտեղ է օգնում մոնիթորինգը</h2></div>
-    <div style="max-width:40ch"><p class="lede" style="margin-top:0;font-size:14px;line-height:1.7">Էլեկտրաէներգիայի որակի խնդիրները չեն սահմանափակվում մեկ ոլորտով։ Մոնիթորինգը կիրառելի է, երբ էլեկտրական պայմաններն ազդում են սարքավորումների կամ աշխատանքային գործընթացների վրա, կամ երբ ինժեներական որոշման համար անհրաժեշտ են չափված տվյալներ։</p>
+    <div><p class="lede">Էլեկտրաէներգիայի որակի խնդիրները չեն սահմանափակվում մեկ ոլորտով։ Մոնիթորինգը կիրառելի է, երբ էլեկտրական պայմաններն ազդում են սարքավորումների կամ աշխատանքային գործընթացների վրա, կամ երբ ինժեներական որոշման համար անհրաժեշտ են չափված տվյալներ։</p>
     </div>
   </div>
 </div>
@@ -578,7 +581,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <div class="rv"><div class="cnt">03</div><div class="eyebrow">ԾԱՌԱՅՈՒԹՅՈՒՆՆԵՐ</div>
   <h2 style="margin-top:16px">7-օրյա մոնիթորինգ</h2>
   <p class="lede">Էլեկտրաէներգիայի որակի տվյալները գրանցվում են համակարգի փաստացի աշխատանքի ընթացքում և վերլուծվում՝ ուսումնասիրվող խնդրի համատեքստում։</p>
-  <p class="lede" style="margin-top:14px">Մոնիթորինգի տևողությունն ընտրվում է աշխատանքային պայմանների բնորոշ պատկերը ստանալու համար։ Եթե խնդիրը պարբերաբար չի դրսևորվում կամ սարքավորման աշխատանքային ցիկլն ավելի երկար է, կարող է առաջարկվել ավելի երկար ժամանակահատված։</p></div>
+  <p class="lede">Մոնիթորինգի տևողությունն ընտրվում է աշխատանքային պայմանների բնորոշ պատկերը ստանալու համար։ Եթե խնդիրը պարբերաբար չի դրսևորվում կամ սարքավորման աշխատանքային ցիկլն ավելի երկար է, կարող է առաջարկվել ավելի երկար ժամանակահատված։</p></div>
   <div class="stats rv"><div class="stat"><b>7</b><span>սովորական ախտորոշման տևողություն</span></div><div class="stat"><b>24/7</b><span>անընդհատ գրանցում ամբողջ ժամանակահատվածում</span></div><div class="stat"><b>1</b><span>կառուցվածքային ինժեներական հաշվետվություն</span></div></div>
   <div class="display rv">Չափումներ՝<br>փաստացի<br><i>բեռնվածությամբ</i></div>
   <div class="steps rv"><div class="step"><div class="no">01</div><h3>Սահմանում ենք նպատակը</h3><p>Հստակեցնում ենք՝ ինչ պետք է ստուգվի, որ սարքավորումն է ներգրավված և ինչ որոշման պետք է աջակցեն արդյունքները։</p></div><div class="step"><div class="no">02</div><h3>Մոնիթորինգ՝ աշխատանքային ռեժիմում</h3><p>Չափումները կատարվում են էլեկտրական համակարգի աշխատանքի ընթացքում՝ բնորոշ աշխատանքային պայմաններում։</p></div><div class="step"><div class="no">03</div><h3>Ներկայացնում ենք ինժեներական գնահատում</h3><p>Արդյունքները գնահատվում են խնդրի համատեքստում և ներկայացվում տեխնիկական հաշվետվությամբ՝ գրանցված տվյալներով հիմնավորված եզրահանգումներով և առաջարկվող հաջորդ քայլերով։</p></div></div>
