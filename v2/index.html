@@ -215,45 +215,19 @@ h2{font-size:clamp(30px,4.8vw,72px);text-wrap:balance;}
 .alink:hover{text-decoration:underline;text-underline-offset:4px;}
 
 /* sticky sequence */
-.seqhold{height:280vh;margin-top:clamp(26px,3.4vw,52px);} /* tall track for the pin */
-.seqhold .pin{position:sticky;top:0;height:100svh;display:grid;grid-template-columns:.8fr 1fr;gap:44px;align-items:center;}
-.seqhold .big{font-family:'Big Shoulders Display',sans-serif;font-weight:700;font-size:clamp(84px,15vw,210px);line-height:.8;letter-spacing:-.02em;}
-.rail{position:relative;height:1px;background:var(--hair2);margin:24px 0 0;}
-.rail i{position:absolute;left:0;top:0;bottom:0;width:100%;background:var(--brand);transform:scaleX(0);transform-origin:left;will-change:transform;}
-.rail em{position:absolute;top:-3px;width:7px;height:7px;background:var(--brand);transform:translateX(-50%);transition:left .35s var(--e);}
-.seqhold .ctx{font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--brand);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
-.seqhold .ctx::before{content:"";width:5px;height:5px;background:var(--brand);}
-/* the thesis and the chain are one unit: the intro keeps its air, the chain follows tight */
-.thesis .intro .lede{margin-bottom:0;}
-.thesis .alink{margin-top:clamp(24px,3vw,44px);}
-.slist{position:relative;padding-left:0;}
-.slist .srow{position:relative;display:grid;grid-template-columns:34px 18px 1fr;gap:0 14px;align-items:center;
-  padding:17px 0;transition:opacity .5s var(--e),transform .55s var(--e);}
-.slist .srow+.srow{border-top:1px solid var(--hair2);}
-/* spine through the markers */
-.slist .srow::before{content:"";position:absolute;left:43px;top:0;bottom:0;width:1px;background:var(--hair2);}
-.slist .srow:first-child::before{top:50%;}
-.slist .srow:last-child::before{bottom:50%;}
-.slist .srow .n{font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.12em;
-  color:var(--fg-soft);transition:color .45s var(--e);}
-.slist .srow .mk{position:relative;z-index:1;width:9px;height:9px;justify-self:center;
-  background:var(--bg);box-shadow:inset 0 0 0 1px var(--hair);
-  transition:box-shadow .45s var(--e),background .45s var(--e),transform .5s var(--e);}
-.slist .srow .t{font-size:clamp(17px,1.9vw,24px);font-weight:600;line-height:1.35;color:var(--fg-soft);
-  transition:color .5s var(--e);}
-/* passed */
-.slist .srow.done .mk{background:var(--brand);box-shadow:none;}
-.slist .srow.done .n{color:var(--fg-soft);}
-.slist .srow.done .t{color:var(--fg-mid);}
-/* current */
-.slist .srow.on{transform:translateX(6px);}
-.slist .srow.on .n{color:var(--brand);}
-.slist .srow.on .mk{background:var(--brand);box-shadow:0 0 0 4px rgba(200,96,61,.16);transform:scale(1.25);}
-.slist .srow.on .t{color:var(--fg);}
-.slist .srow.on .t::after{content:"";display:block;height:1px;background:var(--brand);margin-top:9px;
-  animation:swipe .6s var(--e) forwards;}
-@keyframes swipe{from{transform:scaleX(0);}to{transform:scaleX(1);}}
-.slist .srow.on .t::after{transform-origin:left;width:clamp(40px,7vw,88px);}
+/* the chain of an event, read left to right on one axis — it belongs to the
+   thesis above, so it stays compact and shares its column */
+.chain{margin-top:clamp(24px,3vw,40px);}
+.chaxis{position:relative;height:1px;background:var(--hair2);}
+.chaxis i{position:absolute;inset:0;background:var(--brand);transform:scaleX(0);transform-origin:left;will-change:transform;}
+.chsteps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);}
+.chsteps li{position:relative;padding:16px clamp(12px,1.4vw,22px) 0 0;opacity:.38;transition:opacity .55s var(--e);}
+.chsteps li::before{content:"";position:absolute;top:-3px;left:0;width:5px;height:5px;background:var(--hair);
+  transition:background .45s var(--e),transform .45s var(--e);}
+.chsteps li.on{opacity:1;}
+.chsteps li.on::before{background:var(--brand);transform:scale(1.4);}
+.chsteps .n{display:block;font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--brand);margin-bottom:7px;}
+.chsteps .t{display:block;font-size:14px;line-height:1.42;color:var(--fg);max-width:21ch;}
 
 /* industries grid */
 .other{margin-top:10px;background:var(--inv);color:var(--inv-fg);padding:clamp(26px,3.4vw,44px);display:flex;justify-content:space-between;align-items:center;gap:26px;flex-wrap:wrap;border-radius:2px;}
@@ -378,9 +352,8 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   .hgrid{grid-template-columns:1fr;padding-top:96px;}
   .stage{max-width:460px;justify-self:center;margin-top:18px;margin-right:0;}
   .rd{position:static;margin-top:12px;}
-  .seqhold{height:auto;}.seqhold .pin{position:static;height:auto;grid-template-columns:1fr;gap:14px;padding:40px 0 0;}
-  .seqhold .big,.seqhold .rail{display:none;}
-  .slist .srow{opacity:1;}
+  .chsteps{grid-template-columns:repeat(2,1fr);}
+  .chsteps li{padding-top:14px;}
   .meas{grid-template-columns:repeat(2,1fr);}
 
   .two,.asg,.pr,.plate .wrap{grid-template-columns:1fr;}
@@ -423,14 +396,10 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
     <h2>The event may be over before anyone can inspect it</h2>
     <p class="lede">Some voltage events last only milliseconds or a few cycles. By the time the system is inspected, measured values may have returned to normal. Monitoring provides a time-stamped record of the event and the conditions around it.</p>
   </div>
-  <div class="seqhold"><div class="pin">
-    <div>
-      <div class="ctx">01 &mdash; 05</div>
-      <div class="big" id="seqn">01</div>
-      <div class="rail"><i id="railfill"></i><em id="raildot"></em></div>
-    </div>
-    <div class="slist" id="slist"></div>
-  </div></div>
+  <div class="chain rv" id="chain">
+    <div class="chaxis"><i id="chainfill"></i></div>
+    <ol class="chsteps" id="chsteps"></ol>
+  </div>
   <a class="alink" href="#applications">See where monitoring helps &darr;</a>
 </div></section>
 
@@ -847,27 +816,27 @@ function paintRails(){
   });
 }
 
-/* ============ STICKY SEQUENCE ============ */
+/* ============ EVENT CHAIN — one line, lit by scroll ============ */
 var STEPS=PT.seq;
-var slist=document.getElementById('slist');
-STEPS.forEach(function(s,i){
-  var d=document.createElement('div');d.className='srow'+(i===0?' on':'');
-  d.innerHTML='<span class="n">'+s[0]+'</span><span class="mk"></span><span class="t"></span>';
-  d.querySelector('.t').textContent=s[1];
-  slist.appendChild(d);
+var chsteps=document.getElementById('chsteps'),chainEl=document.getElementById('chain'),
+    chainFill=document.getElementById('chainfill');
+STEPS.forEach(function(st){
+  var li=document.createElement('li');
+  li.innerHTML='<span class="n"></span><span class="t"></span>';
+  li.querySelector('.n').textContent=st[0];
+  li.querySelector('.t').textContent=st[1];
+  chsteps.appendChild(li);
 });
-var seqEl=document.querySelector('.seqhold'),sn=document.getElementById('seqn'),rf=document.getElementById('railfill'),rdot=document.getElementById('raildot'),scur=-1;
 function seqUpd(){
-  if(!seqEl.offsetHeight)return;
-  var r=seqEl.getBoundingClientRect(),total=seqEl.offsetHeight-innerHeight;
-  var p=Math.max(0,Math.min(1,-r.top/Math.max(1,total)));
-  rf.style.transform='scaleX('+p.toFixed(4)+')';rdot.style.left=(p*100).toFixed(2)+'%';
-  var i=Math.min(STEPS.length-1,Math.floor(p*STEPS.length));
-  if(i!==scur){scur=i;sn.textContent=STEPS[i][0];
-    [].forEach.call(slist.children,function(row,j){
-      row.classList.toggle('on',j===i);
-      row.classList.toggle('done',j<i);
-    });}
+  if(!chainEl)return;
+  var r=chainEl.getBoundingClientRect();
+  /* fills while the chain crosses the lower half of the screen */
+  var p=(innerHeight*0.86-r.top)/(innerHeight*0.42);
+  p=p<0?0:(p>1?1:p);
+  chainFill.style.transform='scaleX('+p.toFixed(4)+')';
+  var lit=Math.round(p*STEPS.length);
+  for(var i=0;i<chsteps.children.length;i++)
+    chsteps.children[i].classList.toggle('on',i<lit);
 }
 seqUpd();
 
