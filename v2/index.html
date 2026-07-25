@@ -585,12 +585,12 @@ var PT=window.PT;
 var cv=document.getElementById('star'),cx=cv.getContext('2d');
 var LINES=26,W=0,H=0,dpr=1,tt=0;
 var LABELS=PT.starLabels;
-var traces=[],labelSlots=[];
+var traces=[];
 var mouse={x:-9999,y:-9999,on:false};
-var EV_FIRST=2.4,EV_EVERY=7.0,EV_DUR=1.35,evNext=EV_FIRST,evT=0;
+var EV_FIRST=3.2,EV_EVERY=11.0,EV_DUR=1.35,evNext=EV_FIRST,evT=0;
 var MILK='244,243,241',CORAL='224,116,74';
-var WF={stiff:9.5,damp:4.4,mouseR:150,push:2600,glide:.115,band:.34,
-  dimLo:.10,litHi:.72,core:.5};
+var WF={stiff:9.5,damp:4.4,mouseR:150,push:2600,glide:.07,band:.30,
+  dimLo:.10,litHi:.40,core:.24};
 function size(){
   dpr=Math.min(2,devicePixelRatio||1);
   var r=cv.parentElement.getBoundingClientRect();
@@ -599,7 +599,7 @@ function size(){
   cx.setTransform(dpr,0,0,dpr,0,0);
 }
 function build(){
-  traces=[];labelSlots=[];
+  traces=[];
   for(var i=0;i<LINES;i++){
     var mid=Math.abs(i-(LINES-1)/2)/((LINES-1)/2);   /* 0 centre → 1 edge */
     traces.push({
@@ -610,14 +610,9 @@ function build(){
       glide:WF.glide*(0.8+((i*7)%5)*0.09),
       lit:0.34+(1-mid)*0.66,                         /* centre traces brightest */
       off:(i*0.137)%1,
+      carries:(i%5===2),          /* only every fifth trace glows */
       disp:0,vel:0
     });
-  }
-  /* a few traces carry a parameter label at their right end */
-  var step=Math.max(2,Math.round(LINES/(LABELS.length+1)));
-  for(var j=0;j<LABELS.length;j++){
-    var idx=Math.min(LINES-1,2+j*step);
-    labelSlots.push({i:idx,lab:LABELS[j],vis:0,tl:0,dly:0});
   }
 }
 /* soft travelling light: cosine bell, my own falloff */
@@ -627,21 +622,6 @@ function lightAt(u,head,band){
   var t=Math.abs(d)/(band*.5);
   if(t>=1)return 0;
   return .5*(1+Math.cos(t*Math.PI));
-}
-var lbT=0,lbBatch=[];
-function schedLabels(dt){
-  lbT-=dt;
-  if(lbT<=0){
-    lbBatch.forEach(function(s){s.tl=-1;});
-    lbBatch=labelSlots.slice().sort(function(){return Math.random()-.5;}).slice(0,3);
-    lbBatch.forEach(function(s,k){s.tl=1;s.dly=k*0.18;});
-    lbT=3.6;
-  }
-  labelSlots.forEach(function(s){
-    var target=s.tl===1?1:0;
-    if(s.tl===1&&s.dly>0){s.dly-=dt;target=0;}
-    s.vis+=(target-s.vis)*Math.min(1,dt*(target>s.vis?4.2:2.8));
-  });
 }
 function frame(ts){
   var dt=(ts-(frame.p||ts))/1000;if(!(dt>0)||dt>.05)dt=.016;frame.p=ts;
@@ -692,24 +672,20 @@ function frame(ts){
     for(var s2=1;s2<pts.length;s2++)cx.lineTo(pts[s2][0],pts[s2][1]);
     cx.strokeStyle='rgba('+MILK+','+(WF.dimLo+0.16*t.lit).toFixed(3)+')';
     cx.lineWidth=1.15;cx.stroke();
-    /* travelling light — one horizontal gradient, sampled along the trace */
-    var g=cx.createLinearGradient(0,0,W,0);
-    for(var gi=0;gi<=10;gi++){
-      var gu=gi/10,a=lightAt(gu,head,WF.band)*WF.litHi*t.lit;
-      g.addColorStop(gu,'rgba('+CORAL+','+a.toFixed(4)+')');
-    }
-    cx.strokeStyle=g;cx.lineWidth=2;cx.stroke();
-    /* hot core inside the light */
-    var g2=cx.createLinearGradient(0,0,W,0);
-    for(var gj=0;gj<=10;gj++){
-      var gu2=gj/10,a2=Math.pow(lightAt(gu2,head,WF.band*.6),1.6)*WF.core*t.lit;
-      g2.addColorStop(gu2,'rgba(255,240,230,'+a2.toFixed(4)+')');
-    }
-    cx.strokeStyle=g2;cx.lineWidth=1;cx.stroke();
-    /* event tint on the affected traces */
-    if(evT>0&&evP>0.02){
-      cx.strokeStyle='rgba('+CORAL+','+(evP*.30*t.lit).toFixed(3)+')';
-      cx.lineWidth=1.1;cx.stroke();
+    /* travelling light — only on the few traces that carry it */
+    if(t.carries){
+      var g=cx.createLinearGradient(0,0,W,0);
+      for(var gi=0;gi<=10;gi++){
+        var gu=gi/10,a=lightAt(gu,head,WF.band)*WF.litHi*t.lit;
+        g.addColorStop(gu,'rgba('+CORAL+','+a.toFixed(4)+')');
+      }
+      cx.strokeStyle=g;cx.lineWidth=1.8;cx.stroke();
+      var g2=cx.createLinearGradient(0,0,W,0);
+      for(var gj=0;gj<=10;gj++){
+        var gu2=gj/10,a2=Math.pow(lightAt(gu2,head,WF.band*.6),1.7)*WF.core*t.lit;
+        g2.addColorStop(gu2,'rgba(255,240,230,'+a2.toFixed(4)+')');
+      }
+      cx.strokeStyle=g2;cx.lineWidth=1;cx.stroke();
     }
   }
   /* the sag front marker */
@@ -719,28 +695,15 @@ function frame(ts){
     cx.fillStyle='rgba('+CORAL+','+(evP*.9).toFixed(3)+')';
     cx.fillRect(sagX-2.5,padY*0.55-2.5,5,5);
   }
-  /* parameter labels at the right end of selected traces */
-  schedLabels(dt);
-  cx.font='600 '+(W>620?12:10.5)+'px '+PT.canvasFont;
-  cx.textAlign='right';
-  labelSlots.forEach(function(s){
-    if(s.vis<=.01)return;
-    var t=traces[s.i],baseY=padY+s.i*gap;
-    var y=Math.max(16,Math.min(H-8,baseY+t.disp-9));
-    var tw=cx.measureText(s.lab).width,pad=6,x=W-12;
-    /* a dark pad keeps the label readable wherever the traces run */
-    cx.fillStyle='rgba(10,11,15,'+(s.vis*.7).toFixed(3)+')';
-    cx.fillRect(x-tw-pad,y-11,tw+pad*2,17);
-    cx.fillStyle='rgba('+MILK+','+(s.vis*.92).toFixed(3)+')';
-    cx.fillText(s.lab,x-pad,y);
-  });
   /* readout follows the same event */
-  if(!frame.hm||ts-frame.hm>360){frame.hm=ts;
-    var dip=evP*44;
-    var hv=document.querySelector('.hv'),hz=document.querySelector('.hz');
-    if(hv)hv.textContent=(230.0-dip+(Math.random()-.5)*.3).toFixed(1);
-    if(hz)hz.textContent=(50.00-evP*.05+(Math.random()-.5)*.02).toFixed(2);
-    var st=document.getElementById('stt');if(st)st.textContent=evP>.15?PT.rdDip:PT.rdNominal;}
+  /* steady numbers: they move only while an event is happening, never jitter */
+  if(!frame.hm||ts-frame.hm>500){frame.hm=ts;
+    var vTxt=(230.0-evP*44).toFixed(1),fTxt=(50.00-evP*.05).toFixed(2),
+        sTxt=evP>.15?PT.rdDip:PT.rdNominal;
+    var hv=document.querySelector('.hv'),hz=document.querySelector('.hz'),st=document.getElementById('stt');
+    if(hv&&hv.textContent!==vTxt)hv.textContent=vTxt;
+    if(hz&&hz.textContent!==fTxt)hz.textContent=fTxt;
+    if(st&&st.textContent!==sTxt)st.textContent=sTxt;}
   requestAnimationFrame(frame);
 }
 size();build();
