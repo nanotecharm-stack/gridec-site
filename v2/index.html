@@ -374,20 +374,20 @@ h2{font-size:clamp(30px,4.8vw,72px);text-wrap:balance;}
 /* company */
 /* the approach reads as a route: staggered blocks threaded by one trace */
 .pr{position:relative;margin-top:clamp(36px,4.6vw,68px);}
-.pr .p{position:relative;z-index:1;width:46%;padding:16px 0 0 28px;border-top:1px solid var(--hair2);
-  margin-bottom:clamp(40px,5.4vw,92px);}
+.pr .p{position:relative;z-index:1;width:46%;padding:18px 0 0 30px;border-top:1px solid var(--hair);
+  margin-bottom:clamp(30px,3.8vw,64px);}
 .pr .p:nth-of-type(1){margin-left:0;}
 .pr .p:nth-of-type(2){margin-left:48%;}
 .pr .p:nth-of-type(3){margin-left:20%;}
 .pr .p:last-child{margin-bottom:0;}
-.pr .p::before{content:"";position:absolute;left:0;top:-3px;width:5px;height:5px;background:var(--brand);}
+.pr .p .mk{position:absolute;left:0;top:-3.5px;width:7px;height:7px;background:var(--brand);}
 .coflow{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;color:var(--fg);}
-.coflow .base{fill:none;stroke:currentColor;stroke-opacity:.16;stroke-width:1;}
-.coflow .sub{fill:none;stroke:currentColor;stroke-opacity:.07;stroke-width:1;}
+.coflow .base{fill:none;stroke:currentColor;stroke-opacity:.34;stroke-width:1.2;}
+.coflow .sub{fill:none;stroke:currentColor;stroke-opacity:.15;stroke-width:1;}
 .coflow .pulse{fill:none;stroke:var(--brand);stroke-width:1.6;stroke-linecap:round;}
-.pr .p .no{font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.16em;color:var(--brand);}
+.pr .p .no{font-family:'Martian Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--brand);}
 .pr .p h3{font-size:clamp(18px,1.9vw,25px);margin:12px 0 9px;}
-.pr .p p{font-size:14.5px;line-height:1.7;color:var(--fg-mid);}
+.pr .p p{font-size:16px;line-height:1.72;color:rgba(13,14,19,.82);margin-top:9px;max-width:44ch;}
 .sub{margin-top:clamp(50px,7vw,90px);}
 .sub h3{font-size:clamp(24px,3vw,40px);}
 
@@ -582,7 +582,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <h2 style="margin-top:16px">Independent data<br>Clear engineering judgment</h2>
   <p class="lede">PowerTech was created to make electrical problems measurable. We record how electrical systems behave during operation and provide independent engineering assessments based on the recorded data. PowerTech is based in Yerevan and works on-site across the region.</p></div>
   <div class="sub rv"><h3>From the site to the report</h3><p class="lede">Installation, recording and analysis are managed under one engineering lead.</p></div>
-  <div class="pr rv"><div class="p"><div class="no">01 · ON-SITE</div><p>Monitoring setup verified before recording</p></div><div class="p"><div class="no">02 · RECORDING</div><p>Electrical conditions recorded for the agreed period</p></div><div class="p"><div class="no">03 · ASSESSMENT</div><p>Findings interpreted in context and documented</p></div></div>
+  <div class="pr rv"><div class="p"><i class="mk"></i><div class="no">01 · ON-SITE</div><p>Monitoring setup verified before recording</p></div><div class="p"><i class="mk"></i><div class="no">02 · RECORDING</div><p>Electrical conditions recorded for the agreed period</p></div><div class="p"><i class="mk"></i><div class="no">03 · ASSESSMENT</div><p>Findings interpreted in context and documented</p></div></div>
 </div></section>
 
 <section class="plate" id="contact"><div class="wrap">
