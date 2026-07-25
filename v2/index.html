@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PowerTech — Power Quality Monitoring</title>
+<meta name="description" content="PowerTech monitors electrical parameters and power quality events while your system is operating. We interpret the recorded data and provide a clear engineering assessment.">
+<meta name="theme-color" content="#C8603D">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PowerTech — Power Quality Monitoring">
+<meta property="og:description" content="PowerTech monitors electrical parameters and power quality events while your system is operating. We interpret the recorded data and provide a clear engineering assessment.">
+<meta property="og:locale" content="en_US">
 <meta name="robots" content="noindex,nofollow">
 </head>
 <body>
@@ -16,6 +24,12 @@
   --gut:clamp(18px,4vw,56px);--inset:calc(max(0px,(100vw - 1280px)/2) + clamp(18px,4vw,56px));
 --bg:#EFEDEA;--panel:#FFFFFF;--fg:#0D0E13;--fg-mid:rgba(13,14,19,.64);--fg-soft:rgba(13,14,19,.40);--hair:rgba(13,14,19,.13);--hair2:rgba(13,14,19,.07);--inv:#0D0E13;--inv-fg:#EFEDEA;}
 *{box-sizing:border-box;}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
+select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--brand);
+  outline-offset:3px;border-radius:2px;}
+.hero a:focus-visible,.hero button:focus-visible,.plate a:focus-visible,
+.plate button:focus-visible,.plate2 a:focus-visible,.plate2 button:focus-visible,
+.ic:focus-visible{outline-color:#FFFBF9;}
 html{scroll-behavior:smooth;}
 /* overflow-x:clip, NOT hidden — hidden turns body into a scroll container and kills position:sticky */
 body{margin:0;background:var(--bg);color:var(--fg);font-family:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip;}
@@ -28,6 +42,8 @@ h1,h2,h3{font-family:'Big Shoulders Display',sans-serif;font-weight:700;margin:0
 p{margin:0;}a{color:inherit;text-decoration:none;}button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
 .mono{font-family:'Martian Mono',monospace;}
 .wrap{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,56px);}
+.plate .cnt,.plate2 .cnt{color:rgba(239,237,234,.5);}
+.plate .cnt::after,.plate2 .cnt::after{background:rgba(239,237,234,.16);}
 .cnt{font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.22em;color:var(--fg-soft);display:flex;align-items:center;gap:14px;margin-bottom:20px;}
 .cnt::after{content:"";flex:1;height:1px;background:var(--hair2);max-width:190px;}
 .eyebrow{font-family:'Martian Mono',monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--brand);}
@@ -325,11 +341,16 @@ h2{font-size:clamp(30px,4.8vw,72px);text-wrap:balance;}
 
 /* report */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);align-items:start;}
-.list{background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);padding:clamp(22px,2.6vw,36px);border-radius:2px;}
-.list div{display:flex;gap:14px;align-items:baseline;padding:12px 0;font-size:15px;line-height:1.6;color:var(--fg);}
-.list div+div{border-top:1px solid var(--hair2);}
-.list em{font-style:normal;width:6px;height:6px;background:var(--brand);flex:0 0 auto;transform:translateY(-1px);}
-.note{font-size:13.5px;line-height:1.75;color:var(--fg-soft);margin-top:26px;max-width:52ch;}
+/* what the report contains, read as a numbered sheet rather than a panel */
+.list{border-top:1px solid var(--hair);}
+.list div{display:grid;grid-template-columns:34px 1fr;gap:0 16px;align-items:baseline;
+  padding:15px 0;font-size:15.5px;line-height:1.55;color:var(--fg);
+  border-bottom:1px solid var(--hair2);transition:padding-left .45s var(--e);}
+.list div:hover{padding-left:8px;}
+.list .n{font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--brand);}
+/* the standards footnote: quiet, but legible — it carries the method */
+.note{font-size:13px;line-height:1.7;color:var(--fg-mid);margin-top:30px;padding-top:16px;
+  border-top:1px solid var(--hair2);max-width:54ch;}
 
 /* assignments */
 .asg .card{transition:box-shadow .45s var(--e),transform .5s var(--e);}
@@ -520,7 +541,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 <div class="dith" data-dith="#EFEDEA,#0D0E13,#C8603D"></div>
 
 <section class="sec plate2" id="services" data-rail><div class="wrap">
-  <div class="rv"><div class="eyebrow">SERVICES</div>
+  <div class="rv"><div class="cnt">03</div><div class="eyebrow">SERVICES</div>
   <h2 style="margin-top:16px">Seven-day monitoring</h2>
   <p class="lede">Power quality data is recorded during actual operation and interpreted in the context of the issue being investigated.</p>
   <p class="lede" style="margin-top:14px">The monitoring period is selected to obtain a representative record of operating conditions. A longer period may be recommended when the issue is intermittent or the operating cycle requires more time.</p></div>
@@ -536,7 +557,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <div class="rv"><div class="cnt">04</div><h2>A report built for technical decisions</h2>
     <p class="lede">The report separates measured facts from engineering interpretation and recommendations.</p>
     <p class="note">Power quality parameters are measured using IEC 61000-4-30 Class S methods. Harmonic and interharmonic measurements are evaluated using IEC 61000-4-7 where applicable.</p></div>
-  <div class="list rv"><div><em></em><span>Measurement scope and points</span></div><div><em></em><span>Monitoring period and operating context</span></div><div><em></em><span>Recorded events and trends</span></div><div><em></em><span>Engineering interpretation</span></div><div><em></em><span>Limitations of the available evidence</span></div><div><em></em><span>Recommended next steps</span></div></div>
+  <div class="list rv"><div><span class="n">01</span><span>Measurement scope and points</span></div><div><span class="n">02</span><span>Monitoring period and operating context</span></div><div><span class="n">03</span><span>Recorded events and trends</span></div><div><span class="n">04</span><span>Engineering interpretation</span></div><div><span class="n">05</span><span>Limitations of the available evidence</span></div><div><span class="n">06</span><span>Recommended next steps</span></div></div>
 </div></section>
 
 <div class="wrap"><svg class="joint" data-joint="3"></svg></div>
@@ -557,7 +578,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 <div class="dith" data-dith="#14161C,#EFEDEA,#C8603D"></div>
 
 <section class="sec" id="company" data-rail><div class="wrap">
-  <div class="rv"><div class="eyebrow">COMPANY</div>
+  <div class="rv"><div class="cnt">07</div><div class="eyebrow">COMPANY</div>
   <h2 style="margin-top:16px">Independent data<br>Clear engineering judgment</h2>
   <p class="lede">PowerTech was created to make electrical problems measurable. We record how electrical systems behave during operation and provide independent engineering assessments based on the recorded data. PowerTech is based in Yerevan and works on-site across the region.</p></div>
   <div class="sub rv"><h3>From the site to the report</h3><p class="lede">Installation, recording and analysis are managed under one engineering lead.</p></div>
@@ -565,7 +586,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 </div></section>
 
 <section class="plate" id="contact"><div class="wrap">
-  <div class="rv"><h2>Start with what happened</h2><p>Describe the event, the affected equipment and when it occurred or tends to occur. We will assess whether monitoring can answer the question and what scope is required.</p>
+  <div class="rv"><div class="cnt">08</div><h2>Start with what happened</h2><p>Describe the event, the affected equipment and when it occurred or tends to occur. We will assess whether monitoring can answer the question and what scope is required.</p>
   <button class="btn" data-open-form><span>Describe the issue ↗</span></button></div>
   <div class="chart rv"><div class="cap">RMS VOLTAGE · 10-MIN TREND</div>
     <svg viewBox="0 0 520 240" fill="none">
