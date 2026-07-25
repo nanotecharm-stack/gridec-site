@@ -313,8 +313,20 @@ h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
 .chips span{box-shadow:inset 0 0 0 1px var(--hair);padding:11px 16px;font-size:14px;color:var(--fg);border-radius:2px;background:var(--panel);}
 
 /* company */
-.pr{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,30px);margin-top:44px;}
-.pr .p{border-top:1px solid var(--hair2);padding-top:16px;}
+/* the approach reads as a route: staggered blocks threaded by one trace */
+.pr{position:relative;margin-top:clamp(36px,4.6vw,68px);}
+.pr .p{position:relative;z-index:1;width:46%;padding:16px 0 0 28px;border-top:1px solid var(--hair2);
+  margin-bottom:clamp(40px,5.4vw,92px);}
+.pr .p:nth-child(2){margin-left:0;}
+.pr .p:nth-child(3){margin-left:46%;}
+.pr .p:nth-child(4){margin-left:14%;}
+.pr .p:nth-child(5){margin-left:50%;}
+.pr .p:last-child{margin-bottom:0;}
+.pr .p::before{content:"";position:absolute;left:0;top:-3px;width:5px;height:5px;background:var(--brand);}
+.coflow{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;color:var(--fg);}
+.coflow .base{fill:none;stroke:currentColor;stroke-opacity:.16;stroke-width:1;}
+.coflow .sub{fill:none;stroke:currentColor;stroke-opacity:.07;stroke-width:1;}
+.coflow .pulse{fill:none;stroke:var(--brand);stroke-width:1.6;stroke-linecap:round;}
 .pr .p .no{font-family:'Martian Mono','Noto Sans Armenian',monospace;font-size:10.5px;letter-spacing:.16em;color:var(--brand);}
 .pr .p h3{font-size:clamp(18px,1.9vw,25px);margin:12px 0 9px;}
 .pr .p p{font-size:14.5px;line-height:1.7;color:var(--fg-mid);}
@@ -390,7 +402,10 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   .chsteps{grid-template-columns:repeat(2,1fr);}
   .chsteps li{padding-top:14px;}
 
-  .two,.asg,.pr,.plate .wrap{grid-template-columns:1fr;}
+  .two,.asg,.plate .wrap{grid-template-columns:1fr;}
+  /* same specificity as the staggered rules above, so the meander unwinds */
+  .pr .p:nth-child(n){width:100%;margin-left:0;margin-bottom:30px;}
+  .coflow{display:none;}
   .stats,.steps,.stages{grid-template-columns:1fr;}
   nav{display:none;}
   .navr{gap:8px;}
@@ -849,6 +864,65 @@ function paintRails(){
   });
 }
 
+/* ============ APPROACH ROUTE — one trace threading the staggered blocks ============ */
+function buildCoFlow(){
+  var pr=document.querySelector('#company .pr');
+  if(!pr)return;
+  var old=pr.querySelector('.coflow');if(old)old.remove();
+  if(innerWidth<900)return;
+  var items=[].slice.call(pr.querySelectorAll('.p'));
+  if(!items.length)return;
+  var pb=pr.getBoundingClientRect(),W=pr.offsetWidth,H=pr.offsetHeight;
+  /* anchor beside each block's marker */
+  var nodes=items.map(function(el){
+    var r=el.getBoundingClientRect();
+    return [Math.round(r.left-pb.left)+2,
+            Math.max(2,Math.round(r.top-pb.top))];
+  });
+  /* orthogonal meander: drop, jog across, drop again */
+  var raw=[[nodes[0][0],0]];
+  nodes.forEach(function(n,i){
+    if(i===0){raw.push([n[0],n[1]]);return;}
+    raw.push([nodes[i-1][0],n[1]]);
+    raw.push([n[0],n[1]]);
+  });
+  raw.push([nodes[nodes.length-1][0],H]);
+  /* drop coincident points — they would emit zero-length corners */
+  var pts=[];
+  raw.forEach(function(p){
+    var q=pts[pts.length-1];
+    if(!q||Math.abs(q[0]-p[0])>1||Math.abs(q[1]-p[1])>1)pts.push(p);
+  });
+  if(pts.length<2)return;
+  var ns='http://www.w3.org/2000/svg';
+  var svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('class','coflow');
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  svg.setAttribute('preserveAspectRatio','none');
+  var d=route(pts,20);
+  var sub=document.createElementNS(ns,'path');
+  sub.setAttribute('d',route(pts.map(function(p){return [p[0]+9,p[1]+9];}),20));
+  sub.setAttribute('class','sub');svg.appendChild(sub);
+  var base=document.createElementNS(ns,'path');
+  base.setAttribute('d',d);base.setAttribute('class','base');svg.appendChild(base);
+  var pl=document.createElementNS(ns,'path');
+  pl.setAttribute('d',d);pl.setAttribute('class','pulse');
+  var L=0;try{L=base.getTotalLength();}catch(e){L=H*2;}
+  pl.setAttribute('stroke-dasharray',(L*0.1).toFixed(0)+' '+(L*0.99).toFixed(0));
+  pl.dataset.len=L;svg.appendChild(pl);
+  pr.insertBefore(svg,pr.firstChild);
+  paintCoFlow();
+}
+function paintCoFlow(){
+  var svg=document.querySelector('#company .coflow');if(!svg)return;
+  var pl=svg.querySelector('.pulse'),L=+pl.dataset.len;
+  var r=svg.getBoundingClientRect(),vh=innerHeight;
+  var p=(vh*0.9-r.top)/(r.height+vh*0.5);
+  p=p<0?0:(p>1?1:p);
+  pl.setAttribute('stroke-dashoffset',(L*0.1-p*L*1.1).toFixed(1));
+  pl.setAttribute('opacity',(p>0.004&&p<0.998?1:0));
+}
+
 /* ============ EVENT CHAIN — one line, lit by scroll ============ */
 var STEPS=PT.seq;
 var chsteps=document.getElementById('chsteps'),chainEl=document.getElementById('chain'),
@@ -1208,14 +1282,14 @@ function headerTheme(){
 headerTheme();
 /* capture-phase on document catches wrapper scrolling too; paint synchronously — no frame lag */
 document.addEventListener('scroll',function(){
-  seqUpd();paintJoints();paintRails();paintDither();navSpy();
+  seqUpd();paintJoints();paintRails();paintCoFlow();paintDither();navSpy();
   headerTheme();
 },{passive:true,capture:true});
-buildJoints();buildRails();
-addEventListener('resize',function(){clearTimeout(size.t);size.t=setTimeout(function(){size();buildJoints();buildWipe();buildRails();buildDither();},220);});
+buildJoints();buildRails();buildCoFlow();
+addEventListener('resize',function(){clearTimeout(size.t);size.t=setTimeout(function(){size();buildJoints();buildWipe();buildRails();buildCoFlow();buildDither();},220);});
 /* rails depend on final layout (fonts) */
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){buildRails();});
-addEventListener('load',function(){buildRails();});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){buildRails();buildCoFlow();});
+addEventListener('load',function(){buildRails();buildCoFlow();});
 })();
 </script>
 
