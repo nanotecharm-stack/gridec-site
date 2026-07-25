@@ -580,12 +580,13 @@ var cv=document.getElementById('star'),cx=cv.getContext('2d');
 var SIDES=8,PER_EDGE=11,N=SIDES*PER_EDGE;
 var W=0,H=0,dpr=1,tt=0,CXp=0,CYp=0,R=0,rot=0;
 var strings=[],labelSlots=[],lbT=0,lbBatch=[];
+var arcs=[],arcT=0;   /* live discharge channels over the quiet field */
 var LABELS=PT.starLabels;
 var mouse={x:-9999,y:-9999,on:false};
 var EV_FIRST=2.6,EV_EVERY=7.5,EV_DUR=1.5,evNext=EV_FIRST,evT=0,evAngle=0;
 var MILK='255,251,249',GLOW='255,255,255';
 var OF={stiff:11,damp:3.9,mouseR:165,push:78,drift:27,driftHz:.13,
-  line:.17,litHi:.62,core:.34,glide:.13,band:.30};
+  line:.11,litHi:.30,core:.34,glide:.13,band:.30};
 function readWaveTheme(){
   var cs=getComputedStyle(cv.parentElement);
   var a=(cs.getPropertyValue('--wv-line')||'').trim(),b=(cs.getPropertyValue('--wv-glow')||'').trim();
@@ -619,6 +620,48 @@ function build(){
       lit:0.5+((i*5)%4)*0.17
     });
   }
+  buildArcs();
+}
+/* A handful of channels conduct at any moment, the way a discharge does: each
+   one runs from the centre out to a point on the perimeter, deviating around
+   that line and forking once or twice before it dies out. */
+var ARCS=7,ARC_SEG=13;
+function buildArcs(){
+  arcs=[];
+  for(var a=0;a<ARCS;a++)arcs.push({i:0,jit:[],branch:null,life:0,seed:0});
+  arcs.forEach(reseedArc);
+}
+function reseedArc(arc){
+  arc.i=Math.floor(Math.random()*N);
+  arc.jit=[];
+  for(var k=0;k<=ARC_SEG;k++)arc.jit.push((Math.random()*2-1));
+  /* a fork leaves somewhere in the outer half and stops short of the rim */
+  arc.branch=(Math.random()<0.72)?{
+    at:0.42+Math.random()*0.3,
+    len:0.3+Math.random()*0.26,
+    turn:(Math.random()*2-1)*0.7,
+    jit:Array.apply(null,{length:7}).map(function(){return Math.random()*2-1;})
+  }:null;
+  arc.life=0.9+Math.random()*0.5;
+}
+/* the jagged run from the centre to an anchor, with the string's own bend */
+function arcPath(arc,amp){
+  var st=strings[arc.i],A=anchor(st,R);
+  var dx=A[0]-CXp,dy=A[1]-CYp,len=Math.hypot(dx,dy)||1;
+  var nx=-dy/len,ny=dx/len;
+  var pts=[];
+  for(var k=0;k<=ARC_SEG;k++){
+    var u=k/ARC_SEG;
+    var bell=Math.sin(u*Math.PI);                 /* straight at both ends */
+    var off=arc.jit[k]*amp*bell+st.bend*bell*1.1;
+    pts.push([CXp+dx*u+nx*off,CYp+dy*u+ny*off]);
+  }
+  return {pts:pts,nx:nx,ny:ny,dx:dx,dy:dy,len:len};
+}
+function strokeRun(pts,col,w){
+  cx.beginPath();cx.moveTo(pts[0][0],pts[0][1]);
+  for(var k=1;k<pts.length;k++)cx.lineTo(pts[k][0],pts[k][1]);
+  cx.strokeStyle=col;cx.lineWidth=w;cx.stroke();
 }
 /* the point on the perimeter this string is tied to */
 /* every few strings around the shape carries an annotation */
@@ -729,6 +772,35 @@ function frame(ts){
     /* the point on the perimeter */
     cx.beginPath();cx.arc(A[0],A[1],1.5,0,Math.PI*2);
     cx.fillStyle='rgba('+MILK+',.5)';cx.fill();
+  }
+
+  /* live channels: reseeded on a flicker, so the discharge never repeats */
+  arcT-=dt;
+  if(arcT<=0){
+    arcT=0.11+Math.random()*0.09;
+    reseedArc(arcs[Math.floor(Math.random()*arcs.length)]);
+  }
+  var amp=R*0.085*(1+evP*1.5);
+  for(var ai=0;ai<arcs.length;ai++){
+    var arc=arcs[ai],run=arcPath(arc,amp);
+    var glow=(0.30+0.34*evP)*arc.life;
+    strokeRun(run.pts,'rgba('+MILK+','+(glow*0.5).toFixed(3)+')',2.4);
+    strokeRun(run.pts,'rgba('+GLOW+','+glow.toFixed(3)+')',1);
+    if(arc.branch){
+      var b=arc.branch,i0=Math.round(b.at*ARC_SEG);
+      var p0=run.pts[i0];
+      var bl=run.len*b.len;
+      var ca=Math.cos(b.turn),sa=Math.sin(b.turn);
+      var bdx=(run.dx/run.len)*ca-(run.dy/run.len)*sa;
+      var bdy=(run.dx/run.len)*sa+(run.dy/run.len)*ca;
+      var bp=[];
+      for(var k2=0;k2<b.jit.length;k2++){
+        var u2=k2/(b.jit.length-1),bell2=Math.sin(u2*Math.PI);
+        bp.push([p0[0]+bdx*bl*u2+(-bdy)*b.jit[k2]*amp*0.8*bell2,
+                 p0[1]+bdy*bl*u2+( bdx)*b.jit[k2]*amp*0.8*bell2]);
+      }
+      strokeRun(bp,'rgba('+GLOW+','+(glow*0.55).toFixed(3)+')',.9);
+    }
   }
 
   /* the corners are marked, the way a drawing marks its stations */
