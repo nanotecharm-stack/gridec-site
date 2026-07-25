@@ -863,11 +863,13 @@ STEPS.forEach(function(st){
 function seqUpd(){
   if(!chainEl)return;
   var r=chainEl.getBoundingClientRect();
-  /* fills while the chain crosses the lower half of the screen */
-  var p=(innerHeight*0.86-r.top)/(innerHeight*0.42);
+  /* The chain is the last thing in its block, so it must finish while it is
+     still low on the screen — otherwise the axis only completes once the next
+     section fills most of the viewport. */
+  var p=(innerHeight*0.95-r.top)/(innerHeight*0.29);
   p=p<0?0:(p>1?1:p);
   chainFill.style.transform='scaleX('+p.toFixed(4)+')';
-  var lit=Math.round(p*STEPS.length);
+  var lit=Math.ceil(p*STEPS.length-0.001);
   for(var i=0;i<chsteps.children.length;i++)
     chsteps.children[i].classList.toggle('on',i<lit);
 }
