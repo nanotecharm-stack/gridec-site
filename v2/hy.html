@@ -140,6 +140,9 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
    into the next — cantor8's actual device (static dither, not an animation) */
 .dith{position:relative;height:clamp(58px,7vw,104px);display:grid;width:100%;line-height:0;}
 .dith i{display:block;}
+/* once the band is fully behind us it is one flat plane — no per-cell work */
+.dith.is-solid{background:var(--dbot);}
+.dith.is-solid i{visibility:hidden;}
 
 /* dark plate section (services) */
 .plate2{position:relative;overflow:hidden;background:linear-gradient(180deg,#0D0E13 0%,#111318 60%,#14161C 100%);color:#EFEDEA;}
@@ -440,7 +443,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   </div>
 </section>
 
-<div class="dith" data-dith="#0A0B0F,#EFEDEA"></div>
+<div class="dith" data-dith="#C8603D,#EFEDEA"></div>
 
 <section class="sec thesis" id="why" data-rail><div class="wrap">
   <div class="rv intro">
@@ -1113,31 +1116,36 @@ navSpy();
    solid once passed). Same idea here: at p=0 the band still reads as the section
    above, at p=1 it is solid with the section below, so the boundary dissolves. */
 var dBands=[];
+/* Ordered dither, not noise: cells fill in a fixed Bayer sequence, so the
+   pattern reads as designed and is identical on every load. Two counters walk
+   that sequence as the band crosses the screen, and once it is past, the band
+   becomes a single flat plane (one class, like cantor8's is-solid). */
+var BAYER=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
 function buildDither(){
   dBands=[];
   document.querySelectorAll('.dith').forEach(function(band){
     var pair=(band.dataset.dith||'').split(',');
     if(pair.length<2)return;
     var top=pair[0].trim(),bot=pair[1].trim();
+    band.style.setProperty('--dbot',bot);
     var cs=Math.max(14,Math.round(innerWidth/64));
     var cols=Math.ceil(innerWidth/cs),rows=Math.max(4,Math.round(band.offsetHeight/cs));
     band.style.gridTemplateColumns='repeat('+cols+',1fr)';
     band.style.gridTemplateRows='repeat('+rows+',1fr)';
     band.innerHTML='';
-    var cells=[];
-    for(var r=0;r<rows;r++){
-      /* rows nearest the lower section flip first → the seam erases upward */
-      var rowBias=(rows-1-r)/Math.max(1,rows-1);
-      for(var c=0;c<cols;c++){
-        var i=document.createElement('i');
-        var th=rowBias*0.55+Math.random()*0.62;
-        th=Math.max(0.02,Math.min(0.98,th));
-        i.style.background=top;
-        cells.push({el:i,th:th,on:false});
-        band.appendChild(i);
-      }
+    var cells=[],order=[];
+    for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){
+      var i=document.createElement('i');
+      i.style.background=top;
+      var idx=cells.length;
+      cells.push({el:i,on:false});
+      /* rows nearest the next section go first, Bayer breaks the ties */
+      order.push({idx:idx,key:(rows-1-r)*16+BAYER[r%4][c%4]});
+      band.appendChild(i);
     }
-    dBands.push({el:band,cells:cells,top:top,bot:bot});
+    order.sort(function(x,y){return x.key-y.key;});
+    dBands.push({el:band,cells:cells,top:top,bot:bot,
+      order:order.map(function(o){return o.idx;}),count:0,solid:false});
   });
   paintDither();
 }
@@ -1145,14 +1153,19 @@ function paintDither(){
   var vh=innerHeight;
   for(var b=0;b<dBands.length;b++){
     var band=dBands[b],r=band.el.getBoundingClientRect();
-    /* fills while the band travels the lower three quarters of the screen */
-    var p=(vh-r.top)/(vh*0.75);
+    /* their range: from the band's bottom meeting the viewport bottom, to its
+       top meeting the viewport top — the whole travel, so the fill is calm */
+    var span=r.height+vh;
+    var p=(vh-r.top)/span;
     p=p<0?0:(p>1?1:p);
-    var cells=band.cells;
-    for(var i=0;i<cells.length;i++){
-      var on=p>=cells[i].th;
-      if(on!==cells[i].on){cells[i].on=on;cells[i].el.style.background=on?band.bot:band.top;}
-    }
+    var solid=r.bottom<=0;                       /* fully behind us */
+    if(solid!==band.solid){band.solid=solid;band.el.classList.toggle('is-solid',solid);}
+    if(solid)continue;
+    var want=Math.round(p*band.cells.length);
+    if(want===band.count)continue;
+    /* walk the fixed sequence forwards or backwards — only the delta is touched */
+    while(band.count<want){var c1=band.cells[band.order[band.count]];c1.el.style.background=band.bot;band.count++;}
+    while(band.count>want){band.count--;var c2=band.cells[band.order[band.count]];c2.el.style.background=band.top;}
   }
 }
 buildDither();
