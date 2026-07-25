@@ -579,7 +579,7 @@ var PT=window.PT;
 var cv=document.getElementById('star'),cx=cv.getContext('2d');
 var SIDES=8,PER_EDGE=11,N=SIDES*PER_EDGE;
 var W=0,H=0,dpr=1,tt=0,CXp=0,CYp=0,R=0,rot=0;
-var strings=[],labelSlots=[],lbT=0,lbBatch=[];
+var strings=[],labelSlots=[];
 var arcs=[],arcT=0;   /* live discharge channels over the quiet field */
 var LABELS=PT.starLabels;
 var mouse={x:-9999,y:-9999,on:false};
@@ -679,10 +679,13 @@ function arcPath(arc,amp){
   return {pts:pts,nx:nx,ny:ny,dx:dx,dy:dy,len:len};
 }
 /* the point on the perimeter this string is tied to */
-/* every few strings around the shape carries an annotation */
+/* Annotations live in fixed rows on the right. A row holds one label at a time
+   and fades it out before taking the next, so two labels can never share a row
+   and rows never share a height — identical in both languages. */
+var LROWS=3,lrows=[];
 function buildLabels(){
   labelSlots=[];
-  /* spread them down the right half of the shape */
+  /* the pool: anchors spread down the right half of the shape */
   var pick=[];
   for(var i=0;i<N;i++){
     var a=anchor(strings[i],R);
@@ -690,22 +693,36 @@ function buildLabels(){
   }
   var step=Math.max(1,Math.floor(pick.length/LABELS.length));
   for(var j=0;j<LABELS.length;j++){
-    labelSlots.push({i:pick[(j*step)%pick.length],lab:LABELS[j],vis:0,tl:0,dly:0});
+    labelSlots.push({i:pick[(j*step)%pick.length],lab:LABELS[j]});
+  }
+  lrows=[];
+  for(var k=0;k<LROWS;k++){
+    lrows.push({idx:k%labelSlots.length,vis:0,mode:'in',t:k*0.75});
   }
 }
-function schedLabels(dt){
-  lbT-=dt;
-  if(lbT<=0){
-    lbBatch.forEach(function(sl){sl.tl=-1;});
-    lbBatch=labelSlots.slice().sort(function(){return Math.random()-.5;}).slice(0,3);
-    lbBatch.forEach(function(sl,k){sl.tl=1;sl.dly=k*0.16;});
-    lbT=3.2;
+/* pick a label no other row is showing */
+function nextLabel(row){
+  var used=lrows.map(function(r){return r===row?-1:r.idx;});
+  for(var tries=0;tries<40;tries++){
+    var c=Math.floor(Math.random()*labelSlots.length);
+    if(used.indexOf(c)<0&&c!==row.idx)return c;
   }
-  labelSlots.forEach(function(sl){
-    var target=sl.tl===1?1:0;
-    if(sl.tl===1&&sl.dly>0){sl.dly-=dt;target=0;}
-    sl.vis+=(target-sl.vis)*Math.min(1,dt*(target>sl.vis?4.4:2.9));
-  });
+  return (row.idx+1)%labelSlots.length;
+}
+function schedLabels(dt){
+  for(var k=0;k<lrows.length;k++){
+    var row=lrows[k];
+    if(row.mode==='in'){
+      row.vis+=dt*3.2;
+      if(row.vis>=1){row.vis=1;row.mode='hold';row.t=2.6+Math.random()*1.8;}
+    }else if(row.mode==='hold'){
+      row.t-=dt;
+      if(row.t<=0)row.mode='out';
+    }else{
+      row.vis-=dt*3.2;
+      if(row.vis<=0){row.vis=0;row.idx=nextLabel(row);row.mode='in';}
+    }
+  }
 }
 function anchor(st,rad){
   var p0=vertex(st.edge,rad),p1=vertex(st.edge+1,rad);
@@ -827,24 +844,24 @@ function frame(ts){
     cx.fillRect(vc[0]-2.5,vc[1]-2.5,5,5);
   }
 
-  /* annotations: a leader line from the perimeter out to the frame edge */
+  /* annotations: each row keeps its own height, so nothing can overlap */
   schedLabels(dt);
   cx.font='600 '+(W>520?11:10)+'px '+PT.canvasFont;
-  for(var li=0;li<labelSlots.length;li++){
-    var sl=labelSlots[li];
-    if(sl.vis<=.01)continue;
-    var stl=strings[sl.i],Al=anchor(stl,R);
-    /* every annotation parks on the right edge: the left side can sit under the
-       headline in Armenian, where the line is longer, and would be hidden */
-    var ex=W-10,tw=cx.measureText(sl.lab).width;
-    var y=Math.max(14,Math.min(H-8,Al[1]));
+  cx.textAlign='right';
+  for(var lr=0;lr<lrows.length;lr++){
+    var row=lrows[lr];
+    if(row.vis<=0.01)continue;
+    var item=labelSlots[row.idx];
+    if(!item)continue;
+    var stl=strings[item.i],Al=anchor(stl,R);
+    var rowY=Math.round(H*(0.24+lr*0.26));      /* three fixed heights */
+    var ex=W-10,tw=cx.measureText(item.lab).width;
     cx.beginPath();
     cx.moveTo(Al[0]+4,Al[1]);
-    cx.lineTo(ex-tw-8,y);
-    cx.strokeStyle='rgba('+MILK+','+(sl.vis*.34).toFixed(3)+')';cx.lineWidth=1;cx.stroke();
-    cx.textAlign='right';
-    cx.fillStyle='rgba('+MILK+','+(sl.vis*.92).toFixed(3)+')';
-    cx.fillText(sl.lab,ex,y+3.5);
+    cx.lineTo(ex-tw-8,rowY);
+    cx.strokeStyle='rgba('+MILK+','+(row.vis*.34).toFixed(3)+')';cx.lineWidth=1;cx.stroke();
+    cx.fillStyle='rgba('+MILK+','+(row.vis*.92).toFixed(3)+')';
+    cx.fillText(item.lab,ex,rowY+3.5);
   }
 
   /* readout follows the same event, steadily */
