@@ -460,8 +460,15 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 .ovl{position:fixed;inset:0;z-index:120;background:rgba(9,10,13,.66);backdrop-filter:blur(4px);display:none;justify-content:center;padding:34px 18px;overflow-y:auto;}
 .ovl.open{display:flex;}
 .md{background:var(--bg);color:var(--fg);max-width:760px;width:100%;margin:auto;position:relative;border-radius:4px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.4);}
-.md .x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(13,14,19,.08);z-index:5;font-size:14px;}
-.md .x:hover{background:var(--brand);color:#fff;}
+/* the close control sits over photography, so it cannot be a translucent wash:
+   an opaque chip reads on dark grounds, the hairline ring separates it on light
+   ones. Same language as the card's corner mark. */
+.md .x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;
+  background:#14161C;color:#EFEDEA;z-index:5;font-size:15px;line-height:1;
+  display:grid;place-items:center;
+  box-shadow:0 0 0 1px rgba(239,237,234,.55);}
+.md .x:hover{background:var(--brand);color:#fff;
+  box-shadow:0 0 0 1px rgba(255,251,249,.7);}
 /* the industry detail: the card opens into a full plate */
 #imd{max-width:880px;}
 #imd .ph{position:relative;aspect-ratio:16/7;background:#DDD9D2;overflow:hidden;}
