@@ -373,8 +373,6 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 
 <div class="dith" data-dith="#0A0B0F,#EFEDEA"></div>
 
-<div class="wrap"><svg class="joint" data-joint="0"></svg></div>
-
 <section class="sec thesis" id="why" data-rail><div class="wrap rv">
   <div class="cnt">01</div>
   <h2>Իրադարձությունը կարող է ավարտվել մինչև ստուգումը սկսվի</h2>
@@ -390,6 +388,8 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   </div>
   <div class="slist" id="slist"></div>
 </div></div></section>
+
+<div class="wrap"><svg class="joint" data-joint="0"></svg></div>
 
 <section class="sec" id="applications" data-rail><div class="wrap">
   <div class="rail-head">
@@ -894,8 +894,13 @@ function railBar(){
 irail.addEventListener('scroll',railBar,{passive:true});
 railBar();
 
-/* ============ DITHER BANDS — pixel dissolve between dark and light ============ */
+/* ============ DITHER BANDS — cubes that fill with scroll and erase the seam ============ */
+/* cantor8 drives its pixel band from ScrollTrigger progress (onUpdate → setProgress,
+   solid once passed). Same idea here: at p=0 the band still reads as the section
+   above, at p=1 it is solid with the section below, so the boundary dissolves. */
+var dBands=[];
 function buildDither(){
+  dBands=[];
   document.querySelectorAll('.dith').forEach(function(band){
     var pair=(band.dataset.dith||'').split(',');
     if(pair.length<2)return;
@@ -904,17 +909,37 @@ function buildDither(){
     var cols=Math.ceil(innerWidth/cs),rows=Math.max(4,Math.round(band.offsetHeight/cs));
     band.style.gridTemplateColumns='repeat('+cols+',1fr)';
     band.style.gridTemplateRows='repeat('+rows+',1fr)';
-    var html='';
+    band.innerHTML='';
+    var cells=[];
     for(var r=0;r<rows;r++){
-      /* probability of the lower colour grows down the band → a dithered dissolve */
-      var p=(r+0.5)/rows;
-      p=p*p*(3-2*p);                       /* smoothstep, so the edges stay clean */
+      /* rows nearest the lower section flip first → the seam erases upward */
+      var rowBias=(rows-1-r)/Math.max(1,rows-1);
       for(var c=0;c<cols;c++){
-        html+='<i style="background:'+(Math.random()<p?bot:top)+'"></i>';
+        var i=document.createElement('i');
+        var th=rowBias*0.55+Math.random()*0.62;
+        th=Math.max(0.02,Math.min(0.98,th));
+        i.style.background=top;
+        cells.push({el:i,th:th,on:false});
+        band.appendChild(i);
       }
     }
-    band.innerHTML=html;
+    dBands.push({el:band,cells:cells,top:top,bot:bot});
   });
+  paintDither();
+}
+function paintDither(){
+  var vh=innerHeight;
+  for(var b=0;b<dBands.length;b++){
+    var band=dBands[b],r=band.el.getBoundingClientRect();
+    /* fills while the band travels the lower three quarters of the screen */
+    var p=(vh-r.top)/(vh*0.75);
+    p=p<0?0:(p>1?1:p);
+    var cells=band.cells;
+    for(var i=0;i<cells.length;i++){
+      var on=p>=cells[i].th;
+      if(on!==cells[i].on){cells[i].on=on;cells[i].el.style.background=on?band.bot:band.top;}
+    }
+  }
 }
 buildDither();
 
@@ -1064,7 +1089,7 @@ document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
 var hdr=document.getElementById('hdr');
 /* capture-phase on document catches wrapper scrolling too; paint synchronously — no frame lag */
 document.addEventListener('scroll',function(){
-  seqUpd();paintJoints();paintRails();
+  seqUpd();paintJoints();paintRails();paintDither();
   hdr.classList.toggle('scr',(document.scrollingElement||document.documentElement).scrollTop>20||scrollY>20);
 },{passive:true,capture:true});
 buildJoints();buildRails();
