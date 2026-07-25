@@ -1,0 +1,276 @@
+<!doctype html><html lang="hy"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Հայկական տիպագրություն — փորձ</title>
+<style>
+@font-face{font-family:'T Montserrat Armenian';font-weight:400;font-display:swap;src:url(tfonts/montserrat-armenian-400.woff2) format('woff2');}
+@font-face{font-family:'T Montserrat Armenian';font-weight:500;font-display:swap;src:url(tfonts/montserrat-armenian-500.woff2) format('woff2');}
+@font-face{font-family:'T Montserrat Armenian';font-weight:600;font-display:swap;src:url(tfonts/montserrat-armenian-600.woff2) format('woff2');}
+@font-face{font-family:'T Montserrat Armenian';font-weight:700;font-display:swap;src:url(tfonts/montserrat-armenian-700.woff2) format('woff2');}
+@font-face{font-family:'T Arian AMU Serif';font-weight:400;font-display:swap;src:url(tfonts/arian-amu-serif-400.woff2) format('woff2');}
+@font-face{font-family:'T Arian AMU Serif';font-weight:700;font-display:swap;src:url(tfonts/arian-amu-serif-700.woff2) format('woff2');}
+@font-face{font-family:'T Arian AMU';font-weight:400;font-display:swap;src:url(tfonts/arian-amu-400.woff2) format('woff2');}
+@font-face{font-family:'T Arian AMU';font-weight:700;font-display:swap;src:url(tfonts/arian-amu-700.woff2) format('woff2');}
+@font-face{font-family:'T GHEA Grapalat';font-weight:400;font-display:swap;src:url(tfonts/ghea-grapalat-400.woff2) format('woff2');}
+@font-face{font-family:'T GHEA Grapalat';font-weight:700;font-display:swap;src:url(tfonts/ghea-grapalat-700.woff2) format('woff2');}
+@font-face{font-family:'T Parz';font-weight:400;font-display:swap;src:url(tfonts/parz-400.woff2) format('woff2');}
+@font-face{font-family:'Noto Sans Armenian';font-weight:400;font-display:swap;src:url(../fonts/noto-sans-armenian-400-armenian.woff2) format('woff2');}
+@font-face{font-family:'Noto Sans Armenian';font-weight:700;font-display:swap;src:url(../fonts/noto-sans-armenian-700-armenian.woff2) format('woff2');}
+:root{--bg:#EFEDEA;--fg:#0D0E13;--mid:rgba(13,14,19,.62);--soft:rgba(13,14,19,.42);
+ --hair:rgba(13,14,19,.13);--hair2:rgba(13,14,19,.08);--brand:#C8603D;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.7 'Noto Sans Armenian',sans-serif;}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,56px);}
+header{padding:64px 0 34px;border-bottom:1px solid var(--hair);}
+h1.t{font-size:clamp(28px,4vw,44px);line-height:1.05;font-weight:700;margin:0 0 14px;}
+.lead{color:var(--mid);max-width:62ch;font-size:15.5px;}
+.lab{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--brand);}
+.card{border-bottom:1px solid var(--hair);padding:44px 0;}
+.hd{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:26px;}
+.hd .nm{font-size:13px;letter-spacing:.04em;color:var(--fg);}
+.hd .meta{font-size:11px;letter-spacing:.1em;color:var(--soft);}
+.tag{font-size:10px;letter-spacing:.1em;padding:3px 7px;border-radius:2px;white-space:normal;}
+.tag.ok{background:rgba(46,110,74,.12);color:#2E6E4A;}
+.tag.warn{background:rgba(200,96,61,.13);color:#A34D31;}
+.tag.risk{background:rgba(160,32,32,.12);color:#9B2020;}
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:20px;font-size:12px;color:var(--mid);}
+img{max-width:100%;height:auto;display:block;}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(22px,3vw,48px);}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.spec h2{margin:0 0 6px;font-weight:700;font-size:clamp(26px,3.4vw,46px);line-height:1.02;letter-spacing:-.01em;}
+.spec .sub{font-weight:700;font-size:20px;line-height:1.25;margin:18px 0 8px;}
+.spec .up{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--brand);margin-bottom:10px;}
+.body p{margin:0 0 12px;font-size:15.5px;line-height:1.72;color:rgba(13,14,19,.86);}
+.body .sm{font-size:13px;color:var(--mid);}
+.body .num{font-size:12.5px;letter-spacing:.12em;color:var(--soft);}
+.alpha{margin-top:16px;font-size:19px;line-height:1.5;letter-spacing:.01em;color:rgba(13,14,19,.72);word-break:break-word;}
+.w{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;}
+.w span{font-size:17px;}
+nav.jump{position:sticky;top:0;background:rgba(239,237,234,.92);backdrop-filter:blur(8px);
+ border-bottom:1px solid var(--hair);z-index:5;}
+nav.jump .wrap{display:flex;gap:16px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px;}
+nav.jump a{font-size:11px;letter-spacing:.1em;color:var(--mid);text-decoration:none;}
+nav.jump a:hover{color:var(--brand);}
+.foot{padding:52px 0 90px;color:var(--mid);font-size:14px;}
+.foot a{color:var(--brand);}
+</style></head><body>
+<nav class="jump"><div class="wrap"><a href="#noto">Noto (այսօր)</a> <a href="#montserrat-armenian">Montserrat Armenian</a> <a href="#arian-amu-serif">Arian AMU Serif</a> <a href="#arian-amu">Arian AMU</a> <a href="#ghea-grapalat">GHEA Grapalat</a> <a href="#atyan-dsegh">Atyan Dsegh &#9888;</a> <a href="#amrys">Amrys &#9888;</a> <a href="#weblysleek-ui">WeblySleek UI &#9888;</a> <a href="#parz">Parz</a></div></nav>
+<div class="wrap">
+<header><div class="lab">PowerTech · type trial</div>
+<h1 class="t">Հայկական տառատեսակների ընտրություն</h1>
+<p class="lead">Նույն տեքստը՝ էջի իրական հայերենով։ Ձախում՝ վերնագրային դերը, աջում՝ տեքստային դերը և կտրվածքները։ Ամեն տառատեսակ կարելի է տեսնել կենդանի էջի վրա՝ <a href="hy-type.html">hy-type.html</a></p>
+<div class="legend"><span><i class="tag ok">OFL</i> — վեբում ազատ</span>
+<span><i class="tag warn">?</i> — գրավոր լիցենզիա չկա</span>
+<span><i class="tag risk">⚠</i> — չի կարելի դնել կայքում, ցուցադրվանում է նկարով</span></div></header>
+<section class="card" id="noto">
+ <div class="hd"><div class="nm">Noto Sans Armenian — ներկայիս վիճակը</div>
+  <div class="meta">baseline · 400 · 600 · 700</div></div>
+ <div class="grid">
+  <div class="spec"><div class="up">ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ</div><h2>Ստուգեք, թե ինչպես է աշխատում ձեր էլեկտրացանցը</h2><div class="sub">Իրադարձությունը կարող է ավարտվել մինչև ստուգումը սկսվի</div>
+   <div class="alpha">Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ Ճ Մ Յ Ն Շ Ո Չ Պ Ջ Ռ Ս Վ Տ Ր Ց Ւ Փ Ք Օ Ֆ  ա բ գ դ ե զ է ը թ ժ ի լ խ ծ կ հ ձ ղ ճ մ յ ն շ ո չ պ ջ ռ ս վ տ ր ց ւ փ ք օ ֆ  0123456789 ։ , « »</div></div>
+  <div class="body"><p>PowerTech
+  ՈլորտներԾառայություններԸնկերություն
+  
+    EN
+    Նկարագրել խնդիրը&#8599;
+  
+
+
+
+  
+    
+      ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ
+      Ստուգեք, թե ինչպես է աշխատում ձեր էլեկտրացանցը
+      PowerTech-ը համակարգի աշխատանքի ընթացքում գրանցում է էլեկտրական պարամետրերն ու էլեկտրաէներգիայի որակի իրադարձությունները։ Մենք վերլուծում ենք գրանցված տվյալները և ներկայացնում հստակ ինժեներական գնահատում։</p><p class="sm">Լարման որոշ իրադարձություններ տևում են ընդամենը միլիվայրկյաններ կամ մի քանի ցիկլ։ Ստուգման պահին չափվող արժեքները կարող են արդեն վերադարձած լինել բնականոն մակարդակի։ Մոնիթորինգը պահպանում է իրադարձության ժամանակային նշումը և դրա պահին գրանցված պայմանները։</p>
+   <p class="num">01 · 230 V · 50 Hz · THD 4,8 %% · 7 օր</p></div>
+ </div></section>
+<section class="card" id="montserrat-armenian">
+ <div class="hd"><div class="nm">Montserrat Armenian</div>
+  <div class="meta">geometric sans · կտրվածքներ 400 · 500 · 600 · 700 · 95 KB (subset)</div>
+  <div class="tag ok">SIL OFL 1.1 — վեբում ազատ</div></div>
+ <div class="grid">
+  <div class="spec" style="font-family:'T Montserrat Armenian',sans-serif">
+    <div class="up">ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ</div>
+    <h2>Ստուգեք, թե ինչպես է աշխատում ձեր էլեկտրացանցը</h2>
+    <div class="sub">Իրադարձությունը կարող է ավարտվել մինչև ստուգումը սկսվի</div>
+    <div class="alpha">Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ Ճ Մ Յ Ն Շ Ո Չ Պ Ջ Ռ Ս Վ Տ Ր Ց Ւ Փ Ք Օ Ֆ  ա բ գ դ ե զ է ը թ ժ ի լ խ ծ կ հ ձ ղ ճ մ յ ն շ ո չ պ ջ ռ ս վ տ ր ց ւ փ ք օ ֆ  0123456789 ։ , « »</div>
+  </div>
+  <div class="body" style="font-family:'T Montserrat Armenian',sans-serif">
+    <p>PowerTech
+  ՈլորտներԾառայություններԸնկերություն
+  
+    EN
+    Նկարագրել խնդիրը&#8599;
+  
+
+
+
+  
+    
+      ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ
+      Ստուգեք, թե ինչպես է աշխատում ձեր էլեկտրացանցը
+      PowerTech-ը համակարգի աշխատանքի ընթացքում գրանցում է էլեկտրական պարամետրերն ու էլեկտրաէներգիայի որակի իրադարձությունները։ Մենք վերլուծում ենք գրանցված տվյալները և ներկայացնում հստակ ինժեներական գնահատում։</p><p class="sm">Լարման որոշ իրադարձություններ տևում են ընդամենը միլիվայրկյաններ կամ մի քանի ցիկլ։ Ստուգման պահին չափվող արժեքները կարող են արդեն վերադարձած լինել բնականոն մակարդակի։ Մոնիթորինգը պահպանում է իրադարձության ժամանակային նշումը և դրա պահին գրանցված պայմանները։</p>
+    <p class="num">01 · 230 V · 50 Hz · THD 4,8 % · 7 օր</p>
+    <div class="w"><span style="font-weight:400">Regular 400</span>
+      <span style="font-weight:500">Medium 500</span>
+      <span style="font-weight:600">SemiBold 600</span>
+      <span style="font-weight:700">Bold 700</span></div>
+  </div>
+ </div></section>
+<section class="card" id="arian-amu-serif">
+ <div class="hd"><div class="nm">Arian AMU Serif</div>
+  <div class="meta">serif · կտրվածքներ 400 · 700 · 39 KB (subset)</div>
+  <div class="tag ok">SIL OFL 1.1 (Tarumian) — վեբում ազատ</div></div>
+ <div class="grid">
+  <div class="spec" style="font-family:'T Arian AMU Serif',sans-serif">
+    <div class="up">ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ</div>
+    <h2>Ստուգեք, թե ինչպես է աշխատում ձեր էլեկտրացանցը</h2>
+    <div class="sub">Իրադարձությունը կարող է ավարտվել մինչև ստուգումը սկսվի</div>
+    <div class="alpha">Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ Ճ Մ Յ Ն Շ Ո Չ Պ Ջ Ռ Ս Վ Տ Ր Ց Ւ Փ Ք Օ Ֆ  ա բ գ դ ե զ է ը թ ժ ի լ խ ծ կ հ ձ ղ ճ մ յ ն շ ո չ պ ջ ռ ս վ տ ր ց ւ փ ք օ ֆ  0123456789 ։ , « »</div>
+  </div>
+  <div class="body" style="font-family:'T Arian AMU Serif',sans-serif">
+    <p>PowerTech
+  ՈլորտներԾառայություններԸնկերություն
+  
+    EN
+    Նկարագրել խնդիրը&#8599;
+  
+
+
+
+  
+    
+      ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ
+      Ստուգեք, թե ինչպես է աշխատում ձեր էլեկտրացանցը
+      PowerTech-ը համակարգի աշխատանքի ընթացքում գրանցում է էլեկտրական պարամետրերն ու էլեկտրաէներգիայի որակի իրադարձությունները։ Մենք վերլուծում ենք գրանցված տվյալները և ներկայացնում հստակ ինժեներական գնահատում։</p><p class="sm">Լարման որոշ իրադարձություններ տևում են ընդամենը միլիվայրկյաններ կամ մի քանի ցիկլ։ Ստուգման պահին չափվող արժեքները կարող են արդեն վերադարձած լինել բնականոն մակարդակի։ Մոնիթորինգը պահպանում է իրադարձության ժամանակային նշումը և դրա պահին գրանցված պայմանները։</p>
+    <p class="num">01 · 230 V · 50 Hz · THD 4,8 % · 7 օր</p>
+    <div class="w"><span style="font-weight:400">Regular 400</span>
+      <span style="font-weight:500">Medium 500</span>
+      <span style="font-weight:600">SemiBold 600</span>
+      <span style="font-weight:700">Bold 700</span></div>
+  </div>
+ </div></section>
+<section class="card" id="arian-amu">
+ <div class="hd"><div class="nm">Arian AMU</div>
+  <div class="meta">grotesque sans · կտրվածքներ 400 · 700 · 32 KB (subset)</div>
+  <div class="tag ok">SIL OFL 1.1 (Tarumian) — վեբում ազատ</div></div>
+ <div class="grid">
+  <div class="spec" style="font-family:'T Arian AMU',sans-serif">
+    <div class="up">ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ</div>
+    <h2>Ստուգեք, թե ինչպես է աշխատում ձեր էլեկտրացանցը</h2>
+    <div class="sub">Իրադարձությունը կարող է ավարտվել մինչև ստուգումը սկսվի</div>
+    <div class="alpha">Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ Ճ Մ Յ Ն Շ Ո Չ Պ Ջ Ռ Ս Վ Տ Ր Ց Ւ Փ Ք Օ Ֆ  ա բ գ դ ե զ է ը թ ժ ի լ խ ծ կ հ ձ ղ ճ մ յ ն շ ո չ պ ջ ռ ս վ տ ր ց ւ փ ք օ ֆ  0123456789 ։ , « »</div>
+  </div>
+  <div class="body" style="font-family:'T Arian AMU',sans-serif">
+    <p>PowerTech
+  ՈլորտներԾառայություններԸնկերություն
+  
+    EN
+    Նկարագրել խնդիրը&#8599;
+  
+
+
+
+  
+    
+      ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ
+      Ստուգեք, թե ինչպես է աշխատում ձեր էլեկտրացանցը
+      PowerTech-ը համակարգի աշխատանքի ընթացքում գրանցում է էլեկտրական պարամետրերն ու էլեկտրաէներգիայի որակի իրադարձությունները։ Մենք վերլուծում ենք գրանցված տվյալները և ներկայացնում հստակ ինժեներական գնահատում։</p><p class="sm">Լարման որոշ իրադարձություններ տևում են ընդամենը միլիվայրկյաններ կամ մի քանի ցիկլ։ Ստուգման պահին չափվող արժեքները կարող են արդեն վերադարձած լինել բնականոն մակարդակի։ Մոնիթորինգը պահպանում է իրադարձության ժամանակային նշումը և դրա պահին գրանցված պայմանները։</p>
+    <p class="num">01 · 230 V · 50 Hz · THD 4,8 % · 7 օր</p>
+    <div class="w"><span style="font-weight:400">Regular 400</span>
+      <span style="font-weight:500">Medium 500</span>
+      <span style="font-weight:600">SemiBold 600</span>
+      <span style="font-weight:700">Bold 700</span></div>
+  </div>
+ </div></section>
+<section class="card" id="ghea-grapalat">
+ <div class="hd"><div class="nm">GHEA Grapalat</div>
+  <div class="meta">humanist sans (state font) · կտրվածքներ 400 · 700 · 46 KB (subset)</div>
+  <div class="tag warn">ՀՀ պետական տառատեսակ, fsType=editable — գրավոր վեբ-լիցենզիա չկա</div></div>
+ <div class="grid">
+  <div class="spec" style="font-family:'T GHEA Grapalat',sans-serif">
+    <div class="up">ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ</div>
+    <h2>Ստուգեք, թե ինչպես է աշխատում ձեր էլեկտրացանցը</h2>
+    <div class="sub">Իրադարձությունը կարող է ավարտվել մինչև ստուգումը սկսվի</div>
+    <div class="alpha">Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ Ճ Մ Յ Ն Շ Ո Չ Պ Ջ Ռ Ս Վ Տ Ր Ց Ւ Փ Ք Օ Ֆ  ա բ գ դ ե զ է ը թ ժ ի լ խ ծ կ հ ձ ղ ճ մ յ ն շ ո չ պ ջ ռ ս վ տ ր ց ւ փ ք օ ֆ  0123456789 ։ , « »</div>
+  </div>
+  <div class="body" style="font-family:'T GHEA Grapalat',sans-serif">
+    <p>PowerTech
+  ՈլորտներԾառայություններԸնկերություն
+  
+    EN
+    Նկարագրել խնդիրը&#8599;
+  
+
+
+
+  
+    
+      ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ
+      Ստուգեք, թե ինչպես է աշխատում ձեր էլեկտրացանցը
+      PowerTech-ը համակարգի աշխատանքի ընթացքում գրանցում է էլեկտրական պարամետրերն ու էլեկտրաէներգիայի որակի իրադարձությունները։ Մենք վերլուծում ենք գրանցված տվյալները և ներկայացնում հստակ ինժեներական գնահատում։</p><p class="sm">Լարման որոշ իրադարձություններ տևում են ընդամենը միլիվայրկյաններ կամ մի քանի ցիկլ։ Ստուգման պահին չափվող արժեքները կարող են արդեն վերադարձած լինել բնականոն մակարդակի։ Մոնիթորինգը պահպանում է իրադարձության ժամանակային նշումը և դրա պահին գրանցված պայմանները։</p>
+    <p class="num">01 · 230 V · 50 Hz · THD 4,8 % · 7 օր</p>
+    <div class="w"><span style="font-weight:400">Regular 400</span>
+      <span style="font-weight:500">Medium 500</span>
+      <span style="font-weight:600">SemiBold 600</span>
+      <span style="font-weight:700">Bold 700</span></div>
+  </div>
+ </div></section>
+<section class="card" id="atyan-dsegh">
+ <div class="hd"><div class="nm">Atyan Dsegh</div>
+  <div class="meta">display, all caps · կտրվածքներ 400 · նկար, ոչ վեբ-տառատեսակ</div>
+  <div class="tag warn">fsType=preview&print only — վեբ-ներդրումն արգելված է դրոշակով</div></div>
+ <div class="grid">
+  <div><img src="tsheet/atyan-dsegh-head.png" width="520" height="252" alt="Atyan Dsegh — վերնագիր" loading="lazy"></div>
+  <div><img src="tsheet/atyan-dsegh-body.png" width="470" height="307" alt="Atyan Dsegh — տեքստ" loading="lazy"></div>
+ </div></section>
+<section class="card" id="amrys">
+ <div class="hd"><div class="nm">Amrys</div>
+  <div class="meta">sans · կտրվածքներ 400 · 500 · 600 · 700 · նկար, ոչ վեբ-տառատեսակ</div>
+  <div class="tag risk">Monotype Imaging Inc. — առևտրային, պահանջում է վճարովի վեբ-լիցենզիա</div></div>
+ <div class="grid">
+  <div><img src="tsheet/amrys-head.png" width="520" height="296" alt="Amrys — վերնագիր" loading="lazy"></div>
+  <div><img src="tsheet/amrys-body.png" width="470" height="465" alt="Amrys — տեքստ" loading="lazy"></div>
+ </div></section>
+<section class="card" id="weblysleek-ui">
+ <div class="hd"><div class="nm">WeblySleek UI</div>
+  <div class="meta">UI sans · կտրվածքներ 400 · 600 · նկար, ոչ վեբ-տառատեսակ</div>
+  <div class="tag risk">լիցենզիա բացակայում է, Segoe UI-ի ածանցյալ — իրավական ռիսկ</div></div>
+ <div class="grid">
+  <div><img src="tsheet/weblysleek-ui-head.png" width="520" height="296" alt="WeblySleek UI — վերնագիր" loading="lazy"></div>
+  <div><img src="tsheet/weblysleek-ui-body.png" width="470" height="461" alt="WeblySleek UI — տեքստ" loading="lazy"></div>
+ </div></section>
+<section class="card" id="parz">
+ <div class="hd"><div class="nm">Parz</div>
+  <div class="meta">sans · կտրվածքներ 400 · 12 KB (subset)</div>
+  <div class="tag warn">լիցենզիա բացակայում է արխիվում — հեղինակի հաստատում է պետք</div></div>
+ <div class="grid">
+  <div class="spec" style="font-family:'T Parz',sans-serif">
+    <div class="up">ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ</div>
+    <h2>Ստուգեք, թե ինչպես է աշխատում ձեր էլեկտրացանցը</h2>
+    <div class="sub">Իրադարձությունը կարող է ավարտվել մինչև ստուգումը սկսվի</div>
+    <div class="alpha">Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ղ Ճ Մ Յ Ն Շ Ո Չ Պ Ջ Ռ Ս Վ Տ Ր Ց Ւ Փ Ք Օ Ֆ  ա բ գ դ ե զ է ը թ ժ ի լ խ ծ կ հ ձ ղ ճ մ յ ն շ ո չ պ ջ ռ ս վ տ ր ց ւ փ ք օ ֆ  0123456789 ։ , « »</div>
+  </div>
+  <div class="body" style="font-family:'T Parz',sans-serif">
+    <p>PowerTech
+  ՈլորտներԾառայություններԸնկերություն
+  
+    EN
+    Նկարագրել խնդիրը&#8599;
+  
+
+
+
+  
+    
+      ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ
+      Ստուգեք, թե ինչպես է աշխատում ձեր էլեկտրացանցը
+      PowerTech-ը համակարգի աշխատանքի ընթացքում գրանցում է էլեկտրական պարամետրերն ու էլեկտրաէներգիայի որակի իրադարձությունները։ Մենք վերլուծում ենք գրանցված տվյալները և ներկայացնում հստակ ինժեներական գնահատում։</p><p class="sm">Լարման որոշ իրադարձություններ տևում են ընդամենը միլիվայրկյաններ կամ մի քանի ցիկլ։ Ստուգման պահին չափվող արժեքները կարող են արդեն վերադարձած լինել բնականոն մակարդակի։ Մոնիթորինգը պահպանում է իրադարձության ժամանակային նշումը և դրա պահին գրանցված պայմանները։</p>
+    <p class="num">01 · 230 V · 50 Hz · THD 4,8 % · 7 օր</p>
+    <div class="w"><span style="font-weight:400">Regular 400</span>
+      <span style="font-weight:500">Medium 500</span>
+      <span style="font-weight:600">SemiBold 600</span>
+      <span style="font-weight:700">Bold 700</span></div>
+  </div>
+ </div></section>
+<div class="foot">Կենդանի փորձ՝ <a href="hy-type.html">hy-type.html</a> — իրական էջը փոխարկիչով (վերնագիր / տեքստ / պիտակ)։ Աղբյուր՝ fonter.am</div>
+</div></body></html>
