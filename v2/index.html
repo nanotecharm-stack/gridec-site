@@ -176,10 +176,6 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 /* industries — horizontal rail, detail opens on click */
 .suite .spin>.wrap{width:100%;}
 .rail-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:clamp(20px,3vw,38px);}
-.rail-nav{display:flex;gap:6px;align-items:center;}
-.rail-nav button{width:40px;height:40px;box-shadow:inset 0 0 0 1px var(--hair);display:grid;place-items:center;font-size:15px;transition:.3s var(--e);border-radius:2px;}
-.rail-nav button:hover{background:var(--brand);color:#fff;box-shadow:none;}
-.rail-nav button[disabled]{opacity:.3;pointer-events:none;}
 .railwrap{position:relative;width:100%;}
 /* pinned: the section is tall, the frame sticks, and the rail is paged by scroll */
 .suite{position:relative;}
@@ -233,14 +229,6 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .ic.is-open-card .ic-tag{background:rgba(255,255,255,.18);color:#fff;}
 .ic.is-open-card .ic-foot p{color:rgba(255,251,249,.86);}
 .ic.is-open-card .ic-go{background:#14161C;color:#fff;}
-.rail-dots{display:flex;gap:6px;align-items:center;}
-.rail-dots button{width:22px;height:4px;background:var(--hair);border-radius:1px;transition:background .4s var(--e);}
-.rail-dots button.on{background:var(--brand);}
-.rail-nav{display:flex;gap:6px;}
-.rail-nav button{width:38px;height:38px;border-radius:2px;box-shadow:inset 0 0 0 1px var(--hair);
-  display:grid;place-items:center;font-size:14px;transition:.3s var(--e);}
-.rail-nav button:hover:not(:disabled){background:var(--fg);color:var(--bg);}
-.rail-nav button:disabled{opacity:.3;cursor:default;}
 .suite .spin>.wrap{width:100%;}
 .rail-head{display:flex;justify-content:space-between;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-bottom:clamp(20px,2.6vw,34px);}
 .railbar{height:2px;background:var(--hair2);position:relative;}
@@ -527,7 +515,6 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <div class="rail-head">
     <div><div class="cnt">02</div><h2>Where monitoring helps</h2></div>
     <div style="max-width:40ch"><p class="lede" style="margin-top:0;font-size:14px;line-height:1.7">Power quality problems are not limited to one sector. Monitoring is useful when electrical conditions affect equipment or operations, or when an engineering decision requires measured evidence.</p>
-      <div style="display:flex;align-items:center;gap:14px;margin-top:16px"><div class="rail-dots" id="rdots"></div><div class="rail-nav"><button id="rprev" aria-label="prev">←</button><button id="rnext" aria-label="next">→</button></div></div>
     </div>
   </div>
 </div>
@@ -1166,8 +1153,7 @@ function seqUpd(){
 seqUpd();
 
 /* ============ INDUSTRIES — a stepped rail of card plates ============ */
-var irail=document.getElementById('irail'),rbar=document.getElementById('rbar'),
-    rprev=document.getElementById('rprev'),rnext=document.getElementById('rnext');
+var irail=document.getElementById('irail'),rbar=document.getElementById('rbar');
 
 /* Each card carries its own technical drawing: orthogonal runs leaving a core,
    with pads along the way. Deterministic per card, so it never reshuffles. */
@@ -1270,9 +1256,16 @@ function layoutSuite(){
     var step=0;
     for(var si=0;si<irail.children.length;si++)
       step=Math.max(step,parseFloat(getComputedStyle(irail.children[si]).paddingTop)||0);
+    var hs=getComputedStyle(head);
     var used=parseFloat(sp.paddingTop)+parseFloat(sp.paddingBottom)
-            +head.offsetHeight+parseFloat(rp.paddingTop)+parseFloat(rp.paddingBottom)+step;
-    irail.style.setProperty('--cardh',Math.max(280,Math.round(innerHeight-used))+'px');
+            +head.offsetHeight+parseFloat(hs.marginBottom)
+            +parseFloat(rp.paddingTop)+parseFloat(rp.paddingBottom)+step;
+    var est=Math.max(280,Math.round(innerHeight-used));
+    irail.style.setProperty('--cardh',est+'px');
+    /* correct against the frame we actually got, so a missed margin anywhere
+       cannot push the plates past the fold again */
+    var over=spin.offsetHeight-innerHeight;
+    if(over>0)irail.style.setProperty('--cardh',Math.max(260,est-over)+'px');
   }
   /* line the first plate up with the heading, measured from the real column */
   var w=suiteSec.querySelector('.spin > .wrap'),card=irail.querySelector('.icard');
@@ -1328,40 +1321,12 @@ function suiteUpd(){
   if(rm){railCur=railTarget;paintRail();return;}
   if(!railRAF){railLast=0;railRAF=requestAnimationFrame(railChase);}
 }
-function cardStride(){var c=irail.querySelector('.icard');return c?c.offsetWidth:280;}
-function railIndex(){return Math.round(irail.scrollLeft/Math.max(1,cardStride()));}
-function railGo(i){
-  var n=irail.children.length;
-  i=Math.max(0,Math.min(n-1,i));
-  if(!suitePinned){irail.scrollTo({left:i*cardStride(),behavior:'smooth'});return;}
-  var travel=suiteTravel();
-  if(travel<=0)return;
-  var target=Math.min(1,(i*cardStride())/travel);
-  var top=suiteSec.getBoundingClientRect().top+scrollY;
-  scrollTo({top:top+target*(suiteSec.offsetHeight-innerHeight),behavior:'smooth'});
-}
-function railStep(dir){railGo(railIndex()+dir);}
-rprev.addEventListener('click',function(){railStep(-1);});
-rnext.addEventListener('click',function(){railStep(1);});
-var rdots=document.getElementById('rdots');
-if(rdots){
-  for(var di=0;di<irail.children.length;di++){
-    (function(k){var b=document.createElement('button');
-      b.setAttribute('aria-label','card '+(k+1));
-      b.addEventListener('click',function(){railGo(k);});
-      rdots.appendChild(b);})(di);
-  }
-}
 function railBar(){
   var max=suiteTravel();
   var vis=irail.clientWidth/Math.max(1,irail.scrollWidth);
   rbar.style.width=(vis*100).toFixed(2)+'%';
   var p=max>0?irail.scrollLeft/max:0;
   rbar.style.transform='translateX('+(p*(100/Math.max(vis,.0001)-100)).toFixed(2)+'%)';
-  rprev.disabled=irail.scrollLeft<4;
-  rnext.disabled=irail.scrollLeft>max-4;
-  if(rdots){var cur=railIndex();
-    for(var i=0;i<rdots.children.length;i++)rdots.children[i].classList.toggle('on',i===cur);}
 }
 irail.addEventListener('scroll',railBar,{passive:true});
 layoutSuite();
