@@ -625,24 +625,44 @@ function build(){
 /* A handful of channels conduct at any moment, the way a discharge does: each
    one runs from the centre out to a point on the perimeter, deviating around
    that line and forking once or twice before it dies out. */
-var ARCS=7,ARC_SEG=13;
+var ARCS=7,ARC_SEG=17;
 function buildArcs(){
   arcs=[];
-  for(var a=0;a<ARCS;a++)arcs.push({i:0,jit:[],branch:null,life:0,seed:0});
-  arcs.forEach(reseedArc);
+  for(var a=0;a<ARCS;a++)arcs.push({i:0,jit:[],tgt:null,branch:undefined,life:0,vis:0});
+  arcs.forEach(function(a){a.vis=0;reseedArc(a,true);});
 }
-function reseedArc(arc){
-  arc.i=Math.floor(Math.random()*N);
-  arc.jit=[];
-  for(var k=0;k<=ARC_SEG;k++)arc.jit.push((Math.random()*2-1));
+function reseedArc(arc,moveAnchor){
+  if(moveAnchor||!arc.tgt){
+    arc.i=Math.floor(Math.random()*N);
+    arc.vis=0;                                   /* fades in on its new run */
+  }
+  arc.tgt=[];
+  for(var k=0;k<=ARC_SEG;k++)arc.tgt.push((Math.random()*2-1));
+  if(!arc.jit||!arc.jit.length)arc.jit=arc.tgt.slice();
   /* a fork leaves somewhere in the outer half and stops short of the rim */
-  arc.branch=(Math.random()<0.72)?{
+  if(moveAnchor||arc.branch===undefined)arc.branch=(Math.random()<0.72)?{
     at:0.42+Math.random()*0.3,
     len:0.3+Math.random()*0.26,
     turn:(Math.random()*2-1)*0.7,
-    jit:Array.apply(null,{length:7}).map(function(){return Math.random()*2-1;})
+    jit:Array.apply(null,{length:9}).map(function(){return Math.random()*2-1;})
   }:null;
   arc.life=0.9+Math.random()*0.5;
+}
+/* ease the current shape toward the target, so the channel flows */
+function easeArc(arc,dt){
+  var r=Math.min(1,dt*5.5);
+  for(var k=0;k<arc.jit.length;k++)arc.jit[k]+=(arc.tgt[k]-arc.jit[k])*r;
+  arc.vis+=((1-arc.vis))*Math.min(1,dt*3.4);
+}
+/* a smooth run through the points: quadratics via segment midpoints */
+function strokeSmooth(pts,col,w){
+  cx.beginPath();cx.moveTo(pts[0][0],pts[0][1]);
+  for(var k=1;k<pts.length-1;k++){
+    var mx=(pts[k][0]+pts[k+1][0])/2,my=(pts[k][1]+pts[k+1][1])/2;
+    cx.quadraticCurveTo(pts[k][0],pts[k][1],mx,my);
+  }
+  cx.lineTo(pts[pts.length-1][0],pts[pts.length-1][1]);
+  cx.strokeStyle=col;cx.lineWidth=w;cx.lineJoin='round';cx.lineCap='round';cx.stroke();
 }
 /* the jagged run from the centre to an anchor, with the string's own bend */
 function arcPath(arc,amp){
@@ -657,11 +677,6 @@ function arcPath(arc,amp){
     pts.push([CXp+dx*u+nx*off,CYp+dy*u+ny*off]);
   }
   return {pts:pts,nx:nx,ny:ny,dx:dx,dy:dy,len:len};
-}
-function strokeRun(pts,col,w){
-  cx.beginPath();cx.moveTo(pts[0][0],pts[0][1]);
-  for(var k=1;k<pts.length;k++)cx.lineTo(pts[k][0],pts[k][1]);
-  cx.strokeStyle=col;cx.lineWidth=w;cx.stroke();
 }
 /* the point on the perimeter this string is tied to */
 /* every few strings around the shape carries an annotation */
@@ -777,15 +792,17 @@ function frame(ts){
   /* live channels: reseeded on a flicker, so the discharge never repeats */
   arcT-=dt;
   if(arcT<=0){
-    arcT=0.11+Math.random()*0.09;
-    reseedArc(arcs[Math.floor(Math.random()*arcs.length)]);
+    arcT=0.20+Math.random()*0.16;
+    /* mostly a new shape for the same run; now and then the run itself moves */
+    reseedArc(arcs[Math.floor(Math.random()*arcs.length)],Math.random()<0.22);
   }
-  var amp=R*0.085*(1+evP*1.5);
+  for(var ae=0;ae<arcs.length;ae++)easeArc(arcs[ae],dt);
+  var amp=R*0.070*(1+evP*1.5);
   for(var ai=0;ai<arcs.length;ai++){
     var arc=arcs[ai],run=arcPath(arc,amp);
-    var glow=(0.30+0.34*evP)*arc.life;
-    strokeRun(run.pts,'rgba('+MILK+','+(glow*0.5).toFixed(3)+')',2.4);
-    strokeRun(run.pts,'rgba('+GLOW+','+glow.toFixed(3)+')',1);
+    var glow=(0.30+0.34*evP)*arc.life*arc.vis;
+    strokeSmooth(run.pts,'rgba('+MILK+','+(glow*0.5).toFixed(3)+')',2.4);
+    strokeSmooth(run.pts,'rgba('+GLOW+','+glow.toFixed(3)+')',1);
     if(arc.branch){
       var b=arc.branch,i0=Math.round(b.at*ARC_SEG);
       var p0=run.pts[i0];
@@ -799,7 +816,7 @@ function frame(ts){
         bp.push([p0[0]+bdx*bl*u2+(-bdy)*b.jit[k2]*amp*0.8*bell2,
                  p0[1]+bdy*bl*u2+( bdx)*b.jit[k2]*amp*0.8*bell2]);
       }
-      strokeRun(bp,'rgba('+GLOW+','+(glow*0.55).toFixed(3)+')',.9);
+      strokeSmooth(bp,'rgba('+GLOW+','+(glow*0.55).toFixed(3)+')',.9);
     }
   }
 
