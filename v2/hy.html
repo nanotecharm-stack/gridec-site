@@ -206,15 +206,19 @@ html[data-nav="3"] .navr,html[data-nav="3"] .btn{
    them. The band stays crisp; nothing is veiled. */
 header{--bar-plate:#EFEDEA;--bar-edge:rgba(13,14,19,.14);}
 header[data-tone="ink"]{--bar-plate:#14161C;--bar-edge:rgba(239,237,234,.2);}
-html[data-nav="0"] header[data-scrim] .brand,html[data-nav="2"] header[data-scrim] .brand{
-  background:var(--bar-plate);box-shadow:inset 0 0 0 1px var(--bar-edge);
-  border-radius:2px;padding:6px 12px 6px 8px;}
-html[data-nav="0"] header[data-scrim] .navr,html[data-nav="2"] header[data-scrim] .navr{
-  background:var(--bar-plate);box-shadow:inset 0 0 0 1px var(--bar-edge);
-  border-radius:2px;padding:5px;gap:2px;}
-html[data-nav="2"] header[data-scrim] .btn{margin-left:4px;}
-html[data-nav="0"] header[data-scrim] nav{box-shadow:inset 0 0 0 1px var(--bar-edge);}
-.brand,.navr{transition:background .3s var(--e),box-shadow .3s var(--e),padding .3s var(--e);}
+/* the plate is drawn BEHIND the items, never as padding on them: changing padding
+   on a state change slid the wordmark sideways as the band came under the bar */
+.brand,.navr{position:relative;}
+.brand::after,.navr::after{content:"";position:absolute;inset:-7px -11px;z-index:-1;
+  border-radius:2px;background:var(--bar-plate);box-shadow:inset 0 0 0 1px var(--bar-edge);
+  opacity:0;transition:opacity .28s var(--e);pointer-events:none;}
+html[data-nav="0"] header[data-scrim] .brand::after,
+html[data-nav="0"] header[data-scrim] .navr::after,
+html[data-nav="2"] header[data-scrim] .brand::after,
+html[data-nav="2"] header[data-scrim] .navr::after{opacity:1;}
+/* the brand's own colour, kept as a treatment rather than forced on every one */
+html[data-logo="6"] .brand{color:#AC4A29;}
+html[data-logo="6"] header[data-tone="ink"] .brand{color:#D4714E;}
 
 /* ---- 3 instrument chips: two opaque plates, nothing between ------------ */
 html[data-nav="3"] .hin{height:76px;grid-template-columns:auto 1fr auto;align-items:start;
@@ -1997,7 +2001,7 @@ function toneUnderBar(){
 }
 /* the variant switch, for review only */
 var NAVV=['0','1','2','3'],navLabels=['glass','titleblock','rail','chips'];
-var LOGOV=['0','1','2','3','4','5'],logoLabels=['as built','contour','wordmark','knockout','sag','octagon'];
+var LOGOV=['0','1','2','3','4','5','6'],logoLabels=['as built','contour','wordmark','knockout','sag','octagon','brand tone'];
 function logoSet(v){
   if(v==='0')document.documentElement.removeAttribute('data-logo');
   else document.documentElement.setAttribute('data-logo',v);
