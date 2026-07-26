@@ -200,14 +200,21 @@ html[data-nav="1"] header,html[data-nav="1"] .btn,html[data-nav="3"] .brand,
 html[data-nav="3"] .navr,html[data-nav="3"] .btn{
   transition:background .45s var(--e),color .45s var(--e),box-shadow .45s var(--e);}
 
-/* over a pixel band the transparent rail gets a ground of its own, faded at the
-   bottom edge so it reads as light falling on the bar, not as a second bar */
-header[data-scrim]::before{content:"";position:absolute;left:0;right:0;top:0;height:120%;
-  pointer-events:none;z-index:-1;opacity:0;transition:opacity .3s var(--e);
-  background:linear-gradient(180deg,var(--bar-scrim,#EFEDEA) 0%,var(--bar-scrim,#EFEDEA) 58%,transparent 100%);}
-html[data-nav="2"] header[data-scrim]::before,html[data-nav="0"] header[data-scrim]::before{opacity:.96;}
-header{--bar-scrim:#EFEDEA;}
-header[data-tone="ink"]{--bar-scrim:#14161C;}
+/* A full-width wash over the pixel band saved the text but smeared the band, which
+   is the one thing on that screen worth looking at. So the plateless bars put on
+   local plates instead, around their own items only, and only while a band is under
+   them. The band stays crisp; nothing is veiled. */
+header{--bar-plate:#EFEDEA;--bar-edge:rgba(13,14,19,.14);}
+header[data-tone="ink"]{--bar-plate:#14161C;--bar-edge:rgba(239,237,234,.2);}
+html[data-nav="0"] header[data-scrim] .brand,html[data-nav="2"] header[data-scrim] .brand{
+  background:var(--bar-plate);box-shadow:inset 0 0 0 1px var(--bar-edge);
+  border-radius:2px;padding:6px 12px 6px 8px;}
+html[data-nav="0"] header[data-scrim] .navr,html[data-nav="2"] header[data-scrim] .navr{
+  background:var(--bar-plate);box-shadow:inset 0 0 0 1px var(--bar-edge);
+  border-radius:2px;padding:5px;gap:2px;}
+html[data-nav="2"] header[data-scrim] .btn{margin-left:4px;}
+html[data-nav="0"] header[data-scrim] nav{box-shadow:inset 0 0 0 1px var(--bar-edge);}
+.brand,.navr{transition:background .3s var(--e),box-shadow .3s var(--e),padding .3s var(--e);}
 
 /* ---- 3 instrument chips: two opaque plates, nothing between ------------ */
 html[data-nav="3"] .hin{height:76px;grid-template-columns:auto 1fr auto;align-items:start;
