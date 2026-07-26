@@ -416,6 +416,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .icard:nth-child(7n+6){padding-top:clamp(16px,2.6vw,48px);}
 .icard:nth-child(7n+7){padding-top:clamp(10px,1.8vw,32px);}
 .ic{position:relative;display:flex;flex-direction:column;min-height:var(--cardh,clamp(300px,38vw,470px));
+  box-shadow:0 0 0 1px #101218;backface-visibility:hidden;
   background:#101218;color:#EFEDEA;border-radius:2px;overflow:hidden;cursor:pointer;
   /* the card stays put on hover — only its mark answers */
   transition:none;}
@@ -429,7 +430,8 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   transition:transform .18s var(--e),background .45s var(--e),color .45s var(--e);}
 .ic:hover .ic-go,.ic:focus-visible .ic-go{background:var(--brand);color:#fff;}
 /* the sector photograph, easing in scale so the movement has weight */
-.ic-art{position:relative;flex:1 1 auto;min-height:150px;overflow:hidden;}
+.ic-art{position:relative;flex:1 1 auto;min-height:150px;overflow:hidden;
+  background:#101218;transform:translateZ(0);backface-visibility:hidden;}
 .ic-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
   transform:scale(1.04);transform-origin:52% 45%;
   transition:transform 1.15s cubic-bezier(.16,1,.3,1),filter .7s var(--e);
@@ -442,7 +444,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .ic-foot p{font-size:14px;line-height:1.6;color:rgba(239,237,234,.66);
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
 /* the invitation keeps the brand colour and its drawing */
-.ic.is-open-card{background:var(--brand);}
+.ic.is-open-card{background:var(--brand);box-shadow:0 0 0 1px var(--brand);}
 .ic.is-open-card .ic-art::after{background:linear-gradient(180deg,rgba(200,96,61,.1) 0%,rgba(200,96,61,.92) 100%);}
 .ic.is-open-card .ic-tag{background:rgba(255,255,255,.18);color:#fff;}
 .ic.is-open-card .ic-foot p{color:rgba(255,251,249,.86);}
@@ -1649,7 +1651,7 @@ function sxRender(x){
     shells[i].style.transform='translate3d(0,'+y.toFixed(2)+'px,0) scale('+sc.toFixed(4)+')';
     var im=shells[i].querySelector('.ic-art img');
     if(im){var rel=(centre-SX.focus)/SX.focus;
-      im.style.transform='scale(1.06) translate3d('+(-rel*12).toFixed(2)+'px,0,0)';}
+      im.style.transform='scale(1.06) translate3d('+Math.round(-rel*12)+'px,0,0)';}
   }
 }
 function suiteUpd(){
