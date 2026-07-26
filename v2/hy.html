@@ -200,6 +200,15 @@ html[data-nav="1"] header,html[data-nav="1"] .btn,html[data-nav="3"] .brand,
 html[data-nav="3"] .navr,html[data-nav="3"] .btn{
   transition:background .45s var(--e),color .45s var(--e),box-shadow .45s var(--e);}
 
+/* over a pixel band the transparent rail gets a ground of its own, faded at the
+   bottom edge so it reads as light falling on the bar, not as a second bar */
+header[data-scrim]::before{content:"";position:absolute;left:0;right:0;top:0;height:120%;
+  pointer-events:none;z-index:-1;opacity:0;transition:opacity .3s var(--e);
+  background:linear-gradient(180deg,var(--bar-scrim,#EFEDEA) 0%,var(--bar-scrim,#EFEDEA) 58%,transparent 100%);}
+html[data-nav="2"] header[data-scrim]::before,html[data-nav="0"] header[data-scrim]::before{opacity:.96;}
+header{--bar-scrim:#EFEDEA;}
+header[data-tone="ink"]{--bar-scrim:#14161C;}
+
 /* ---- 3 instrument chips: two opaque plates, nothing between ------------ */
 html[data-nav="3"] .hin{height:76px;grid-template-columns:auto 1fr auto;align-items:start;
   padding-top:12px;}
@@ -1946,15 +1955,37 @@ function ixSpy(){
 [].slice.call(document.querySelectorAll('.plate,.plate2')).forEach(function(sec){
   sec.dataset.tone='ink';
 });
+/* the pixel bands are not sections and they mix two colours, so the bar used to
+   sail over them still thinking it was on paper. Read their own two colours. */
+function hexTone(h){
+  h=(h||'').trim();if(h.charAt(0)!=='#')return 'paper';
+  var r=parseInt(h.substr(1,2),16),g=parseInt(h.substr(3,2),16),b=parseInt(h.substr(5,2),16);
+  return (0.2126*r+0.7152*g+0.0722*b)<110?'ink':'paper';
+}
+var bands=[].slice.call(document.querySelectorAll('.dith')).map(function(el){
+  var c=(el.getAttribute('data-dith')||'').split(',');
+  return {el:el,top:hexTone(c[0]),bottom:hexTone(c[1])};
+});
 function toneUnderBar(){
-  var y=38,tone='paper';
+  var y=38,tone='paper',overBand=false;
   var secs=document.querySelectorAll('section[data-tone]');
   for(var i=0;i<secs.length;i++){
     var r=secs[i].getBoundingClientRect();
     if(r.top<=y&&r.bottom>=y){tone=secs[i].dataset.tone;break;}
   }
-  if(!ixp.hidden)tone='paper';            /* the index is paper, keep the bar readable on it */
+  for(var j=0;j<bands.length;j++){
+    var br=bands[j].el.getBoundingClientRect();
+    if(br.top<=y&&br.bottom>=y){
+      /* the dither leans to the top colour in its upper half, to the bottom in its lower */
+      tone=(y-br.top)/Math.max(1,br.height)<0.5?bands[j].top:bands[j].bottom;
+      overBand=true;break;
+    }
+  }
+  if(!ixp.hidden){tone='paper';overBand=false;}   /* the index is paper */
   hdr.setAttribute('data-tone',tone);
+  /* a band always keeps some cells of the opposite colour, so a bar with no plate
+     of its own needs one exactly there */
+  if(overBand)hdr.setAttribute('data-scrim','1');else hdr.removeAttribute('data-scrim');
   hdr.classList.toggle('on-dark',tone==='ink');
 }
 /* the variant switch, for review only */
