@@ -32,7 +32,6 @@ IMG_FILES = ['02_manufacturing_industrial_robot.jpg', '03_solar_power_plant.jpg'
              '06_healthcare_laboratory.jpg', '05_data_center.jpg',
              '04_commercial_building.jpg', '08_finance_investment.jpg']
 IMGD = {'IMG%d' % i: b64(os.path.join(IMGS, f), 'image/jpeg') for i, f in enumerate(IMG_FILES)}
-IMGD['METAL'] = b64(os.path.join(IMGS, 'hero_metal.webp'), 'image/webp')
 
 def stats_html(items):
     return ''.join('<div class="stat"><b>%s</b><span>%s</span></div>' % (b, s) for b, s in items)
@@ -153,10 +152,10 @@ EN = {
  'MEA_CHIPS': meas_html(['Voltage & Current', 'Harmonics & Interharmonics', 'Flicker',
                           'Voltage Dips', 'Unbalance', 'Power & Energy', 'Events']),
  'CO_EYEBROW': 'COMPANY',
- 'CO_H2': 'Independent data<br>Clear engineering judgment',
+ 'CO_H2': 'Measured data<br>Independent engineering assessment',
  'CO_P': 'PowerTech was created to make electrical problems measurable. We record how electrical systems behave during operation and provide independent engineering assessments based on the recorded data. PowerTech is based in Yerevan and works on-site across the region.',
- 'CO_SUB': 'From the site to the report',
- 'CO_SUBP': 'Installation, recording and analysis are managed under one engineering lead.',
+ 'CO_SUB': 'From on-site setup to engineering report',
+ 'CO_SUBP': 'One engineering lead oversees setup, recording and analysis.',
  'CO_STAGES': stages_html([
     ('01 · ON-SITE', 'Monitoring setup verified before recording'),
     ('02 · RECORDING', 'Electrical conditions recorded for the agreed period'),
@@ -266,7 +265,7 @@ HY = {
  'HERO_P': 'PowerTech-ը համակարգի աշխատանքի ընթացքում գրանցում է էլեկտրական պարամետրերն ու էլեկտրաէներգիայի որակի իրադարձությունները։ Մենք վերլուծում ենք գրանցված տվյալները և ներկայացնում հստակ ինժեներական գնահատում։',
  'HERO_CTA2': 'Ինչպես է իրականացվում մոնիթորինգը',
  'RD_CAP': 'RMS ԼԱՐՈՒՄ · 10-ՐՈՊԵԱՆՈՑ ՄԻՏՈՒՄ', 'RD_NOMINAL': 'ԱՆՎԱՆԱԿԱՆ',
- 'WHY_H2': 'Իրադարձությունը կարող է ավարտվել մինչև ստուգումը սկսվի',
+ 'WHY_H2': 'Իրադարձությունը կարող է ավարտվել դեռևս ստուգումը սկսելուց առաջ',
  'WHY_P': 'Լարման որոշ իրադարձություններ տևում են ընդամենը միլիվայրկյաններ կամ մի քանի ցիկլ։ Ստուգման պահին չափվող արժեքները կարող են արդեն վերադարձած լինել բնականոն մակարդակի։ Մոնիթորինգը պահպանում է իրադարձության ժամանակային նշումը և դրա պահին գրանցված պայմանները։',
  'WHY_LINK': 'Տեսնել, թե որտեղ է օգնում մոնիթորինգը',
  'APP_H2': 'Որտեղ է օգնում մոնիթորինգը',
@@ -426,7 +425,6 @@ FF_HY_D = '\n'.join([
     font_face_url('Arian AMU Serif', '600 900', 'arian-amu-serif-700.woff2'),
 ])
 IMGD_D = {'IMG%d' % i: '../uploads/img/' + f for i, f in enumerate(IMG_FILES)}
-IMGD_D['METAL'] = '../uploads/img/hero_metal.webp'
 
 # ---------------------------------------------------------------- assemble
 shell = io.open(os.path.join(HERE, 'shell.html'), encoding='utf-8').read()
@@ -436,7 +434,7 @@ def fill(tokens, data, ff, imgs):
     d = dict(data)
     d['imgs'] = imgs
     s = s.replace('%%DATA%%', json.dumps(d, ensure_ascii=False))
-    t = dict(tokens); t['FONTFACES'] = ff; t['METAL'] = imgs['METAL']
+    t = dict(tokens); t['FONTFACES'] = ff
     for k, v in t.items():
         s = s.replace('%%' + k + '%%', v)
     left = re.findall(r'%%[A-Z0-9_]+%%', s)

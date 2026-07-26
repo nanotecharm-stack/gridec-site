@@ -1,6 +1,6 @@
 <style>
 %%FONTFACES%%
-:root{--brand:#C8603D;--brand-ink:#AC4A29;/* small coral TEXT on light surfaces: 4.77:1 on milk */--e:cubic-bezier(.16,1,.3,1);--metal:url(%%METAL%%);
+:root{--brand:#C8603D;--brand-ink:#AC4A29;/* small coral TEXT on light surfaces: 4.77:1 on milk */--e:cubic-bezier(.16,1,.3,1);
   --gut:clamp(18px,4vw,56px);--inset:calc(max(0px,(100vw - 1280px)/2) + clamp(18px,4vw,56px));
 --bg:#EFEDEA;--panel:#FFFFFF;--fg:#0D0E13;--fg-mid:rgba(13,14,19,.64);--fg-soft:rgba(13,14,19,.40);--hair:rgba(13,14,19,.13);--hair2:rgba(13,14,19,.07);--inv:#0D0E13;--inv-fg:#EFEDEA;}
 *{box-sizing:border-box;}
@@ -60,7 +60,13 @@ nav a.here{color:var(--inv-fg);background:var(--inv);}
    wordmark, so it depends on the ground: the graphite half sinks on an ink plate
    and the tile itself disappears on terracotta. Every treatment below is single
    colour and inherits the bar's own colour, so there is nothing left to clash. */
-html[data-logo] .brand .wm i{color:inherit;}
+/* the header never carries the two-tone word: one colour, whatever the ground */
+.brand .wm i{color:inherit;}
+.brand .glyph{width:34px;height:34px;display:none;flex:0 0 auto;}
+html[data-logo="4"] .brand .mark,html[data-logo="5"] .brand .mark{display:none;}
+html[data-logo="4"] .brand .glyph-sag{display:block;}
+html[data-logo="5"] .brand .glyph-oct{display:block;}
+html[data-logo="0"] .brand .wm i{color:var(--brand-ink);}   /* only the as-built comparison */
 /* 1 contour: the tile becomes a drawn square, the wave a drawn line */
 html[data-logo="1"] .mark .tile{fill:none;}
 html[data-logo="1"] .mark .rim{stroke:currentColor;stroke-opacity:.5;stroke-width:6;}
@@ -147,6 +153,52 @@ html[data-nav="2"] header[data-tone="ink"] .btn:hover span{color:#0D0E13;}
 html[data-nav="2"] header[data-tone="ink"] .btn i{background:rgba(239,237,234,.18);}
 html[data-nav="2"] .brand,html[data-nav="2"] .ixb,html[data-nav="2"] .lang,html[data-nav="2"] .btn{
   transition:color .45s var(--e),box-shadow .45s var(--e);}
+
+/* the titleblock and the chips follow the ground as well: a paper plate on a dark
+   band reads as a sticker, which is exactly what the review shot showed */
+html[data-nav="1"] header[data-tone="ink"]{background:#14161C;box-shadow:0 1px 0 rgba(239,237,234,.18);}
+html[data-nav="1"] header[data-tone="ink"] .brand,
+html[data-nav="1"] header[data-tone="ink"] .ixb,
+html[data-nav="1"] header[data-tone="ink"] .lang{color:#EFEDEA;}
+html[data-nav="1"] header[data-tone="ink"] .ixb::before{background:rgba(239,237,234,.3);}
+html[data-nav="1"] header[data-tone="ink"] .btn{background:#EFEDEA;color:#0D0E13;}
+html[data-nav="1"] header[data-tone="ink"] .btn::before{background:#0D0E13;}
+html[data-nav="1"] header[data-tone="ink"] .btn:hover span{color:#EFEDEA;}
+html[data-nav="1"] header[data-tone="ink"] .btn i{background:rgba(13,14,19,.14);}
+html[data-nav="3"] header[data-tone="ink"] .brand,
+html[data-nav="3"] header[data-tone="ink"] .navr{background:#14161C;
+  box-shadow:inset 0 0 0 1px rgba(239,237,234,.2);}
+html[data-nav="3"] header[data-tone="ink"] .brand,
+html[data-nav="3"] header[data-tone="ink"] .ixb,
+html[data-nav="3"] header[data-tone="ink"] .lang{color:#EFEDEA;}
+html[data-nav="3"] header[data-tone="ink"] .lang::before{background:rgba(239,237,234,.18);}
+html[data-nav="3"] header[data-tone="ink"] .btn{background:#EFEDEA;color:#0D0E13;}
+html[data-nav="3"] header[data-tone="ink"] .btn::before{background:#0D0E13;}
+html[data-nav="3"] header[data-tone="ink"] .btn:hover span{color:#EFEDEA;}
+html[data-nav="3"] header[data-tone="ink"] .btn i{background:rgba(13,14,19,.14);}
+html[data-nav="1"] header,html[data-nav="1"] .btn,html[data-nav="3"] .brand,
+html[data-nav="3"] .navr,html[data-nav="3"] .btn{
+  transition:background .45s var(--e),color .45s var(--e),box-shadow .45s var(--e);}
+
+/* A full-width wash over the pixel band saved the text but smeared the band, which
+   is the one thing on that screen worth looking at. So the plateless bars put on
+   local plates instead, around their own items only, and only while a band is under
+   them. The band stays crisp; nothing is veiled. */
+header{--bar-plate:#EFEDEA;--bar-edge:rgba(13,14,19,.14);}
+header[data-tone="ink"]{--bar-plate:#14161C;--bar-edge:rgba(239,237,234,.2);}
+/* the plate is drawn BEHIND the items, never as padding on them: changing padding
+   on a state change slid the wordmark sideways as the band came under the bar */
+.brand,.navr{position:relative;}
+.brand::after,.navr::after{content:"";position:absolute;inset:-7px -11px;z-index:-1;
+  border-radius:2px;background:var(--bar-plate);box-shadow:inset 0 0 0 1px var(--bar-edge);
+  opacity:0;transition:opacity .28s var(--e);pointer-events:none;}
+html[data-nav="0"] header[data-scrim] .brand::after,
+html[data-nav="0"] header[data-scrim] .navr::after,
+html[data-nav="2"] header[data-scrim] .brand::after,
+html[data-nav="2"] header[data-scrim] .navr::after{opacity:1;}
+/* the brand's own colour, kept as a treatment rather than forced on every one */
+html[data-logo="6"] .brand{color:#AC4A29;}
+html[data-logo="6"] header[data-tone="ink"] .brand{color:#D4714E;}
 
 /* ---- 3 instrument chips: two opaque plates, nothing between ------------ */
 html[data-nav="3"] .hin{height:76px;grid-template-columns:auto 1fr auto;align-items:start;
@@ -253,8 +305,13 @@ h1 em{font-style:normal;color:var(--brand-ink);}
 .hero .eyebrow::before{background:var(--brand-ink);}
 /* on paper the hero needs no special buttons — the page's own pair is right */
 /* its own area again, so the cursor reaches the canvas and the strings react */
-.stage{position:relative;align-self:center;justify-self:end;width:min(100%,560px);aspect-ratio:1;
-  margin-right:clamp(16px,6vw,104px);          /* pulled in off the right edge */
+/* The field is placed by the CENTRE OF THE FIGURE, not by the canvas edge, which is
+   what the owner marked: the octagon's centre sits at 75% of the viewport width (the
+   middle of the right half) and at 47% of the hero's height. The figure is drawn at
+   45.2% across its own canvas, since the strip to its right belongs to the
+   annotations, so the canvas is pulled back by exactly that much. */
+.stage{position:absolute;left:75%;top:47%;transform:translate(-45.2%,-50%);
+  width:min(42vw,580px);aspect-ratio:1;margin:0;
   /* graphite hairlines; the light that travels them is the accent */
   --wv-line:13,14,19;--wv-glow:200,96,61;}
 #star{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;}
@@ -291,9 +348,6 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 
 /* dark plate section (services) */
 .plate2{position:relative;overflow:hidden;background:linear-gradient(180deg,#0D0E13 0%,#111318 60%,#14161C 100%);color:#EFEDEA;}
-/* reuses the hero's generated texture — no extra asset, just depth */
-.plate2::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:var(--metal) center/cover no-repeat;opacity:.09;filter:saturate(.35) contrast(1.03);}
 .plate2>.wrap{position:relative;z-index:1;}
 .plate2 h2,.plate2 h3{color:#F4F3F1;}
 .plate2 .lede{color:rgba(239,237,234,.66);}
@@ -344,6 +398,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .icard:nth-child(7n+6){padding-top:clamp(16px,2.6vw,48px);}
 .icard:nth-child(7n+7){padding-top:clamp(10px,1.8vw,32px);}
 .ic{position:relative;display:flex;flex-direction:column;min-height:var(--cardh,clamp(300px,38vw,470px));
+  box-shadow:0 0 0 1px #101218;backface-visibility:hidden;
   background:#101218;color:#EFEDEA;border-radius:2px;overflow:hidden;cursor:pointer;
   /* the card stays put on hover — only its mark answers */
   transition:none;}
@@ -357,7 +412,8 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   transition:transform .18s var(--e),background .45s var(--e),color .45s var(--e);}
 .ic:hover .ic-go,.ic:focus-visible .ic-go{background:var(--brand);color:#fff;}
 /* the sector photograph, easing in scale so the movement has weight */
-.ic-art{position:relative;flex:1 1 auto;min-height:150px;overflow:hidden;}
+.ic-art{position:relative;flex:1 1 auto;min-height:150px;overflow:hidden;
+  background:#101218;transform:translateZ(0);backface-visibility:hidden;}
 .ic-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
   transform:scale(1.04);transform-origin:52% 45%;
   transition:transform 1.15s cubic-bezier(.16,1,.3,1),filter .7s var(--e);
@@ -370,7 +426,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .ic-foot p{font-size:14px;line-height:1.6;color:rgba(239,237,234,.66);
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
 /* the invitation keeps the brand colour and its drawing */
-.ic.is-open-card{background:var(--brand);}
+.ic.is-open-card{background:var(--brand);box-shadow:0 0 0 1px var(--brand);}
 .ic.is-open-card .ic-art::after{background:linear-gradient(180deg,rgba(200,96,61,.1) 0%,rgba(200,96,61,.92) 100%);}
 .ic.is-open-card .ic-tag{background:rgba(255,255,255,.18);color:#fff;}
 .ic.is-open-card .ic-foot p{color:rgba(255,251,249,.86);}
@@ -645,7 +701,8 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 
 @media (max-width:960px){
   .hgrid{grid-template-columns:1fr;padding:92px clamp(18px,4vw,26px) 40px;gap:22px;}
-  .stage{margin-right:0;justify-self:center;}
+  .stage{position:relative;left:auto;top:auto;transform:none;
+    width:min(100%,520px);margin:0 auto;justify-self:center;}
   .hero h1{width:auto;max-width:none;}
   .rd{position:static;margin-top:12px;}
   .chsteps{grid-template-columns:repeat(2,1fr);}
@@ -665,7 +722,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 
 <div id="wipe"></div>
 <header id="hdr" data-tone="paper"><div class="hin">
-  <a class="brand" href="#top"><svg class="mark" viewBox="14 8 182 182" fill="none" role="img" aria-label="PowerTech"><defs><linearGradient id="ptTile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6573d"/><stop offset="1" stop-color="#c5280d"/></linearGradient><clipPath id="ptClip"><rect x="24" y="20" width="160" height="160"/></clipPath></defs><rect class="tile" x="24" y="20" width="160" height="160" fill="url(#ptTile)"/><rect class="rim" x="24" y="20" width="160" height="160" fill="none" stroke="#ffffff" stroke-opacity=".28" stroke-width="2"/><g clip-path="url(#ptClip)"><path d="M48,100 C66,56 86,56 104,100 C122,144 142,144 160,100" class="wave" stroke="#f7f5f4" stroke-width="9" stroke-linecap="round" fill="none"/></g></svg><span class="wm">Power<i>Tech</i></span></a>
+  <a class="brand" href="#top"><svg class="mark" viewBox="14 8 182 182" fill="none" role="img" aria-label="PowerTech"><defs><linearGradient id="ptTile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6573d"/><stop offset="1" stop-color="#c5280d"/></linearGradient><clipPath id="ptClip"><rect x="24" y="20" width="160" height="160"/></clipPath></defs><rect class="tile" x="24" y="20" width="160" height="160" fill="url(#ptTile)"/><rect class="rim" x="24" y="20" width="160" height="160" fill="none" stroke="#ffffff" stroke-opacity=".28" stroke-width="2"/><g clip-path="url(#ptClip)"><path d="M48,100 C66,56 86,56 104,100 C122,144 142,144 160,100" class="wave" stroke="#f7f5f4" stroke-width="9" stroke-linecap="round" fill="none"/></g></svg><svg class="glyph glyph-sag" viewBox="0 0 40 40" fill="none" role="img" aria-label="PowerTech"><path d="M3 15 H14 V27 H26 V15 H37" stroke="currentColor" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg><svg class="glyph glyph-oct" viewBox="0 0 40 40" fill="none" role="img" aria-label="PowerTech"><path d="M14 4 H26 L36 14 V26 L26 36 H14 L4 26 V14 Z" stroke="currentColor" stroke-width="2.6" fill="none"/><rect x="17" y="17" width="6" height="6" fill="currentColor"/></svg><span class="wm">Power<i>Tech</i></span></a>
   <nav><a class="lk" href="#applications">%%NAV_INDUSTRIES%%</a><a class="lk" href="#services">%%NAV_SERVICES%%</a><a class="lk" href="#company">%%NAV_COMPANY%%</a></nav>
   <div class="navr">
     <button class="ixb" id="ixb" aria-expanded="false" aria-controls="ixp"><b id="ixn">01</b><s>/</s><em id="ixt">08</em></button>
@@ -1577,7 +1634,7 @@ function sxRender(x){
     shells[i].style.transform='translate3d(0,'+y.toFixed(2)+'px,0) scale('+sc.toFixed(4)+')';
     var im=shells[i].querySelector('.ic-art img');
     if(im){var rel=(centre-SX.focus)/SX.focus;
-      im.style.transform='scale(1.06) translate3d('+(-rel*12).toFixed(2)+'px,0,0)';}
+      im.style.transform='scale(1.06) translate3d('+Math.round(-rel*12)+'px,0,0)';}
   }
 }
 function suiteUpd(){
@@ -1894,20 +1951,42 @@ function ixSpy(){
 [].slice.call(document.querySelectorAll('.plate,.plate2')).forEach(function(sec){
   sec.dataset.tone='ink';
 });
+/* the pixel bands are not sections and they mix two colours, so the bar used to
+   sail over them still thinking it was on paper. Read their own two colours. */
+function hexTone(h){
+  h=(h||'').trim();if(h.charAt(0)!=='#')return 'paper';
+  var r=parseInt(h.substr(1,2),16),g=parseInt(h.substr(3,2),16),b=parseInt(h.substr(5,2),16);
+  return (0.2126*r+0.7152*g+0.0722*b)<110?'ink':'paper';
+}
+var bands=[].slice.call(document.querySelectorAll('.dith')).map(function(el){
+  var c=(el.getAttribute('data-dith')||'').split(',');
+  return {el:el,top:hexTone(c[0]),bottom:hexTone(c[1])};
+});
 function toneUnderBar(){
-  var y=38,tone='paper';
+  var y=38,tone='paper',overBand=false;
   var secs=document.querySelectorAll('section[data-tone]');
   for(var i=0;i<secs.length;i++){
     var r=secs[i].getBoundingClientRect();
     if(r.top<=y&&r.bottom>=y){tone=secs[i].dataset.tone;break;}
   }
-  if(!ixp.hidden)tone='paper';            /* the index is paper, keep the bar readable on it */
+  for(var j=0;j<bands.length;j++){
+    var br=bands[j].el.getBoundingClientRect();
+    if(br.top<=y&&br.bottom>=y){
+      /* the dither leans to the top colour in its upper half, to the bottom in its lower */
+      tone=(y-br.top)/Math.max(1,br.height)<0.5?bands[j].top:bands[j].bottom;
+      overBand=true;break;
+    }
+  }
+  if(!ixp.hidden){tone='paper';overBand=false;}   /* the index is paper */
   hdr.setAttribute('data-tone',tone);
+  /* a band always keeps some cells of the opposite colour, so a bar with no plate
+     of its own needs one exactly there */
+  if(overBand)hdr.setAttribute('data-scrim','1');else hdr.removeAttribute('data-scrim');
   hdr.classList.toggle('on-dark',tone==='ink');
 }
 /* the variant switch, for review only */
 var NAVV=['0','1','2','3'],navLabels=['glass','titleblock','rail','chips'];
-var LOGOV=['0','1','2','3'],logoLabels=['as built','contour','wordmark','knockout'];
+var LOGOV=['0','1','2','3','4','5','6'],logoLabels=['as built','contour','wordmark','knockout','sag','octagon','brand tone'];
 function logoSet(v){
   if(v==='0')document.documentElement.removeAttribute('data-logo');
   else document.documentElement.setAttribute('data-logo',v);
