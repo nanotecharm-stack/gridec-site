@@ -1,0 +1,12 @@
+# Build products, all regenerable with `python build.py`. The standalone pages carry
+# base64 fonts and photography, so they are ~700 KB each — sources belong in git, these
+# do not.
+pt-en.html
+pt-hy.html
+pt-en-mint.html
+pt-en-warm.html
+art-en.html
+art-hy.html
+art-en-mint.html
+art-en-warm.html
+icons-sheet.html

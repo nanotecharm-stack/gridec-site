@@ -448,7 +448,8 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 
 /* what we measure — signatures in a table of cells.
    Separators are drawn BY the cells, never by a gap showing the parent through:
-   with 7 items the 8th slot must read as empty air, not as a missing tile. */
+   the grid now runs 8 cells, so the second row closes; when it does not, an unfilled
+   slot must read as empty air rather than as a missing tile. */
 .meas{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:transparent;
   margin-top:clamp(28px,3.4vw,46px);border-top:1px solid var(--hair2);}
 .mi{position:relative;padding:clamp(20px,2.2vw,30px) clamp(16px,1.8vw,26px);
@@ -463,6 +464,16 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .mi .lb2{font-size:14px;line-height:1.42;color:var(--fg);}
 .mi:hover{background:rgba(13,14,19,.04);}
 .mi:hover svg{transform:translateY(-2px);}
+/* the last cell is not an electrical parameter but a reading OF them, so it is set
+   apart the way a drawing sheet sets apart a derived quantity: dashed separators,
+   a corner tick and its index in the accent. No extra words. */
+:root{--alt-wash:rgba(200,96,61,.05);--alt-wash-h:rgba(200,96,61,.085);}
+.mi-alt{border-left-style:dashed;background:var(--alt-wash);}
+.mi-alt:nth-child(n+5){border-top-style:dashed;}
+.mi-alt::before{content:"";position:absolute;top:0;left:0;width:26px;height:2px;
+  background:var(--brand);}
+.mi-alt .ix{color:var(--brand-ink);opacity:1;}
+.mi-alt:hover{background:var(--alt-wash-h);}
 /* on the dark plate the cells stay transparent, so the empty slot is just air */
 .plate2 .meas{border-top-color:rgba(239,237,234,.13);}
 .plate2 .mi{border-left-color:rgba(239,237,234,.13);}
@@ -470,6 +481,10 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .plate2 .mi svg{color:#EFEDEA;}
 .plate2 .mi .lb2{color:rgba(239,237,234,.84);}
 .plate2 .mi .ix{color:rgba(239,237,234,.42);}
+/* on the plate the accent tint has to come from the light side of the brand, and the
+   index needs the deeper selector or the rule above wins on specificity */
+.plate2{--alt-wash:rgba(239,237,234,.055);--alt-wash-h:rgba(239,237,234,.09);}
+.plate2 .mi-alt .ix{color:var(--brand-ink);opacity:1;}
 .plate2 .mi:hover{background:rgba(239,237,234,.05);}
 @media (max-width:1100px){
   .meas{grid-template-columns:repeat(3,1fr);}

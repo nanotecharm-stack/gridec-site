@@ -3,7 +3,10 @@
 import base64, io, json, os, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-FONTS = os.path.join(HERE, '..', 'assets', 'fonts')
+# The site repo (a worktree) supplies the real fonts for the base64 preview build and
+# receives the deploy pair. PT_SITE points at it; by default it is the sibling `assets`.
+SITE = os.environ.get('PT_SITE') or os.path.join(HERE, '..', 'assets')
+FONTS = os.path.join(SITE, 'fonts')
 IMGS = os.path.join(HERE, 'img')
 
 def b64(path, mime):
@@ -49,45 +52,79 @@ def asg_html(items):
                    '<span class="tag">%s</span></div><h3>%s</h3><p>%s</p></div>' % (n, tg, t, p)
                    for n, tg, t, p in items)
 
-# each parameter gets its own measurement signature, drawn as a hairline diagram
+# Each parameter gets its own measurement signature. Drawn to the owner's sketches
+# (2026-07-28) in the site's own hairline language: one stroke weight, currentColor for
+# the structure and var(--brand) for the single accent, so every icon inherits the page
+# palette and inverts on the dark plates. No gradients, no fills, nothing that needs a
+# raster. They render at 52x34 CSS pixels, which is what settles most of the detail
+# decisions below.
 MEAS_ICONS = [
- # 01 voltage & current — two waves out of phase
- '<path d="M2 15C4 7 6 7 8 15s4 8 6 0 4-8 6 0 4 8 6 0 4-8 6 0" fill="none" stroke="currentColor" stroke-width="1.3"/>'
- '<path d="M2 15c2 8 4 8 6 0s4-8 6 0 4 8 6 0 4-8 6 0 4 8 6 0" fill="none" stroke="var(--brand)" stroke-width="1.3" opacity=".85"/>',
- # 02 harmonics — a spectrum decaying from the fundamental
- '<path d="M2 26h40" stroke="currentColor" stroke-width="1" opacity=".45"/>'
- '<g stroke="currentColor" stroke-width="2.6" stroke-linecap="square">'
- '<path d="M6 26V6"/><path d="M13 26V13" opacity=".8"/><path d="M20 26V17" opacity=".62"/>'
- '<path d="M27 26V20" opacity=".48"/><path d="M34 26V22" opacity=".36"/></g>'
- '<path d="M6 26V6" stroke="var(--brand)" stroke-width="2.6" stroke-linecap="square"/>',
- # 03 flicker — a wave inside a swelling envelope
- '<path d="M2 8c8 0 14 4 20 4s12-4 20-4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35" stroke-dasharray="3 3"/>'
- '<path d="M2 22c8 0 14-4 20-4s12 4 20 4" fill="none" stroke="currentColor" stroke-width="1" opacity=".35" stroke-dasharray="3 3"/>'
- '<path d="M4 15c2 4 4 4 6 0s4-6 6 0 4 8 6 0 4-6 6 0 4 4 6 0" fill="none" stroke="var(--brand)" stroke-width="1.4"/>',
- # 04 voltage dip — a rectangular drop and recovery
- '<path d="M2 10h12v12h12V10h14" fill="none" stroke="currentColor" stroke-width="1.4"/>'
- '<path d="M14 22h12" stroke="var(--brand)" stroke-width="2.4"/>',
- # 05 unbalance — three phasors of unequal length
+ # 01 voltage & current — three linked loops crossing one axis, the middle phase lit
+ '<g fill="none" stroke="currentColor" stroke-width="1.1">'
+ '<ellipse cx="13" cy="15" rx="6.6" ry="10.4"/><ellipse cx="31" cy="15" rx="6.6" ry="10.4"/></g>'
+ '<ellipse cx="22" cy="15" rx="6.6" ry="10.4" fill="none" stroke="var(--brand)" stroke-width="1.4"/>'
+ '<g stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity=".7">'
+ '<path d="M2.5 15h10"/><path d="M31.5 15h10"/></g>'
+ '<path d="M19 15h6" stroke="var(--brand)" stroke-width="1.7" stroke-linecap="round"/>',
+ # 02 harmonics — a decaying spectrum, the third order carrying the accent
+ '<path d="M2 21h40" stroke="currentColor" stroke-width="1" opacity=".5"/>'
+ '<g fill="none" stroke="currentColor" stroke-width="1">'
+ '<rect x="8" y="4" width="3" height="19"/><rect x="13" y="7" width="3" height="16"/>'
+ '<rect x="23" y="13" width="3" height="10"/><rect x="28" y="16" width="3" height="7"/>'
+ '<rect x="33" y="18.4" width="3" height="4.6"/></g>'
+ '<rect x="18" y="10" width="3" height="13" fill="var(--brand)"/>',
+ # 03 flicker — the fluctuation held between two limit lines
+ '<g stroke="currentColor" stroke-width="1" opacity=".38" stroke-dasharray="3 3">'
+ '<path d="M4 8h36"/><path d="M4 22h36"/></g>'
+ '<path d="M4 15c2 4 4 4 6 0s4-6 6 0 4 8 6 0 4-6 6 0 4 4 6 0" fill="none" stroke="currentColor" stroke-width="1.4"/>'
+ '<path d="M4 15c2 4 4 4 6 0s4-6 6 0 4 8 6 0" fill="none" stroke="var(--brand)" stroke-width="1.4"/>',
+ # 04 voltage dip — a smooth sag that recovers short of where it started,
+ #    with the accent marking the depth it reached
+ '<path d="M2 10c6 0 7 13 13 13s6-6 12-6 9 1 15 1" fill="none" stroke="currentColor" '
+ 'stroke-width="1.4" stroke-linecap="round"/>'
+ '<path d="M12.5 23h9" stroke="var(--brand)" stroke-width="2.2" stroke-linecap="round"/>',
+ # 05 unbalance — a star point whose lit phase runs long
  '<g stroke="currentColor" stroke-width="1.4" stroke-linecap="round">'
- '<path d="M22 17V4"/><path d="M22 17l11 7"/></g>'
- '<path d="M22 17l-10 6" stroke="var(--brand)" stroke-width="1.4" stroke-linecap="round"/>'
- '<circle cx="22" cy="17" r="1.8" fill="currentColor"/>',
- # 06 power & energy — accumulated area under the curve
- '<path d="M2 26c8 0 10-14 18-14s10 8 22 4v10z" fill="currentColor" opacity=".18"/>'
- '<path d="M2 26c8 0 10-14 18-14s10 8 22 4" fill="none" stroke="currentColor" stroke-width="1.4"/>'
- '<path d="M2 26h40" stroke="var(--brand)" stroke-width="1.4"/>',
- # 07 events — a flagged transient on a quiet line
- '<path d="M2 17h14l4-11 4 22 3-11h13" fill="none" stroke="currentColor" stroke-width="1.4"/>'
- '<rect x="18" y="4" width="4" height="4" fill="var(--brand)"/>',
+ '<path d="M22 15.5 13.5 21"/><path d="M22 15.5 30.5 21"/></g>'
+ '<g fill="currentColor"><circle cx="13.5" cy="21" r="1.9"/><circle cx="30.5" cy="21" r="1.9"/></g>'
+ '<path d="M22 15.5V4" stroke="var(--brand)" stroke-width="1.6" stroke-linecap="round"/>'
+ '<circle cx="22" cy="4" r="2" fill="var(--brand)"/>'
+ '<circle cx="22" cy="15.5" r="2.1" fill="currentColor"/>',
+ # 06 power & energy — the area accumulated under the curve, closed by the accent
+ '<path d="M2 24c8 0 10-13 18-13s10 8 22 4v9z" fill="currentColor" opacity=".14"/>'
+ '<path d="M2 24c8 0 10-13 18-13s10 8 22 4" fill="none" stroke="currentColor" stroke-width="1.4"/>'
+ '<path d="M2 24h40" stroke="var(--brand)" stroke-width="1.6"/>',
+ # 07 events — a transient on a quiet line, flagged
+ '<path d="M2 18h14l3-13 3.4 22 2.6-9h17" fill="none" stroke="currentColor" '
+ 'stroke-width="1.4" stroke-linejoin="round"/>'
+ '<rect x="27" y="10.5" width="3" height="5.4" rx=".9" fill="var(--brand)"/>',
+ # 08 risk indicators — NOT an electrical parameter: a trend read off the baseline
+ #    whose latest point is flagged. This is the one card that draws a conclusion
+ #    rather than a measurement, which is why its cell is marked (.mi-alt).
+ '<g stroke="currentColor" stroke-width=".8" opacity=".26">'
+ '<path d="M8 21v5"/><path d="M14 18v8"/><path d="M20 20v6"/><path d="M26 14v12"/>'
+ '<path d="M32 16v10"/></g>'
+ '<path d="M3 24 8 21 14 18 20 20 26 14 32 16 37 11" fill="none" stroke="currentColor" '
+ 'stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>'
+ '<g fill="currentColor"><circle cx="8" cy="21" r="1.4"/><circle cx="14" cy="18" r="1.4"/>'
+ '<circle cx="20" cy="20" r="1.4"/><circle cx="26" cy="14" r="1.4"/><circle cx="32" cy="16" r="1.4"/></g>'
+ '<circle cx="37" cy="11" r="2.5" fill="none" stroke="var(--brand)" stroke-width="1.6"/>'
+ #    (the sketch's exclamation mark inside the triangle is dropped: at this size the
+ #    notch would need the ground colour, which differs between the light and dark
+ #    surfaces the grid can sit on, and a 1px sliver reads as dirt either way)
+ '<path d="M37 1.4 40.1 6.8h-6.2z" fill="var(--brand)"/>',
 ]
 
-def meas_html(items):
+def meas_html(items, alt=0):
+    """`alt` = how many trailing cells are not electrical parameters. They get .mi-alt,
+    which sets them apart from the measured quantities without inventing any copy."""
     out = []
     for i, label in enumerate(items):
-        out.append('<div class="mi"><span class="ix">%02d</span>'
+        cls = 'mi mi-alt' if i >= len(items) - alt else 'mi'
+        out.append('<div class="%s"><span class="ix">%02d</span>'
                    '<svg viewBox="0 0 44 30" aria-hidden="true">%s</svg>'
                    '<span class="lb2">%s</span></div>'
-                   % (i + 1, MEAS_ICONS[i % len(MEAS_ICONS)], label))
+                   % (cls, i + 1, MEAS_ICONS[i % len(MEAS_ICONS)], label))
     return ''.join(out)
 
 def chips_html(items):
@@ -150,7 +187,8 @@ EN = {
     ('04', 'DUE DILIGENCE', 'Technical Due Diligence Measurements', 'Provide independent measurements of loading, power quality and observed operating constraints to support technical due diligence.')]),
  'MEA_H2': 'What we measure',
  'MEA_CHIPS': meas_html(['Voltage & Current', 'Harmonics & Interharmonics', 'Flicker',
-                          'Voltage Dips', 'Unbalance', 'Power & Energy', 'Events']),
+                          'Voltage Dips', 'Unbalance', 'Power & Energy', 'Events',
+                          'Risk Indicators'], alt=1),
  'CO_EYEBROW': 'COMPANY',
  'CO_H2': 'Measured data<br>Independent engineering assessment',
  'CO_P': 'PowerTech was created to make electrical problems measurable. We record how electrical systems behave during operation and provide independent engineering assessments based on the recorded data. PowerTech is based in Yerevan and works on-site across the region.',
@@ -262,7 +300,7 @@ HY = {
  'CTA': 'Նկարագրել խնդիրը',
  'HERO_EYEBROW': 'ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ',
  'HERO_H1': 'Ստուգեք, թե ինչպես է աշխատում ձեր <em>էլեկտրացանցը</em>',
- 'HERO_P': 'PowerTech-ը համակարգի աշխատանքի ընթացքում գրանցում է էլեկտրական պարամետրերն ու էլեկտրաէներգիայի որակի իրադարձությունները։ Մենք վերլուծում ենք գրանցված տվյալները և ներկայացնում հստակ ինժեներական գնահատում։',
+ 'HERO_P': 'PowerTech-ը էլեկտրական համակարգի աշխատանքի ընթացքում գրանցում է էլեկտրական պարամետրերն ու ցանցում առաջացող շեղումները։ Մենք վերլուծում ենք գրանցված տվյալները և ներկայացնում ենք հստակ ինժեներական եզրակացություն։',
  'HERO_CTA2': 'Ինչպես է իրականացվում մոնիթորինգը',
  'RD_CAP': 'RMS ԼԱՐՈՒՄ · 10-ՐՈՊԵԱՆՈՑ ՄԻՏՈՒՄ', 'RD_NOMINAL': 'ԱՆՎԱՆԱԿԱՆ',
  'WHY_H2': 'Իրադարձությունը կարող է ավարտվել դեռևս ստուգումը սկսելուց առաջ',
@@ -300,7 +338,7 @@ HY = {
  'MEA_H2': 'Ինչ ենք չափում',
  'MEA_CHIPS': meas_html(['Լարում և հոսանք', 'Հարմոնիկներ և միջհարմոնիկներ', 'Ֆլիկեր',
                           'Լարման անկումներ', 'Լարման անհամաչափություն', 'Հզորություն և էներգիա',
-                          'Իրադարձություններ']),
+                          'Իրադարձություններ', 'Ռիսկի ցուցանիշներ'], alt=1),
  'CO_EYEBROW': 'ԸՆԿԵՐՈՒԹՅՈՒՆ',
  'CO_H2': 'Անկախ տվյալներ<br>Հստակ ինժեներական գնահատում',
  'CO_P': 'PowerTech-ը ստեղծվել է էլեկտրական խնդիրները չափելի դարձնելու համար։ Մենք գրանցում ենք, թե ինչպես են էլեկտրական համակարգերն աշխատում շահագործման ընթացքում, և եզրակացությունը հիմնում ենք չափված փաստերի, ոչ թե ենթադրությունների վրա։ PowerTech-ը Երևանում գործող անկախ ինժեներական ընկերություն է։ Էլեկտրաէներգիայի որակի չափումներ ենք իրականացնում ամբողջ Հայաստանում։',
@@ -464,24 +502,151 @@ def wrap(tokens, body, extra_head=''):
     return ('<!doctype html>\n<html lang="%s">\n<head>\n%s%s</head>\n<body>\n%s\n</body>\n</html>\n'
             % (tokens['LANG'], head, extra_head, body))
 
-def render(tokens, data, out_body, out_full):
+# ------------------------------------------------------------------- palettes
+# REVIEW-ONLY palette passes. Each rewrites the FINISHED page, so index.html/hy.html
+# keep the terracotta palette untouched and every variant is judged on the same markup.
+#
+# Both variants share one finding: an accent has to work on two very different grounds,
+# and a single value rarely does. So each palette declares `light` (the accent for text
+# and hairlines on paper) and `dark` (its twin on the graphite plates), and the extra CSS
+# below wires them to --brand / --brand-ink / --brand-on so a fill always knows what
+# colour of text belongs on top of it.
+#
+# mint: sky mint measures 1.11:1 on light paper, so it cannot carry a line, a dot or a
+#   letter there at all — the light side has to use the deep mint and the mint itself
+#   only appears on graphite.
+# warm: the terracotta family kept, but taken down in chroma and depth. #9D5B43 reads
+#   4.79:1 on its paper where the current #C8603D reads 3.70 — quieter AND more legible,
+#   which is the answer to "терракота кричащий": the loudness was chroma, not hue.
+PALETTES = {
+    'mint': dict(
+        paper='#F3F6F5', hi='#F9FBFA', lo='#EBF0EE', tint='#EEF3F1', tint2='#F6F9F8',
+        ph='#DBE1DF', offwhite='#F9FCFB',
+        ink='#25272C', ink2='#2A2C32', ink3='#2E3138', ink4='#313439', ink5='#292B31',
+        shadow='#1C1E22',
+        light='#18624C', dark='#B8F7E4', glow='#35B68F', deep='#0F2A22', err='#9E2B25',
+    ),
+    'warm': dict(
+        paper='#F4F5F5', hi='#FAFAFA', lo='#ECEDEE', tint='#EFF0F1', tint2='#F7F8F8',
+        ph='#DCDEE0', offwhite='#FBFCFC',
+        ink='#25272C', ink2='#2A2C32', ink3='#2E3138', ink4='#313439', ink5='#292B31',
+        shadow='#1C1E22',
+        light='#9D5B43', dark='#C8856A', glow='#9D5B43', deep='#2A1610', err='#A8341F',
+    ),
+}
+
+def _rgb(h):
+    h = h.lstrip('#')
+    return '%d,%d,%d' % tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
+def palette_map(p):
+    """Source literals are the terracotta palette's own, so the list is the same for
+    every variant — only the targets change."""
+    return [
+        # -- the dither bands: the accent cell follows the band's own ground
+        ('#EFEDEA,#0D0E13,#C8603D', '%s,%s,%s' % (p['paper'], p['ink'], p['light'])),
+        ('#14161C,#EFEDEA,#C8603D', '%s,%s,%s' % (p['ink3'], p['paper'], p['dark'])),
+        # -- the section rails are drawn on both grounds, so they take the aware token
+        ("tick.setAttribute('fill','#C8603D');", "tick.style.fill='var(--brand-ink)';"),
+        ("pl.setAttribute('stroke','#C8603D');", "pl.style.stroke='var(--brand-ink)';"),
+        # -- text sitting ON a brand fill: white is only right when the fill is dark
+        ('background:var(--brand);color:#fff',
+         'background:var(--brand);color:var(--brand-on)'),
+        # -- the browser chrome reads as the darkest brand surface
+        ('content="#C8603D"', 'content="%s"' % p['ink']),
+        # -- the wave field: graphite structure, the travelling light stays chromatic
+        ('--wv-line:13,14,19', '--wv-line:%s' % _rgb(p['ink'])),
+        ('--wv-glow:200,96,61', '--wv-glow:%s' % _rgb(p['glow'])),
+        # -- grounds
+        ('#EFEDEA', p['paper']), ('rgba(239,237,234', 'rgba(%s' % _rgb(p['paper'])),
+        ('#F4F3F1', p['tint']), ('rgba(244,243,241', 'rgba(%s' % _rgb(p['tint'])),
+        ('#F7F5F4', p['tint2']), ('#F7F5F2', p['hi']), ('#E9E6E2', p['lo']),
+        ('#DDD9D2', p['ph']),
+        ('#FFFBF9', p['offwhite']), ('rgba(255,251,249', 'rgba(%s' % _rgb(p['offwhite'])),
+        ('rgba(252,251,250', 'rgba(%s' % _rgb(p['offwhite'])),
+        ('#0D0E13', p['ink']), ('rgba(13,14,19', 'rgba(%s' % _rgb(p['ink'])),
+        ('rgba(9,10,13', 'rgba(%s' % _rgb(p['shadow'])),
+        ('#111318', p['ink2']),
+        ('#14161C', p['ink3']), ('rgba(20,22,28', 'rgba(%s' % _rgb(p['ink3'])),
+        ('#15171E', p['ink4']),
+        ('#101218', p['ink5']), ('rgba(16,18,24', 'rgba(%s' % _rgb(p['ink5'])),
+        # -- accent
+        ('#C8603D', p['light']), ('rgba(200,96,61', 'rgba(%s' % _rgb(p['light'])),
+        ('#AC4A29', p['light']), ('#D4714E', p['dark']),
+        ('#F6573D', p['dark']), ('#C5280D', p['light']), ('#c5280d', p['light'].lower()),
+        ('#2C1109', p['deep']),
+        # -- a failed field must not read as brand
+        ('#A8341F', p['err']),
+        # -- the mark is single colour under either palette; no gradient tile survives
+        ("logoSet(lm?lm[1]:(ls||'1'));", "logoSet(lm?lm[1]:'1');"),
+    ]
+
+PAL_CSS = """
+/* ==================== %(name)s (review palette) ====================
+   --brand      accent for graphics AND fills
+   --brand-ink  accent for text and hairlines
+   --brand-on   what sits on top of a --brand fill
+   The light grounds and the graphite plates each get the depth that works on them. */
+:root{--brand:%(light)s;--brand-ink:%(light)s;--brand-on:%(paper)s;}
+.plate,.plate2,.other,.chart,.ic{--brand:%(dark)s;--brand-ink:%(dark)s;--brand-on:%(ink)s;}
+/* the invitation card is a brand block, and on the plates the brand is the LIGHTER of
+   the two depths — so its type flips to graphite. Its edge cannot rely on the fill
+   either, so it keeps a hairline. */
+.ic.is-open-card{color:%(ink)s;box-shadow:0 0 0 1px rgba(%(inkrgb)s,.22);}
+.ic.is-open-card .ic-foot p{color:rgba(%(inkrgb)s,.78);}
+.ic.is-open-card .ic-tag{background:rgba(%(inkrgb)s,.10);color:%(ink)s;}
+.ic.is-open-card .ic-go{background:%(ink)s;color:%(dark)s;}
+.ic.is-open-card .ic-art::after{
+  background:linear-gradient(180deg,rgba(%(darkrgb)s,.10) 0%%,rgba(%(darkrgb)s,.94) 100%%);}
+/* the hero's breath, in the palette's own chroma */
+.hero::after{background:radial-gradient(58%% 52%% at 78%% 46%%,rgba(%(glowrgb)s,.075),transparent 70%%);}
+"""
+
+def palette_pass(name):
+    p = PALETTES[name]
+    css = PAL_CSS % dict(p, name=name, inkrgb=_rgb(p['ink']),
+                         darkrgb=_rgb(p['dark']), glowrgb=_rgb(p['glow']))
+    rules = palette_map(p)
+
+    def run(html):
+        for a, b in rules:
+            html = html.replace(a, b)
+        for stale in ('#C8603D', '#EFEDEA', '#0D0E13'):
+            if stale in html:
+                raise SystemExit('%s: terracotta literal %s survived' % (name, stale))
+        return html.replace('</style>', css + '</style>', 1)
+    return run
+
+mintify = palette_pass('mint')
+warmify = palette_pass('warm')
+def render(tokens, data, out_body, out_full, post=None):
     s = fill(tokens, data, tokens['FONTFACES'], IMGD)
     io.open(os.path.join(HERE, out_body), 'w', encoding='utf-8').write(s)
     full = wrap(tokens, s)
+    if post:
+        full = post(full)
     io.open(os.path.join(HERE, out_full), 'w', encoding='utf-8').write(full)
     print(out_full, round(len(full) / 1024), 'KB')
 
-def render_deploy(tokens, data, ff, out_path):
+def render_deploy(tokens, data, ff, out_path, post=None):
     s = fill(tokens, data, ff, IMGD_D)
     full = wrap(tokens, s, '<meta name="robots" content="noindex,nofollow">\n')
+    if post:
+        full = post(full)
     io.open(out_path, 'w', encoding='utf-8').write(full)
     print(out_path, round(len(full) / 1024), 'KB')
 
 render(EN, EN_DATA, 'art-en.html', 'pt-en.html')
 render(HY, HY_DATA, 'art-hy.html', 'pt-hy.html')
+render(EN, EN_DATA, 'art-en-mint.html', 'pt-en-mint.html', mintify)
+render(EN, EN_DATA, 'art-en-warm.html', 'pt-en-warm.html', warmify)
 
-V2 = os.path.join(HERE, '..', 'assets', 'v2')
+# The deploy pair goes into the site repo's v2/. By default that is a worktree named
+# `assets` sitting next to this folder; PT_V2 points the build at it wherever it lives.
+V2 = os.path.join(SITE, 'v2')
 os.makedirs(V2, exist_ok=True)
 render_deploy(EN, EN_DATA, FF_EN_D, os.path.join(V2, 'index.html'))
 render_deploy(HY, HY_DATA, FF_HY_D, os.path.join(V2, 'hy.html'))
+render_deploy(EN, EN_DATA, FF_EN_D, os.path.join(V2, 'mint.html'), mintify)
+render_deploy(EN, EN_DATA, FF_EN_D, os.path.join(V2, 'warm.html'), warmify)
 print('done')
