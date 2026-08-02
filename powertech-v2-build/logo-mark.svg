@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-86.603 -100 173.205 200" fill="currentColor" role="img" aria-label="mark">
+  <!-- Isometric cube: three faces at 120 deg = three phases.
+       The negative-space seam is the wye (star) connection: centre out to 90/210/330 deg.
+       Geometry is exact; gap d=6 of a 100-unit circumradius. -->
+  <path d="M-86.603 -50 L-6 -96.536 L-6 -3.464 L-86.603 43.072 Z"/>
+  <path d="M86.603 -50 L6 -96.536 L6 -3.464 L86.603 43.072 Z"/>
+  <path d="M-86.603 56.928 L0 6.928 L86.603 56.928 L0 100 Z"/>
+</svg>
