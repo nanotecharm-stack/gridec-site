@@ -145,7 +145,10 @@ EN = {
  'NAVFONT': 'inherit',
  'HEADTT': 'text-transform:uppercase;', 'HEADLH': '.92', 'HEADLS': '.006em',
  'H1SIZE': 'clamp(48px,7.2vw,116px)', 'H2SIZE': 'clamp(30px,4.8vw,72px)',
- 'LANG_HREF': './hy.html', 'LANG_LABEL': 'ՀԱՅ',
+ # Латинский код, а не «ՀԱՅ»: в EN-сборку вшита только латинская подрезка Martian
+ # Mono, армянские буквы падали в системную подмену и выглядели чужеродно. Пара
+ # переключателя заодно стала симметричной — на HY-странице стоит «EN».
+ 'LANG_HREF': './hy.html', 'LANG_LABEL': 'HY',
  'NAV_SERVICES': 'Services', 'NAV_INDUSTRIES': 'Industries', 'NAV_COMPANY': 'Company',
  'CTA': 'Describe the issue',
  'HERO_EYEBROW': 'POWER QUALITY MONITORING',
@@ -532,6 +535,16 @@ PALETTES = {
         ink='#25272C', ink2='#2A2C32', ink3='#2E3138', ink4='#313439', ink5='#292B31',
         shadow='#1C1E22',
         light='#9D5B43', dark='#C8856A', glow='#9D5B43', deep='#2A1610', err='#A8341F',
+    ),
+    # Четыре цвета заказчика: #E7F0FA бумага, #2E5E99 акцент на светлом (5,74:1),
+    # #7BA4D0 акцент на плашке (6,0:1), #0D2440 плашка. Средний синий на бумаге даёт
+    # 2,26:1, поэтому в светлой роли он не появляется — ровно случай sky mint.
+    'blue': dict(
+        paper='#E7F0FA', hi='#F1F6FD', lo='#D8E5F5', tint='#DFEAF7', tint2='#EFF5FD',
+        ph='#C2D5EA', offwhite='#F5FAFE',
+        ink='#0D2440', ink2='#12294A', ink3='#162E52', ink4='#183256', ink5='#102745',
+        shadow='#081A31',
+        light='#2E5E99', dark='#7BA4D0', glow='#4C8ACB', deep='#0A1A2E', err='#A32C26',
     ),
 }
 
