@@ -176,6 +176,11 @@ ROT_NEW = 'R=0,OCT_R=0,rot=(SIDES===6?-Math.PI/SIDES:0);'
 SPIN_SRC = 'tt+=dt;rot+=dt*0.032;'
 SPIN_NEW = 'tt+=dt;if(SIDES!==6)rot+=dt*0.032;'
 
+# Фигура сжимается и встаёт по центру: подписи теперь по всем восьми сторонам,
+# и прежние 0.452 ширины с радиусом 0.40 не оставляли воздуха слева.
+GEO_SRC = 'CXp=W*0.452;CYp=H/2;R=Math.min(W,H)*0.40;'
+GEO_NEW = 'CXp=W*0.50;CYp=H/2;R=Math.min(W,H)*0.335;'
+
 SIDES_SRC = 'var SIDES=8,PER_EDGE=11,N=SIDES*PER_EDGE;'
 SIDES_NEW = ('var SIDES=/[?&]sides=6/.test(location.search)?6:8,'
              'PER_EDGE=SIDES===8?11:14,N=SIDES*PER_EDGE;')
@@ -190,8 +195,69 @@ RING_NEW = "cx.strokeStyle='rgba('+MILK+',0)';cx.lineWidth=1;cx.stroke();"
 # градиент самой плиты, а не подложенная краска. Швы следуют за vertex(), поэтому
 # держатся фигуры при её медленном повороте. Струны, пружины, курсор и разряды
 # не тронуты — это дорисовка после них.
+# Подписи величин: восемь фиксированных секторов вокруг центра.
+#
+# Прежняя схема выбирала подписи через Math.random() и держала их в двух строках по
+# вертикали справа — то есть расставляла по свободному месту, а не по смыслу.
+# Здесь центр — точка подключения, вокруг него восемь секторов по 45 градусов, в
+# каждом одна позиция, и обход по часовой идёт как цепочка обработки: сначала то,
+# что снимается напрямую, затем производные от формы кривой, затем от величины во
+# времени, затем произведение U на I, затем временная запись — и последним то, что
+# Gridec делает из всего этого сам. Восьмая позиция помечена акцентом и отбита
+# правилом: это не измерение, а заключение.
+#
+# Сектора неподвижны, фигура внутри них продолжает медленно поворачиваться —
+# получается ротор в неподвижной шкале, что вернее по смыслу, чем подписи,
+# уезжающие вместе с рёбрами.
+RING_LABELS = """
+/* ============ PARAMETER RING — what is recorded at one point ============ */
+var RING=[['01','VOLTAGE','& CURRENT',0],['02','HARMONICS','',0],
+          ['03','FLICKER','',0],['04','DIPS','& SWELLS',0],
+          ['05','UNBALANCE','',0],['06','POWER','& ENERGY',0],
+          ['07','EVENTS','',0],['08','RISK','READ',1]];
+var ringIn=0;                                  /* появление, один раз */
+function ringDraw(dt){
+  if(!RING.length)return;
+  ringIn=Math.min(1,ringIn+dt*0.85);
+  var i,n=RING.length,fs=(W>500?10:9);
+  for(i=0;i<n;i++){
+    /* сектор i: середина сектора, отсчёт от верха по часовой */
+    var a=-Math.PI/2+(i+0.5)*Math.PI*2/n;
+    var nx=Math.cos(a),ny=Math.sin(a);
+    /* появление по очереди, четверть секунды на позицию */
+    var app=Math.max(0,Math.min(1,(ringIn-i/n*0.55)*3));
+    if(app<=0.01)continue;
+    var r0=R*1.02,r1=R*1.02+(W>500?13:9);
+    cx.strokeStyle='rgba('+MILK+','+(0.26*app).toFixed(3)+')';cx.lineWidth=1;
+    cx.beginPath();
+    cx.moveTo(CXp+nx*r0,CYp+ny*r0);cx.lineTo(CXp+nx*r1,CYp+ny*r1);cx.stroke();
+    /* узел на конце выноски; у восьмой позиции он залит акцентом */
+    var qx=CXp+nx*r1,qy=CYp+ny*r1;
+    cx.fillStyle=RING[i][3]?'rgba('+GLOW+','+(0.95*app).toFixed(3)+')'
+                           :'rgba('+MILK+','+(0.55*app).toFixed(3)+')';
+    cx.fillRect(qx-1.5,qy-1.5,3,3);
+    /* текст: сторона и базовая линия — от направления сектора */
+    var pad=6,tx=qx+nx*pad,ty=qy+ny*pad;
+    cx.textAlign=nx>0.35?'left':(nx<-0.35?'right':'center');
+    cx.textBaseline=ny>0.35?'top':(ny<-0.35?'alphabetic':'middle');
+    var accent=RING[i][3];
+    cx.font='600 '+(fs-1.5)+'px '+PT.canvasFont;
+    cx.fillStyle='rgba('+MILK+','+(0.34*app).toFixed(3)+')';
+    /* номер позиции ставится над названием, со сдвигом против направления */
+    var lh=fs+3, two=RING[i][2]?1:0;
+    var numY=ty-(ny<-0.35?(lh*(1+two)):(ny>0.35?-0:(lh*(0.5+two*0.5))));
+    cx.fillText(RING[i][0],tx,numY);
+    cx.font='600 '+fs+'px '+PT.canvasFont;
+    cx.fillStyle=accent?'rgba('+GLOW+','+(0.95*app).toFixed(3)+')'
+                       :'rgba('+MILK+','+(0.78*app).toFixed(3)+')';
+    cx.fillText(RING[i][1],tx,numY+lh);
+    if(two)cx.fillText(RING[i][2],tx,numY+lh*2);
+  }
+}
+"""
+
 CUBE_SRC = '  requestAnimationFrame(frame);\n}'
-CUBE_NEW = """  cubeFaces();
+CUBE_NEW = """  cubeFaces();ringDraw(dt);
   requestAnimationFrame(frame);
 }
 /* три грани знака поверх поля: тон, обводка, швы */
@@ -223,7 +289,10 @@ function cubeFaces(){
   }
   cx.restore();
 }
-try{window.__field={frame:frame,faces:cubeFaces,
+/* прежняя сборка подписей выключается: она выбирала их случайно */
+buildLabels=function(){labelSlots=[];lrows=[];};
+"""+RING_LABELS+"""
+try{window.__field={frame:frame,faces:cubeFaces,ring:function(){return RING;},ringShow:function(){ringIn=1;},
   geom:function(){return{CXp:CXp,CYp:CYp,R:R,SIDES:SIDES,N:N,rot:rot};}};}catch(e){}"""
 
 
@@ -248,6 +317,7 @@ def patch(html, pal, rgb):
     for src, new, what in ((SIDES_SRC, SIDES_NEW, 'объявление SIDES'),
                            (ROT_SRC, ROT_NEW, 'начальный угол'),
                            (SPIN_SRC, SPIN_NEW, 'приращение поворота'),
+                           (GEO_SRC, GEO_NEW, 'центр и радиус поля'),
                            (CUBE_SRC, CUBE_NEW, 'конец кадра поля')):
         if html.count(src) != 1:
             raise SystemExit('%s: не найдено однозначно' % what)
