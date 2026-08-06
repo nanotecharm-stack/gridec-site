@@ -34,7 +34,27 @@ FF_HY = '\n'.join([
 IMG_FILES = ['02_manufacturing_industrial_robot.jpg', '03_solar_power_plant.jpg',
              '06_healthcare_laboratory.jpg', '05_data_center.jpg',
              '04_commercial_building.jpg', '08_finance_investment.jpg']
-IMGD = {'IMG%d' % i: b64(os.path.join(IMGS, f), 'image/jpeg') for i, f in enumerate(IMG_FILES)}
+def b64_small(path, maxw=1800, quality=82):
+    """Вшитая копия снимка, уменьшенная до maxw.
+
+    Самый крупный вывод фотографии — модалка отрасли, 880x385 CSS, то есть 1760 px при
+    экране 2x. Оригиналы 2400 px в base64 дают около 8 МБ на страницу без видимой
+    разницы. Деплойная сборка ссылается на файлы и получает полный размер. Без Pillow
+    вшиваем как есть, чтобы сборка не падала.
+    """
+    try:
+        from PIL import Image
+    except ImportError:
+        return b64(path, 'image/jpeg')
+    im = Image.open(path)
+    if im.width > maxw:
+        im = im.resize((maxw, round(im.height * maxw / im.width)), Image.LANCZOS)
+    buf = io.BytesIO()
+    im.convert('RGB').save(buf, 'JPEG', quality=quality, optimize=True, progressive=True)
+    return 'data:image/jpeg;base64,' + base64.b64encode(buf.getvalue()).decode('ascii')
+
+
+IMGD = {'IMG%d' % i: b64_small(os.path.join(IMGS, f)) for i, f in enumerate(IMG_FILES)}
 
 def stats_html(items):
     return ''.join('<div class="stat"><b>%s</b><span>%s</span></div>' % (b, s) for b, s in items)

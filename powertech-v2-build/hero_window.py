@@ -71,7 +71,6 @@ def cubes_svg(paper):
 
 def tail_svg(ink, ink2, ink5, paper):
     """Границу секции пересекает фигура, а не градиент.
-
     Прежний хвост гас вертикальным градиентом и читался серой мутью — то же самое,
     что уже дважды не получилось на левом крае. Здесь вниз уходит нижняя половина
     крупного куба: у границы её цвет совпадает с низом плиты, поэтому стыка нет, а
@@ -98,7 +97,6 @@ def tail_svg(ink, ink2, ink5, paper):
 MARKUP = ('\n<div class="hplate" aria-hidden="true">%(cubes)s'
           '<i class="hveil"></i></div>\n')
 TAIL = '\n<div class="hplate-tail" aria-hidden="true">%(tail)s</div>\n'
-
 CSS = """
 /* ==================== герой: тёмная плита под полем ====================
    Растровый спад по левому краю снят: в деле он читался штрих-кодом, а хвост
@@ -114,7 +112,6 @@ CSS = """
   pointer-events:none;overflow:hidden;
   width:clamp(340px,42vw,580px);height:clamp(160px,22vh,260px);}
 .htail{position:absolute;inset:0;width:100%%;height:100%%;display:block;}
-
 /* Крупные изометрические кубы: вектор, три грани в три тона, рёбра с выносом.
    Ни одного фильтра и ни одного блюра — только тон. */
 .hcubes{position:absolute;inset:0;width:100%%;height:100%%;display:block;}
@@ -123,7 +120,6 @@ CSS = """
 .hveil{position:absolute;inset:0;display:block;pointer-events:none;
   background:linear-gradient(90deg,rgba(%(shadowrgb)s,.72) 0%%,
     rgba(%(shadowrgb)s,.28) 34%%,rgba(%(shadowrgb)s,0) 62%%);}
-
 @media(min-width:1100px){
   html[data-hero2="1"] .hplate,
   html[data-hero2="1"] .hplate-tail{display:block;}
@@ -142,13 +138,11 @@ CSS = """
   html[data-hero2="1"] .hero::after{display:none;}
 }
 """
-
 # строка HERO в чипе ревью
 ROW = ("html+='</div><div class=\"row\"><span>HERO</span>';"
        "var HV=['0','1'],HL=['as built','window'];"
        "for(var q=0;q<HV.length;q++)"
        "html+='<button data-h2=\"'+HV[q]+'\">'+HV[q]+' '+HL[q]+'</button>';")
-
 BOOT = """<script>
 function hero2Set(v){
   document.documentElement.setAttribute('data-hero2',v);
@@ -164,7 +158,6 @@ function hero2Set(v){
     hero2Set(document.documentElement.getAttribute('data-hero2'));});
 })();
 </script>"""
-
 # Поза куба вместо медленного вращения. Угол вершины считается как
 # (k/SIDES)*2pi + pi/SIDES - pi/2 + rot, то есть при rot=0 и шести сторонах сверху
 # оказывается плоская сторона. Сдвиг на -pi/SIDES ставит вершину вверх, и тогда швы
@@ -175,20 +168,17 @@ ROT_SRC = 'R=0,OCT_R=0,rot=0;'
 ROT_NEW = 'R=0,OCT_R=0,rot=(SIDES===6?-Math.PI/SIDES:0);'
 SPIN_SRC = 'tt+=dt;rot+=dt*0.032;'
 SPIN_NEW = 'tt+=dt;if(SIDES!==6)rot+=dt*0.032;'
-
 # Фигура сжимается и встаёт по центру: подписи теперь по всем восьми сторонам,
 # и прежние 0.452 ширины с радиусом 0.40 не оставляли воздуха слева.
 GEO_SRC = 'CXp=W*0.452;CYp=H/2;R=Math.min(W,H)*0.40;'
-GEO_NEW = 'CXp=W*0.50;CYp=H/2;R=Math.min(W,H)*0.335;'
-
+GEO_NEW = ('CXp=W*0.50;CYp=H/2;'
+           'R=Math.min(W,H)*(W<430?0.275:0.335);')
 SIDES_SRC = 'var SIDES=8,PER_EDGE=11,N=SIDES*PER_EDGE;'
 SIDES_NEW = ('var SIDES=/[?&]sides=6/.test(location.search)?6:8,'
              'PER_EDGE=SIDES===8?11:14,N=SIDES*PER_EDGE;')
-
 # Второй, тихий контур снаружи фигуры логотипу не принадлежит — гасим.
 RING_SRC = "cx.strokeStyle='rgba('+MILK+',.11)';cx.lineWidth=1;cx.stroke();"
 RING_NEW = "cx.strokeStyle='rgba('+MILK+',0)';cx.lineWidth=1;cx.stroke();"
-
 # Куб поверх готового кадра: три грани заливаются разным тоном (объём одним
 # цветом, как в знаке), обводятся, и по трём швам из центра пробиваются
 # прозрачные каналы. Пробивка идёт destination-out, то есть сквозь неё видно
@@ -219,7 +209,7 @@ var ringIn=0;                                  /* появление, один �
 function ringDraw(dt){
   if(!RING.length)return;
   ringIn=Math.min(1,ringIn+dt*0.85);
-  var i,n=RING.length,fs=(W>500?10:9);
+  var i,n=RING.length,fs=(W>500?10:(W>430?9:8));
   for(i=0;i<n;i++){
     /* сектор i: середина сектора, отсчёт от верха по часовой */
     var a=-Math.PI/2+(i+0.5)*Math.PI*2/n;
@@ -242,20 +232,19 @@ function ringDraw(dt){
     cx.textBaseline=ny>0.35?'top':(ny<-0.35?'alphabetic':'middle');
     var accent=RING[i][3];
     cx.font='600 '+(fs-1.5)+'px '+PT.canvasFont;
-    cx.fillStyle='rgba('+MILK+','+(0.34*app).toFixed(3)+')';
+    cx.fillStyle='rgba('+MILK+','+(0.66*app).toFixed(3)+')';
     /* номер позиции ставится над названием, со сдвигом против направления */
     var lh=fs+3, two=RING[i][2]?1:0;
     var numY=ty-(ny<-0.35?(lh*(1+two)):(ny>0.35?-0:(lh*(0.5+two*0.5))));
     cx.fillText(RING[i][0],tx,numY);
     cx.font='600 '+fs+'px '+PT.canvasFont;
     cx.fillStyle=accent?'rgba('+GLOW+','+(0.95*app).toFixed(3)+')'
-                       :'rgba('+MILK+','+(0.78*app).toFixed(3)+')';
+                       :'rgba('+MILK+','+(0.86*app).toFixed(3)+')';
     cx.fillText(RING[i][1],tx,numY+lh);
     if(two)cx.fillText(RING[i][2],tx,numY+lh*2);
   }
 }
 """
-
 CUBE_SRC = '  requestAnimationFrame(frame);\n}'
 CUBE_NEW = """  cubeFaces();ringDraw(dt);
   requestAnimationFrame(frame);
@@ -294,26 +283,43 @@ buildLabels=function(){labelSlots=[];lrows=[];};
 """+RING_LABELS+"""
 try{window.__field={frame:frame,faces:cubeFaces,ring:function(){return RING;},ringShow:function(){ringIn=1;},
   geom:function(){return{CXp:CXp,CYp:CYp,R:R,SIDES:SIDES,N:N,rot:rot};}};}catch(e){}"""
+# Финальная врезка: только кольцо. Прежняя сборка подписей глушится — она
+# выбирала их случайно, — а грани куба, прорези и отладочный хук не приходят вовсе.
+RING_ONLY = ('  ringDraw(dt);\n  requestAnimationFrame(frame);\n}\n'
+             'buildLabels=function(){labelSlots=[];lrows=[];};\n' + RING_LABELS)
+
+
+def patch_final(html, pal, rgb):
+    """Чистый герой: только принятое состояние, без альтернатив.
+    Из всего наработанного в странице остаётся ровно то, что выбрано: светлый
+    герой, восьмиугольное поле в исходной физике и кольцо величин. Не попадает
+    ничего из сравнительного: ни тёмная плита с кубами и хвостом, ни изменённая
+    форма, ни фиксированная поза, ни прорези по швам, ни отладочный хук. Всё это
+    живёт в истории (коммиты 1e197e7 и a95c429) и в ревью-сборке рядом.
+    """
+    for src, new, what in ((GEO_SRC, GEO_NEW, 'центр и радиус поля'),
+                           (CUBE_SRC, RING_ONLY, 'конец кадра поля')):
+        if html.count(src) != 1:
+            raise SystemExit('%s: не найдено однозначно' % what)
+        html = html.replace(src, new, 1)
+    return html
 
 
 def patch(html, pal, rgb):
     subs = dict(ink=pal['ink'], ink2=pal['ink2'], ink5=pal['ink5'], dark=pal['dark'],
                 darkrgb=rgb(pal['dark']), paperrgb=rgb(pal['paper']),
                 ink5rgb=rgb(pal['ink5']), shadowrgb=rgb(pal['shadow']))
-
     anchor = '<section class="hero" id="top">'
     if html.count(anchor) != 1:
         raise SystemExit('секция героя не найдена')
     html = html.replace(anchor, anchor + MARKUP % dict(
         cubes=cubes_svg(rgb(pal['paper']))), 1)
-
     tail_at = '<section class="sec thesis" id="why" data-rail>'
     if html.count(tail_at) != 1:
         raise SystemExit('секция #why не найдена')
     html = html.replace(tail_at, tail_at + TAIL % dict(
         tail=tail_svg(pal['ink'], pal['ink2'], pal['ink5'],
                       rgb(pal['paper']))), 1)
-
     for src, new, what in ((SIDES_SRC, SIDES_NEW, 'объявление SIDES'),
                            (ROT_SRC, ROT_NEW, 'начальный угол'),
                            (SPIN_SRC, SPIN_NEW, 'приращение поворота'),
@@ -322,10 +328,8 @@ def patch(html, pal, rgb):
         if html.count(src) != 1:
             raise SystemExit('%s: не найдено однозначно' % what)
         html = html.replace(src, new, 1)
-
     j = html.rindex('</style>')
     html = html[:j] + (CSS % subs) + html[j:]
-
     tail = "sw.innerHTML=html+'</div>';"
     if html.count(tail) != 1:
         raise SystemExit('сборка чипа не найдена')
@@ -334,6 +338,5 @@ def patch(html, pal, rgb):
                         "if(w){wmSet(w.dataset.w);return;}"
                         "var h2=e.target.closest('button[data-h2]');"
                         "if(h2)hero2Set(h2.dataset.h2);});", 1)
-
     k = html.rindex('</body>') if '</body>' in html else len(html)
     return html[:k] + BOOT + html[k:]

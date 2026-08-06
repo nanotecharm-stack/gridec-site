@@ -378,8 +378,12 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .hrail::-webkit-scrollbar{display:none;}
 .sx-track{display:flex;align-items:flex-start;gap:clamp(18px,2vw,32px);width:max-content;
   transform:translate3d(0,0,0);will-change:transform;}
-.icard{flex:0 0 clamp(270px,28vw,420px);transform-origin:50% 50%;will-change:transform;
-  backface-visibility:hidden;}
+.icard{flex:0 0 clamp(270px,28vw,420px);transform-origin:50% 50%;
+  /* Deliberately NOT promoted. The rail rescales this box every frame; as its own
+     layer it was rasterised once and then stretched, which frays a straight
+     vertical edge into a visible wave. Painted in the section's layer it is
+     re-rastered each frame, so the edges stay straight. The photograph inside
+     keeps its own layer and its own sharpness. */}
 /* touch and narrow: no pin, no transforms — a native horizontal list instead */
 @media (max-width:980px),(hover:none),(pointer:coarse){
   .hrail{overflow-x:auto;scroll-snap-type:x proximity;padding-left:clamp(18px,4vw,56px);}
@@ -398,7 +402,15 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .icard:nth-child(7n+6){padding-top:clamp(16px,2.6vw,48px);}
 .icard:nth-child(7n+7){padding-top:clamp(10px,1.8vw,32px);}
 .ic{position:relative;display:flex;flex-direction:column;min-height:var(--cardh,clamp(300px,38vw,470px));
-  box-shadow:0 0 0 1px #101218;backface-visibility:hidden;
+  border:1px solid #101218;
+  /* A real border, not a spread shadow. The photograph is clipped at the border
+     box, so with the dark ring painted OUTSIDE it the outermost pixel was a blend
+     of picture and page - light wherever the picture is sky. A border paints over
+     that boundary, so the edge pixel is always the card colour. box-sizing is
+     border-box globally, so nothing moves. */
+  /* No backface hint: it promoted the card to its own layer, and the rail scales
+     that layer every frame, so the texture was stretched instead of repainted -
+     that is the wavy vertical edge. Nothing in these cards is composited now. */
   background:#101218;color:#EFEDEA;border-radius:2px;overflow:hidden;cursor:pointer;
   /* the card stays put on hover — only its mark answers */
   transition:none;}
@@ -413,15 +425,30 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .ic:hover .ic-go,.ic:focus-visible .ic-go{background:var(--brand);color:#fff;}
 /* the sector photograph, easing in scale so the movement has weight */
 .ic-art{position:relative;flex:1 1 auto;min-height:150px;overflow:hidden;
-  background:#101218;transform:translateZ(0);backface-visibility:hidden;}
+  background:#101218;
+  /* No layer here either. That mattered only while .icard was promoted: the
+     photograph then landed in the parent texture and was stretched. With the
+     card unpromoted the whole thing repaints at the true scale every frame,
+     so neither the edge nor the image is ever resampled. */}
 .ic-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
   transform:scale(1.04);transform-origin:52% 45%;
   transition:transform 1.15s cubic-bezier(.16,1,.3,1),filter .7s var(--e);
   filter:saturate(.85) contrast(1.03);}
-.ic-art::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(180deg,rgba(13,14,19,.5) 0%,rgba(13,14,19,.05) 42%,rgba(16,18,24,.92) 100%);}
+.ic-art::after{content:"";position:absolute;pointer-events:none;
+  /* One pixel past every edge, not flush with them. The art box is a fractional
+     height (271.469px here), so an overlay at inset:0 has a half-covered bottom
+     row, and the photograph shows through it as a light line right where the
+     title sits. overflow:hidden on the parent clips the overhang. */
+  inset:-1px;
+  background:linear-gradient(180deg,rgba(13,14,19,.5) 0%,rgba(13,14,19,.05) 42%,rgba(16,18,24,.92) 86%,#101218 100%);}
 .ic-art svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;color:rgba(255,251,249,.5);}
-.ic-foot{position:relative;z-index:2;padding:0 16px 18px;margin-top:-8px;}
+.ic-foot{position:relative;z-index:2;padding:0 16px 18px;margin-top:-8px;
+  /* Opaque, so the eight pixels it already overlaps are painted over rather
+     than blended: the photo-to-background boundary that flickered under the
+     title stops existing instead of being colour-matched. Inherited, not a fixed
+     colour: the invitation card carries the brand background and dark text, and a
+     hard dark fill here hid its copy. */
+  background-color:inherit;}
 .ic-foot h3{font-size:clamp(19px,1.9vw,26px);margin:0 0 8px;}
 .ic-foot p{font-size:14px;line-height:1.6;color:rgba(239,237,234,.66);
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
@@ -1646,10 +1673,20 @@ function sxRender(x){
     var e=sxEase(prox);
     var sc=SX.scaleMin+(1-SX.scaleMin)*e;
     var y=SX.lift-SX.lift*e;
-    shells[i].style.transform='translate3d(0,'+y.toFixed(2)+'px,0) scale('+sc.toFixed(4)+')';
+    /* Whole device pixels. A promoted layer is rasterised once and then
+       resampled by the scale, so a fractional scale frays its edge into
+       transparency and the light page shows through as a moving rim. Landing
+       the scaled width on a whole device pixel makes that edge step instead
+       of shimmer; the focus-point effect itself is unchanged. */
+    var _dp=window.devicePixelRatio||1,_w=shells[i].offsetWidth||1;
+    sc=Math.round(_w*sc*_dp)/(_w*_dp);
+    y=Math.round(y*_dp)/_dp;
+    shells[i].style.transform='translate3d(0,'+y+'px,0) scale('+sc.toFixed(5)+')';
     var im=shells[i].querySelector('.ic-art img');
     if(im){var rel=(centre-SX.focus)/SX.focus;
-      im.style.transform='scale(1.06) translate3d('+Math.round(-rel*12)+'px,0,0)';}
+      /* translateX, not translate3d: a 3D transform promotes the image to its own
+         layer, and that layer is then resampled by the rail's scale. */
+      im.style.transform='scale(1.06) translateX('+Math.round(-rel*12)+'px)';}
   }
 }
 function suiteUpd(){
@@ -1657,7 +1694,8 @@ function suiteUpd(){
   var p=suiteProgress();
   var tp=p/SX.window; tp=tp<0?0:tp>1?1:tp;      /* the last stretch is the hold */
   var x=SX.startX+(SX.endX-SX.startX)*tp;
-  sxTrack.style.transform='translate3d('+x.toFixed(2)+'px,0,0)';
+  var _dpt=window.devicePixelRatio||1;
+  sxTrack.style.transform='translate3d('+(Math.round(x*_dpt)/_dpt)+'px,0,0)';
   sxRender(x);
   railBar(tp);
 }
@@ -1953,9 +1991,14 @@ function ixSpy(){
     var r=ixItems[i].sec.getBoundingClientRect();
     if(r.top<=probe&&r.bottom>probe)cur=ixItems[i];
   }
-  if(!cur&&ixItems.length){                 /* above the first sheet, or past the last */
-    var first=ixItems[0],lastI=ixItems[ixItems.length-1];
-    cur=first.sec.getBoundingClientRect().top>probe?first:lastI;
+  if(!cur&&ixItems.length){
+    /* The probe falls between two sheets: the gaps run 176-192px, so this window is
+       wide enough to see. Holding the sheet we just left is right; the old fallback
+       jumped to the LAST sheet whenever we were past the first, which flashed 08 in
+       every gap. Above the first sheet we still show the first. */
+    for(var j=0;j<ixItems.length;j++)
+      if(ixItems[j].sec.getBoundingClientRect().top<=probe)cur=ixItems[j];
+    if(!cur)cur=ixItems[0];
   }
   if(cur){ixn.textContent=cur.no;sheet.textContent=cur.label||cur.title.slice(0,26);}
   var links=ixlist.querySelectorAll('a');
@@ -2066,7 +2109,7 @@ function psFrame(ts){
   PS.c+=(PS.t-PS.c)*k;
   if(Math.abs(PS.t-PS.c)<0.35){PS.c=PS.t;PS.raf=0;PS.last=0;}
   else PS.raf=requestAnimationFrame(psFrame);
-  PS.self=true;window.scrollTo(0,PS.c);PS.self=false;
+  PS.self=true;/* Whole device pixels, not the raw lerp: a fractional scroll offset lands the edge of every dark section on a part-pixel and antialiases it against the light page, and because the fraction changes each frame that seam shimmers. The eased value stays fractional so the motion keeps its smoothness. */var _dp=window.devicePixelRatio||1;window.scrollTo(0,Math.round(PS.c*_dp)/_dp);PS.self=false;
 }
 function psPush(dy){
   PS.t=Math.max(0,Math.min(psMax(),PS.t+dy));
