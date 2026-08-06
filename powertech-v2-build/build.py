@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Assemble PowerTech one-page (EN+HY) from shell.html + exact site texts."""
+"""Assemble Gridec one-page (EN+HY) from shell.html + exact site texts."""
 import base64, io, json, os, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -157,7 +157,7 @@ def stages_html(items):
 
 # ---------------------------------------------------------------- EN
 EN = {
- 'LANG': 'en', 'TITLE': 'PowerTech | Power Quality Monitoring',
+ 'LANG': 'en', 'TITLE': 'Gridec | Power Quality Monitoring',
  'FONTFACES': FF_EN,
  'BODYFONT': "'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif",
  'HEADFONT': "'Big Shoulders Display',sans-serif",
@@ -173,7 +173,7 @@ EN = {
  'CTA': 'Describe the issue',
  'HERO_EYEBROW': 'POWER QUALITY MONITORING',
  'HERO_H1': 'See how your<br>electrical system<br><em>performs</em>',
- 'HERO_P': 'PowerTech monitors electrical parameters and power quality events while your system is operating. We interpret the recorded data and provide a clear engineering assessment.',
+ 'HERO_P': 'Gridec monitors electrical parameters and power quality events while your system is operating. We interpret the recorded data and provide a clear engineering assessment.',
  'HERO_CTA2': 'How monitoring works',
  'RD_CAP': 'RMS VOLTAGE · 10-MIN TREND', 'RD_NOMINAL': 'NOMINAL',
  'WHY_H2': 'The event may be over before anyone can inspect it',
@@ -214,7 +214,7 @@ EN = {
                           'Risk Indicators'], alt=1),
  'CO_EYEBROW': 'COMPANY',
  'CO_H2': 'Measured data<br>Independent engineering assessment',
- 'CO_P': 'PowerTech was created to make electrical problems measurable. We record how electrical systems behave during operation and provide independent engineering assessments based on the recorded data. PowerTech is based in Yerevan and works on-site across the region.',
+ 'CO_P': 'Gridec was created to make electrical problems measurable. We record how electrical systems behave during operation and provide independent engineering assessments based on the recorded data. Gridec is based in Yerevan and works on-site across the region.',
  'CO_SUB': 'From on-site setup to engineering report',
  'CO_SUBP': 'One engineering lead oversees setup, recording and analysis.',
  'CO_STAGES': stages_html([
@@ -248,8 +248,13 @@ EN = {
  'F_CLOSE': 'Close',
 }
 EN_DATA = {
- 'starLabels': ['Voltage & Current', 'Harmonics & Interharmonics', 'Flicker', 'Voltage Dips',
-                'Unbalance', 'Power & Energy', 'Events'],
+    # Кольцо величин в герое: номер, две строки названия, признак акцента.
+    # Восьмая позиция — заключение, а не измерение, поэтому помечена.
+    # Армянские термины взяты из словаря самой страницы, а не переведены заново.
+    'ring': [['01', 'VOLTAGE', '& CURRENT', 0], ['02', 'HARMONICS', '', 0],
+             ['03', 'FLICKER', '', 0], ['04', 'DIPS', '& SWELLS', 0],
+             ['05', 'UNBALANCE', '', 0], ['06', 'POWER', '& ENERGY', 0],
+             ['07', 'EVENTS', '', 0], ['08', 'RISK', 'READ', 1]],
  'canvasFont': '"Martian Mono",monospace',
  'rdNominal': 'NOMINAL', 'rdDip': 'VOLTAGE DIP · 180 MS',
  'incident': 'Incident',
@@ -310,7 +315,7 @@ EN_DATA = {
 
 # ---------------------------------------------------------------- HY
 HY = {
- 'LANG': 'hy', 'TITLE': 'PowerTech | Էլեկտրաէներգիայի որակի մոնիթորինգ',
+ 'LANG': 'hy', 'TITLE': 'Gridec | Էլեկտրաէներգիայի որակի մոնիթորինգ',
  'FONTFACES': FF_HY,
  'BODYFONT': "'Arian AMU','Helvetica Neue',sans-serif",
  'HEADFONT': "'Arian AMU',sans-serif",
@@ -323,7 +328,7 @@ HY = {
  'CTA': 'Նկարագրել խնդիրը',
  'HERO_EYEBROW': 'ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ',
  'HERO_H1': 'Ստուգեք, թե ինչպես է աշխատում ձեր <em>էլեկտրացանցը</em>',
- 'HERO_P': 'PowerTech-ը էլեկտրական համակարգի աշխատանքի ընթացքում գրանցում է էլեկտրական պարամետրերն ու ցանցում առաջացող շեղումները։ Մենք վերլուծում ենք գրանցված տվյալները և ներկայացնում ենք հստակ ինժեներական եզրակացություն։',
+ 'HERO_P': 'Gridec-ը էլեկտրական համակարգի աշխատանքի ընթացքում գրանցում է էլեկտրական պարամետրերն ու ցանցում առաջացող շեղումները։ Մենք վերլուծում ենք գրանցված տվյալները և ներկայացնում ենք հստակ ինժեներական եզրակացություն։',
  'HERO_CTA2': 'Ինչպես է իրականացվում մոնիթորինգը',
  'RD_CAP': 'RMS ԼԱՐՈՒՄ · 10-ՐՈՊԵԱՆՈՑ ՄԻՏՈՒՄ', 'RD_NOMINAL': 'ԱՆՎԱՆԱԿԱՆ',
  'WHY_H2': 'Իրադարձությունը կարող է ավարտվել դեռևս ստուգումը սկսելուց առաջ',
@@ -364,7 +369,7 @@ HY = {
                           'Իրադարձություններ', 'Ռիսկի ցուցանիշներ'], alt=1),
  'CO_EYEBROW': 'ԸՆԿԵՐՈՒԹՅՈՒՆ',
  'CO_H2': 'Անկախ տվյալներ<br>Հստակ ինժեներական գնահատում',
- 'CO_P': 'PowerTech-ը ստեղծվել է էլեկտրական խնդիրները չափելի դարձնելու համար։ Մենք գրանցում ենք, թե ինչպես են էլեկտրական համակարգերն աշխատում շահագործման ընթացքում, և եզրակացությունը հիմնում ենք չափված փաստերի, ոչ թե ենթադրությունների վրա։ PowerTech-ը Երևանում գործող անկախ ինժեներական ընկերություն է։ Էլեկտրաէներգիայի որակի չափումներ ենք իրականացնում ամբողջ Հայաստանում։',
+ 'CO_P': 'Gridec-ը ստեղծվել է էլեկտրական խնդիրները չափելի դարձնելու համար։ Մենք գրանցում ենք, թե ինչպես են էլեկտրական համակարգերն աշխատում շահագործման ընթացքում, և եզրակացությունը հիմնում ենք չափված փաստերի, ոչ թե ենթադրությունների վրա։ Gridec-ը Երևանում գործող անկախ ինժեներական ընկերություն է։ Էլեկտրաէներգիայի որակի չափումներ ենք իրականացնում ամբողջ Հայաստանում։',
  'CO_SUB': 'Չափման վայրից մինչև հաշվետվություն',
  'CO_SUBP': 'Տեղադրումը, գրանցումը և վերլուծությունն իրականացվում են մեկ պատասխանատու ինժեների ղեկավարությամբ։',
  'CO_STAGES': stages_html([
@@ -400,8 +405,13 @@ HY = {
 import copy
 HY_DATA = copy.deepcopy(EN_DATA)
 HY_DATA.update({
- 'starLabels': ['Լարում և հոսանք', 'Հարմոնիկներ և միջհարմոնիկներ', 'Ֆլիկեր', 'Լարման անկումներ',
-                'Լարման անհամաչափություն', 'Հզորություն և էներգիա', 'Իրադարձություններ'],
+    # Кольцо величин в герое: номер, две строки названия, признак акцента.
+    # Восьмая позиция — заключение, а не измерение, поэтому помечена.
+    # Армянские термины взяты из словаря самой страницы, а не переведены заново.
+    'ring': [['01', 'ԼԱՐՈՒՄ', 'ՀՈՍԱՆՔ', 0], ['02', 'ՀԱՐՄՈՆԻԿՆԵՐ', '', 0],
+             ['03', 'ՖԼԻԿԵՐ', '', 0], ['04', 'ԼԱՐՄԱՆ', 'ԱՆԿՈՒՄՆԵՐ', 0],
+             ['05', 'ԱՆՀԱՄԱՉԱՓՈՒԹՅՈՒՆ', '', 0], ['06', 'ՀԶՈՐՈՒԹՅՈՒՆ', 'ԷՆԵՐԳԻԱ', 0],
+             ['07', 'ԴԵՊՔԵՐ', '', 0], ['08', 'ՌԻՍԿԻ', 'ԳՆԱՀԱՏՈՒՄ', 1]],
  'canvasFont': '"Arian AMU Serif",Georgia,serif',
  'rdNominal': 'ԱՆՎԱՆԱԿԱՆ', 'rdDip': 'ԼԱՐՄԱՆ ԱՆԿՈՒՄ · 180 ՄՎՐԿ',
  'incident': 'Միջադեպ',
@@ -669,8 +679,13 @@ def render_deploy(tokens, data, ff, out_path, post=None):
     io.open(out_path, 'w', encoding='utf-8').write(full)
     print(out_path, round(len(full) / 1024), 'KB')
 
-render(EN, EN_DATA, 'art-en.html', 'pt-en.html')
-render(HY, HY_DATA, 'art-hy.html', 'pt-hy.html')
+# Синяя палитра — базовая, а не обзорный вариант: решение принято 2026-08-04.
+# Тот же пост-проход, что делает mint и warm, только применён к основным сборкам,
+# поэтому английская и армянская страницы получают её одинаково.
+blueify = palette_pass('blue')
+
+render(EN, EN_DATA, 'art-en.html', 'pt-en.html', blueify)
+render(HY, HY_DATA, 'art-hy.html', 'pt-hy.html', blueify)
 render(EN, EN_DATA, 'art-en-mint.html', 'pt-en-mint.html', mintify)
 render(EN, EN_DATA, 'art-en-warm.html', 'pt-en-warm.html', warmify)
 
@@ -678,8 +693,8 @@ render(EN, EN_DATA, 'art-en-warm.html', 'pt-en-warm.html', warmify)
 # `assets` sitting next to this folder; PT_V2 points the build at it wherever it lives.
 V2 = os.path.join(SITE, 'v2')
 os.makedirs(V2, exist_ok=True)
-render_deploy(EN, EN_DATA, FF_EN_D, os.path.join(V2, 'index.html'))
-render_deploy(HY, HY_DATA, FF_HY_D, os.path.join(V2, 'hy.html'))
+render_deploy(EN, EN_DATA, FF_EN_D, os.path.join(V2, 'index.html'), blueify)
+render_deploy(HY, HY_DATA, FF_HY_D, os.path.join(V2, 'hy.html'), blueify)
 render_deploy(EN, EN_DATA, FF_EN_D, os.path.join(V2, 'mint.html'), mintify)
 render_deploy(EN, EN_DATA, FF_EN_D, os.path.join(V2, 'warm.html'), warmify)
 print('done')

@@ -41,10 +41,13 @@ header a,header button,header nav,header .navr{pointer-events:auto;}
    sit in the corners, only a small edge margin */
 .hin{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:74px;gap:14px;
   width:100%;padding:0 clamp(14px,2.1vw,30px);}
-.brand{display:flex;align-items:center;gap:11px;flex:0 0 auto;transition:color .5s var(--e);}
-.brand .mark{width:34px;height:34px;display:block;flex:0 0 auto;}
-.brand .wm{font-weight:600;font-size:20px;letter-spacing:-.015em;line-height:1;}
-.brand .wm i{font-style:normal;color:var(--brand-ink);}
+.brand{display:flex;align-items:center;gap:10px;/* Локап в кривых: одна фигура вместо знака и текста. У него свой viewBox,
+     поэтому ширина считается сама. --acc отдаёт акцент внутрь вектора, и оба
+     значения записаны терракотовыми литералами, которые палитровый пост-проход
+     переводит в цвет выбранной палитры. */
+  --acc:#AC4A29;flex:0 0 auto;transition:color .5s var(--e);}
+.brand .lock{display:block;height:26px;width:auto;flex:0 0 auto;fill:currentColor;}
+header.on-dark .brand{--acc:#D4714E;}
 /* centre group — the sections, enclosed like one control */
 nav{justify-self:center;display:flex;align-items:center;gap:2px;padding:4px;font-size:14px;
   border-radius:3px;box-shadow:inset 0 0 0 1px rgba(13,14,19,.12);background:rgba(252,251,250,.9);
@@ -55,32 +58,6 @@ nav a{font-family:%%NAVFONT%%;position:relative;padding:8px 15px;white-space:now
   transition:color .35s var(--e),background .35s var(--e);}
 nav a:hover{color:#0D0E13;background:rgba(13,14,19,.07);}
 nav a.here{color:var(--inv-fg);background:var(--inv);}
-/* ---- LOGO TREATMENTS (under review) ------------------------------------
-   The lockup as built is a filled coral tile with a white wave plus a two-tone
-   wordmark, so it depends on the ground: the graphite half sinks on an ink plate
-   and the tile itself disappears on terracotta. Every treatment below is single
-   colour and inherits the bar's own colour, so there is nothing left to clash. */
-/* the header never carries the two-tone word: one colour, whatever the ground */
-.brand .wm i{color:inherit;}
-.brand .glyph{width:34px;height:34px;display:none;flex:0 0 auto;}
-html[data-logo="4"] .brand .mark,html[data-logo="5"] .brand .mark{display:none;}
-html[data-logo="4"] .brand .glyph-sag{display:block;}
-html[data-logo="5"] .brand .glyph-oct{display:block;}
-html[data-logo="0"] .brand .wm i{color:var(--brand-ink);}   /* only the as-built comparison */
-/* 1 contour: the tile becomes a drawn square, the wave a drawn line */
-html[data-logo="1"] .mark .tile{fill:none;}
-html[data-logo="1"] .mark .rim{stroke:currentColor;stroke-opacity:.5;stroke-width:6;}
-html[data-logo="1"] .mark .wave{stroke:currentColor;stroke-width:11;}
-/* 2 wordmark only: the mark is kept for the favicon, not for the bar */
-html[data-logo="2"] .mark{display:none;}
-html[data-logo="2"] .brand .wm{letter-spacing:-.005em;}
-/* 3 knockout: a solid tile in the bar's own colour, the wave cut out of it */
-html[data-logo="3"] .mark .tile{fill:currentColor;}
-html[data-logo="3"] .mark .rim{stroke:none;}
-html[data-logo="3"] .mark .wave{stroke:var(--logo-knock,#EFEDEA);stroke-width:10;}
-:root{--logo-knock:#EFEDEA;}
-header[data-tone="ink"]{--logo-knock:#0D0E13;}
-
 /* ============ HEADER VARIANTS (under review) ============================
    0 = the glass capsule as built, 1 = titleblock, 2 = hairline rail, 3 = chips.
    The section list is out of the bar in every variant; it lives in the index. */
@@ -116,8 +93,6 @@ header[data-tone="ink"]{--logo-knock:#0D0E13;}
 html[data-nav="1"] header{background:var(--bg);box-shadow:0 1px 0 var(--hair);pointer-events:auto;}
 html[data-nav="1"] .hin{height:58px;grid-template-columns:auto 1fr auto;}
 html[data-nav="1"] nav{display:none;}
-html[data-nav="1"] .brand .mark{width:28px;height:28px;}
-html[data-nav="1"] .brand .wm{font-size:18px;}
 html[data-nav="1"] .ixb{justify-self:start;background:none;box-shadow:none;padding:9px 0 9px 22px;
   position:relative;color:var(--fg-mid);}
 html[data-nav="1"] .ixb::before{content:"";position:absolute;left:0;top:50%;width:11px;height:1px;
@@ -196,10 +171,6 @@ html[data-nav="0"] header[data-scrim] .brand::after,
 html[data-nav="0"] header[data-scrim] .navr::after,
 html[data-nav="2"] header[data-scrim] .brand::after,
 html[data-nav="2"] header[data-scrim] .navr::after{opacity:1;}
-/* the brand's own colour, kept as a treatment rather than forced on every one */
-html[data-logo="6"] .brand{color:#AC4A29;}
-html[data-logo="6"] header[data-tone="ink"] .brand{color:#D4714E;}
-
 /* ---- 3 instrument chips: two opaque plates, nothing between ------------ */
 html[data-nav="3"] .hin{height:76px;grid-template-columns:auto 1fr auto;align-items:start;
   padding-top:12px;}
@@ -223,16 +194,6 @@ html[data-nav="3"] .ixp{margin-top:12px;box-shadow:inset 0 0 0 1px rgba(13,14,19
   html[data-nav="3"] .brand{box-shadow:none;background:none;padding:0;}
 }
 
-/* the review switcher, removed once a variant is chosen */
-.navsw{position:fixed;left:14px;bottom:14px;z-index:9000;display:grid;gap:5px;padding:7px;
-  background:rgba(13,14,19,.92);border-radius:3px;font:400 11px/1 ui-sans-serif,system-ui,sans-serif;}
-.navsw[hidden]{display:none;}
-.navsw button{color:rgba(239,237,234,.8);background:rgba(239,237,234,.08);border:none;
-  border-radius:2px;padding:6px 9px;cursor:pointer;font:inherit;}
-.navsw button.on{background:var(--brand);color:#fff;}
-.navsw .row{display:flex;gap:6px;align-items:center;}
-.navsw span{color:rgba(239,237,234,.45);width:44px;padding-right:4px;letter-spacing:.1em;}
-
 /* right group — language, then the enquiry button */
 .navr{justify-self:end;display:flex;align-items:center;gap:12px;}
 .lang{font-family:%%MONOFONT%%;font-size:12px;letter-spacing:.12em;padding:9px 12px;
@@ -255,21 +216,6 @@ html[data-nav="3"] .ixp{margin-top:12px;box-shadow:inset 0 0 0 1px rgba(13,14,19
 .lang,.md .x{transition:transform .16s var(--e),background .35s var(--e),color .35s var(--e);}
 /* dark surfaces: the untinted brand is the one with contrast there */
 .plate,.plate2,.other,.chart{--brand-ink:#D4714E;}
-/* ?hero=terracotta restores the earlier poster, for comparison */
-html[data-hero="terracotta"] .hero{background:#C8603D;color:#FFFBF9;--brand-ink:#D4714E;}
-html[data-hero="terracotta"] .hero::after{display:none;}
-html[data-hero="terracotta"] .hero h1,html[data-hero="terracotta"] .rd b{color:#FFFBF9;}
-html[data-hero="terracotta"] .hero h1 em,html[data-hero="terracotta"] .hero .eyebrow,
-html[data-hero="terracotta"] .rd .st{color:#2C1109;}
-html[data-hero="terracotta"] .hero .eyebrow::before{background:#2C1109;}
-html[data-hero="terracotta"] .hero .hp{color:rgba(255,251,249,.88);}
-html[data-hero="terracotta"] .rd{color:rgba(255,251,249,.88);}
-html[data-hero="terracotta"] .hero .btn{background:#14161C;color:#fff;}
-html[data-hero="terracotta"] .hero .btn::before{background:#FFFBF9;}
-html[data-hero="terracotta"] .hero .btn:hover span{color:#14161C;}
-html[data-hero="terracotta"] .hero .btn.gh{background:transparent;color:#FFFBF9;
-  box-shadow:inset 0 0 0 1px rgba(255,251,249,.44);}
-html[data-hero="terracotta"] .stage{--wv-line:255,251,249;--wv-glow:255,255,255;}
 .btn.gh{background:transparent;color:var(--fg);box-shadow:inset 0 0 0 1px var(--hair);}
 .btn.lt{background:var(--bg);color:var(--fg);}
 .btn.lt:hover span{color:#fff;}
@@ -764,7 +710,21 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 
 <div id="wipe"></div>
 <header id="hdr" data-tone="paper"><div class="hin">
-  <a class="brand" href="#top"><svg class="mark" viewBox="14 8 182 182" fill="none" role="img" aria-label="PowerTech"><defs><linearGradient id="ptTile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6573d"/><stop offset="1" stop-color="#c5280d"/></linearGradient><clipPath id="ptClip"><rect x="24" y="20" width="160" height="160"/></clipPath></defs><rect class="tile" x="24" y="20" width="160" height="160" fill="url(#ptTile)"/><rect class="rim" x="24" y="20" width="160" height="160" fill="none" stroke="#ffffff" stroke-opacity=".28" stroke-width="2"/><g clip-path="url(#ptClip)"><path d="M48,100 C66,56 86,56 104,100 C122,144 142,144 160,100" class="wave" stroke="#f7f5f4" stroke-width="9" stroke-linecap="round" fill="none"/></g></svg><svg class="glyph glyph-sag" viewBox="0 0 40 40" fill="none" role="img" aria-label="PowerTech"><path d="M3 15 H14 V27 H26 V15 H37" stroke="currentColor" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter" fill="none"/></svg><svg class="glyph glyph-oct" viewBox="0 0 40 40" fill="none" role="img" aria-label="PowerTech"><path d="M14 4 H26 L36 14 V26 L26 36 H14 L4 26 V14 Z" stroke="currentColor" stroke-width="2.6" fill="none"/><rect x="17" y="17" width="6" height="6" fill="currentColor"/></svg><span class="wm">Power<i>Tech</i></span></a>
+  <a class="brand" href="#top" aria-label="Gridec"><svg class="lock" viewBox="0 -100.0 815.62 200.0" aria-hidden="true">
+  <g transform="translate(86.6025 0)">
+    <path d="M-86.603 -50 L-6 -96.536 L-6 -3.464 L-86.603 43.072 Z"/>
+    <path style="fill:var(--acc,#2E5E99)" d="M86.603 -50 L6 -96.536 L6 -3.464 L86.603 43.072 Z"/>
+    <path d="M-86.603 56.928 L0 6.928 L86.603 56.928 L0 100 Z"/>
+  </g>
+<g>
+    <path transform="translate(249.42 65.36) scale(0.18674 -0.18674)" d="M392 -10Q320 -10 256.0 18.0Q192 46 144.0 95.5Q96 145 68.5 210.5Q41 276 41 351Q41 426 68.5 491.0Q96 556 144.5 605.5Q193 655 258.5 682.5Q324 710 400 710Q483 710 554.0 678.0Q625 646 673 587L595 509Q564 553 512.0 576.5Q460 600 400 600Q328 600 273.5 568.5Q219 537 189.0 481.0Q159 425 159 351Q159 277 189.5 220.5Q220 164 272.0 132.0Q324 100 390 100Q460 100 510.5 125.5Q561 151 588.0 201.5Q615 252 615 326L687 274H388V379H734V363Q734 238 689.5 155.0Q645 72 568.0 31.0Q491 -10 392 -10Z"/>
+    <path transform="translate(393.58 65.36) scale(0.18674 -0.18674)" d="M61 0V480H171V0ZM171 267 133 286Q133 377 173.5 433.5Q214 490 296 490Q332 490 361.0 477.0Q390 464 415 435L343 361Q330 375 314.0 381.0Q298 387 277 387Q231 387 201.0 358.0Q171 329 171 267Z"/>
+    <path transform="translate(472.94 65.36) scale(0.18674 -0.18674)" d="M62 0V480H172V0ZM117 568Q89 568 70.5 587.0Q52 606 52 634Q52 662 70.5 681.0Q89 700 117 700Q146 700 164.0 681.0Q182 662 182 634Q182 606 164.0 587.0Q146 568 117 568Z"/>
+    <path transform="translate(516.64 65.36) scale(0.18674 -0.18674)" d="M262 -10Q197 -10 144.6 23.0Q92.1 55.9 61.6 112.5Q31 169 31 239.2Q31 310.5 61.5 366.7Q92 423 144.3 456.5Q196.6 490 262 490Q317 490 359.5 466.5Q402 443 427.0 402.0Q452 361 452 309V171Q452 119 427.5 78.0Q403 37 360.0 13.5Q317 -10 262 -10ZM280 94Q321 94 351.4 112.7Q381.8 131.3 398.9 164.2Q416 197 416 240Q416 283.4 398.8 316.1Q381.6 348.8 351.3 367.4Q321 386 280.5 386Q240 386 209.6 367.3Q179.2 348.6 161.6 315.8Q144 282.9 144 240Q144 197 161.4 164.0Q178.8 131.1 209.7 112.5Q240.5 94 280 94ZM519 0H409V129L428 246L409 362V720H519Z"/>
+    <path transform="translate(624.95 65.36) scale(0.18674 -0.18674)" d="M284 -10Q212 -10 154.5 22.5Q97 55 63.5 112.0Q30 169 30 240Q30 311 63.0 367.5Q96 424 152.5 457.0Q209 490 278 490Q345 490 396.5 459.0Q448 428 477.5 374.0Q507 320 507 251Q507 239 505.5 226.5Q504 214 501 199H107V289H444L403 253Q401 297 386.0 327.0Q371 357 343.5 373.0Q316 389 276 389Q234 389 203.0 371.0Q172 353 155.0 320.5Q138 288 138 243Q138 198 156.0 164.0Q174 130 207.0 111.5Q240 93 283 93Q320 93 351.5 106.0Q383 119 405 144L475 73Q440 32 390.0 11.0Q340 -10 284 -10Z"/>
+    <path transform="translate(724.67 65.36) scale(0.18674 -0.18674)" d="M282 -10Q211 -10 153.5 23.0Q96 56 63.0 113.0Q30 170 30 240Q30 311 63.0 367.5Q96 424 153.5 457.0Q211 490 282 490Q338 490 386.5 468.5Q435 447 469 407L397 334Q376 359 346.5 371.5Q317 384 282 384Q241 384 209.5 365.5Q178 347 160.5 315.0Q143 283 143 240Q143 198 160.5 165.5Q178 133 209.5 114.5Q241 96 282 96Q317 96 346.5 108.5Q376 121 397 146L469 73Q435 33 386.5 11.5Q338 -10 282 -10Z"/>
+</g>
+</svg></a>
   <nav><a class="lk" href="#applications">%%NAV_INDUSTRIES%%</a><a class="lk" href="#services">%%NAV_SERVICES%%</a><a class="lk" href="#company">%%NAV_COMPANY%%</a></nav>
   <div class="navr">
     <button class="ixb" id="ixb" aria-expanded="false" aria-controls="ixp"><b id="ixn">01</b><s>/</s><em id="ixt">08</em></button>
@@ -774,7 +734,6 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 </div>
 <div class="ixp" id="ixp" hidden><div class="ixin"><ol id="ixlist"></ol></div></div>
 </header>
-<div class="navsw" id="navsw" hidden></div>
 <main>
 
 <section class="hero" id="top">
@@ -885,7 +844,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 </div></section>
 
 </main>
-<footer><div class="wrap in"><span>PowerTech</span><span>sales@powertech.am · +374 41 00 00 14</span><span>%%FOOT_ADDR%%</span></div></footer>
+<footer><div class="wrap in"><span>Gridec</span><span>sales@powertech.am · +374 41 00 00 14</span><span>%%FOOT_ADDR%%</span></div></footer>
 
 <div class="ovl" id="iovl"><div class="md" id="imd">
   <button class="x" data-close>&times;</button>
@@ -946,16 +905,13 @@ var PT=window.PT;
 var cv=document.getElementById('star'),cx=cv.getContext('2d');
 var SIDES=8,PER_EDGE=11,N=SIDES*PER_EDGE;
 var W=0,H=0,dpr=1,tt=0,CXp=0,CYp=0,R=0,OCT_R=0,rot=0;
-var strings=[],labelSlots=[];
+var strings=[];
 var arcs=[],arcT=0;   /* live discharge channels over the quiet field */
-var LABELS=PT.starLabels;
 var mouse={x:-9999,y:-9999,on:false};
 var EV_FIRST=2.6,EV_EVERY=7.5,EV_DUR=1.5,evNext=EV_FIRST,evT=0,evAngle=0;
 var MILK='255,251,249',GLOW='255,255,255';
 var OF={stiff:11,damp:3.9,mouseR:165,push:78,drift:27,driftHz:.13,
   line:.20,litHi:.52,core:.34,glide:.13,band:.30};
-(function(){var m=/[?&]hero=([a-z]+)/.exec(location.search);
-  if(m&&m[1]==='terracotta')document.documentElement.dataset.hero='terracotta';})();
 function readWaveTheme(){
   var cs=getComputedStyle(cv.parentElement);
   var a=(cs.getPropertyValue('--wv-line')||'').trim(),b=(cs.getPropertyValue('--wv-glow')||'').trim();
@@ -970,7 +926,7 @@ function size(){
   cx.setTransform(dpr,0,0,dpr,0,0);
   /* the shape sits a little left of centre: the strip on the right belongs to the
      annotations, so no label ever has to sit on top of the drawing */
-  CXp=W*0.452;CYp=H/2;R=Math.min(W,H)*0.40;
+  CXp=W*0.50;CYp=H/2;R=Math.min(W,H)*(W<430?0.275:0.335);
   OCT_R=R*Math.cos(Math.PI/SIDES);            /* inradius — the flat sides */
 }
 /* a vertex of the octagon, flat side up */
@@ -1051,63 +1007,59 @@ function arcPath(arc,amp){
   return {pts:pts,nx:nx,ny:ny,dx:dx,dy:dy,len:len};
 }
 /* the point on the perimeter this string is tied to */
-/* Annotations live in fixed rows on the right. A row holds one label at a time
-   and fades it out before taking the next, so two labels can never share a row
-   and rows never share a height — identical in both languages. */
-var LROWS=2,lrows=[];
-function buildLabels(){
-  labelSlots=[];
-  /* the pool: anchors spread down the right half of the shape */
-  var pick=[];
-  for(var i=0;i<N;i++){
-    var a=anchor(strings[i],R);
-    if(a[0]>=CXp)pick.push(i);
-  }
-  var step=Math.max(1,Math.floor(pick.length/LABELS.length));
-  for(var j=0;j<LABELS.length;j++){
-    labelSlots.push({i:pick[(j*step)%pick.length],lab:LABELS[j]});
-  }
-  lrows=[];
-  for(var k=0;k<LROWS;k++){
-    lrows.push({idx:0,vis:0,mode:'in',t:k*0.75});
-  }
-  for(var k2=0;k2<LROWS;k2++)lrows[k2].idx=nextLabel(lrows[k2],k2);
-}
-/* pick a label no other row is showing AND one that fits this row's own room */
-function rowY(lr){return Math.round(H*(0.13+lr*0.71));}
-function rowRoom(lr){return (W-8)-(octRightAt(rowY(lr))+12);}
-function nextLabel(row,lr){
-  var used=lrows.map(function(r){return r===row?-1:r.idx;});
-  var room=rowRoom(lr===undefined?lrows.indexOf(row):lr);
-  cx.font='600 '+(W>520?11:10)+'px '+PT.canvasFont;
-  var fits=[];
-  for(var c=0;c<labelSlots.length;c++){
-    if(used.indexOf(c)>=0||c===row.idx)continue;
-    if(cx.measureText(labelSlots[c].lab).width<=room)fits.push(c);
-  }
-  if(fits.length)return fits[Math.floor(Math.random()*fits.length)];
-  /* nothing fits this row — hold the shortest one there */
-  var best=-1,bw=1e9;
-  for(var c2=0;c2<labelSlots.length;c2++){
-    if(used.indexOf(c2)>=0)continue;
-    var w=cx.measureText(labelSlots[c2].lab).width;
-    if(w<bw){bw=w;best=c2;}
-  }
-  return best<0?(row.idx+1)%labelSlots.length:best;
-}
-function schedLabels(dt){
-  for(var k=0;k<lrows.length;k++){
-    var row=lrows[k];
-    if(row.mode==='in'){
-      row.vis+=dt*3.2;
-      if(row.vis>=1){row.vis=1;row.mode='hold';row.t=2.6+Math.random()*1.8;}
-    }else if(row.mode==='hold'){
-      row.t-=dt;
-      if(row.t<=0)row.mode='out';
-    }else{
-      row.vis-=dt*3.2;
-      if(row.vis<=0){row.vis=0;row.idx=nextLabel(row,k);row.mode='in';}
+/* Annotations sit in eight fixed sectors around the centre: the centre is the
+   point of connection, and clockwise from the top the sectors read as the chain
+   of processing — what is taken directly, then what follows from the shape of
+   the curve, then from the value over time, then U times I, then the record in
+   time, and last the one thing produced rather than measured. That eighth
+   position carries the accent. The sectors stay put while the shape inside them
+   keeps turning: a rotor in a fixed scale. */
+var RING=PT.ring||[],ringIn=0;
+function ringDraw(dt){
+  if(!RING.length)return;
+  ringIn=Math.min(1,ringIn+dt*0.85);                 /* appears once, in order */
+  var i,n=RING.length,fs=(W>500?10:(W>430?9:8));
+  for(i=0;i<n;i++){
+    var a=-Math.PI/2+(i+0.5)*Math.PI*2/n;            /* middle of sector i */
+    var nx=Math.cos(a),ny=Math.sin(a);
+    var app=Math.max(0,Math.min(1,(ringIn-i/n*0.55)*3));
+    if(app<=0.01)continue;
+    /* leader out of the perimeter, and a node where the text starts */
+    var r0=R*1.02,r1=R*1.02+(W>500?13:9);
+    cx.strokeStyle='rgba('+MILK+','+(0.26*app).toFixed(3)+')';cx.lineWidth=1;
+    cx.beginPath();
+    cx.moveTo(CXp+nx*r0,CYp+ny*r0);cx.lineTo(CXp+nx*r1,CYp+ny*r1);cx.stroke();
+    var qx=CXp+nx*r1,qy=CYp+ny*r1,accent=RING[i][3];
+    cx.fillStyle=accent?'rgba('+GLOW+','+(0.95*app).toFixed(3)+')'
+                       :'rgba('+MILK+','+(0.55*app).toFixed(3)+')';
+    cx.fillRect(qx-1.5,qy-1.5,3,3);
+    /* side and baseline follow the sector's own direction */
+    var pad=6,tx=qx+nx*pad,ty=qy+ny*pad;
+    cx.textAlign=nx>0.35?'left':(nx<-0.35?'right':'center');
+    cx.textBaseline=ny>0.35?'top':(ny<-0.35?'alphabetic':'middle');
+    /* fit the type to the room this sector actually has. The Armenian terms run
+       far longer than the English ones, and neither may spill off the canvas. */
+    var lines=[RING[i][1]];if(RING[i][2])lines.push(RING[i][2]);
+    var room=nx>0.35?(W-4-tx):(nx<-0.35?(tx-4):(Math.min(tx,W-tx)*2-8));
+    var fz=fs,j,wm;
+    for(;;){
+      cx.font='600 '+fz+'px '+PT.canvasFont;
+      wm=0;
+      for(j=0;j<lines.length;j++)wm=Math.max(wm,cx.measureText(lines[j]).width);
+      if(wm<=room||fz<=7)break;
+      fz-=0.5;
     }
+    if(wm>room)continue;            /* rather no label than one off the canvas */
+    /* the position number sits above the term, offset against the direction */
+    var lh=fz+3,two=lines.length-1;
+    var numY=ty-(ny<-0.35?(lh*(1+two)):(ny>0.35?0:(lh*(0.5+two*0.5))));
+    cx.font='600 '+(fz-1.5)+'px '+PT.canvasFont;
+    cx.fillStyle='rgba('+MILK+','+(0.66*app).toFixed(3)+')';
+    cx.fillText(RING[i][0],tx,numY);
+    cx.font='600 '+fz+'px '+PT.canvasFont;
+    cx.fillStyle=accent?'rgba('+GLOW+','+(0.95*app).toFixed(3)+')'
+                       :'rgba('+MILK+','+(0.86*app).toFixed(3)+')';
+    for(j=0;j<lines.length;j++)cx.fillText(lines[j],tx,numY+lh*(j+1));
   }
 }
 function anchor(st,rad){
@@ -1256,40 +1208,7 @@ function frame(ts){
     cx.fillRect(vc[0]-2.5,vc[1]-2.5,5,5);
   }
 
-  /* annotations: each row keeps its own height, so nothing can overlap */
-  schedLabels(dt);
-  cx.font='600 '+(W>520?11:10)+'px '+PT.canvasFont;
-  cx.textAlign='right';
-  for(var lr=0;lr<lrows.length;lr++){
-    var row=lrows[lr];
-    if(row.vis<=0.01)continue;
-    var item=labelSlots[row.idx];
-    if(!item)continue;
-    var ry=rowY(lr),ex=W-10,room=rowRoom(lr),fs=W>520?11:10;
-    cx.font='600 '+fs+'px '+PT.canvasFont;
-    var tw=cx.measureText(item.lab).width;
-    while(tw>room&&fs>9){fs-=0.5;cx.font='600 '+fs+'px '+PT.canvasFont;
-      tw=cx.measureText(item.lab).width;}
-    if(tw>room)continue;                       /* never spill over the drawing */
-    /* tie the row to the perimeter point nearest its height: short leaders that
-       cannot cross another row's */
-    var Al=null,bd=1e9;
-    for(var ai=0;ai<N;ai++){
-      var ap=anchor(strings[ai],R);
-      if(ap[0]<CXp)continue;
-      var d2=Math.abs(ap[1]-ry);
-      if(d2<bd){bd=d2;Al=ap;}
-    }
-    if(!Al)Al=anchor(strings[item.i],R);
-    var tx=Math.max(octRightAt(ry)+12,ex-tw);    /* never over the drawing */
-    cx.beginPath();
-    cx.moveTo(Al[0]+4,Al[1]);
-    cx.lineTo(tx-8,ry);
-    cx.strokeStyle='rgba('+MILK+','+(row.vis*.34).toFixed(3)+')';cx.lineWidth=1;cx.stroke();
-    cx.fillStyle='rgba('+MILK+','+(row.vis*.92).toFixed(3)+')';
-    cx.fillText(item.lab,Math.max(tx+tw,ex),ry+3.5);
-  }
-
+  ringDraw(dt);
   /* readout follows the same event, steadily */
   if(!frame.hm||ts-frame.hm>500){frame.hm=ts;
     var vTxt=(230.0-evP*44).toFixed(1),fTxt=(50.00-evP*.05).toFixed(2),
@@ -1300,7 +1219,7 @@ function frame(ts){
     if(stt&&stt.textContent!==sTxt)stt.textContent=sTxt;}
   requestAnimationFrame(frame);
 }
-size();build();buildLabels();
+size();build();
 cv.addEventListener('pointermove',function(e){var r=cv.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;mouse.on=true;});
 cv.addEventListener('pointerleave',function(){mouse.on=false;});
 if(!rm)requestAnimationFrame(frame);
@@ -1887,16 +1806,16 @@ document.getElementById('ptfSubmit').addEventListener('click',function(){
   if(files.length){
     var fd=new FormData();
     Object.keys(fields).forEach(function(k){fd.append(k,fields[k]);});
-    fd.append('_subject','PowerTech website request');fd.append('_captcha','false');fd.append('_template','table');
+    fd.append('_subject','Gridec website request');fd.append('_captcha','false');fd.append('_template','table');
     files.forEach(function(f){fd.append('attachment',f,f.name);});
     fetch('https://formsubmit.co/sales@powertech.am',{method:'POST',body:fd,mode:'no-cors'}).then(done).catch(done);
   }else{
-    var payload=Object.assign({},fields,{_subject:'PowerTech website request'});
+    var payload=Object.assign({},fields,{_subject:'Gridec website request'});
     fetch('https://formsubmit.co/ajax/sales@powertech.am',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)})
       .then(function(r){if(!r.ok)throw new Error('send failed');done();})
       .catch(function(){
         var body=encodeURIComponent('Name: '+fields.name+'\nCompany: '+fields.company+'\nEmail: '+fields.email+'\nPhone: '+fields.phone+'\nApplication: '+fields.application+'\n\n'+fields.message);
-        location.href='mailto:sales@powertech.am?subject='+encodeURIComponent('PowerTech website request')+'&body='+body;
+        location.href='mailto:sales@powertech.am?subject='+encodeURIComponent('Gridec website request')+'&body='+body;
         done();
       });
   }
@@ -2042,47 +1961,10 @@ function toneUnderBar(){
   if(overBand)hdr.setAttribute('data-scrim','1');else hdr.removeAttribute('data-scrim');
   hdr.classList.toggle('on-dark',tone==='ink');
 }
-/* the variant switch, for review only */
-var NAVV=['0','1','2','3'],navLabels=['glass','titleblock','rail','chips'];
-var LOGOV=['0','1','2','3','4','5','6'],logoLabels=['as built','contour','wordmark','knockout','sag','octagon','brand tone'];
-function logoSet(v){
-  if(v==='0')document.documentElement.removeAttribute('data-logo');
-  else document.documentElement.setAttribute('data-logo',v);
-  try{localStorage.setItem('pt-logo',v);}catch(e){}
-  var b=document.querySelectorAll('#navsw button[data-l]');
-  for(var i=0;i<b.length;i++)b[i].classList.toggle('on',b[i].dataset.l===v);
-}
-function navSet(v){
-  if(v==='0')document.documentElement.removeAttribute('data-nav');
-  else document.documentElement.setAttribute('data-nav',v);
-  try{localStorage.setItem('pt-nav',v);}catch(e){}
-  var b=document.querySelectorAll('#navsw button');
-  for(var i=0;i<b.length;i++)b[i].classList.toggle('on',b[i].dataset.v===v);
-  layoutSuite&&layoutSuite();
-}
-(function(){
-  var m=/[?&]nav=([0-3])/.exec(location.search),stored=null;
-  try{stored=localStorage.getItem('pt-nav');}catch(e){}
-  var v=m?m[1]:(stored||'0');
-  var sw=document.getElementById('navsw');
-  {                                        /* always on while the variants are under review */
-    sw.hidden=false;
-    var html='<div class="row"><span>BAR</span>';
-    for(var i=0;i<NAVV.length;i++)
-      html+='<button data-v="'+NAVV[i]+'">'+NAVV[i]+' '+navLabels[i]+'</button>';
-    html+='</div><div class="row"><span>LOGO</span>';
-    for(var j=0;j<LOGOV.length;j++)
-      html+='<button data-l="'+LOGOV[j]+'">'+LOGOV[j]+' '+logoLabels[j]+'</button>';
-    sw.innerHTML=html+'</div>';
-    sw.addEventListener('click',function(e){
-      var b=e.target.closest('button[data-v]');if(b){navSet(b.dataset.v);return;}
-      var l=e.target.closest('button[data-l]');if(l)logoSet(l.dataset.l);});
-  }
-  navSet(v);
-  var lm=/[?&]logo=([0-3])/.exec(location.search),ls=null;
-  try{ls=localStorage.getItem('pt-logo');}catch(e){}
-  logoSet(lm?lm[1]:(ls||'1'));            /* contour is the default while under review */
-})();
+/* The instrument-chip bar is the chosen one: two opaque plates with nothing
+   between them. Set once — the other three lived only for the comparison. */
+document.documentElement.setAttribute('data-nav','3');
+layoutSuite&&layoutSuite();
 /* ============ PREMIUM SCROLL — eased wheel, native everywhere else ============ */
 /* Lenis-style: accumulate wheel delta into a target, ease the real scroll toward it
    with scrollTo (NOT a transformed wrapper — that would kill position:sticky, and
