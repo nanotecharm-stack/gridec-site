@@ -321,20 +321,12 @@ def patch(html, pal):
     # в EN-сборку вшита только латинская подрезка Martian Mono. В build.py уже
     # исправлено, здесь — чтобы правка была видна в готовой сборке без пересборки.
     lang_old, lang_new = '>ՀԱՅ</a>', '>HY</a>'
-    if html.count(lang_old) != 1:
-        raise SystemExit('%s: подпись переключателя языка не найдена' % pal)
-    html = html.replace(lang_old, lang_new, 1)
+    # Не обязательно: build.py уже отдаёт латинское HY, и после полной сборки этой
+    # строки в странице нет. Патч остаётся для страниц, собранных до той правки.
+    if html.count(lang_old) == 1:
+        html = html.replace(lang_old, lang_new, 1)
 
 
-    html = fix_counter(html, pal)
-    html = fix_seam(html, pal)
-    html = fix_rail_seam(html, pal)
-    html = fix_card_seam(html, pal)
-    html = fix_overlay(html, pal)
-    html = fix_foot(html, pal)
-    html = fix_card_layer(html, pal)
-    html = fix_art_layer(html, pal)
-    html = fix_card_border(html, pal)
     html = hero_window.patch(html, p, ns['_rgb'])
 
 
@@ -598,6 +590,13 @@ def fix_card_border(html, pal):
     return html.replace(src, 'border:1px solid %s;' % ink5, 1)
 
 
+# ВАЖНО про эти функции. Все они исправляли дефекты в СОБРАННОЙ странице, потому что
+# build.py не запускался: шрифты v2 лежали только в задеплоенном репозитории сайта.
+# Шрифты спасены в powertech-v2-build/fonts, PT_SITE=powertech-v2-build запускает сборку,
+# и те же правки теперь живут в shell.html — то есть приходят и в английскую, и в
+# армянскую страницу сами. Вызовы сняты, функции оставлены как документация: каждая
+# описывает найденную причину, а не только правку.
+
 def patch_final(html, pal):
     p = PALETTES[pal]
 
@@ -608,15 +607,6 @@ def patch_final(html, pal):
         raise SystemExit('%s: шапка не найдена' % pal)
 
 
-    html = fix_counter(html, pal)
-    html = fix_seam(html, pal)
-    html = fix_rail_seam(html, pal)
-    html = fix_card_seam(html, pal)
-    html = fix_overlay(html, pal)
-    html = fix_foot(html, pal)
-    html = fix_card_layer(html, pal)
-    html = fix_art_layer(html, pal)
-    html = fix_card_border(html, pal)
     html = hero_window.patch_final(html, p, ns['_rgb'])
 
 
