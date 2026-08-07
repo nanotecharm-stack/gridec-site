@@ -706,6 +706,8 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
       #fmd .fr{grid-template-columns:1fr;}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}.rv{opacity:1;transform:none;}}
+
+%%READOUT%%
 </style>
 
 <div id="wipe"></div>
@@ -1018,7 +1020,7 @@ var RING=PT.ring||[],ringIn=0;
 function ringDraw(dt){
   if(!RING.length)return;
   ringIn=Math.min(1,ringIn+dt*0.85);                 /* appears once, in order */
-  var i,n=RING.length,fs=(W>500?10:(W>430?9:8));
+  var i,n=RING.length,/* Departure Mono живёт на сетке 11 пикселей: ниже неё выпадают штрихи. */fs=(PT.canvasFont.indexOf('Departure')>=0?11:(W>500?10:(W>430?9:8)));
   for(i=0;i<n;i++){
     var a=-Math.PI/2+(i+0.5)*Math.PI*2/n;            /* middle of sector i */
     var nx=Math.cos(a),ny=Math.sin(a);

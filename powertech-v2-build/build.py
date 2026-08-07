@@ -24,6 +24,49 @@ FF_EN = '\n'.join([
     font_face('Archivo', 600, 'archivo-600-latin.woff2'),
     font_face('Martian Mono', 600, 'martian-mono-600-latin.woff2'),
 ])
+# Departure Mono, пиксельный, SIL OFL — шрифт показаний. Вес объявлен диапазоном,
+# хотя начертание одно: иначе на элементах с 600 браузер подделает жир и размажет
+# пиксельные штрихи.
+FF_DEP = (
+    "@font-face{font-family:'Departure Mono';font-weight:100 900;font-display:swap;"
+    "src:url(%s) format('woff2');}"
+    % b64(os.path.join(FONTS, 'departure-mono.woff2'), 'font/woff2'))
+
+# Правила показаний. Кегль 11 — сетка шрифта; ниже он теряет штрихи, выше мылится.
+# Трекинг вдвое меньше прежнего: прежний рассчитан на узкий Martian Mono.
+READOUT_EN = """
+/* ============ ПОКАЗАНИЯ ============
+   Пиксельный шрифт достаётся только тому, что является показанием прибора: номерам,
+   счётчику и значениям. Слова остаются на прежнем — на длинных строках пиксельная
+   сетка бледнеет и теряет вес рядом с основным текстом. */
+.cnt,.ixb,.ixp a .no,.rd,.mi .ix,.chsteps .n,.step .no,.list .n,.asg .no{
+  font-family:'Departure Mono',monospace;font-size:11px;}
+.cnt{letter-spacing:.11em;}
+.ixb{letter-spacing:.05em;}
+.ixp a .no,.mi .ix,.list .n,.asg .no{letter-spacing:.07em;}
+.chsteps .n{letter-spacing:.09em;}
+.step .no{letter-spacing:.08em;}
+/* число и слово лежат в одном элементе — слово возвращается прежнему шрифту */
+.ixb .sheet{font-family:%(mono)s;font-size:12px;letter-spacing:.1em;}
+.rd>span:not(.st){font-family:%(mono)s;font-size:12px;}
+"""
+
+# На армянской странице — только цифровой слой: армянских букв у шрифта нет, поэтому
+# кольцо остаётся на Arian AMU Serif, а в показании цифры берутся отдельно от слов.
+READOUT_HY = """
+/* ============ ПОКАЗАНИЯ ============
+   Только цифры: армянского у пиксельного шрифта нет, слова остаются прежними. */
+.cnt,.ixp a .no,.mi .ix,.chsteps .n,.step .no,.list .n,.asg .no,.rd b,.ixb b,.ixb em{
+  font-family:'Departure Mono',monospace;font-size:11px;}
+.cnt{letter-spacing:.11em;}
+.ixp a .no,.mi .ix,.list .n,.asg .no{letter-spacing:.07em;}
+.chsteps .n{letter-spacing:.09em;}
+.step .no{letter-spacing:.08em;}
+"""
+
+MONO_EN = "'Martian Mono',monospace"
+MONO_HY = "'Arian AMU Serif',Georgia,serif"
+
 FF_HY = '\n'.join([
     font_face('Arian AMU', '400 500', 'arian-amu-400.woff2'),
     font_face('Arian AMU', '600 900', 'arian-amu-700.woff2'),
@@ -158,10 +201,11 @@ def stages_html(items):
 # ---------------------------------------------------------------- EN
 EN = {
  'LANG': 'en', 'TITLE': 'Gridec | Power Quality Monitoring',
- 'FONTFACES': FF_EN,
+ 'FONTFACES': FF_EN + '\n' + FF_DEP,
+ 'READOUT': READOUT_EN % dict(mono=MONO_EN),
  'BODYFONT': "'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif",
  'HEADFONT': "'Big Shoulders Display',sans-serif",
- 'MONOFONT': "'Martian Mono',monospace",
+ 'MONOFONT': MONO_EN,
  'NAVFONT': 'inherit',
  'HEADTT': 'text-transform:uppercase;', 'HEADLH': '.92', 'HEADLS': '.006em',
  'H1SIZE': 'clamp(48px,7.2vw,116px)', 'H2SIZE': 'clamp(30px,4.8vw,72px)',
@@ -255,7 +299,7 @@ EN_DATA = {
              ['03', 'FLICKER', '', 0], ['04', 'DIPS', '& SWELLS', 0],
              ['05', 'UNBALANCE', '', 0], ['06', 'POWER', '& ENERGY', 0],
              ['07', 'EVENTS', '', 0], ['08', 'RISK', 'READ', 1]],
- 'canvasFont': '"Martian Mono",monospace',
+ 'canvasFont': '"Departure Mono",monospace',
  'rdNominal': 'NOMINAL', 'rdDip': 'VOLTAGE DIP · 180 MS',
  'incident': 'Incident',
  'seq': [['01', 'Normal operation'], ['02', 'Electrical event'], ['03', 'Equipment trip or alarm'],
@@ -316,10 +360,11 @@ EN_DATA = {
 # ---------------------------------------------------------------- HY
 HY = {
  'LANG': 'hy', 'TITLE': 'Gridec | Էլեկտրաէներգիայի որակի մոնիթորինգ',
- 'FONTFACES': FF_HY,
+ 'FONTFACES': FF_HY + '\n' + FF_DEP,
+ 'READOUT': READOUT_HY % dict(mono=MONO_HY),
  'BODYFONT': "'Arian AMU','Helvetica Neue',sans-serif",
  'HEADFONT': "'Arian AMU',sans-serif",
- 'MONOFONT': "'Arian AMU Serif',Georgia,serif",
+ 'MONOFONT': MONO_HY,
  'NAVFONT': "'Arian AMU Serif',Georgia,serif",
  'HEADTT': '', 'HEADLH': '1.0', 'HEADLS': '-.012em',
  'H1SIZE': 'clamp(34px,5.6vw,86px)', 'H2SIZE': 'clamp(26px,4.1vw,58px)',

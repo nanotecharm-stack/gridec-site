@@ -727,6 +727,17 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}.rv{opacity:1;transform:none;}}
 
+
+/* ============ ПОКАЗАНИЯ ============
+   Только цифры: армянского у пиксельного шрифта нет, слова остаются прежними. */
+.cnt,.ixp a .no,.mi .ix,.chsteps .n,.step .no,.list .n,.asg .no,.rd b,.ixb b,.ixb em{
+  font-family:'Departure Mono',monospace;font-size:11px;}
+.cnt{letter-spacing:.11em;}
+.ixp a .no,.mi .ix,.list .n,.asg .no{letter-spacing:.07em;}
+.chsteps .n{letter-spacing:.09em;}
+.step .no{letter-spacing:.08em;}
+
+
 /* ==================== blue (review palette) ====================
    --brand      accent for graphics AND fills
    --brand-ink  accent for text and hairlines
@@ -1057,7 +1068,7 @@ var RING=PT.ring||[],ringIn=0;
 function ringDraw(dt){
   if(!RING.length)return;
   ringIn=Math.min(1,ringIn+dt*0.85);                 /* appears once, in order */
-  var i,n=RING.length,fs=(W>500?10:(W>430?9:8));
+  var i,n=RING.length,/* Departure Mono живёт на сетке 11 пикселей: ниже неё выпадают штрихи. */fs=(PT.canvasFont.indexOf('Departure')>=0?11:(W>500?10:(W>430?9:8)));
   for(i=0;i<n;i++){
     var a=-Math.PI/2+(i+0.5)*Math.PI*2/n;            /* middle of sector i */
     var nx=Math.cos(a),ny=Math.sin(a);
