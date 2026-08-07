@@ -3,28 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>html{background:#F3EEE9}html.wiping{background:#2E5E99}html.wiping body{visibility:hidden}
-/* ==================== blue (review palette) ====================
-   --brand      accent for graphics AND fills
-   --brand-ink  accent for text and hairlines
-   --brand-on   what sits on top of a --brand fill
-   The light grounds and the graphite plates each get the depth that works on them. */
-:root{--brand:#2E5E99;--brand-ink:#2E5E99;--brand-on:#F3EEE9;}
-.plate,.plate2,.other,.chart,.ic{--brand:#7BA4D0;--brand-ink:#7BA4D0;--brand-on:#0D2440;}
-/* the invitation card is a brand block, and on the plates the brand is the LIGHTER of
-   the two depths — so its type flips to graphite. Its edge cannot rely on the fill
-   either, so it keeps a hairline. */
-.ic.is-open-card{color:#0D2440;box-shadow:0 0 0 1px rgba(13,36,64,.22);}
-/* Сплошные чернила, а не .78: на фирменном фоне карточки .78 давало 4,06:1 в
-   синей палитре и 3,54 в тёплой — ниже нормы для 14 пикселей. Приглушать
-   абзац теперь приходится кеглем, а не выцветанием: подходящей прозрачности,
-   которая проходит норму во всех трёх палитрах, попросту нет. */
-.ic.is-open-card .ic-foot p{color:#0D2440;}
-.ic.is-open-card .ic-art::after{
-  background:linear-gradient(180deg,rgba(123,164,208,.10) 0%,rgba(123,164,208,.94) 100%);}
-/* the hero's breath, in the palette's own chroma */
-.hero::after{background:radial-gradient(58% 52% at 78% 46%,rgba(76,138,203,.075),transparent 70%);}
-</style>
+<style>html{background:#F3EEE9}html.wiping{background:#2E5E99}html.wiping body{visibility:hidden}</style>
 <script>try{if(sessionStorage.getItem("ptwipe")==="1"){var _h=document.documentElement;_h.className+=" wiping";setTimeout(function(){_h.classList.remove("wiping")},2000);}}catch(e){}</script>
 <title>Gridec | Power Quality Monitoring</title>
 <meta name="description" content="Gridec monitors electrical parameters and power quality events while your system is operating. We interpret the recorded data and provide a clear engineering assessment.">
@@ -767,6 +746,27 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 .ixb .sheet{font-family:'Martian Mono',monospace;font-size:12px;letter-spacing:.1em;}
 .rd>span:not(.st){font-family:'Martian Mono',monospace;font-size:12px;}
 
+
+/* ==================== blue (review palette) ====================
+   --brand      accent for graphics AND fills
+   --brand-ink  accent for text and hairlines
+   --brand-on   what sits on top of a --brand fill
+   The light grounds and the graphite plates each get the depth that works on them. */
+:root{--brand:#2E5E99;--brand-ink:#2E5E99;--brand-on:#F3EEE9;}
+.plate,.plate2,.other,.chart,.ic{--brand:#7BA4D0;--brand-ink:#7BA4D0;--brand-on:#0D2440;}
+/* the invitation card is a brand block, and on the plates the brand is the LIGHTER of
+   the two depths — so its type flips to graphite. Its edge cannot rely on the fill
+   either, so it keeps a hairline. */
+.ic.is-open-card{color:#0D2440;box-shadow:0 0 0 1px rgba(13,36,64,.22);}
+/* Сплошные чернила, а не .78: на фирменном фоне карточки .78 давало 4,06:1 в
+   синей палитре и 3,54 в тёплой — ниже нормы для 14 пикселей. Приглушать
+   абзац теперь приходится кеглем, а не выцветанием: подходящей прозрачности,
+   которая проходит норму во всех трёх палитрах, попросту нет. */
+.ic.is-open-card .ic-foot p{color:#0D2440;}
+.ic.is-open-card .ic-art::after{
+  background:linear-gradient(180deg,rgba(123,164,208,.10) 0%,rgba(123,164,208,.94) 100%);}
+/* the hero's breath, in the palette's own chroma */
+.hero::after{background:radial-gradient(58% 52% at 78% 46%,rgba(76,138,203,.075),transparent 70%);}
 </style>
 
 <div id="wipe"></div>

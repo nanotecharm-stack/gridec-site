@@ -725,7 +725,13 @@ def palette_pass(name):
         for stale in ('#C8603D', '#EFEDEA', '#0D0E13'):
             if stale in html:
                 raise SystemExit('%s: terracotta literal %s survived' % (name, stale))
-        return html.replace('</style>', css + '</style>', 1)
+        # В ПОСЛЕДНИЙ блок стилей, а не в первый. С появлением раннего фона в голове
+        # документа блоков стало два, и палитра влилась в головной — то есть встала
+        # ПЕРЕД основной таблицей и проиграла ей по порядку. Ломалось всё, что палитра
+        # переопределяет: карточка-приглашение теряла чернильный текст, а шторка над
+        # её артом стремилась не к тому синему, оставляя шов.
+        i = html.rindex('</style>')
+        return html[:i] + css + html[i:]
     return run
 
 mintify = palette_pass('mint')
