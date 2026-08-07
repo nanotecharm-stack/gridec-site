@@ -22,7 +22,10 @@
 @font-face{font-family:'Martian Mono';font-weight:600;font-display:swap;src:url(../fonts/martian-mono-600-latin.woff2) format('woff2');}
 :root{--brand:#2E5E99;--brand-ink:#2E5E99;/* small coral TEXT on light surfaces: 4.77:1 on milk */--e:cubic-bezier(.16,1,.3,1);
   --gut:clamp(18px,4vw,56px);--inset:calc(max(0px,(100vw - 1280px)/2) + clamp(18px,4vw,56px));
---bg:#E7F0FA;--panel:#FFFFFF;--fg:#0D2440;--fg-mid:rgba(13,36,64,.64);--fg-soft:rgba(13,36,64,.40);--hair:rgba(13,36,64,.13);--hair2:rgba(13,36,64,.07);--inv:#0D2440;--inv-fg:#E7F0FA;}
+--bg:#E7F0FA;--panel:#FFFFFF;--fg:#0D2440;--fg-mid:rgba(13,36,64,.68);/* .64 хватало на ровной бумаге (4,58), но подложка героя внизу темнее,
+     и там оно падало до 4,38. .68 держит 4,92 в худшей точке. */--fg-soft:rgba(13,36,64,.68);/* .66 = 4,87:1 на бумаге. Пол для этой пары — .64 (4,58); всё, что ниже,
+     не проходит норму для текста мельче 24px, а на --fg-soft сидят подписи
+     от 10 до 14. Иерархию ниже второго уровня приходится держать кеглем. */--hair:rgba(13,36,64,.13);--hair2:rgba(13,36,64,.07);--inv:#0D2440;--inv-fg:#E7F0FA;}
 *{box-sizing:border-box;}
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--brand);
@@ -42,7 +45,7 @@ h1,h2,h3{font-family:'Big Shoulders Display',sans-serif;font-weight:700;margin:0
 p{margin:0;}a{color:inherit;text-decoration:none;}button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
 .mono{font-family:'Martian Mono',monospace;}
 .wrap{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,56px);}
-.plate .cnt,.plate2 .cnt{color:rgba(231,240,250,.5);}
+.plate .cnt,.plate2 .cnt{color:rgba(231,240,250,.58);}
 .plate .cnt::after,.plate2 .cnt::after{background:rgba(231,240,250,.16);}
 .cnt{font-family:'Martian Mono',monospace;font-size:12px;letter-spacing:.22em;color:var(--fg-soft);display:flex;align-items:center;gap:14px;margin-bottom:20px;}
 .cnt::after{content:"";flex:1;height:1px;background:var(--hair2);max-width:190px;}
@@ -317,14 +320,14 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .plate2>.wrap{position:relative;z-index:1;}
 .plate2 h2,.plate2 h3{color:#DFEAF7;}
 .plate2 .lede{color:rgba(231,240,250,.66);}
-.plate2 .cnt{color:rgba(231,240,250,.4);}
+.plate2 .cnt{color:rgba(231,240,250,.58);}
 .plate2 .stat{background:rgba(231,240,250,.045);box-shadow:inset 0 0 0 1px rgba(231,240,250,.1);}
 .plate2 .stat span{color:rgba(231,240,250,.66);}
 .plate2 .step p{color:rgba(231,240,250,.64);}
 .plate2 .alink:hover{color:#fff;}
 .plate2 .display{color:#DFEAF7;}
 .plate2 .chips span{color:#DFEAF7;}
-.plate2 .note{color:rgba(231,240,250,.5);}
+.plate2 .note{color:rgba(231,240,250,.58);}
 .plate2 h2 i,.plate2 .lede i{color:rgba(231,240,250,.4);}
 
 /* industries — horizontal rail, detail opens on click */
@@ -473,7 +476,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .plate2 .mi:nth-child(n+5){border-top-color:rgba(231,240,250,.13);}
 .plate2 .mi svg{color:#E7F0FA;}
 .plate2 .mi .lb2{color:rgba(231,240,250,.84);}
-.plate2 .mi .ix{color:rgba(231,240,250,.42);}
+.plate2 .mi .ix{color:rgba(231,240,250,.58);}
 /* on the plate the accent tint has to come from the light side of the brand, and the
    index needs the deeper selector or the rule above wins on specificity */
 .plate2{--alt-wash:rgba(231,240,250,.055);--alt-wash-h:rgba(231,240,250,.09);}
@@ -532,7 +535,7 @@ h2{font-size:clamp(30px,4.8vw,72px);text-wrap:balance;}
 
 /* industries grid */
 .other{margin-top:10px;background:var(--inv);color:var(--inv-fg);padding:clamp(26px,3.4vw,44px);display:flex;justify-content:space-between;align-items:center;gap:26px;flex-wrap:wrap;border-radius:2px;}
-.other .no{font-family:'Martian Mono',monospace;font-size:12px;letter-spacing:.14em;color:rgba(231,240,250,.5);}
+.other .no{font-family:'Martian Mono',monospace;font-size:12px;letter-spacing:.14em;color:rgba(231,240,250,.58);}
 .other h3{font-size:clamp(21px,2.4vw,32px);margin:12px 0 10px;}
 .other p{color:rgba(231,240,250,.66);font-size:16px;line-height:1.7;max-width:52ch;}
 .other .btn{background:var(--brand);color:var(--brand-on);}
@@ -632,7 +635,7 @@ h2{font-size:clamp(30px,4.8vw,72px);text-wrap:balance;}
 .plate .btn:hover span{color:var(--fg);}
 .chart{position:relative;}
 .chart svg{width:100%;height:auto;display:block;}
-.chart .cap{font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(231,240,250,.45);margin-bottom:12px;}
+.chart .cap{font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(231,240,250,.58);margin-bottom:12px;}
 footer{border-top:1px solid var(--hair2);padding:32px 0;font-family:'Martian Mono',monospace;font-size:12px;color:var(--fg-soft);}
 footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wrap;line-height:1.9;}
 
@@ -755,7 +758,11 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
    the two depths — so its type flips to graphite. Its edge cannot rely on the fill
    either, so it keeps a hairline. */
 .ic.is-open-card{color:#0D2440;box-shadow:0 0 0 1px rgba(13,36,64,.22);}
-.ic.is-open-card .ic-foot p{color:rgba(13,36,64,.78);}
+/* Сплошные чернила, а не .78: на фирменном фоне карточки .78 давало 4,06:1 в
+   синей палитре и 3,54 в тёплой — ниже нормы для 14 пикселей. Приглушать
+   абзац теперь приходится кеглем, а не выцветанием: подходящей прозрачности,
+   которая проходит норму во всех трёх палитрах, попросту нет. */
+.ic.is-open-card .ic-foot p{color:#0D2440;}
 .ic.is-open-card .ic-tag{background:rgba(13,36,64,.10);color:#0D2440;}
 .ic.is-open-card .ic-go{background:#0D2440;color:#7BA4D0;}
 .ic.is-open-card .ic-art::after{

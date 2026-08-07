@@ -681,7 +681,11 @@ PAL_CSS = """
    the two depths — so its type flips to graphite. Its edge cannot rely on the fill
    either, so it keeps a hairline. */
 .ic.is-open-card{color:%(ink)s;box-shadow:0 0 0 1px rgba(%(inkrgb)s,.22);}
-.ic.is-open-card .ic-foot p{color:rgba(%(inkrgb)s,.78);}
+/* Сплошные чернила, а не .78: на фирменном фоне карточки .78 давало 4,06:1 в
+   синей палитре и 3,54 в тёплой — ниже нормы для 14 пикселей. Приглушать
+   абзац теперь приходится кеглем, а не выцветанием: подходящей прозрачности,
+   которая проходит норму во всех трёх палитрах, попросту нет. */
+.ic.is-open-card .ic-foot p{color:%(ink)s;}
 .ic.is-open-card .ic-tag{background:rgba(%(inkrgb)s,.10);color:%(ink)s;}
 .ic.is-open-card .ic-go{background:%(ink)s;color:%(dark)s;}
 .ic.is-open-card .ic-art::after{
