@@ -18,12 +18,14 @@ def font_face(fam, weight, fn):
             "src:url(%s) format('woff2');}"
             % (fam, weight, b64(os.path.join(FONTS, fn), 'font/woff2')))
 
-FF_EN = '\n'.join([
-    font_face('Big Shoulders Display', 700, 'big-shoulders-display-700-latin.woff2'),
-    font_face('Archivo', 400, 'archivo-400-latin.woff2'),
-    font_face('Archivo', 600, 'archivo-600-latin.woff2'),
-    font_face('Martian Mono', 600, 'martian-mono-600-latin.woff2'),
-])
+# Английская страница держится на двух начертаниях: Overused Grotesk на весь текст,
+# заголовки и технические подписи, и пиксельный Departure Mono на показания.
+# Начертание одно, ось веса 300–900 закрывает и 400, и 600, и 700 — объявляется
+# диапазоном, иначе браузер начнёт подделывать жир.
+#
+# Archivo, Big Shoulders Display и Martian Mono больше не вшиваются: после замены на
+# них не ссылается ни одно правило. Файлы оставлены в fonts на случай возврата.
+FF_EN = font_face('Overused Grotesk', '300 900', 'overused-grotesk-latin.woff2')
 # Departure Mono, пиксельный, SIL OFL — шрифт показаний. Вес объявлен диапазоном,
 # хотя начертание одно: иначе на элементах с 600 браузер подделает жир и размажет
 # пиксельные штрихи.
@@ -64,7 +66,7 @@ READOUT_HY = """
 .step .no{letter-spacing:.08em;}
 """
 
-MONO_EN = "'Martian Mono',monospace"
+MONO_EN = "'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif"
 MONO_HY = "'Arian AMU Serif',Georgia,serif"
 
 FF_HY = '\n'.join([
@@ -203,12 +205,15 @@ EN = {
  'LANG': 'en', 'TITLE': 'Gridec | Power Quality Monitoring',
  'FONTFACES': FF_EN + '\n' + FF_DEP,
  'READOUT': READOUT_EN % dict(mono=MONO_EN),
- 'BODYFONT': "'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif",
- 'HEADFONT': "'Big Shoulders Display',sans-serif",
+ 'BODYFONT': "'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif",
+ 'HEADFONT': "'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif",
  'MONOFONT': MONO_EN,
  'NAVFONT': 'inherit',
  'HEADTT': 'text-transform:uppercase;', 'HEADLH': '.92', 'HEADLS': '.006em',
- 'H1SIZE': 'clamp(48px,7.2vw,116px)', 'H2SIZE': 'clamp(30px,4.8vw,72px)',
+ # Шкала умножена на 0,66: узкий Big Shoulders сменился нормальным по ширине
+ # гротеском, и при прежнем кегле строка героя выходила из колонки в полтора раза.
+ 'H1SIZE': 'clamp(32px,4.75vw,77px)', 'H2SIZE': 'clamp(20px,3.17vw,48px)',
+ 'DISPSIZE': 'clamp(23px,3.96vw,55px)',
  # Латинский код, а не «ՀԱՅ»: в EN-сборку вшита только латинская подрезка Martian
  # Mono, армянские буквы падали в системную подмену и выглядели чужеродно. Пара
  # переключателя заодно стала симметричной — на HY-странице стоит «EN».
@@ -368,6 +373,7 @@ HY = {
  'NAVFONT': "'Arian AMU Serif',Georgia,serif",
  'HEADTT': '', 'HEADLH': '1.0', 'HEADLS': '-.012em',
  'H1SIZE': 'clamp(34px,5.6vw,86px)', 'H2SIZE': 'clamp(26px,4.1vw,58px)',
+ 'DISPSIZE': 'clamp(34px,6vw,84px)',   # прежний: армянская страница не трогается
  'LANG_HREF': './index.html', 'LANG_LABEL': 'EN',
  'NAV_SERVICES': 'Ծառայություններ', 'NAV_INDUSTRIES': 'Ոլորտներ', 'NAV_COMPANY': 'Ընկերություն',
  'CTA': 'Նկարագրել խնդիրը',
