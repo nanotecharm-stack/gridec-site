@@ -686,7 +686,6 @@ PAL_CSS = """
    абзац теперь приходится кеглем, а не выцветанием: подходящей прозрачности,
    которая проходит норму во всех трёх палитрах, попросту нет. */
 .ic.is-open-card .ic-foot p{color:%(ink)s;}
-.ic.is-open-card .ic-go{background:%(ink)s;color:%(dark)s;}
 .ic.is-open-card .ic-art::after{
   background:linear-gradient(180deg,rgba(%(darkrgb)s,.10) 0%%,rgba(%(darkrgb)s,.94) 100%%);}
 /* the hero's breath, in the palette's own chroma */

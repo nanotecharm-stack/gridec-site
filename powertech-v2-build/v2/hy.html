@@ -389,6 +389,8 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .ic-go{width:32px;height:32px;border-radius:2px;background:#E7F0FA;color:#102745;
   display:grid;place-items:center;font-size:14px;flex:0 0 auto;
   transition:transform .18s var(--e),background .45s var(--e),color .45s var(--e);}
+/* Знак берёт цвет, назначенный палитрой для работы поверх фирменного:
+   белый по нему давал 2,60 при норме 3 для управляющего значка. */
 .ic:hover .ic-go,.ic:focus-visible .ic-go{background:var(--brand);color:var(--brand-on);}
 /* the sector photograph, easing in scale so the movement has weight */
 .ic-art{position:relative;flex:1 1 auto;min-height:150px;overflow:hidden;
@@ -423,7 +425,6 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .ic.is-open-card{background:var(--brand);box-shadow:0 0 0 1px var(--brand);}
 .ic.is-open-card .ic-art::after{background:linear-gradient(180deg,rgba(46,94,153,.1) 0%,rgba(46,94,153,.92) 100%);}
 .ic.is-open-card .ic-foot p{color:rgba(245,250,254,.86);}
-.ic.is-open-card .ic-go{background:#162E52;color:#fff;}
 .suite .spin>.wrap{width:100%;}
 /* head of the card zone: heading left, intro right, in fixed columns. As a flex
    row it used to wrap in Armenian — the longer heading pushed the intro onto its
@@ -751,7 +752,6 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
    абзац теперь приходится кеглем, а не выцветанием: подходящей прозрачности,
    которая проходит норму во всех трёх палитрах, попросту нет. */
 .ic.is-open-card .ic-foot p{color:#0D2440;}
-.ic.is-open-card .ic-go{background:#0D2440;color:#7BA4D0;}
 .ic.is-open-card .ic-art::after{
   background:linear-gradient(180deg,rgba(123,164,208,.10) 0%,rgba(123,164,208,.94) 100%);}
 /* the hero's breath, in the palette's own chroma */
