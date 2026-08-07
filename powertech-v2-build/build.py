@@ -372,7 +372,9 @@ HY = {
  'MONOFONT': MONO_HY,
  'NAVFONT': "'Arian AMU Serif',Georgia,serif",
  'HEADTT': '', 'HEADLH': '1.0', 'HEADLS': '-.012em',
- 'H1SIZE': 'clamp(34px,5.6vw,86px)', 'H2SIZE': 'clamp(26px,4.1vw,58px)',
+ # Шкала подобрана так, чтобы блок заголовка совпадал с английским по высоте:
+ # расхождение не больше трёх пикселей от 1024 до 1440, три строки везде.
+ 'H1SIZE': 'clamp(28px,4.3vw,64px)', 'H2SIZE': 'clamp(26px,4.1vw,58px)',
  'DISPSIZE': 'clamp(34px,6vw,84px)',   # прежний: армянская страница не трогается
  'LANG_HREF': './index.html', 'LANG_LABEL': 'EN',
  'NAV_SERVICES': 'Ծառայություններ', 'NAV_INDUSTRIES': 'Ոլորտներ', 'NAV_COMPANY': 'Ընկերություն',

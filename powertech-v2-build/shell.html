@@ -245,7 +245,9 @@ h1{font-size:%%H1SIZE%%;margin-top:20px;text-wrap:balance;}
 /* the headline keeps its full measure: it may reach past its column into the
    quiet left part of the wave field rather than break into extra lines */
 .hcol{position:relative;z-index:3;}
-.hero h1{color:var(--fg);width:max-content;max-width:min(72vw,1060px);}
+/* Потолок — своя колонка, а не окно. Заголовок тянется по содержимому, и текст
+   без ручных переносов иначе разливается на всю ширину героя, заезжая на фигуру. */
+.hero h1{color:var(--fg);width:max-content;max-width:100%;}
 h1 em{font-style:normal;color:var(--brand-ink);}
 .hero h1 em{color:var(--brand-ink);}
 .hero .hp{max-width:38ch;font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.76;color:var(--fg-mid);margin-top:30px;}
