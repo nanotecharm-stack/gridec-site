@@ -566,6 +566,20 @@ def wrap(tokens, body, extra_head=''):
     head = ''.join([
         '<meta charset="utf-8">\n',
         '<meta name="viewport" content="width=device-width, initial-scale=1">\n',
+        # Ранний фон холста. Основная таблица стилей лежит в теле документа, и до
+        # неё браузер красит белым — на каждой загрузке, а на стыке языков особенно
+        # заметно. Одно правило здесь убирает это раньше, чем что-либо успеет
+        # отрисоваться. Литералы терракотовые: их переводит палитровый проход.
+        #
+        # Класс wiping ставится, только если мы пришли своим переходом. Тогда первый
+        # кадр уже фирменного цвета, а тело спрятано, чтобы страница не показалась
+        # непокрытой до того, как плашки встанут. Предохранитель снимает маскировку
+        # сам — иначе сбой скрипта оставил бы пустой экран.
+        '<style>html{background:#EFEDEA}html.wiping{background:#AC4A29}'
+        'html.wiping body{visibility:hidden}</style>\n',
+        '<script>try{if(sessionStorage.getItem("ptwipe")==="1"){'
+        'var _h=document.documentElement;_h.className+=" wiping";'
+        'setTimeout(function(){_h.classList.remove("wiping")},2000);}}catch(e){}</script>\n',
         '<title>', tokens['TITLE'], '</title>\n',
         '<meta name="description" content="', desc, '">\n',
         '<meta name="theme-color" content="#C8603D">\n',

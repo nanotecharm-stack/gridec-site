@@ -3,6 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>html{background:#F3EEE9}html.wiping{background:#2E5E99}html.wiping body{visibility:hidden}
+/* ==================== blue (review palette) ====================
+   --brand      accent for graphics AND fills
+   --brand-ink  accent for text and hairlines
+   --brand-on   what sits on top of a --brand fill
+   The light grounds and the graphite plates each get the depth that works on them. */
+:root{--brand:#2E5E99;--brand-ink:#2E5E99;--brand-on:#F3EEE9;}
+.plate,.plate2,.other,.chart,.ic{--brand:#7BA4D0;--brand-ink:#7BA4D0;--brand-on:#0D2440;}
+/* the invitation card is a brand block, and on the plates the brand is the LIGHTER of
+   the two depths — so its type flips to graphite. Its edge cannot rely on the fill
+   either, so it keeps a hairline. */
+.ic.is-open-card{color:#0D2440;box-shadow:0 0 0 1px rgba(13,36,64,.22);}
+/* Сплошные чернила, а не .78: на фирменном фоне карточки .78 давало 4,06:1 в
+   синей палитре и 3,54 в тёплой — ниже нормы для 14 пикселей. Приглушать
+   абзац теперь приходится кеглем, а не выцветанием: подходящей прозрачности,
+   которая проходит норму во всех трёх палитрах, попросту нет. */
+.ic.is-open-card .ic-foot p{color:#0D2440;}
+.ic.is-open-card .ic-art::after{
+  background:linear-gradient(180deg,rgba(123,164,208,.10) 0%,rgba(123,164,208,.94) 100%);}
+/* the hero's breath, in the palette's own chroma */
+.hero::after{background:radial-gradient(58% 52% at 78% 46%,rgba(76,138,203,.075),transparent 70%);}
+</style>
+<script>try{if(sessionStorage.getItem("ptwipe")==="1"){var _h=document.documentElement;_h.className+=" wiping";setTimeout(function(){_h.classList.remove("wiping")},2000);}}catch(e){}</script>
 <title>Gridec | Էլեկտրաէներգիայի որակի մոնիթորինգ</title>
 <meta name="description" content="Gridec-ը էլեկտրական համակարգի աշխատանքի ընթացքում գրանցում է էլեկտրական պարամետրերն ու ցանցում առաջացող շեղումները։ Մենք վերլուծում ենք գրանցված տվյալները և ներկայացնում ենք…">
 <meta name="theme-color" content="#0D2440">
@@ -738,27 +761,6 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 .chsteps .n{letter-spacing:.09em;}
 .step .no{letter-spacing:.08em;}
 
-
-/* ==================== blue (review palette) ====================
-   --brand      accent for graphics AND fills
-   --brand-ink  accent for text and hairlines
-   --brand-on   what sits on top of a --brand fill
-   The light grounds and the graphite plates each get the depth that works on them. */
-:root{--brand:#2E5E99;--brand-ink:#2E5E99;--brand-on:#F3EEE9;}
-.plate,.plate2,.other,.chart,.ic{--brand:#7BA4D0;--brand-ink:#7BA4D0;--brand-on:#0D2440;}
-/* the invitation card is a brand block, and on the plates the brand is the LIGHTER of
-   the two depths — so its type flips to graphite. Its edge cannot rely on the fill
-   either, so it keeps a hairline. */
-.ic.is-open-card{color:#0D2440;box-shadow:0 0 0 1px rgba(13,36,64,.22);}
-/* Сплошные чернила, а не .78: на фирменном фоне карточки .78 давало 4,06:1 в
-   синей палитре и 3,54 в тёплой — ниже нормы для 14 пикселей. Приглушать
-   абзац теперь приходится кеглем, а не выцветанием: подходящей прозрачности,
-   которая проходит норму во всех трёх палитрах, попросту нет. */
-.ic.is-open-card .ic-foot p{color:#0D2440;}
-.ic.is-open-card .ic-art::after{
-  background:linear-gradient(180deg,rgba(123,164,208,.10) 0%,rgba(123,164,208,.94) 100%);}
-/* the hero's breath, in the palette's own chroma */
-.hero::after{background:radial-gradient(58% 52% at 78% 46%,rgba(76,138,203,.075),transparent 70%);}
 </style>
 
 <div id="wipe"></div>
@@ -1775,11 +1777,15 @@ buildWipe();
    transition finishing: it stays display:none unless deliberately armed,
    and a failsafe always tears it down. */
 var WIPE_MS=420;
-function wipeHide(){wipeEl.classList.remove('on','go','instant');}
+function wipeHide(){wipeEl.classList.remove('on','go','instant');
+  document.documentElement.classList.remove('wiping');}
 function wipeReveal(){
   if(rm||document.visibilityState!=='visible'){wipeHide();return;}
   wipeEl.classList.add('on','go','instant');
   wCells.forEach(function(i){i.style.transitionDelay='0ms';});
+  /* маскировка снимается в том же кадре, в котором встали плашки: экран уже
+     покрыт, поэтому непокрытой страницы не видно ни одного кадра */
+  document.documentElement.classList.remove('wiping');
   requestAnimationFrame(function(){
     wipeEl.classList.remove('instant');
     requestAnimationFrame(function(){wipeSet(false,WIPE_MS,wipeHide);});
@@ -1797,6 +1803,27 @@ function wipeCoverThen(go){
 try{
   if(sessionStorage.getItem('ptwipe')==='1'){sessionStorage.removeItem('ptwipe');wipeReveal();}
 }catch(e){}
+/* Логотип возвращает к началу тем же переходом, что и смена языка: плашки
+   собираются, страница встаёт на герое, плашки расходятся. Прокрутка через весь
+   документ для этого — долгая дорога, и она проматывает мимо всё, что посетитель
+   уже посмотрел. Если мы и так наверху, переход не играется: показывать нечего. */
+function wipeToTop(){
+  var h=document.documentElement,prev=h.style.scrollBehavior;
+  h.style.scrollBehavior='auto';                 /* без плавности: прыжок под плашками */
+  window.scrollTo(0,0);
+  if(typeof PS!=='undefined'){PS.t=PS.c=0;}      /* свой плавный скролл тоже на нуле */
+  h.style.scrollBehavior=prev;
+  history.replaceState(null,'','#top');
+}
+var brandA=document.querySelector('.brand');
+if(brandA)brandA.addEventListener('click',function(e){
+  if(e.metaKey||e.ctrlKey||e.shiftKey)return;
+  e.preventDefault();
+  e.stopPropagation();          /* иначе общий обработчик якорей начнёт прокрутку */
+  if(rm||document.visibilityState!=='visible'||window.pageYOffset<4){wipeToTop();return;}
+  wipeCoverThen(function(){wipeToTop();wipeReveal();});
+},true);                        /* перехват: опережаем делегированный обработчик */
+
 document.querySelectorAll('a[href$=".html"]').forEach(function(a){
   a.addEventListener('click',function(e){
     if(rm||e.metaKey||e.ctrlKey||e.shiftKey||a.target==='_blank')return;

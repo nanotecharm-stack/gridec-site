@@ -1725,11 +1725,15 @@ buildWipe();
    transition finishing: it stays display:none unless deliberately armed,
    and a failsafe always tears it down. */
 var WIPE_MS=420;
-function wipeHide(){wipeEl.classList.remove('on','go','instant');}
+function wipeHide(){wipeEl.classList.remove('on','go','instant');
+  document.documentElement.classList.remove('wiping');}
 function wipeReveal(){
   if(rm||document.visibilityState!=='visible'){wipeHide();return;}
   wipeEl.classList.add('on','go','instant');
   wCells.forEach(function(i){i.style.transitionDelay='0ms';});
+  /* маскировка снимается в том же кадре, в котором встали плашки: экран уже
+     покрыт, поэтому непокрытой страницы не видно ни одного кадра */
+  document.documentElement.classList.remove('wiping');
   requestAnimationFrame(function(){
     wipeEl.classList.remove('instant');
     requestAnimationFrame(function(){wipeSet(false,WIPE_MS,wipeHide);});
@@ -1747,6 +1751,27 @@ function wipeCoverThen(go){
 try{
   if(sessionStorage.getItem('ptwipe')==='1'){sessionStorage.removeItem('ptwipe');wipeReveal();}
 }catch(e){}
+/* Логотип возвращает к началу тем же переходом, что и смена языка: плашки
+   собираются, страница встаёт на герое, плашки расходятся. Прокрутка через весь
+   документ для этого — долгая дорога, и она проматывает мимо всё, что посетитель
+   уже посмотрел. Если мы и так наверху, переход не играется: показывать нечего. */
+function wipeToTop(){
+  var h=document.documentElement,prev=h.style.scrollBehavior;
+  h.style.scrollBehavior='auto';                 /* без плавности: прыжок под плашками */
+  window.scrollTo(0,0);
+  if(typeof PS!=='undefined'){PS.t=PS.c=0;}      /* свой плавный скролл тоже на нуле */
+  h.style.scrollBehavior=prev;
+  history.replaceState(null,'','#top');
+}
+var brandA=document.querySelector('.brand');
+if(brandA)brandA.addEventListener('click',function(e){
+  if(e.metaKey||e.ctrlKey||e.shiftKey)return;
+  e.preventDefault();
+  e.stopPropagation();          /* иначе общий обработчик якорей начнёт прокрутку */
+  if(rm||document.visibilityState!=='visible'||window.pageYOffset<4){wipeToTop();return;}
+  wipeCoverThen(function(){wipeToTop();wipeReveal();});
+},true);                        /* перехват: опережаем делегированный обработчик */
+
 document.querySelectorAll('a[href$=".html"]').forEach(function(a){
   a.addEventListener('click',function(e){
     if(rm||e.metaKey||e.ctrlKey||e.shiftKey||a.target==='_blank')return;
