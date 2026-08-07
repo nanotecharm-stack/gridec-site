@@ -22,17 +22,17 @@
 @font-face{font-family:'Arian AMU Serif';font-weight:600 900;font-display:swap;src:url(../fonts/arian-amu-serif-700.woff2) format('woff2');}
 :root{--brand:#2E5E99;--brand-ink:#2E5E99;/* small coral TEXT on light surfaces: 4.77:1 on milk */--e:cubic-bezier(.16,1,.3,1);
   --gut:clamp(18px,4vw,56px);--inset:calc(max(0px,(100vw - 1280px)/2) + clamp(18px,4vw,56px));
---bg:#E7F0FA;--panel:#FFFFFF;--fg:#0D2440;--fg-mid:rgba(13,36,64,.68);/* .64 хватало на ровной бумаге (4,58), но подложка героя внизу темнее,
+--bg:#F3EEE9;--panel:#FFFFFF;--fg:#0D2440;--fg-mid:rgba(13,36,64,.68);/* .64 хватало на ровной бумаге (4,58), но подложка героя внизу темнее,
      и там оно падало до 4,38. .68 держит 4,92 в худшей точке. */--fg-soft:rgba(13,36,64,.68);/* .66 = 4,87:1 на бумаге. Пол для этой пары — .64 (4,58); всё, что ниже,
      не проходит норму для текста мельче 24px, а на --fg-soft сидят подписи
-     от 10 до 14. Иерархию ниже второго уровня приходится держать кеглем. */--hair:rgba(13,36,64,.13);--hair2:rgba(13,36,64,.07);--inv:#0D2440;--inv-fg:#E7F0FA;}
+     от 10 до 14. Иерархию ниже второго уровня приходится держать кеглем. */--hair:rgba(13,36,64,.13);--hair2:rgba(13,36,64,.07);--inv:#0D2440;--inv-fg:#F3EEE9;}
 *{box-sizing:border-box;}
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--brand);
   outline-offset:3px;border-radius:2px;}
 .hero a:focus-visible,.hero button:focus-visible,.plate a:focus-visible,
 .plate button:focus-visible,.plate2 a:focus-visible,.plate2 button:focus-visible,
-.ic:focus-visible{outline-color:#F5FAFE;}
+.ic:focus-visible{outline-color:#FBF9F6;}
 html{scroll-behavior:smooth;}
 /* overflow-x:clip, NOT hidden — hidden turns body into a scroll container and kills position:sticky */
 body{margin:0;background:var(--bg);color:var(--fg);font-family:'Arian AMU','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip;}
@@ -45,8 +45,8 @@ h1,h2,h3{font-family:'Arian AMU',sans-serif;font-weight:700;margin:0;line-height
 p{margin:0;}a{color:inherit;text-decoration:none;}button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
 .mono{font-family:'Arian AMU Serif',Georgia,serif;}
 .wrap{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,56px);}
-.plate .cnt,.plate2 .cnt{color:rgba(231,240,250,.58);}
-.plate .cnt::after,.plate2 .cnt::after{background:rgba(231,240,250,.16);}
+.plate .cnt,.plate2 .cnt{color:rgba(243,238,233,.58);}
+.plate .cnt::after,.plate2 .cnt::after{background:rgba(243,238,233,.16);}
 .cnt{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.22em;color:var(--fg-soft);display:flex;align-items:center;gap:14px;margin-bottom:20px;}
 .cnt::after{content:"";flex:1;height:1px;background:var(--hair2);max-width:190px;}
 .eyebrow{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--brand-ink);}
@@ -73,7 +73,7 @@ header a,header button,header nav,header .navr{pointer-events:auto;}
 header.on-dark .brand{--acc:#7BA4D0;}
 /* centre group — the sections, enclosed like one control */
 nav{justify-self:center;display:flex;align-items:center;gap:2px;padding:4px;font-size:14px;
-  border-radius:3px;box-shadow:inset 0 0 0 1px rgba(13,36,64,.12);background:rgba(245,250,254,.9);
+  border-radius:3px;box-shadow:inset 0 0 0 1px rgba(13,36,64,.12);background:rgba(251,249,246,.9);
   -webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1);
   transition:box-shadow .5s var(--e),background .5s var(--e);}
 /* section names carry the label voice — the serif in Armenian, the body face in English */
@@ -86,7 +86,7 @@ nav a.here{color:var(--inv-fg);background:var(--inv);}
    The section list is out of the bar in every variant; it lives in the index. */
 .ixb{display:inline-flex;align-items:baseline;gap:3px;font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;
   letter-spacing:.1em;padding:9px 11px;border-radius:2px;color:rgba(13,36,64,.82);
-  box-shadow:inset 0 0 0 1px rgba(13,36,64,.12);background:rgba(245,250,254,.9);
+  box-shadow:inset 0 0 0 1px rgba(13,36,64,.12);background:rgba(251,249,246,.9);
   transition:color .35s var(--e),box-shadow .35s var(--e),background .35s var(--e);}
 .ixb s{text-decoration:none;opacity:.45;}
 .ixb em{font-style:normal;opacity:.55;}
@@ -141,38 +141,38 @@ html[data-nav="2"] .btn::before{background:var(--fg);}
 html[data-nav="2"] .btn:hover span{color:var(--bg);}
 html[data-nav="2"] .btn i{background:rgba(13,36,64,.09);}
 /* over an ink section the whole rail inverts, hairline included */
-html[data-nav="2"] header[data-tone="ink"] .hin{box-shadow:inset 0 -1px 0 rgba(231,240,250,.22);}
+html[data-nav="2"] header[data-tone="ink"] .hin{box-shadow:inset 0 -1px 0 rgba(243,238,233,.22);}
 html[data-nav="2"] header[data-tone="ink"] .brand,
 html[data-nav="2"] header[data-tone="ink"] .ixb,
-html[data-nav="2"] header[data-tone="ink"] .lang{color:#E7F0FA;}
-html[data-nav="2"] header[data-tone="ink"] .btn{color:#E7F0FA;box-shadow:inset 0 0 0 1px rgba(231,240,250,.34);}
-html[data-nav="2"] header[data-tone="ink"] .btn::before{background:#E7F0FA;}
+html[data-nav="2"] header[data-tone="ink"] .lang{color:#F3EEE9;}
+html[data-nav="2"] header[data-tone="ink"] .btn{color:#F3EEE9;box-shadow:inset 0 0 0 1px rgba(243,238,233,.34);}
+html[data-nav="2"] header[data-tone="ink"] .btn::before{background:#F3EEE9;}
 html[data-nav="2"] header[data-tone="ink"] .btn:hover span{color:#0D2440;}
-html[data-nav="2"] header[data-tone="ink"] .btn i{background:rgba(231,240,250,.18);}
+html[data-nav="2"] header[data-tone="ink"] .btn i{background:rgba(243,238,233,.18);}
 html[data-nav="2"] .brand,html[data-nav="2"] .ixb,html[data-nav="2"] .lang,html[data-nav="2"] .btn{
   transition:color .45s var(--e),box-shadow .45s var(--e);}
 
 /* the titleblock and the chips follow the ground as well: a paper plate on a dark
    band reads as a sticker, which is exactly what the review shot showed */
-html[data-nav="1"] header[data-tone="ink"]{background:#162E52;box-shadow:0 1px 0 rgba(231,240,250,.18);}
+html[data-nav="1"] header[data-tone="ink"]{background:#162E52;box-shadow:0 1px 0 rgba(243,238,233,.18);}
 html[data-nav="1"] header[data-tone="ink"] .brand,
 html[data-nav="1"] header[data-tone="ink"] .ixb,
-html[data-nav="1"] header[data-tone="ink"] .lang{color:#E7F0FA;}
-html[data-nav="1"] header[data-tone="ink"] .ixb::before{background:rgba(231,240,250,.3);}
-html[data-nav="1"] header[data-tone="ink"] .btn{background:#E7F0FA;color:#0D2440;}
+html[data-nav="1"] header[data-tone="ink"] .lang{color:#F3EEE9;}
+html[data-nav="1"] header[data-tone="ink"] .ixb::before{background:rgba(243,238,233,.3);}
+html[data-nav="1"] header[data-tone="ink"] .btn{background:#F3EEE9;color:#0D2440;}
 html[data-nav="1"] header[data-tone="ink"] .btn::before{background:#0D2440;}
-html[data-nav="1"] header[data-tone="ink"] .btn:hover span{color:#E7F0FA;}
+html[data-nav="1"] header[data-tone="ink"] .btn:hover span{color:#F3EEE9;}
 html[data-nav="1"] header[data-tone="ink"] .btn i{background:rgba(13,36,64,.14);}
 html[data-nav="3"] header[data-tone="ink"] .brand,
 html[data-nav="3"] header[data-tone="ink"] .navr{background:#162E52;
-  box-shadow:inset 0 0 0 1px rgba(231,240,250,.2);}
+  box-shadow:inset 0 0 0 1px rgba(243,238,233,.2);}
 html[data-nav="3"] header[data-tone="ink"] .brand,
 html[data-nav="3"] header[data-tone="ink"] .ixb,
-html[data-nav="3"] header[data-tone="ink"] .lang{color:#E7F0FA;}
-html[data-nav="3"] header[data-tone="ink"] .lang::before{background:rgba(231,240,250,.18);}
-html[data-nav="3"] header[data-tone="ink"] .btn{background:#E7F0FA;color:#0D2440;}
+html[data-nav="3"] header[data-tone="ink"] .lang{color:#F3EEE9;}
+html[data-nav="3"] header[data-tone="ink"] .lang::before{background:rgba(243,238,233,.18);}
+html[data-nav="3"] header[data-tone="ink"] .btn{background:#F3EEE9;color:#0D2440;}
 html[data-nav="3"] header[data-tone="ink"] .btn::before{background:#0D2440;}
-html[data-nav="3"] header[data-tone="ink"] .btn:hover span{color:#E7F0FA;}
+html[data-nav="3"] header[data-tone="ink"] .btn:hover span{color:#F3EEE9;}
 html[data-nav="3"] header[data-tone="ink"] .btn i{background:rgba(13,36,64,.14);}
 html[data-nav="1"] header,html[data-nav="1"] .btn,html[data-nav="3"] .brand,
 html[data-nav="3"] .navr,html[data-nav="3"] .btn{
@@ -182,8 +182,8 @@ html[data-nav="3"] .navr,html[data-nav="3"] .btn{
    is the one thing on that screen worth looking at. So the plateless bars put on
    local plates instead, around their own items only, and only while a band is under
    them. The band stays crisp; nothing is veiled. */
-header{--bar-plate:#E7F0FA;--bar-edge:rgba(13,36,64,.14);}
-header[data-tone="ink"]{--bar-plate:#162E52;--bar-edge:rgba(231,240,250,.2);}
+header{--bar-plate:#F3EEE9;--bar-edge:rgba(13,36,64,.14);}
+header[data-tone="ink"]{--bar-plate:#162E52;--bar-edge:rgba(243,238,233,.2);}
 /* the plate is drawn BEHIND the items, never as padding on them: changing padding
    on a state change slid the wordmark sideways as the band came under the bar */
 .brand,.navr{position:relative;}
@@ -221,7 +221,7 @@ html[data-nav="3"] .ixp{margin-top:12px;box-shadow:inset 0 0 0 1px rgba(13,36,64
 .navr{justify-self:end;display:flex;align-items:center;gap:12px;}
 .lang{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.12em;padding:9px 12px;
   border-radius:2px;color:rgba(13,36,64,.82);box-shadow:inset 0 0 0 1px rgba(13,36,64,.12);
-  background:rgba(245,250,254,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:.4s var(--e);}
+  background:rgba(251,249,246,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:.4s var(--e);}
 .lang:hover{color:#0D2440;box-shadow:inset 0 0 0 1px rgba(13,36,64,.26);}
 /* the arrow sits in its own square, flush inside the button */
 .btn i{position:relative;z-index:1;display:grid;place-items:center;width:22px;height:22px;border-radius:2px;
@@ -248,7 +248,7 @@ html[data-nav="3"] .ixp{margin-top:12px;box-shadow:inset 0 0 0 1px rgba(13,36,64
 /* a sheet, not a poster: paper that darkens a touch towards the fold, with the
    faintest warm breath where the field lives on the right */
 .hero{position:relative;min-height:100svh;overflow:hidden;color:var(--fg);
-  background:linear-gradient(178deg,#F1F6FD 0%,#E7F0FA 58%,#D8E5F5 100%);}
+  background:linear-gradient(178deg,#F8F5F1 0%,#F3EEE9 58%,#E9E3DA 100%);}
 .hero::before{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;z-index:2;
   background:rgba(13,36,64,.10);}
 .hero::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
@@ -289,12 +289,12 @@ h1 em{font-style:normal;color:var(--brand-ink);}
 .rd b{color:var(--fg);font-variant-numeric:tabular-nums;font-weight:600;}
 .rd .st{color:var(--brand-ink);}
 /* header over the dark hero: light chrome until scrolled */
-header.on-dark .brand{color:#E7F0FA;}
-header.on-dark nav{box-shadow:inset 0 0 0 1px rgba(245,250,254,.28);background:rgba(22,46,82,.42);}
-header.on-dark nav a{color:rgba(223,234,247,.88);}
-header.on-dark nav a:hover{color:#fff;background:rgba(231,240,250,.10);}
-header.on-dark nav a.here{color:#0D2440;background:#E7F0FA;}
-header.on-dark .lang{color:rgba(245,250,254,.9);background:rgba(22,46,82,.42);box-shadow:inset 0 0 0 1px rgba(245,250,254,.3);}
+header.on-dark .brand{color:#F3EEE9;}
+header.on-dark nav{box-shadow:inset 0 0 0 1px rgba(251,249,246,.28);background:rgba(22,46,82,.42);}
+header.on-dark nav a{color:rgba(237,232,225,.88);}
+header.on-dark nav a:hover{color:#fff;background:rgba(243,238,233,.10);}
+header.on-dark nav a.here{color:#0D2440;background:#F3EEE9;}
+header.on-dark .lang{color:rgba(251,249,246,.9);background:rgba(22,46,82,.42);box-shadow:inset 0 0 0 1px rgba(251,249,246,.3);}
 header.on-dark .lang:hover{color:#fff;}
 header.on-dark .btn{background:#162E52;color:#fff;}
 header.on-dark .btn i{background:rgba(255,255,255,.22);}
@@ -316,19 +316,19 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .dith i{display:block;}
 
 /* dark plate section (services) */
-.plate2{position:relative;overflow:hidden;background:linear-gradient(180deg,#0D2440 0%,#12294A 60%,#162E52 100%);color:#E7F0FA;}
+.plate2{position:relative;overflow:hidden;background:linear-gradient(180deg,#0D2440 0%,#12294A 60%,#162E52 100%);color:#F3EEE9;}
 .plate2>.wrap{position:relative;z-index:1;}
-.plate2 h2,.plate2 h3{color:#DFEAF7;}
-.plate2 .lede{color:rgba(231,240,250,.66);}
-.plate2 .cnt{color:rgba(231,240,250,.58);}
-.plate2 .stat{background:rgba(231,240,250,.045);box-shadow:inset 0 0 0 1px rgba(231,240,250,.1);}
-.plate2 .stat span{color:rgba(231,240,250,.66);}
-.plate2 .step p{color:rgba(231,240,250,.64);}
+.plate2 h2,.plate2 h3{color:#EDE8E1;}
+.plate2 .lede{color:rgba(243,238,233,.66);}
+.plate2 .cnt{color:rgba(243,238,233,.58);}
+.plate2 .stat{background:rgba(243,238,233,.045);box-shadow:inset 0 0 0 1px rgba(243,238,233,.1);}
+.plate2 .stat span{color:rgba(243,238,233,.66);}
+.plate2 .step p{color:rgba(243,238,233,.64);}
 .plate2 .alink:hover{color:#fff;}
-.plate2 .display{color:#DFEAF7;}
-.plate2 .chips span{color:#DFEAF7;}
-.plate2 .note{color:rgba(231,240,250,.58);}
-.plate2 h2 i,.plate2 .lede i{color:rgba(231,240,250,.4);}
+.plate2 .display{color:#EDE8E1;}
+.plate2 .chips span{color:#EDE8E1;}
+.plate2 .note{color:rgba(243,238,233,.58);}
+.plate2 h2 i,.plate2 .lede i{color:rgba(243,238,233,.4);}
 
 /* industries — horizontal rail, detail opens on click */
 .suite .spin>.wrap{width:100%;}
@@ -380,7 +380,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   /* No backface hint: it promoted the card to its own layer, and the rail scales
      that layer every frame, so the texture was stretched instead of repainted -
      that is the wavy vertical edge. Nothing in these cards is composited now. */
-  background:#102745;color:#E7F0FA;border-radius:2px;overflow:hidden;cursor:pointer;
+  background:#102745;color:#F3EEE9;border-radius:2px;overflow:hidden;cursor:pointer;
   /* the card stays put on hover — only its mark answers */
   transition:none;}
 .ic-top{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:flex-start;
@@ -389,7 +389,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 /* Стрелка — вектор, а не знак шрифта: ↗ нет ни в одном из наших начертаний,
    его подставляла система, и вид кнопки решала чужая машина. */
 .ic-go svg{width:16px;height:16px;display:block;}
-.ic-go{width:32px;height:32px;border-radius:2px;background:#E7F0FA;color:#102745;
+.ic-go{width:32px;height:32px;border-radius:2px;background:#F3EEE9;color:#102745;
   display:grid;place-items:center;flex:0 0 auto;
   transition:transform .18s var(--e),background .45s var(--e),color .45s var(--e);}
 /* Знак берёт цвет, назначенный палитрой для работы поверх фирменного:
@@ -413,7 +413,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
      title sits. overflow:hidden on the parent clips the overhang. */
   inset:-1px;
   background:linear-gradient(180deg,rgba(13,36,64,.5) 0%,rgba(13,36,64,.05) 42%,rgba(16,39,69,.92) 86%,#102745 100%);}
-.ic-art svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;color:rgba(245,250,254,.5);}
+.ic-art svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;color:rgba(251,249,246,.5);}
 .ic-foot{position:relative;z-index:2;padding:0 16px 18px;margin-top:-8px;
   /* Opaque, so the eight pixels it already overlaps are painted over rather
      than blended: the photo-to-background boundary that flickered under the
@@ -422,12 +422,12 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
      hard dark fill here hid its copy. */
   background-color:inherit;}
 .ic-foot h3{font-size:clamp(19px,1.9vw,26px);margin:0 0 8px;}
-.ic-foot p{font-size:14px;line-height:1.6;color:rgba(231,240,250,.66);
+.ic-foot p{font-size:14px;line-height:1.6;color:rgba(243,238,233,.66);
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
 /* the invitation keeps the brand colour and its drawing */
 .ic.is-open-card{background:var(--brand);box-shadow:0 0 0 1px var(--brand);}
 .ic.is-open-card .ic-art::after{background:linear-gradient(180deg,rgba(46,94,153,.1) 0%,rgba(46,94,153,.92) 100%);}
-.ic.is-open-card .ic-foot p{color:rgba(245,250,254,.86);}
+.ic.is-open-card .ic-foot p{color:rgba(251,249,246,.86);}
 .suite .spin>.wrap{width:100%;}
 /* head of the card zone: heading left, intro right, in fixed columns. As a flex
    row it used to wrap in Armenian — the longer heading pushed the intro onto its
@@ -472,25 +472,25 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .mi-alt .ix{color:var(--brand-ink);opacity:1;}
 .mi-alt:hover{background:var(--alt-wash-h);}
 /* on the dark plate the cells stay transparent, so the empty slot is just air */
-.plate2 .meas{border-top-color:rgba(231,240,250,.13);}
-.plate2 .mi{border-left-color:rgba(231,240,250,.13);}
-.plate2 .mi:nth-child(n+5){border-top-color:rgba(231,240,250,.13);}
-.plate2 .mi svg{color:#E7F0FA;}
-.plate2 .mi .lb2{color:rgba(231,240,250,.84);}
-.plate2 .mi .ix{color:rgba(231,240,250,.58);}
+.plate2 .meas{border-top-color:rgba(243,238,233,.13);}
+.plate2 .mi{border-left-color:rgba(243,238,233,.13);}
+.plate2 .mi:nth-child(n+5){border-top-color:rgba(243,238,233,.13);}
+.plate2 .mi svg{color:#F3EEE9;}
+.plate2 .mi .lb2{color:rgba(243,238,233,.84);}
+.plate2 .mi .ix{color:rgba(243,238,233,.58);}
 /* on the plate the accent tint has to come from the light side of the brand, and the
    index needs the deeper selector or the rule above wins on specificity */
-.plate2{--alt-wash:rgba(231,240,250,.055);--alt-wash-h:rgba(231,240,250,.09);}
+.plate2{--alt-wash:rgba(243,238,233,.055);--alt-wash-h:rgba(243,238,233,.09);}
 .plate2 .mi-alt .ix{color:var(--brand-ink);opacity:1;}
-.plate2 .mi:hover{background:rgba(231,240,250,.05);}
+.plate2 .mi:hover{background:rgba(243,238,233,.05);}
 @media (max-width:1100px){
   .meas{grid-template-columns:repeat(3,1fr);}
   .mi:nth-child(4n+1){border-left:1px solid var(--hair2);}
   .mi:nth-child(3n+1){border-left:none;}
   .mi:nth-child(n+5){border-top:none;}
   .mi:nth-child(n+4){border-top:1px solid var(--hair2);}
-  .plate2 .mi:nth-child(4n+1){border-left-color:rgba(231,240,250,.13);}
-  .plate2 .mi:nth-child(n+4){border-top-color:rgba(231,240,250,.13);}
+  .plate2 .mi:nth-child(4n+1){border-left-color:rgba(243,238,233,.13);}
+  .plate2 .mi:nth-child(n+4){border-top-color:rgba(243,238,233,.13);}
 }
 @media (max-width:640px){
   .meas{grid-template-columns:repeat(2,1fr);}
@@ -498,8 +498,8 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   .mi:nth-child(2n+1){border-left:none;}
   .mi:nth-child(n+4){border-top:none;}
   .mi:nth-child(n+3){border-top:1px solid var(--hair2);}
-  .plate2 .mi:nth-child(3n+1){border-left-color:rgba(231,240,250,.13);}
-  .plate2 .mi:nth-child(n+3){border-top-color:rgba(231,240,250,.13);}
+  .plate2 .mi:nth-child(3n+1){border-left-color:rgba(243,238,233,.13);}
+  .plate2 .mi:nth-child(n+3){border-top-color:rgba(243,238,233,.13);}
 }
 
 /* sections */
@@ -536,9 +536,9 @@ h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
 
 /* industries grid */
 .other{margin-top:10px;background:var(--inv);color:var(--inv-fg);padding:clamp(26px,3.4vw,44px);display:flex;justify-content:space-between;align-items:center;gap:26px;flex-wrap:wrap;border-radius:2px;}
-.other .no{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.14em;color:rgba(231,240,250,.58);}
+.other .no{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.14em;color:rgba(243,238,233,.58);}
 .other h3{font-size:clamp(21px,2.4vw,32px);margin:12px 0 10px;}
-.other p{color:rgba(231,240,250,.66);font-size:16px;line-height:1.7;max-width:52ch;}
+.other p{color:rgba(243,238,233,.66);font-size:16px;line-height:1.7;max-width:52ch;}
 .other .btn{background:var(--brand);color:var(--brand-on);}
 .other .btn::before{background:var(--bg);}
 .other .btn:hover span{color:var(--fg);}
@@ -613,7 +613,7 @@ h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
 .plate{background:linear-gradient(180deg,#0D2440 0%,#12294A 58%,#183256 100%);color:var(--inv-fg);}
 .plate .wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,70px);align-items:center;padding-top:clamp(70px,9vw,130px);padding-bottom:clamp(70px,9vw,130px);}
 .plate h2{color:var(--inv-fg);}
-.plate p{color:rgba(231,240,250,.68);font-size:16px;line-height:1.75;max-width:46ch;margin-top:22px;}
+.plate p{color:rgba(243,238,233,.68);font-size:16px;line-height:1.75;max-width:46ch;margin-top:22px;}
 .plate .btn{background:var(--brand);color:var(--brand-on);margin-top:30px;}
 /* heading and call to action are one element, so the phrase is said once */
 /* the CTA reads as a button, so it takes a step below the section titles —
@@ -636,7 +636,7 @@ h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
 .plate .btn:hover span{color:var(--fg);}
 .chart{position:relative;}
 .chart svg{width:100%;height:auto;display:block;}
-.chart .cap{font-family:'Arian AMU Serif',Georgia,serif;font-size:10px;letter-spacing:.14em;color:rgba(231,240,250,.58);margin-bottom:12px;}
+.chart .cap{font-family:'Arian AMU Serif',Georgia,serif;font-size:10px;letter-spacing:.14em;color:rgba(243,238,233,.58);margin-bottom:12px;}
 footer{border-top:1px solid var(--hair2);padding:32px 0;font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;color:var(--fg-soft);}
 footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wrap;line-height:1.9;}
 
@@ -648,14 +648,14 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
    an opaque chip reads on dark grounds, the hairline ring separates it on light
    ones. Same language as the card's corner mark. */
 .md .x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;
-  background:#162E52;color:#E7F0FA;z-index:5;font-size:15px;line-height:1;
+  background:#162E52;color:#F3EEE9;z-index:5;font-size:15px;line-height:1;
   display:grid;place-items:center;
-  box-shadow:0 0 0 1px rgba(231,240,250,.55);}
+  box-shadow:0 0 0 1px rgba(243,238,233,.55);}
 .md .x:hover{background:var(--brand);color:var(--brand-on);
-  box-shadow:0 0 0 1px rgba(245,250,254,.7);}
+  box-shadow:0 0 0 1px rgba(251,249,246,.7);}
 /* the industry detail: the card opens into a full plate */
 #imd{max-width:880px;}
-#imd .ph{position:relative;aspect-ratio:16/7;background:#C2D5EA;overflow:hidden;}
+#imd .ph{position:relative;aspect-ratio:16/7;background:#DAD2C6;overflow:hidden;}
 #imd .ph img{width:100%;height:100%;object-fit:cover;display:block;}
 /* the index sat in difference blend mode, which inverts against the photograph —
    on mid-tone frames it landed within a hair of the backdrop. It now reads on its
@@ -744,7 +744,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
    --brand-ink  accent for text and hairlines
    --brand-on   what sits on top of a --brand fill
    The light grounds and the graphite plates each get the depth that works on them. */
-:root{--brand:#2E5E99;--brand-ink:#2E5E99;--brand-on:#E7F0FA;}
+:root{--brand:#2E5E99;--brand-ink:#2E5E99;--brand-on:#F3EEE9;}
 .plate,.plate2,.other,.chart,.ic{--brand:#7BA4D0;--brand-ink:#7BA4D0;--brand-on:#0D2440;}
 /* the invitation card is a brand block, and on the plates the brand is the LIGHTER of
    the two depths — so its type flips to graphite. Its edge cannot rely on the fill
@@ -835,7 +835,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 </div></section>
 
 
-<div class="dith" data-dith="#E7F0FA,#0D2440,#2E5E99"></div>
+<div class="dith" data-dith="#F3EEE9,#0D2440,#2E5E99"></div>
 
 <section class="sec plate2" id="services" data-rail><div class="wrap">
   <div class="rv"><div class="cnt">03</div><div class="eyebrow">ԾԱՌԱՅՈՒԹՅՈՒՆՆԵՐ</div>
@@ -848,7 +848,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <a class="alink rv" href="#report">Տեսնել, թե ինչ կարող է բացահայտել մոնիթորինգը ↗</a>
 </div></section>
 
-<div class="dith" data-dith="#162E52,#E7F0FA,#7BA4D0"></div>
+<div class="dith" data-dith="#162E52,#F3EEE9,#7BA4D0"></div>
 
 <section class="sec" id="report" data-rail><div class="wrap two">
   <div class="rv"><div class="cnt">04</div><h2>Հաշվետվություն տեխնիկական որոշումների համար</h2>
@@ -865,14 +865,14 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <div class="asg rv"><div class="card"><div class="hd"><span class="no">01</span><span class="tag">ԽԱՓԱՆՈՒՄՆԵՐ</span></div><h3>Խափանումների ուսումնասիրություն</h3><p>Գնահատել՝ արդյոք սարքավորումների անջատումները, ազդանշանները կամ գործընթացի ընդհատումները համընկել են գրանցված էլեկտրական իրադարձությունների հետ։</p></div><div class="card"><div class="hd"><span class="no">02</span><span class="tag">ՀԱՆՁՆՈՒՄ</span></div><h3>Գործարկման և հանձնման գնահատում</h3><p>Գրանցել էլեկտրական համակարգի աշխատանքային պայմանները՝ ընդունման, հանձնման կամ երաշխիքային ժամկետի ավարտից առաջ կատարվող ստուգման համար։</p></div><div class="card"><div class="hd"><span class="no">03</span><span class="tag">ԱՐԵՎԱՅԻՆ</span></div><h3>Արևային կայանի միացման գնահատում</h3><p>Գնահատել լարման պայմաններն ու ինվերտորի իրադարձությունները կայանի համապատասխան կետերում և միացման կետում։</p></div><div class="card"><div class="hd"><span class="no">04</span><span class="tag">ՏԵԽՆԻԿԱԿԱՆ ԳՆԱՀԱՏՈՒՄ</span></div><h3>Չափումներ՝ տեխնիկական համալիր գնահատման համար</h3><p>Տրամադրել բեռնվածության, էլեկտրաէներգիայի որակի և դիտարկված աշխատանքային սահմանափակումների անկախ չափումներ՝ տեխնիկական համալիր գնահատման համար։</p></div></div>
 </div></section>
 
-<div class="dith" data-dith="#E7F0FA,#0D2440,#2E5E99"></div>
+<div class="dith" data-dith="#F3EEE9,#0D2440,#2E5E99"></div>
 
 <section class="sec plate2" id="measure"><div class="wrap rv">
   <div class="cnt">06</div><h2>Ինչ ենք չափում</h2>
   <div class="meas"><div class="mi"><span class="ix">01</span><svg viewBox="0 0 44 30" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.1"><ellipse cx="13" cy="15" rx="6.6" ry="10.4"/><ellipse cx="31" cy="15" rx="6.6" ry="10.4"/></g><ellipse cx="22" cy="15" rx="6.6" ry="10.4" fill="none" stroke="var(--brand)" stroke-width="1.4"/><g stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity=".7"><path d="M2.5 15h10"/><path d="M31.5 15h10"/></g><path d="M19 15h6" stroke="var(--brand)" stroke-width="1.7" stroke-linecap="round"/></svg><span class="lb2">Լարում և հոսանք</span></div><div class="mi"><span class="ix">02</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 21h40" stroke="currentColor" stroke-width="1" opacity=".5"/><g fill="none" stroke="currentColor" stroke-width="1"><rect x="8" y="4" width="3" height="19"/><rect x="13" y="7" width="3" height="16"/><rect x="23" y="13" width="3" height="10"/><rect x="28" y="16" width="3" height="7"/><rect x="33" y="18.4" width="3" height="4.6"/></g><rect x="18" y="10" width="3" height="13" fill="var(--brand)"/></svg><span class="lb2">Հարմոնիկներ և միջհարմոնիկներ</span></div><div class="mi"><span class="ix">03</span><svg viewBox="0 0 44 30" aria-hidden="true"><g stroke="currentColor" stroke-width="1" opacity=".38" stroke-dasharray="3 3"><path d="M4 8h36"/><path d="M4 22h36"/></g><path d="M4 15c2 4 4 4 6 0s4-6 6 0 4 8 6 0 4-6 6 0 4 4 6 0" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M4 15c2 4 4 4 6 0s4-6 6 0 4 8 6 0" fill="none" stroke="var(--brand)" stroke-width="1.4"/></svg><span class="lb2">Ֆլիկեր</span></div><div class="mi"><span class="ix">04</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 10c6 0 7 13 13 13s6-6 12-6 9 1 15 1" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12.5 23h9" stroke="var(--brand)" stroke-width="2.2" stroke-linecap="round"/></svg><span class="lb2">Լարման անկումներ</span></div><div class="mi"><span class="ix">05</span><svg viewBox="0 0 44 30" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M22 15.5 13.5 21"/><path d="M22 15.5 30.5 21"/></g><g fill="currentColor"><circle cx="13.5" cy="21" r="1.9"/><circle cx="30.5" cy="21" r="1.9"/></g><path d="M22 15.5V4" stroke="var(--brand)" stroke-width="1.6" stroke-linecap="round"/><circle cx="22" cy="4" r="2" fill="var(--brand)"/><circle cx="22" cy="15.5" r="2.1" fill="currentColor"/></svg><span class="lb2">Լարման անհամաչափություն</span></div><div class="mi"><span class="ix">06</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 24c8 0 10-13 18-13s10 8 22 4v9z" fill="currentColor" opacity=".14"/><path d="M2 24c8 0 10-13 18-13s10 8 22 4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2 24h40" stroke="var(--brand)" stroke-width="1.6"/></svg><span class="lb2">Հզորություն և էներգիա</span></div><div class="mi"><span class="ix">07</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 18h14l3-13 3.4 22 2.6-9h17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><rect x="27" y="10.5" width="3" height="5.4" rx=".9" fill="var(--brand)"/></svg><span class="lb2">Իրադարձություններ</span></div><div class="mi mi-alt"><span class="ix">08</span><svg viewBox="0 0 44 30" aria-hidden="true"><g stroke="currentColor" stroke-width=".8" opacity=".26"><path d="M8 21v5"/><path d="M14 18v8"/><path d="M20 20v6"/><path d="M26 14v12"/><path d="M32 16v10"/></g><path d="M3 24 8 21 14 18 20 20 26 14 32 16 37 11" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><g fill="currentColor"><circle cx="8" cy="21" r="1.4"/><circle cx="14" cy="18" r="1.4"/><circle cx="20" cy="20" r="1.4"/><circle cx="26" cy="14" r="1.4"/><circle cx="32" cy="16" r="1.4"/></g><circle cx="37" cy="11" r="2.5" fill="none" stroke="var(--brand)" stroke-width="1.6"/><path d="M37 1.4 40.1 6.8h-6.2z" fill="var(--brand)"/></svg><span class="lb2">Ռիսկի ցուցանիշներ</span></div></div>
 </div></section>
 
-<div class="dith" data-dith="#162E52,#E7F0FA,#7BA4D0"></div>
+<div class="dith" data-dith="#162E52,#F3EEE9,#7BA4D0"></div>
 
 <section class="sec" id="company" data-rail><div class="wrap">
   <div class="rv"><div class="cnt">07</div><div class="eyebrow">ԸՆԿԵՐՈՒԹՅՈՒՆ</div>
@@ -887,11 +887,11 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <h2 class="ct-act"><button data-open-form><span>Ներկայացրեք խնդիրը նախնական գնահատման համար</span><i>&#8599;</i></button></h2></div>
   <div class="chart rv"><div class="cap">RMS ԼԱՐՈՒՄ · 10-ՐՈՊԵԱՆՈՑ ՄԻՏՈՒՄ</div>
     <svg viewBox="0 0 520 240" fill="none">
-      <line x1="0" y1="60" x2="520" y2="60" stroke="rgba(231,240,250,.14)" stroke-dasharray="3 5"/>
-      <text x="0" y="50" fill="rgba(231,240,250,.45)" font-size="10" font-family="Martian Mono,monospace" letter-spacing="1.5">ԱՆՎԱՆԱԿԱՆ</text>
+      <line x1="0" y1="60" x2="520" y2="60" stroke="rgba(243,238,233,.14)" stroke-dasharray="3 5"/>
+      <text x="0" y="50" fill="rgba(243,238,233,.45)" font-size="10" font-family="Martian Mono,monospace" letter-spacing="1.5">ԱՆՎԱՆԱԿԱՆ</text>
       <path d="M0,62 L150,60 C168,60 172,64 178,96 C184,130 188,132 196,132 L236,132 C244,132 248,128 254,94 C260,64 264,61 282,61 L520,60" stroke="#2E5E99" stroke-width="2" stroke-linecap="round"/>
-      <rect x="178" y="150" width="76" height="1" fill="rgba(231,240,250,.3)"/>
-      <text x="178" y="172" fill="rgba(231,240,250,.55)" font-size="10" font-family="Martian Mono,monospace" letter-spacing="1.2">ԼԱՐՄԱՆ ԱՆԿՈՒՄ · 180 ՄՎՐԿ</text>
+      <rect x="178" y="150" width="76" height="1" fill="rgba(243,238,233,.3)"/>
+      <text x="178" y="172" fill="rgba(243,238,233,.55)" font-size="10" font-family="Martian Mono,monospace" letter-spacing="1.2">ԼԱՐՄԱՆ ԱՆԿՈՒՄ · 180 ՄՎՐԿ</text>
     </svg>
   </div>
 </div></section>
