@@ -384,10 +384,8 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   /* the card stays put on hover — only its mark answers */
   transition:none;}
 .ic-top{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:flex-start;
-  justify-content:space-between;padding:15px;}
-.ic-tag{font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:.16em;
-  background:rgba(37,39,44,.55);color:#EFF0F1;padding:6px 9px;border-radius:2px;
-  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+  /* осталась одна стрелка: space-between увёл бы её к левому краю */
+  justify-content:flex-end;padding:15px;}
 .ic-go{width:32px;height:32px;border-radius:2px;background:#F4F5F5;color:#292B31;
   display:grid;place-items:center;font-size:14px;flex:0 0 auto;
   transition:transform .18s var(--e),background .45s var(--e),color .45s var(--e);}
@@ -424,7 +422,6 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 /* the invitation keeps the brand colour and its drawing */
 .ic.is-open-card{background:var(--brand);box-shadow:0 0 0 1px var(--brand);}
 .ic.is-open-card .ic-art::after{background:linear-gradient(180deg,rgba(157,91,67,.1) 0%,rgba(157,91,67,.92) 100%);}
-.ic.is-open-card .ic-tag{background:rgba(255,255,255,.18);color:#fff;}
 .ic.is-open-card .ic-foot p{color:rgba(251,252,252,.86);}
 .ic.is-open-card .ic-go{background:#2E3138;color:#fff;}
 .suite .spin>.wrap{width:100%;}
@@ -662,11 +659,8 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 #imd .ph::after{content:"";position:absolute;left:0;bottom:0;width:62%;height:58%;
   pointer-events:none;z-index:1;
   background:linear-gradient(to top right,rgba(37,39,44,.72),rgba(37,39,44,.28) 42%,rgba(37,39,44,0) 78%);}
-#imd .ph .num{position:absolute;left:18px;bottom:8px;z-index:2;font-family:'Big Shoulders Display',sans-serif;font-weight:700;
-  font-size:clamp(38px,5vw,64px);color:#FBFCFC;line-height:1;}
 #imd .bd{padding:clamp(22px,3vw,38px);}
-#imd .tag{font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--brand-ink);}
-#imd h3{font-size:clamp(24px,3vw,38px);margin:10px 0 14px;}
+#imd h3{font-size:clamp(24px,3vw,38px);margin:0 0 14px;}
 #imd .p1{font-size:16px;line-height:1.75;color:var(--fg-mid);max-width:62ch;}
 #imd .lb{font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand-ink);margin:26px 0 4px;}
 #imd .fi{display:flex;gap:12px;align-items:baseline;font-size:14px;line-height:1.65;padding:11px 0;border-top:1px solid var(--hair2);}
@@ -763,7 +757,6 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
    абзац теперь приходится кеглем, а не выцветанием: подходящей прозрачности,
    которая проходит норму во всех трёх палитрах, попросту нет. */
 .ic.is-open-card .ic-foot p{color:#25272C;}
-.ic.is-open-card .ic-tag{background:rgba(37,39,44,.10);color:#25272C;}
 .ic.is-open-card .ic-go{background:#25272C;color:#C8856A;}
 .ic.is-open-card .ic-art::after{
   background:linear-gradient(180deg,rgba(200,133,106,.10) 0%,rgba(200,133,106,.94) 100%);}
@@ -911,9 +904,8 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 
 <div class="ovl" id="iovl"><div class="md" id="imd">
   <button class="x" data-close>&times;</button>
-  <div class="ph"><img id="im_img" alt=""><span class="num" id="im_num"></span></div>
+  <div class="ph"><img id="im_img" alt=""></div>
   <div class="bd">
-    <div class="tag" id="im_tag"></div>
     <h3 id="im_t"></h3>
     <p class="p1" id="im_p1"></p>
     <div class="lb" id="im_lb">What the report can address</div>
@@ -955,7 +947,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 </div></div></div>
 
 <script>
-window.PT={"ring": [["01", "VOLTAGE", "& CURRENT", 0], ["02", "HARMONICS", "", 0], ["03", "FLICKER", "", 0], ["04", "DIPS", "& SWELLS", 0], ["05", "UNBALANCE", "", 0], ["06", "POWER", "& ENERGY", 0], ["07", "EVENTS", "", 0], ["08", "RISK", "READ", 1]], "canvasFont": "\"Departure Mono\",monospace", "rdNominal": "NOMINAL", "rdDip": "VOLTAGE DIP · 180 MS", "incident": "Incident", "seq": [["01", "Normal operation"], ["02", "Electrical event"], ["03", "Equipment trip or alarm"], ["04", "System returns to normal"], ["05", "The event record remains available for analysis"]], "viewDetails": "View details", "hint1": " file · ", "hintN": " files · ", "hintSuf": " of 10 MB", "hint0": "Up to 10 MB total.", "appTypes": ["Manufacturing", "Solar PV", "Healthcare or laboratory", "Data center or IT infrastructure", "Commercial building", "Investment and Technical Review", "Other"], "cards": [{"num": "01", "title": "Manufacturing", "img": "IMG0", "p1": "Backup generation is designed for interruptions on a different time scale. A short voltage dip may affect equipment before transfer occurs, so the event must be recorded while it happens.", "findings": ["Timestamp, duration, minimum RMS voltage and affected phases of recorded dips.", "Voltage unbalance and current loading relevant to motor operation.", "Whether reactive power or harmonic distortion requires further engineering review."], "statLabel": "Technical note", "statText": "Voltage sags and momentary interruptions can trip electronic and electromechanical devices and stop production lines.", "statSource": "Source: EPRI"}, {"num": "02", "title": "Solar PV", "img": "IMG1", "p1": "Voltage rise can reflect the interaction of plant output, internal impedance and upstream network conditions. Measurements at relevant points can help distinguish plant-side from network-side factors.", "findings": ["Voltage conditions during inverter disconnection or active-power limitation.", "Voltage and harmonic distortion against applicable connection requirements.", "Independent measurement evidence for commissioning or EPC review."], "note": "Independent, time-aligned measurements give the owner, EPC contractor and network operator a common record of operating conditions."}, {"num": "03", "title": "Healthcare and Laboratories", "img": "IMG2", "p1": "Warranty or service review may require evidence of the supply conditions present while the equipment was operating. A spot measurement may miss intermittent events.", "findings": ["Recorded supply conditions compared with manufacturer requirements.", "Evidence relevant to distinguishing supply-related events from equipment faults.", "Recommended next checks prioritized by technical criticality and operational impact."], "statLabel": "Technical note", "statText": "IEC 60601-1-2 includes immunity testing for voltage dips and short interruptions in medical electrical equipment.", "statSource": "Source: IEC"}, {"num": "04", "title": "Data Centers and IT Infrastructure", "img": "IMG3", "p1": "Generators start and transfer on a different time scale from millisecond-level disturbances. Time-stamped monitoring records can be compared with UPS and IT logs.", "findings": ["UPS input loading relative to rated capacity.", "Correlation between restarts, battery operation and recorded supply disturbances.", "Load profiles relevant to planned expansion."], "stat": "57%", "statLabel": "Statistic", "statText": "of respondents to Uptime's 2025 annual survey said their most recent major outage cost more than USD 100,000.", "statSource": "Source: Uptime Institute, Annual Outage Analysis 2026"}, {"num": "05", "title": "Commercial Buildings", "img": "IMG4", "p1": "Measurements can help distinguish upstream supply conditions from disturbances generated within the building or by tenant equipment.", "findings": ["Evidence relevant to the likely source of a disturbance.", "Electrical conditions associated with overheating or protective-device operation.", "Power factor, reactive power and load trends relevant to billing or capacity."], "statLabel": "Technical note", "statText": "Power-quality events can originate on either side of the customer meter.", "statSource": "Source: U.S. DOE / LBNL"}, {"num": "06", "title": "Investment and Technical Review", "img": "IMG5", "p1": "Diagnostic or continuous monitoring provides an independent record under actual operation. The findings can support technical due diligence, handover, warranty review or performance assessment.", "findings": ["Observed loading and power quality at relevant points.", "Recorded conditions associated with interruptions or reduced output.", "Limitations, risks and recommended further checks."], "note": "Reports can be prepared in Armenian, Russian or English."}], "otherT": "Other Critical Electrical Systems", "otherP": "Do not see your sector here? Describe the issue and the equipment affected. Monitoring is defined by the technical question, not by the sector alone.", "imgs": {"IMG0": "../uploads/img/02_manufacturing_industrial_robot.jpg", "IMG1": "../uploads/img/03_solar_power_plant.jpg", "IMG2": "../uploads/img/06_healthcare_laboratory.jpg", "IMG3": "../uploads/img/05_data_center.jpg", "IMG4": "../uploads/img/04_commercial_building.jpg", "IMG5": "../uploads/img/08_finance_investment.jpg"}};
+window.PT={"ring": [["01", "VOLTAGE", "& CURRENT", 0], ["02", "HARMONICS", "", 0], ["03", "FLICKER", "", 0], ["04", "DIPS", "& SWELLS", 0], ["05", "UNBALANCE", "", 0], ["06", "POWER", "& ENERGY", 0], ["07", "EVENTS", "", 0], ["08", "RISK", "READ", 1]], "canvasFont": "\"Departure Mono\",monospace", "rdNominal": "NOMINAL", "rdDip": "VOLTAGE DIP · 180 MS", "incident": "Incident", "seq": [["01", "Normal operation"], ["02", "Electrical event"], ["03", "Equipment trip or alarm"], ["04", "System returns to normal"], ["05", "The event record remains available for analysis"]], "viewDetails": "View details", "hint1": " file · ", "hintN": " files · ", "hintSuf": " of 10 MB", "hint0": "Up to 10 MB total.", "appTypes": ["Manufacturing", "Solar PV", "Healthcare or laboratory", "Data center or IT infrastructure", "Commercial building", "Investment and Technical Review", "Other"], "cards": [{"title": "Manufacturing", "img": "IMG0", "p1": "Backup generation is designed for interruptions on a different time scale. A short voltage dip may affect equipment before transfer occurs, so the event must be recorded while it happens.", "findings": ["Timestamp, duration, minimum RMS voltage and affected phases of recorded dips.", "Voltage unbalance and current loading relevant to motor operation.", "Whether reactive power or harmonic distortion requires further engineering review."], "statLabel": "Technical note", "statText": "Voltage sags and momentary interruptions can trip electronic and electromechanical devices and stop production lines.", "statSource": "Source: EPRI"}, {"title": "Solar PV", "img": "IMG1", "p1": "Voltage rise can reflect the interaction of plant output, internal impedance and upstream network conditions. Measurements at relevant points can help distinguish plant-side from network-side factors.", "findings": ["Voltage conditions during inverter disconnection or active-power limitation.", "Voltage and harmonic distortion against applicable connection requirements.", "Independent measurement evidence for commissioning or EPC review."], "note": "Independent, time-aligned measurements give the owner, EPC contractor and network operator a common record of operating conditions."}, {"title": "Healthcare and Laboratories", "img": "IMG2", "p1": "Warranty or service review may require evidence of the supply conditions present while the equipment was operating. A spot measurement may miss intermittent events.", "findings": ["Recorded supply conditions compared with manufacturer requirements.", "Evidence relevant to distinguishing supply-related events from equipment faults.", "Recommended next checks prioritized by technical criticality and operational impact."], "statLabel": "Technical note", "statText": "IEC 60601-1-2 includes immunity testing for voltage dips and short interruptions in medical electrical equipment.", "statSource": "Source: IEC"}, {"title": "Data Centers and IT Infrastructure", "img": "IMG3", "p1": "Generators start and transfer on a different time scale from millisecond-level disturbances. Time-stamped monitoring records can be compared with UPS and IT logs.", "findings": ["UPS input loading relative to rated capacity.", "Correlation between restarts, battery operation and recorded supply disturbances.", "Load profiles relevant to planned expansion."], "stat": "57%", "statLabel": "Statistic", "statText": "of respondents to Uptime's 2025 annual survey said their most recent major outage cost more than USD 100,000.", "statSource": "Source: Uptime Institute, Annual Outage Analysis 2026"}, {"title": "Commercial Buildings", "img": "IMG4", "p1": "Measurements can help distinguish upstream supply conditions from disturbances generated within the building or by tenant equipment.", "findings": ["Evidence relevant to the likely source of a disturbance.", "Electrical conditions associated with overheating or protective-device operation.", "Power factor, reactive power and load trends relevant to billing or capacity."], "statLabel": "Technical note", "statText": "Power-quality events can originate on either side of the customer meter.", "statSource": "Source: U.S. DOE / LBNL"}, {"title": "Investment and Technical Review", "img": "IMG5", "p1": "Diagnostic or continuous monitoring provides an independent record under actual operation. The findings can support technical due diligence, handover, warranty review or performance assessment.", "findings": ["Observed loading and power quality at relevant points.", "Recorded conditions associated with interruptions or reduced output.", "Limitations, risks and recommended further checks."], "note": "Reports can be prepared in Armenian, Russian or English."}], "otherT": "Other Critical Electrical Systems", "otherP": "Do not see your sector here? Describe the issue and the equipment affected. Monitoring is defined by the technical question, not by the sector alone.", "imgs": {"IMG0": "../uploads/img/02_manufacturing_industrial_robot.jpg", "IMG1": "../uploads/img/03_solar_power_plant.jpg", "IMG2": "../uploads/img/06_healthcare_laboratory.jpg", "IMG3": "../uploads/img/05_data_center.jpg", "IMG4": "../uploads/img/04_commercial_building.jpg", "IMG5": "../uploads/img/08_finance_investment.jpg"}};
 (function(){
 var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
 var PT=window.PT;
@@ -1542,8 +1534,6 @@ function openInd(o){
   var img=document.getElementById('im_img'),ph=img.parentElement;
   if(o.img!==undefined&&PT.imgs[o.img]){img.src=PT.imgs[o.img];img.alt=o.title;ph.style.display='';}
   else ph.style.display='none';
-  document.getElementById('im_num').textContent=o.num||'';
-  document.getElementById('im_tag').textContent=o.num?('CH '+o.num):'';
   document.getElementById('im_t').textContent=o.title;
   document.getElementById('im_p1').textContent=o.p1;
   var fi=document.getElementById('im_fi');fi.innerHTML='';
@@ -1565,7 +1555,7 @@ function openInd(o){
 }
 
 /* the six sectors, then the open invitation as the seventh plate */
-var CARDS=PT.cards.concat([{num:'07',title:PT.otherT,p1:PT.otherP,invite:true}]);
+var CARDS=PT.cards.concat([{title:PT.otherT,p1:PT.otherP,invite:true}]);
 var sxTrack=document.createElement('div');sxTrack.className='sx-track';
 irail.appendChild(sxTrack);
 CARDS.forEach(function(o,i){
@@ -1574,10 +1564,9 @@ CARDS.forEach(function(o,i){
     ? '<img alt="'+o.title+'" src="'+PT.imgs[o.img]+'">'
     : cardArt(i*97+13);
   slide.innerHTML='<article class="ic'+(o.invite?' is-open-card':'')+'" tabindex="0">'+
-    '<div class="ic-top"><span class="ic-tag"></span><span class="ic-go">&#8599;</span></div>'+
+    '<div class="ic-top"><span class="ic-go">&#8599;</span></div>'+
     '<div class="ic-art">'+visual+'</div>'+
     '<div class="ic-foot"><h3></h3><p></p></div></article>';
-  slide.querySelector('.ic-tag').textContent='CH '+o.num;
   slide.querySelector('h3').textContent=o.title;
   slide.querySelector('.ic-foot p').textContent=o.p1;
   var card=slide.querySelector('.ic');

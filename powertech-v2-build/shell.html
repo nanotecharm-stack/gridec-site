@@ -364,10 +364,8 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   /* the card stays put on hover — only its mark answers */
   transition:none;}
 .ic-top{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:flex-start;
-  justify-content:space-between;padding:15px;}
-.ic-tag{font-family:%%MONOFONT%%;font-size:10px;letter-spacing:.16em;
-  background:rgba(13,14,19,.55);color:#F4F3F1;padding:6px 9px;border-radius:2px;
-  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+  /* осталась одна стрелка: space-between увёл бы её к левому краю */
+  justify-content:flex-end;padding:15px;}
 .ic-go{width:32px;height:32px;border-radius:2px;background:#EFEDEA;color:#101218;
   display:grid;place-items:center;font-size:14px;flex:0 0 auto;
   transition:transform .18s var(--e),background .45s var(--e),color .45s var(--e);}
@@ -404,7 +402,6 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 /* the invitation keeps the brand colour and its drawing */
 .ic.is-open-card{background:var(--brand);box-shadow:0 0 0 1px var(--brand);}
 .ic.is-open-card .ic-art::after{background:linear-gradient(180deg,rgba(200,96,61,.1) 0%,rgba(200,96,61,.92) 100%);}
-.ic.is-open-card .ic-tag{background:rgba(255,255,255,.18);color:#fff;}
 .ic.is-open-card .ic-foot p{color:rgba(255,251,249,.86);}
 .ic.is-open-card .ic-go{background:#14161C;color:#fff;}
 .suite .spin>.wrap{width:100%;}
@@ -642,11 +639,8 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 #imd .ph::after{content:"";position:absolute;left:0;bottom:0;width:62%;height:58%;
   pointer-events:none;z-index:1;
   background:linear-gradient(to top right,rgba(13,14,19,.72),rgba(13,14,19,.28) 42%,rgba(13,14,19,0) 78%);}
-#imd .ph .num{position:absolute;left:18px;bottom:8px;z-index:2;font-family:%%HEADFONT%%;font-weight:700;
-  font-size:clamp(38px,5vw,64px);color:#FFFBF9;line-height:1;}
 #imd .bd{padding:clamp(22px,3vw,38px);}
-#imd .tag{font-family:%%MONOFONT%%;font-size:10px;letter-spacing:.16em;color:var(--brand-ink);}
-#imd h3{font-size:clamp(24px,3vw,38px);margin:10px 0 14px;}
+#imd h3{font-size:clamp(24px,3vw,38px);margin:0 0 14px;}
 #imd .p1{font-size:16px;line-height:1.75;color:var(--fg-mid);max-width:62ch;}
 #imd .lb{font-family:%%MONOFONT%%;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand-ink);margin:26px 0 4px;}
 #imd .fi{display:flex;gap:12px;align-items:baseline;font-size:14px;line-height:1.65;padding:11px 0;border-top:1px solid var(--hair2);}
@@ -853,9 +847,8 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 
 <div class="ovl" id="iovl"><div class="md" id="imd">
   <button class="x" data-close>&times;</button>
-  <div class="ph"><img id="im_img" alt=""><span class="num" id="im_num"></span></div>
+  <div class="ph"><img id="im_img" alt=""></div>
   <div class="bd">
-    <div class="tag" id="im_tag"></div>
     <h3 id="im_t"></h3>
     <p class="p1" id="im_p1"></p>
     <div class="lb" id="im_lb">%%IM_FINDLB%%</div>
@@ -1484,8 +1477,6 @@ function openInd(o){
   var img=document.getElementById('im_img'),ph=img.parentElement;
   if(o.img!==undefined&&PT.imgs[o.img]){img.src=PT.imgs[o.img];img.alt=o.title;ph.style.display='';}
   else ph.style.display='none';
-  document.getElementById('im_num').textContent=o.num||'';
-  document.getElementById('im_tag').textContent=o.num?('CH '+o.num):'';
   document.getElementById('im_t').textContent=o.title;
   document.getElementById('im_p1').textContent=o.p1;
   var fi=document.getElementById('im_fi');fi.innerHTML='';
@@ -1507,7 +1498,7 @@ function openInd(o){
 }
 
 /* the six sectors, then the open invitation as the seventh plate */
-var CARDS=PT.cards.concat([{num:'07',title:PT.otherT,p1:PT.otherP,invite:true}]);
+var CARDS=PT.cards.concat([{title:PT.otherT,p1:PT.otherP,invite:true}]);
 var sxTrack=document.createElement('div');sxTrack.className='sx-track';
 irail.appendChild(sxTrack);
 CARDS.forEach(function(o,i){
@@ -1516,10 +1507,9 @@ CARDS.forEach(function(o,i){
     ? '<img alt="'+o.title+'" src="'+PT.imgs[o.img]+'">'
     : cardArt(i*97+13);
   slide.innerHTML='<article class="ic'+(o.invite?' is-open-card':'')+'" tabindex="0">'+
-    '<div class="ic-top"><span class="ic-tag"></span><span class="ic-go">&#8599;</span></div>'+
+    '<div class="ic-top"><span class="ic-go">&#8599;</span></div>'+
     '<div class="ic-art">'+visual+'</div>'+
     '<div class="ic-foot"><h3></h3><p></p></div></article>';
-  slide.querySelector('.ic-tag').textContent='CH '+o.num;
   slide.querySelector('h3').textContent=o.title;
   slide.querySelector('.ic-foot p').textContent=o.p1;
   var card=slide.querySelector('.ic');
