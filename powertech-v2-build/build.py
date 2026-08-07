@@ -709,6 +709,11 @@ mintify = palette_pass('mint')
 warmify = palette_pass('warm')
 def render(tokens, data, out_body, out_full, post=None):
     s = fill(tokens, data, tokens['FONTFACES'], IMGD)
+    # Переключатель языка ведёт на деплойные имена — в паре v2 это index.html и
+    # hy.html. Отдельные страницы просмотра лежат рядом под своими именами, и без
+    # этой подмены переключатель в них указывает в пустоту.
+    s = s.replace('href="./hy.html"', 'href="./pt-hy.html"')
+    s = s.replace('href="./index.html"', 'href="./pt-en.html"')
     io.open(os.path.join(HERE, out_body), 'w', encoding='utf-8').write(s)
     full = wrap(tokens, s)
     if post:
