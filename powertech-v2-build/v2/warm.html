@@ -386,8 +386,11 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .ic-top{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:flex-start;
   /* осталась одна стрелка: space-between увёл бы её к левому краю */
   justify-content:flex-end;padding:15px;}
+/* Стрелка — вектор, а не знак шрифта: ↗ нет ни в одном из наших начертаний,
+   его подставляла система, и вид кнопки решала чужая машина. */
+.ic-go svg{width:16px;height:16px;display:block;}
 .ic-go{width:32px;height:32px;border-radius:2px;background:#F4F5F5;color:#292B31;
-  display:grid;place-items:center;font-size:14px;flex:0 0 auto;
+  display:grid;place-items:center;flex:0 0 auto;
   transition:transform .18s var(--e),background .45s var(--e),color .45s var(--e);}
 /* Знак берёт цвет, назначенный палитрой для работы поверх фирменного:
    белый по нему давал 2,60 при норме 3 для управляющего значка. */
@@ -1564,7 +1567,7 @@ CARDS.forEach(function(o,i){
     ? '<img alt="'+o.title+'" src="'+PT.imgs[o.img]+'">'
     : cardArt(i*97+13);
   slide.innerHTML='<article class="ic'+(o.invite?' is-open-card':'')+'" tabindex="0">'+
-    '<div class="ic-top"><span class="ic-go">&#8599;</span></div>'+
+    '<div class="ic-top"><span class="ic-go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.7 12.3 12.3 3.7"/><path d="M12.3 8.7V3.7H7.3"/></svg></span></div>'+
     '<div class="ic-art">'+visual+'</div>'+
     '<div class="ic-foot"><h3></h3><p></p></div></article>';
   slide.querySelector('h3').textContent=o.title;
