@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>html{background:#F3EEE9}html.wiping{background:#2E5E99}html.wiping body{visibility:hidden}</style>
+<style>html{background:#F6F1E9}html.wiping{background:#2E5E99}html.wiping body{visibility:hidden}</style>
 <script>try{if(sessionStorage.getItem("ptwipe")==="1"){var _h=document.documentElement;_h.className+=" wiping";setTimeout(function(){_h.classList.remove("wiping")},2000);}}catch(e){}</script>
 <title>Gridec | Էլեկտրաէներգիայի որակի մոնիթորինգ</title>
-<meta name="description" content="Գրանցում ենք էլեկտրական համակարգի շեղումներն ու իրադարձությունները։ Տվյալների հիման վրա տալիս ենք հստակ ինժեներական գնահատական։">
+<meta name="description" content="Gridec-ը համակարգի աշխատանքի ընթացքում չափում և գրանցում է էլեկտրական պարամետրերը, ուսումնասիրում այն տեղում և վերլուծում ստացված տվյալները։ Չափումներն ու դիտարկումները…">
 <meta name="theme-color" content="#0D2440">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Gridec | Էլեկտրաէներգիայի որակի մոնիթորինգ">
-<meta property="og:description" content="Գրանցում ենք էլեկտրական համակարգի շեղումներն ու իրադարձությունները։ Տվյալների հիման վրա տալիս ենք հստակ ինժեներական գնահատական։">
+<meta property="og:description" content="Gridec-ը համակարգի աշխատանքի ընթացքում չափում և գրանցում է էլեկտրական պարամետրերը, ուսումնասիրում այն տեղում և վերլուծում ստացված տվյալները։ Չափումներն ու դիտարկումները…">
 <meta property="og:locale" content="hy_AM">
 <meta name="robots" content="noindex,nofollow">
 </head>
@@ -24,17 +24,17 @@
 @font-face{font-family:'Arian AMU Serif';font-weight:600 900;font-display:swap;src:url(../fonts/arian-amu-serif-700.woff2) format('woff2');}
 :root{--brand:#2E5E99;--brand-ink:#2E5E99;/* small coral TEXT on light surfaces: 4.77:1 on milk */--e:cubic-bezier(.16,1,.3,1);
   --gut:clamp(18px,4vw,56px);--inset:calc(max(0px,(100vw - 1280px)/2) + clamp(18px,4vw,56px));
---bg:#F3EEE9;--panel:#FFFFFF;--fg:#0D2440;--fg-mid:rgba(13,36,64,.68);/* .64 хватало на ровной бумаге (4,58), но подложка героя внизу темнее,
-     и там оно падало до 4,38. .68 держит 4,92 в худшей точке. */--fg-soft:rgba(13,36,64,.68);/* .66 = 4,87:1 на бумаге. Пол для этой пары — .64 (4,58); всё, что ниже,
+--bg:#F6F1E9;--panel:#FFFFFF;--fg:#0D2440;--fg-mid:rgba(13,36,64,.68);/* .64 давало на бумаге 4,58 — впритык; .68 держит 4,92 и оставляет запас
+     на светлых подложках вроде верха героя. */--fg-soft:rgba(13,36,64,.68);/* .66 = 4,87:1 на бумаге. Пол для этой пары — .64 (4,58); всё, что ниже,
      не проходит норму для текста мельче 24px, а на --fg-soft сидят подписи
-     от 10 до 14. Иерархию ниже второго уровня приходится держать кеглем. */--hair:rgba(13,36,64,.13);--hair2:rgba(13,36,64,.07);--inv:#0D2440;--inv-fg:#F3EEE9;}
+     от 10 до 14. Иерархию ниже второго уровня приходится держать кеглем. */--hair:rgba(13,36,64,.13);--hair2:rgba(13,36,64,.07);--inv:#0D2440;--inv-fg:#F6F1E9;}
 *{box-sizing:border-box;}
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--brand);
   outline-offset:3px;border-radius:2px;}
 .hero a:focus-visible,.hero button:focus-visible,.plate a:focus-visible,
 .plate button:focus-visible,.plate2 a:focus-visible,.plate2 button:focus-visible,
-.ic:focus-visible{outline-color:#FBF9F6;}
+.ic:focus-visible{outline-color:#FDFAF4;}
 html{scroll-behavior:smooth;}
 /* overflow-x:clip, NOT hidden — hidden turns body into a scroll container and kills position:sticky */
 body{margin:0;background:var(--bg);color:var(--fg);font-family:'Arian AMU','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip;}
@@ -45,10 +45,9 @@ body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opa
 .eyebrow{display:inline-flex;align-items:center;gap:9px;}
 h1,h2,h3{font-family:'Arian AMU',sans-serif;font-weight:700;margin:0;line-height:1.0;letter-spacing:-.012em;}
 p{margin:0;}a{color:inherit;text-decoration:none;}button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
-.mono{font-family:'Arian AMU Serif',Georgia,serif;}
 .wrap{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,56px);}
-.plate .cnt,.plate2 .cnt{color:rgba(243,238,233,.58);}
-.plate .cnt::after,.plate2 .cnt::after{background:rgba(243,238,233,.16);}
+.plate .cnt,.plate2 .cnt{color:rgba(246,241,233,.58);}
+.plate .cnt::after,.plate2 .cnt::after{background:rgba(246,241,233,.16);}
 .cnt{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.22em;color:var(--fg-soft);display:flex;align-items:center;gap:14px;margin-bottom:20px;}
 .cnt::after{content:"";flex:1;height:1px;background:var(--hair2);max-width:190px;}
 .eyebrow{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--brand-ink);}
@@ -75,7 +74,7 @@ header a,header button,header nav,header .navr{pointer-events:auto;}
 header.on-dark .brand{--acc:#7BA4D0;}
 /* centre group — the sections, enclosed like one control */
 nav{justify-self:center;display:flex;align-items:center;gap:2px;padding:4px;font-size:14px;
-  border-radius:3px;box-shadow:inset 0 0 0 1px rgba(13,36,64,.12);background:rgba(251,249,246,.9);
+  border-radius:3px;box-shadow:inset 0 0 0 1px rgba(13,36,64,.12);background:rgba(253,250,244,.9);
   -webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1);
   transition:box-shadow .5s var(--e),background .5s var(--e);}
 /* section names carry the label voice — the serif in Armenian, the body face in English */
@@ -87,32 +86,101 @@ nav a.here{color:var(--inv-fg);background:var(--inv);}
    0 = the glass capsule as built, 1 = titleblock, 2 = hairline rail, 3 = chips.
    The section list is out of the bar in every variant; it lives in the index. */
 .ixb{display:inline-flex;align-items:baseline;gap:3px;font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;
-  letter-spacing:.1em;padding:9px 11px;border-radius:2px;color:rgba(13,36,64,.82);
-  box-shadow:inset 0 0 0 1px rgba(13,36,64,.12);background:rgba(251,249,246,.9);
+  letter-spacing:.1em;padding:9px 11px;border-radius:2px;color:var(--fg);
+  box-shadow:inset 0 0 0 1px rgba(13,36,64,.12);background:rgba(253,250,244,.9);
   transition:color .35s var(--e),box-shadow .35s var(--e),background .35s var(--e);}
-.ixb s{text-decoration:none;opacity:.45;}
-.ixb em{font-style:normal;opacity:.55;}
+.ixb s{text-decoration:none;opacity:.55;}
+.ixb em{font-style:normal;opacity:.68;}
 .ixb b{font-weight:600;}
+/* Стрелка — единственное, что отличает счётчик от кнопки: без неё никто не
+   догадается, что за «01 / 08» скрыт список разделов. */
+/* Стрелка рисуется линиями, а не набирается глифом: у шрифта одна насыщенность
+   и свой кегль, а здесь нужна управляемая толщина и цвет марки — иначе указатель
+   на список теряется среди цифр. Заодно она перестаёт зависеть от языка: на
+   армянской странице глиф брался из Arian AMU Serif и выглядел иначе. */
+.ixb .cv{flex:none;align-self:center;position:relative;width:9px;height:9px;
+  margin-left:8px;font-size:0;transition:transform .3s var(--e);}
+.ixb .cv::before{content:"";position:absolute;left:1px;top:0;width:7px;height:7px;
+  border-right:1.6px solid var(--brand-ink);border-bottom:1.6px solid var(--brand-ink);
+  transform:rotate(45deg);}
+.ixb[aria-expanded="true"] .cv{transform:rotate(180deg);}
+.ixb[aria-expanded="true"]{box-shadow:inset 0 0 0 1px rgba(13,36,64,.34);}
 .ixb:hover{box-shadow:inset 0 0 0 1px rgba(13,36,64,.3);}
 /* the index sheet: numbered rows, nothing decorative */
-.ixp{position:absolute;left:0;right:0;top:100%;background:var(--bg);
-  box-shadow:0 1px 0 var(--hair);pointer-events:auto;overflow:hidden;}
+/* Панель — отдельный лист, положенный поверх страницы: тон светлее бумаги,
+   под нижней кромкой настоящая тень со смещением, а сама страница уходит под
+   лёгкую вуаль. Прежде лист был того же тона, что и фон, и держался на одном
+   контуре в пиксель — на светлых разделах его просто не было видно. */
+.ixp{position:absolute;left:0;right:0;top:100%;
+  background:linear-gradient(180deg,#0D2440 0%,#12294A 62%,#183256 100%);
+  color:var(--inv-fg);
+  box-shadow:0 26px 48px -26px rgba(13,36,64,.55);
+  pointer-events:auto;overflow:hidden;}
+.ixsc{position:fixed;inset:0;background:#0D2440;opacity:0;pointer-events:none;
+  /* -1 внутри шапки: вуаль ложится под саму панель навигации и под лист,
+     но поверх страницы. Без этого гасли и логотип, и кнопки. */
+  z-index:-1;transition:opacity .32s var(--e);}
+.ixsc.on{opacity:.44;pointer-events:auto;}
 .ixp[hidden]{display:none;}
 .ixin{padding:clamp(14px,2vh,26px) clamp(14px,2.1vw,30px) clamp(20px,3vh,34px);}
 .ixp ol{list-style:none;margin:0 auto;padding:0;max-width:1400px;
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(24px,4vw,64px);}
 @media (max-width:760px){.ixp ol{grid-template-columns:1fr;}}
-.ixp li{border-top:1px solid var(--hair2);}
-.ixp a{display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:baseline;
-  padding:13px 0;color:var(--fg);}
+.ixp li{border-top:1px solid rgba(246,241,233,.13);}
+/* Номер, название и линейка до края колонки — так набирают оглавление. */
+.ixp a{display:grid;grid-template-columns:34px minmax(0,auto) minmax(20px,1fr);
+  gap:14px;align-items:baseline;padding:13px 0;color:var(--inv-fg);}
+.ixp a::after{content:"";height:1px;background:rgba(246,241,233,.15);align-self:center;}
+.ixp a:hover::after{background:rgba(246,241,233,.3);transition-delay:0s;}
 .ixp a .no{font-family:'Arian AMU Serif',Georgia,serif;font-size:11px;letter-spacing:.14em;color:var(--brand-ink);}
-.ixp a .tl{font-size:16px;line-height:1.35;}
-.ixp a:hover .tl{color:var(--brand-ink);}
+.ixp a .tl{font-size:16px;line-height:1.35;color:rgba(246,241,233,.86);
+  display:inline-flex;flex-wrap:wrap;}
+.ixp .tl .wd{display:inline-flex;white-space:nowrap;}
+.ixp .tl .sp{display:inline-block;width:.31em;}
+.ixp .tl .lt{display:inline-block;overflow:hidden;height:1.35em;}
+/* Разбег стоит ТОЛЬКО на наведении. Когда он висел на самой букве, он
+   отрабатывал и на уходе курсора: строка возвращалась ещё треть секунды после
+   того, как указатель ушёл, и рядом уже начинала реагировать следующая — на
+   экране всегда было две живых строки вместо одной. Обратный ход короче и без
+   задержек: строка гаснет разом, как только курсор ушёл. */
+.ixp .tl .lt i{display:block;height:1.35em;font-style:normal;
+  transition:transform .3s var(--e);transition-delay:0s;}
+.ixp a:hover .tl .lt i,.ixp a:focus-visible .tl .lt i{transform:translateY(-100%);
+  transition:transform .6s var(--e);transition-delay:var(--d,0ms);}
+.ixp a:hover .tl{color:#F0EAE0;}
+/* Текущий раздел виден без чтения: линейка и название в цвете марки. */
 .ixp a.here .no{font-weight:600;}
+.ixp a.here .tl{color:var(--brand-ink);}
+.ixp a.here::after{background:var(--brand);}
 /* motion: a sheet sliding out from under the bar, nothing bouncing */
-.ixp{max-height:0;transition:max-height .34s var(--e);}
-.ixp.on{max-height:70svh;overflow-y:auto;}
-@media (prefers-reduced-motion:reduce){.ixp{transition:none;}}
+/* Раскрытие собрано из трёх движений, а не одного. Лист опускается; по его
+   верхней кромке проводится линия цветом марки — прибор ставит базовую черту;
+   строки приходят одна за другой с шагом 34 мс, и у каждой следом вытягивается
+   своя линейка. Закрытие идёт без задержек и быстрее: уходить нужно разом. */
+.ixp{max-height:0;opacity:0;
+  transition:max-height .5s var(--e),opacity .34s var(--e);}
+.ixp.on{max-height:70svh;overflow-y:auto;opacity:1;
+  transition:max-height .5s var(--e),opacity .2s var(--e);}
+.ixp::before{content:"";position:absolute;left:0;top:0;height:1px;width:100%;
+  background:var(--brand);transform:scaleX(0);transform-origin:left;
+  transition:transform .62s var(--e);}
+.ixp.on::before{transform:scaleX(1);}
+.ixp li{opacity:0;transform:translateY(-9px);
+  transition:opacity .4s var(--e),transform .4s var(--e);}
+.ixp.on li{opacity:1;transform:none;
+  transition-delay:calc(var(--i,0) * 34ms + 90ms);}
+.ixp a::after{transform:scaleX(0);transform-origin:left;
+  transition:transform .55s var(--e),background .3s var(--e);}
+.ixp.on a::after{transform:scaleX(1);
+  transition-delay:calc(var(--i,0) * 34ms + 190ms);}
+.ixp a.picked .tl{color:#F0EAE0;}
+.ixp a.picked::after{background:var(--brand);}
+@media (prefers-reduced-motion:reduce){
+  .ixp,.ixp.on,.ixsc,.ixp li,.ixp.on li,.ixp::before,.ixp a::after{transition:none;}
+  .ixp li{opacity:1;transform:none;}
+  .ixp::before,.ixp a::after{transform:scaleX(1);}
+  .ixp .tl .lt i{transition:none;}
+  .ixp a:hover .tl .lt i{transform:none;}}
 
 /* ---- 1 titleblock: the bar is a real strip of paper -------------------- */
 html[data-nav="1"] header{background:var(--bg);box-shadow:0 1px 0 var(--hair);pointer-events:auto;}
@@ -122,8 +190,8 @@ html[data-nav="1"] .ixb{justify-self:start;background:none;box-shadow:none;paddi
   position:relative;color:var(--fg-mid);}
 html[data-nav="1"] .ixb::before{content:"";position:absolute;left:0;top:50%;width:11px;height:1px;
   background:var(--hair);}
-html[data-nav="1"] .ixb .sheet{margin-left:10px;text-transform:uppercase;letter-spacing:.16em;
-  font-size:10px;color:var(--fg);}
+html[data-nav="1"] .ixb .sheet{margin-left:10px;text-transform:uppercase;letter-spacing:.13em;
+  font-size:11px;color:var(--fg);}
 html[data-nav="1"] .lang{background:none;box-shadow:none;padding:9px 6px;}
 html[data-nav="1"] .btn{padding:10px 15px;font-size:13px;}
 html[data-nav="1"] .btn i{width:19px;height:19px;}
@@ -143,38 +211,41 @@ html[data-nav="2"] .btn::before{background:var(--fg);}
 html[data-nav="2"] .btn:hover span{color:var(--bg);}
 html[data-nav="2"] .btn i{background:rgba(13,36,64,.09);}
 /* over an ink section the whole rail inverts, hairline included */
-html[data-nav="2"] header[data-tone="ink"] .hin{box-shadow:inset 0 -1px 0 rgba(243,238,233,.22);}
+html[data-nav="2"] header[data-tone="ink"] .hin{box-shadow:inset 0 -1px 0 rgba(246,241,233,.22);}
 html[data-nav="2"] header[data-tone="ink"] .brand,
 html[data-nav="2"] header[data-tone="ink"] .ixb,
-html[data-nav="2"] header[data-tone="ink"] .lang{color:#F3EEE9;}
-html[data-nav="2"] header[data-tone="ink"] .btn{color:#F3EEE9;box-shadow:inset 0 0 0 1px rgba(243,238,233,.34);}
-html[data-nav="2"] header[data-tone="ink"] .btn::before{background:#F3EEE9;}
+html[data-nav="2"] header[data-tone="ink"] .lang,
+html[data-nav="2"] header[data-tone="ink"] .ixb{color:#F6F1E9;}
+html[data-nav="2"] header[data-tone="ink"] .btn{color:#F6F1E9;box-shadow:inset 0 0 0 1px rgba(246,241,233,.34);}
+html[data-nav="2"] header[data-tone="ink"] .btn::before{background:#F6F1E9;}
 html[data-nav="2"] header[data-tone="ink"] .btn:hover span{color:#0D2440;}
-html[data-nav="2"] header[data-tone="ink"] .btn i{background:rgba(243,238,233,.18);}
+html[data-nav="2"] header[data-tone="ink"] .btn i{background:rgba(246,241,233,.18);}
 html[data-nav="2"] .brand,html[data-nav="2"] .ixb,html[data-nav="2"] .lang,html[data-nav="2"] .btn{
   transition:color .45s var(--e),box-shadow .45s var(--e);}
 
 /* the titleblock and the chips follow the ground as well: a paper plate on a dark
    band reads as a sticker, which is exactly what the review shot showed */
-html[data-nav="1"] header[data-tone="ink"]{background:#162E52;box-shadow:0 1px 0 rgba(243,238,233,.18);}
+html[data-nav="1"] header[data-tone="ink"]{background:#162E52;box-shadow:0 1px 0 rgba(246,241,233,.18);}
 html[data-nav="1"] header[data-tone="ink"] .brand,
 html[data-nav="1"] header[data-tone="ink"] .ixb,
-html[data-nav="1"] header[data-tone="ink"] .lang{color:#F3EEE9;}
-html[data-nav="1"] header[data-tone="ink"] .ixb::before{background:rgba(243,238,233,.3);}
-html[data-nav="1"] header[data-tone="ink"] .btn{background:#F3EEE9;color:#0D2440;}
+html[data-nav="1"] header[data-tone="ink"] .lang,
+html[data-nav="1"] header[data-tone="ink"] .ixb{color:#F6F1E9;}
+html[data-nav="1"] header[data-tone="ink"] .ixb::before{background:rgba(246,241,233,.3);}
+html[data-nav="1"] header[data-tone="ink"] .btn{background:#F6F1E9;color:#0D2440;}
 html[data-nav="1"] header[data-tone="ink"] .btn::before{background:#0D2440;}
-html[data-nav="1"] header[data-tone="ink"] .btn:hover span{color:#F3EEE9;}
+html[data-nav="1"] header[data-tone="ink"] .btn:hover span{color:#F6F1E9;}
 html[data-nav="1"] header[data-tone="ink"] .btn i{background:rgba(13,36,64,.14);}
 html[data-nav="3"] header[data-tone="ink"] .brand,
 html[data-nav="3"] header[data-tone="ink"] .navr{background:#162E52;
-  box-shadow:inset 0 0 0 1px rgba(243,238,233,.2);}
+  box-shadow:inset 0 0 0 1px rgba(246,241,233,.2);}
 html[data-nav="3"] header[data-tone="ink"] .brand,
 html[data-nav="3"] header[data-tone="ink"] .ixb,
-html[data-nav="3"] header[data-tone="ink"] .lang{color:#F3EEE9;}
-html[data-nav="3"] header[data-tone="ink"] .lang::before{background:rgba(243,238,233,.18);}
-html[data-nav="3"] header[data-tone="ink"] .btn{background:#F3EEE9;color:#0D2440;}
+html[data-nav="3"] header[data-tone="ink"] .lang,
+html[data-nav="3"] header[data-tone="ink"] .ixb{color:#F6F1E9;}
+html[data-nav="3"] header[data-tone="ink"] .lang::before{background:rgba(246,241,233,.18);}
+html[data-nav="3"] header[data-tone="ink"] .btn{background:#F6F1E9;color:#0D2440;}
 html[data-nav="3"] header[data-tone="ink"] .btn::before{background:#0D2440;}
-html[data-nav="3"] header[data-tone="ink"] .btn:hover span{color:#F3EEE9;}
+html[data-nav="3"] header[data-tone="ink"] .btn:hover span{color:#F6F1E9;}
 html[data-nav="3"] header[data-tone="ink"] .btn i{background:rgba(13,36,64,.14);}
 html[data-nav="1"] header,html[data-nav="1"] .btn,html[data-nav="3"] .brand,
 html[data-nav="3"] .navr,html[data-nav="3"] .btn{
@@ -184,8 +255,8 @@ html[data-nav="3"] .navr,html[data-nav="3"] .btn{
    is the one thing on that screen worth looking at. So the plateless bars put on
    local plates instead, around their own items only, and only while a band is under
    them. The band stays crisp; nothing is veiled. */
-header{--bar-plate:#F3EEE9;--bar-edge:rgba(13,36,64,.14);}
-header[data-tone="ink"]{--bar-plate:#162E52;--bar-edge:rgba(243,238,233,.2);}
+header{--bar-plate:#F6F1E9;--bar-edge:rgba(13,36,64,.14);}
+header[data-tone="ink"]{--bar-plate:#162E52;--bar-edge:rgba(246,241,233,.2);}
 /* the plate is drawn BEHIND the items, never as padding on them: changing padding
    on a state change slid the wordmark sideways as the band came under the bar */
 .brand,.navr{position:relative;}
@@ -210,7 +281,8 @@ html[data-nav="3"] .lang::before{content:"";position:absolute;left:0;top:6px;bot
   background:var(--hair2);}
 html[data-nav="3"] .btn{padding:10px 15px;font-size:13px;margin-left:5px;}
 html[data-nav="3"] .btn i{width:19px;height:19px;}
-html[data-nav="3"] .ixp{margin-top:12px;box-shadow:inset 0 0 0 1px rgba(13,36,64,.14);}
+/* контур сохраняем, но тень листа он больше не отменяет */
+html[data-nav="3"] .ixp{margin-top:12px;}
 
 /* narrow: every variant lands on the same compact bar */
 @media (max-width:900px){
@@ -219,11 +291,27 @@ html[data-nav="3"] .ixp{margin-top:12px;box-shadow:inset 0 0 0 1px rgba(13,36,64
   html[data-nav="3"] .brand{box-shadow:none;background:none;padding:0;}
 }
 
+/* Узкий экран: армянская надпись на кнопке длиннее английской, и правая группа
+   уезжала за край — стрелку срезало кромкой экрана. Ужимаем поля счётчика,
+   переключателя языка и промежутки; ничего не убираем, вся навигация на месте. */
+@media (max-width:430px){
+  /* знаменатель уходит: указатель на список важнее, чем «из восьми» */
+  .ixb s,.ixb em{display:none;}
+  .navr{gap:5px;}
+  .ixb{padding:9px 5px;}
+  .lang{padding:9px 7px;}
+  /* кнопка в шапке ужимается вместе с группой; в герое она остаётся полной */
+  header .btn{padding:11px 12px;font-size:13px;gap:7px;}
+}
+
 /* right group — language, then the enquiry button */
 .navr{justify-self:end;display:flex;align-items:center;gap:12px;}
-.lang{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.12em;padding:9px 12px;
+/* «EN» и «HY» — латиница на обеих страницах, поэтому гарнитура задана явно:
+   через 'Arian AMU Serif',Georgia,serif армянская версия рисовала их своим шрифтом, и кнопка
+   получалась другого размера, чем в английской. */
+.lang{font-family:'Departure Mono',monospace;font-size:11px;letter-spacing:.12em;padding:9px 12px;
   border-radius:2px;color:rgba(13,36,64,.82);box-shadow:inset 0 0 0 1px rgba(13,36,64,.12);
-  background:rgba(251,249,246,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:.4s var(--e);}
+  background:rgba(253,250,244,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:.4s var(--e);}
 .lang:hover{color:#0D2440;box-shadow:inset 0 0 0 1px rgba(13,36,64,.26);}
 /* the arrow sits in its own square, flush inside the button */
 .btn i{position:relative;z-index:1;display:grid;place-items:center;width:22px;height:22px;border-radius:2px;
@@ -240,21 +328,57 @@ html[data-nav="3"] .ixp{margin-top:12px;box-shadow:inset 0 0 0 1px rgba(13,36,64
 .lang:active,.alink:active,nav a:active,.md .x:active,.ic-go:active{transform:translateY(1px);}
 .lang,.md .x{transition:transform .16s var(--e),background .35s var(--e),color .35s var(--e);}
 /* dark surfaces: the untinted brand is the one with contrast there */
-.plate,.plate2,.other,.chart{--brand-ink:#7BA4D0;}
+.plate,.plate2,.other,.chart,.ixp{--brand-ink:#7BA4D0;}
 .btn.gh{background:transparent;color:var(--fg);box-shadow:inset 0 0 0 1px var(--hair);}
-.btn.lt{background:var(--bg);color:var(--fg);}
-.btn.lt:hover span{color:#fff;}
 
 /* hero — the brand colour AS the ground: one flat plane, nothing layered on it.
    Everything reads light because there is no texture and no gradient to fight. */
 /* a sheet, not a poster: paper that darkens a touch towards the fold, with the
    faintest warm breath where the field lives on the right */
 .hero{position:relative;min-height:100svh;overflow:hidden;color:var(--fg);
-  background:linear-gradient(178deg,#F8F5F1 0%,#F3EEE9 58%,#E9E3DA 100%);}
-.hero::before{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;z-index:2;
-  background:rgba(13,36,64,.10);}
-.hero::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
-  background:radial-gradient(58% 52% at 78% 46%,rgba(46,94,153,.055),transparent 70%);}
+  /* Низ героя приходит ровно в бумагу страницы. Прежний последний тон был темнее
+     фона (#EBE4D8 против #F6F1E9), и на стыке через весь экран стояла ступенька —
+     та самая «линия», которая перерезала рисунок. Верх остаётся светлее. */
+  background:linear-gradient(178deg,#FAF7F0 0%,#F6F1E9 72%);}
+/* Волосяной линии по нижней кромке героя больше нет: граница читается самим
+   рисунком на стыке, а сплошная черта через весь экран его перерезала. */
+/* Радиальной заливки поверх бумаги героя больше нет. Она красила фирменным, и на
+   светлой бумаге это давало герою холодный налёт: панель указателя показывала
+   чистый грунт, а герой — тот же грунт под синей вуалью, и разница была видна на
+   стыке. Бумага теперь везде одна. */
+/* ============ ЧЕРТЁЖНЫЙ ЛИСТ И СТЫК ============
+   От листа в герое остались только угловые метки: рамка со штампом на этот экран
+   уже не помещается — справа холст и показание, и третий слой графики их задавит.
+   Сам чертёж живёт на стыке с разделом 01 и сидит верхом на границе: шины и клещи
+   остаются на бумаге героя, прибор уходит вниз. Порядок слоёв выбран так, чтобы
+   промах был безопасным: z-index 1 держит полосу НАД фоном героя, но ПОД его
+   текстом (.hgrid, z-index 2), поэтому случайное наложение съедает рисунок, а не
+   заголовок. Нижняя линия героя (::before, z-index 2) проходит поверх рисунка и
+   работает как базовая линия чертежа.
+   Ни одного литерала цвета: currentColor и переменные переживают смену палитры. */
+/* ПРОВОДНИК: оболочка снизу даёт сечение, жила сверху — саму линию, торцы и углы
+   скруглены. Наконечник ставится там, где жила действительно начинается или
+   заканчивается. Ореол импульса гасит скрипт атрибутом opacity, поэтому здесь
+   только stroke-opacity — иначе правило перебило бы его и свет не гас. */
+.sigrun .sheath,.joint .sheath{fill:none;stroke:currentColor;
+  stroke-width:3.4;stroke-opacity:.07;stroke-linecap:round;stroke-linejoin:round;}
+.sigrun .sig{fill:none;stroke:currentColor;stroke-width:1;
+  stroke-opacity:.22;stroke-linecap:round;stroke-linejoin:round;}
+.sigrun .ferrule{fill:none;stroke:currentColor;stroke-width:1.4;
+  stroke-opacity:.38;stroke-linecap:round;}
+.sigrun .sp{fill:none;stroke:var(--brand);stroke-width:1.6;stroke-linecap:round;}
+.sigrun .sp.halo,.joint .pulse.halo{stroke-width:4.4;stroke-opacity:.22;}
+/* Полоса сигнала: отдельный слой ПОСЛЕ героя. Внутри героя жилу обрезало бы его
+   overflow, и сигналу было некуда идти. */
+.sigrun{position:relative;z-index:1;pointer-events:none;height:120px;
+  margin-top:calc(-1 * clamp(120px,13vh,190px));
+  /* появляется вместе с фиксацией, гаснет, когда импульс дошёл;
+     гаснет втрое дольше, чем появляется — след растворяется, а не выключается */
+  opacity:0;transition:opacity 1.15s var(--e);}
+.sigrun.lit{opacity:1;transition:opacity .3s var(--e);}
+.sigrun svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;
+  color:var(--fg);}
+@media (max-width:1099px){.sigrun{display:none;}}
 /* Two areas across the FULL width: text hard left, wave field running to the
    right edge. No side padding on the hero — the text starts on the same line as
    the logo, the waves bleed off the right edge. */
@@ -277,42 +401,93 @@ h1 em{font-style:normal;color:var(--brand-ink);}
 .hero .eyebrow{color:var(--brand-ink);}
 .hero .eyebrow::before{background:var(--brand-ink);}
 /* on paper the hero needs no special buttons — the page's own pair is right */
-/* its own area again, so the cursor reaches the canvas and the strings react */
 /* The field is placed by the CENTRE OF THE FIGURE, not by the canvas edge, which is
    what the owner marked: the octagon's centre sits at 75% of the viewport width (the
    middle of the right half) and at 47% of the hero's height. The figure is drawn at
    45.2% across its own canvas, since the strip to its right belongs to the
    annotations, so the canvas is pulled back by exactly that much. */
-.stage{position:absolute;left:75%;top:47%;transform:translate(-45.2%,-50%);
-  width:min(42vw,580px);aspect-ratio:1;margin:0;
+/* 70, а не 75: правее кольца живёт цепь измерения, и при 75% между ободом и
+   краем экрана оставалось 138 px — колонка с просветами туда не помещалась. */
+/* Лента идёт во всю ширину героя: фигура перестала быть объектом справа и
+   стала полосой, поэтому сцена больше не квадрат. */
+.stage{position:absolute;left:0;top:0;width:100%;height:100%;margin:0;
   /* graphite hairlines; the light that travels them is the accent */
   --wv-line:13,36,64;--wv-glow:76,138,203;}
 #star{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;}
-.rd{position:absolute;left:0;bottom:calc(-1*clamp(30px,5vh,52px));z-index:2;
-  font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;color:var(--fg-soft);line-height:1.95;}
-.rd b{color:var(--fg);font-variant-numeric:tabular-nums;font-weight:600;}
-.rd .st{color:var(--brand-ink);}
+/* ПОКАЗАНИЕ.
+   Привязано к КОЛЬЦУ, а не к низу сцены: обод заканчивается на 83,5% высоты
+   квадратной сцены (50% центр + 33,5% радиус), и прежняя посадка по нижней кромке
+   оставляла между ними полтораста пикселей пустоты — показание висело само по
+   себе вместо того, чтобы читаться подписью к фигуре.
+   Иерархия в три ступени: тихая подпись, крупное значение, состояние акцентом.
+   Специфичность правил ниже поднята намеренно: блок показаний, который сборка
+   вливает в конец таблицы, иначе вернёт всему кегль 11.
+   Токен блока показаний здесь НЕ упоминаем даже в комментарии: подстановка внесёт
+   внутрь чужие границы комментария и закроет этот раньше времени. */
+/* Показание стоит ПОД КОЛОНКОЙ ФАЗ, а не под кольцом: кольцо — образ сети, оно
+   ничего не измеряет, и цифры под ним читались бы его выводом. Правое поле то же,
+   что у колонки (70 px), поэтому у блока появляется общая с ней ось. */
+.rd{position:absolute;right:70px;top:60%;left:auto;bottom:auto;z-index:2;
+  font-family:'Arian AMU Serif',Georgia,serif;color:var(--fg-soft);line-height:1.4;}
+/* :not(.st) поднимает вес правила выше, чем у общего правила подписей из блока
+   показаний, — иначе подпись возвращается к 12 px и ступень иерархии пропадает */
+.rd>.cp:not(.st){display:block;font-size:11px;letter-spacing:.17em;}
+.rd .vl{display:flex;align-items:baseline;gap:7px;margin:12px 0 0;}
+/* И цифры, и единицы — пиксельным шрифтом, одинаково на обеих языковых версиях.
+   Раньше на английской он доставался всему блоку, а на армянской только цифрам, и
+   «V» с «Hz» выходили разными гарнитурами — это и была замеченная разница.
+   Кегли кратны 11: пиксельная гарнитура нарисована на этой сетке и на кратных
+   размерах ложится точно в пиксель, а между ними мылится. 34 была не кратной и
+   вдобавок кричала; 22 и чётче, и тише. */
+.rd .vl b,.rd .vl i{font-family:'Departure Mono',monospace;}
+.rd .vl b{color:var(--fg);font-variant-numeric:tabular-nums;font-weight:400;}
+.rd .vl .hv{font-size:22px;line-height:1;letter-spacing:.02em;}
+.rd .vl .hz{font-size:11px;line-height:1;margin-left:10px;}
+.rd .vl i{font-style:normal;font-size:11px;letter-spacing:.08em;}
+/* СОСТОЯНИЕ. Спокойный режим словом не подписывается — «NOMINAL» сообщал ровно
+   ничего и занимал строку. Остаётся индикатор: в покое серая точка, при
+   зафиксированном отклонении она загорается фирменным и рядом появляется текст
+   события. Переключение держится на :empty, без единой строки скрипта.
+   min-height удерживает строку занятой всегда, иначе блок дышал бы по высоте на
+   каждом событии и тянул за собой привязанный к нему кабель. */
+/* Индикатор — НАСТОЯЩИЙ элемент, а не ::before: Chrome не перерисовывал
+   псевдоэлемент при смене текста рядом, и точка оставалась серой на событии.
+   Строка держит высоту всегда, поэтому блок не дышит, когда текста нет. */
+/* 14, а не 12: строка состояния при кегле 10 и интерлиньяже 1,4 занимает ровно
+   14 px, и на меньшем минимуме блок подрастал на 2 px в момент события. */
+.rd .sw{display:flex;align-items:center;gap:9px;margin-top:13px;min-height:14px;}
+.rd .ind{flex:none;width:5px;height:5px;background:var(--fg);opacity:.22;
+  transition:background-color .35s var(--e),opacity .35s var(--e);}
+/* класс вешается на .sw — там же, где живёт сам индикатор */
+.rd .sw.is-ev .ind{background:var(--brand-ink);opacity:1;}
+.rd .st{font-size:11px;letter-spacing:.17em;color:var(--brand-ink);}
 /* header over the dark hero: light chrome until scrolled */
-header.on-dark .brand{color:#F3EEE9;}
-header.on-dark nav{box-shadow:inset 0 0 0 1px rgba(251,249,246,.28);background:rgba(22,46,82,.42);}
-header.on-dark nav a{color:rgba(237,232,225,.88);}
-header.on-dark nav a:hover{color:#fff;background:rgba(243,238,233,.10);}
-header.on-dark nav a.here{color:#0D2440;background:#F3EEE9;}
-header.on-dark .lang{color:rgba(251,249,246,.9);background:rgba(22,46,82,.42);box-shadow:inset 0 0 0 1px rgba(251,249,246,.3);}
+header.on-dark .brand{color:#F6F1E9;}
+header.on-dark nav{box-shadow:inset 0 0 0 1px rgba(253,250,244,.28);background:rgba(22,46,82,.42);}
+header.on-dark nav a{color:rgba(240,234,224,.88);}
+header.on-dark nav a:hover{color:#fff;background:rgba(246,241,233,.10);}
+header.on-dark nav a.here{color:#0D2440;background:#F6F1E9;}
+header.on-dark .lang{color:rgba(253,250,244,.9);background:rgba(22,46,82,.42);box-shadow:inset 0 0 0 1px rgba(253,250,244,.3);}
 header.on-dark .lang:hover{color:#fff;}
 header.on-dark .btn{background:#162E52;color:#fff;}
 header.on-dark .btn i{background:rgba(255,255,255,.22);}
 
 /* junction traces */
 .joint{display:block;width:100%;height:clamp(110px,15vw,200px);overflow:visible;color:var(--fg);}
-.joint .base{fill:none;stroke-width:1;}
+.joint .base{fill:none;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;}
 .joint .pulse{fill:none;stroke:var(--brand);stroke-width:1.6;stroke-linecap:round;}
 
 /* cantor8-style pixel wipe — a grid of brand squares sweeps the screen at section changes */
 #wipe{position:fixed;inset:0;z-index:110;pointer-events:none;display:none;}
 #wipe.on{display:grid;}
-#wipe i{background:var(--brand);transform:scale(0);transform-origin:center;will-change:transform;transition:transform .32s cubic-bezier(.4,0,.2,1);}
-#wipe.go i{transform:scale(1.02);}
+/* БЕЗ will-change. Ячеек шестьсот, и повышение каждой в свой слой давало ровно то,
+   с чем в этом файле уже дважды разбирались на карточке и на фотографии: соседние
+   слои при дробных координатах не сшиваются, и между ними просвечивает страница —
+   белые нити по всему полю в момент полного перекрытия.
+   Перекрытие поднято с 2 до 6 %: даже без слоёв дорожки грида дробные, и двух
+   процентов не хватало, чтобы закрыть шов. */
+#wipe i{background:var(--brand);transform:scale(0);transform-origin:center;transition:transform .32s cubic-bezier(.4,0,.2,1);}
+#wipe.go i{transform:scale(1.06);}
 #wipe.instant i{transition:none;}
 /* dithered pixel boundary: a band of squares that dissolves one section colour
    into the next — cantor8's actual device (static dither, not an animation) */
@@ -320,19 +495,18 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .dith i{display:block;}
 
 /* dark plate section (services) */
-.plate2{position:relative;overflow:hidden;background:linear-gradient(180deg,#0D2440 0%,#12294A 60%,#162E52 100%);color:#F3EEE9;}
+.plate2{position:relative;overflow:hidden;background:linear-gradient(180deg,#0D2440 0%,#12294A 60%,#162E52 100%);color:#F6F1E9;}
 .plate2>.wrap{position:relative;z-index:1;}
-.plate2 h2,.plate2 h3{color:#EDE8E1;}
-.plate2 .lede{color:rgba(243,238,233,.66);}
-.plate2 .cnt{color:rgba(243,238,233,.58);}
-.plate2 .stat{background:rgba(243,238,233,.045);box-shadow:inset 0 0 0 1px rgba(243,238,233,.1);}
-.plate2 .stat span{color:rgba(243,238,233,.66);}
-.plate2 .step p{color:rgba(243,238,233,.64);}
+.plate2 h2,.plate2 h3{color:#F0EAE0;}
+.plate2 .lede{color:rgba(246,241,233,.66);}
+.plate2 .cnt{color:rgba(246,241,233,.58);}
+.plate2 .stat{background:rgba(246,241,233,.045);box-shadow:inset 0 0 0 1px rgba(246,241,233,.1);}
+.plate2 .stat span{color:rgba(246,241,233,.66);}
+.plate2 .step p{color:rgba(246,241,233,.64);}
 .plate2 .alink:hover{color:#fff;}
-.plate2 .display{color:#EDE8E1;}
-.plate2 .chips span{color:#EDE8E1;}
-.plate2 .note{color:rgba(243,238,233,.58);}
-.plate2 h2 i,.plate2 .lede i{color:rgba(243,238,233,.4);}
+.plate2 .display{color:#F0EAE0;}
+.plate2 .note{color:rgba(246,241,233,.58);}
+.plate2 h2 i,.plate2 .lede i{color:rgba(246,241,233,.4);}
 
 /* industries — horizontal rail, detail opens on click */
 .suite .spin>.wrap{width:100%;}
@@ -374,7 +548,14 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .icard:nth-child(7n+5){padding-top:clamp(4px,.8vw,14px);}
 .icard:nth-child(7n+6){padding-top:clamp(16px,2.6vw,48px);}
 .icard:nth-child(7n+7){padding-top:clamp(10px,1.8vw,32px);}
-.ic{position:relative;display:flex;flex-direction:column;min-height:var(--cardh,clamp(300px,38vw,470px));
+/* height, а НЕ min-height. С минимумом карточка росла по своему тексту: заголовок
+   в одну строку или в две — и высоты разъезжались на полсотни пикселей, а ряд
+   выглядел случайным. Заодно это возвращало долг кадру: --cardh считается так,
+   чтобы карточка влезала в закреплённый экран, а с минимумом она его перерастала.
+   Разницу забирает .ic-art (flex:1 1 auto) — фотография, а не текст. */
+.icard{backface-visibility:hidden;}
+.ic{position:relative;display:flex;flex-direction:column;overflow:hidden;
+  height:var(--cardh,clamp(300px,38vw,470px));
   border:1px solid #102745;
   /* A real border, not a spread shadow. The photograph is clipped at the border
      box, so with the dark ring painted OUTSIDE it the outermost pixel was a blend
@@ -384,7 +565,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   /* No backface hint: it promoted the card to its own layer, and the rail scales
      that layer every frame, so the texture was stretched instead of repainted -
      that is the wavy vertical edge. Nothing in these cards is composited now. */
-  background:#102745;color:#F3EEE9;border-radius:2px;overflow:hidden;cursor:pointer;
+  background:#102745;color:#F6F1E9;border-radius:2px;overflow:hidden;cursor:pointer;
   /* the card stays put on hover — only its mark answers */
   transition:none;}
 .ic-top{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:flex-start;
@@ -392,15 +573,18 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   justify-content:flex-end;padding:15px;}
 /* Стрелка — вектор, а не знак шрифта: ↗ нет ни в одном из наших начертаний,
    его подставляла система, и вид кнопки решала чужая машина. */
-.ic-go svg{width:16px;height:16px;display:block;}
-.ic-go{width:32px;height:32px;border-radius:2px;background:#F3EEE9;color:#102745;
+.ic-go svg{width:19px;height:19px;display:block;}
+.ic-go{width:38px;height:38px;border-radius:2px;background:#F6F1E9;color:#102745;
   display:grid;place-items:center;flex:0 0 auto;
   transition:transform .18s var(--e),background .45s var(--e),color .45s var(--e);}
 /* Знак берёт цвет, назначенный палитрой для работы поверх фирменного:
    белый по нему давал 2,60 при норме 3 для управляющего значка. */
 .ic:hover .ic-go,.ic:focus-visible .ic-go{background:var(--brand);color:var(--brand-on);}
 /* the sector photograph, easing in scale so the movement has weight */
-.ic-art{position:relative;flex:1 1 auto;min-height:150px;overflow:hidden;
+/* 110, а не 150: высота карточки теперь ЖЁСТКАЯ, и на коротком экране, где
+   --cardh опускается к 260, фотографии с минимумом 150 не хватало места вместе с
+   подвалом (до 141 при заголовке в две строки) — подрезался бы текст. */
+.ic-art{position:relative;flex:1 1 auto;min-height:110px;overflow:hidden;
   background:#102745;
   /* No layer here either. That mattered only while .icard was promoted: the
      photograph then landed in the parent texture and was stretched. With the
@@ -417,7 +601,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
      title sits. overflow:hidden on the parent clips the overhang. */
   inset:-1px;
   background:linear-gradient(180deg,rgba(13,36,64,.5) 0%,rgba(13,36,64,.05) 42%,rgba(16,39,69,.92) 86%,#102745 100%);}
-.ic-art svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;color:rgba(251,249,246,.5);}
+.ic-art svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;color:rgba(253,250,244,.5);}
 .ic-foot{position:relative;z-index:2;padding:0 16px 18px;margin-top:-8px;
   /* Opaque, so the eight pixels it already overlaps are painted over rather
      than blended: the photo-to-background boundary that flickered under the
@@ -426,12 +610,24 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
      hard dark fill here hid its copy. */
   background-color:inherit;}
 .ic-foot h3{font-size:clamp(19px,1.9vw,26px);margin:0 0 8px;}
-.ic-foot p{font-size:14px;line-height:1.6;color:rgba(243,238,233,.66);
+.ic-foot p{font-size:14px;line-height:1.6;color:rgba(246,241,233,.66);
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
 /* the invitation keeps the brand colour and its drawing */
-.ic.is-open-card{background:var(--brand);box-shadow:0 0 0 1px var(--brand);}
-.ic.is-open-card .ic-art::after{background:linear-gradient(180deg,rgba(46,94,153,.1) 0%,rgba(46,94,153,.92) 100%);}
-.ic.is-open-card .ic-foot p{color:rgba(251,249,246,.86);}
+/* Последняя плита была залита цветом марки целиком, и её низ выпадал из ряда:
+   шесть карточек с тёмной подложкой и светлым названием, седьмая — светлая с
+   тёмным. Теперь она той же тёмной семьи, а отличается тем, чем и должна: на
+   ней не фотография, а чертёж. Марка осталась акцентом — линия по нижней
+   кромке и сам рисунок. */
+.ic.is-open-card{background:#102745;box-shadow:0 0 0 1px #102745;}
+.ic.is-open-card::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;
+  background:var(--brand);z-index:4;}
+/* Тот же спуск в темноту, что и у фотографий, только чуть глубже сверху:
+   под ним не снимок, а линии, и им нужно больше воздуха. */
+.ic.is-open-card .ic-art::after{
+  background:linear-gradient(180deg,rgba(13,36,64,.18) 0%,rgba(13,36,64,.05) 46%,rgba(16,39,69,.9) 86%,#102745 100%);}
+.ic.is-open-card .ic-art{background:#0D1524;}
+.ic.is-open-card .ic-art svg{color:rgba(46,94,153,.55);}
+.ic.is-open-card .ic-foot p{color:rgba(253,250,244,.86);}
 .suite .spin>.wrap{width:100%;}
 /* head of the card zone: heading left, intro right, in fixed columns. As a flex
    row it used to wrap in Armenian — the longer heading pushed the intro onto its
@@ -459,7 +655,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .mi:nth-child(4n+1){border-left:none;}
 .mi:nth-child(n+5){border-top:1px solid var(--hair2);}
 .mi .ix{position:absolute;top:clamp(20px,2.2vw,30px);right:clamp(16px,1.8vw,26px);
-  font-family:'Arian AMU Serif',Georgia,serif;font-size:10px;letter-spacing:.14em;color:var(--fg-soft);opacity:.6;}
+  font-family:'Arian AMU Serif',Georgia,serif;font-size:11px;letter-spacing:.12em;color:var(--fg-soft);opacity:.6;}
 .mi svg{width:52px;height:34px;display:block;overflow:visible;color:var(--fg);
   transition:color .45s var(--e),transform .5s var(--e);}
 .mi .lb2{font-size:14px;line-height:1.42;color:var(--fg);}
@@ -476,25 +672,25 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .mi-alt .ix{color:var(--brand-ink);opacity:1;}
 .mi-alt:hover{background:var(--alt-wash-h);}
 /* on the dark plate the cells stay transparent, so the empty slot is just air */
-.plate2 .meas{border-top-color:rgba(243,238,233,.13);}
-.plate2 .mi{border-left-color:rgba(243,238,233,.13);}
-.plate2 .mi:nth-child(n+5){border-top-color:rgba(243,238,233,.13);}
-.plate2 .mi svg{color:#F3EEE9;}
-.plate2 .mi .lb2{color:rgba(243,238,233,.84);}
-.plate2 .mi .ix{color:rgba(243,238,233,.58);}
+.plate2 .meas{border-top-color:rgba(246,241,233,.13);}
+.plate2 .mi{border-left-color:rgba(246,241,233,.13);}
+.plate2 .mi:nth-child(n+5){border-top-color:rgba(246,241,233,.13);}
+.plate2 .mi svg{color:#F6F1E9;}
+.plate2 .mi .lb2{color:rgba(246,241,233,.84);}
+.plate2 .mi .ix{color:rgba(246,241,233,.58);}
 /* on the plate the accent tint has to come from the light side of the brand, and the
    index needs the deeper selector or the rule above wins on specificity */
-.plate2{--alt-wash:rgba(243,238,233,.055);--alt-wash-h:rgba(243,238,233,.09);}
+.plate2{--alt-wash:rgba(246,241,233,.055);--alt-wash-h:rgba(246,241,233,.09);}
 .plate2 .mi-alt .ix{color:var(--brand-ink);opacity:1;}
-.plate2 .mi:hover{background:rgba(243,238,233,.05);}
+.plate2 .mi:hover{background:rgba(246,241,233,.05);}
 @media (max-width:1100px){
   .meas{grid-template-columns:repeat(3,1fr);}
   .mi:nth-child(4n+1){border-left:1px solid var(--hair2);}
   .mi:nth-child(3n+1){border-left:none;}
   .mi:nth-child(n+5){border-top:none;}
   .mi:nth-child(n+4){border-top:1px solid var(--hair2);}
-  .plate2 .mi:nth-child(4n+1){border-left-color:rgba(243,238,233,.13);}
-  .plate2 .mi:nth-child(n+4){border-top-color:rgba(243,238,233,.13);}
+  .plate2 .mi:nth-child(4n+1){border-left-color:rgba(246,241,233,.13);}
+  .plate2 .mi:nth-child(n+4){border-top-color:rgba(246,241,233,.13);}
 }
 @media (max-width:640px){
   .meas{grid-template-columns:repeat(2,1fr);}
@@ -502,15 +698,20 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   .mi:nth-child(2n+1){border-left:none;}
   .mi:nth-child(n+4){border-top:none;}
   .mi:nth-child(n+3){border-top:1px solid var(--hair2);}
-  .plate2 .mi:nth-child(3n+1){border-left-color:rgba(243,238,233,.13);}
-  .plate2 .mi:nth-child(n+3){border-top-color:rgba(243,238,233,.13);}
+  .plate2 .mi:nth-child(3n+1){border-left-color:rgba(246,241,233,.13);}
+  .plate2 .mi:nth-child(n+3){border-top-color:rgba(246,241,233,.13);}
 }
 
 /* sections */
 .sec{padding:clamp(56px,7vw,104px) 0 clamp(64px,8vw,120px);}
 h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
 .thesis h2{max-width:24ch;}
-.alink{display:inline-flex;align-items:center;gap:9px;margin-top:26px;font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand-ink);}
+/* Строчная ссылка была высотой 13 px — вдвое ниже минимальной цели нажатия
+   24x24. Поле уходит в область нажатия, а не в отступы: верхний margin
+   уменьшен, нижний отрицательный, поэтому в потоке ничего не сдвинулось. */
+.alink{display:inline-flex;align-items:center;gap:9px;margin-top:17px;
+  padding-block:9px;margin-bottom:-9px;font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--brand-ink);}
 .alink:hover{text-decoration:underline;text-underline-offset:4px;}
 
 /* sticky sequence */
@@ -518,7 +719,8 @@ h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
    thesis above, so it stays compact and shares its column */
 .chain{margin-top:clamp(24px,3vw,40px);}
 .chaxis{position:relative;height:2px;background:var(--hair);}
-.chaxis i{position:absolute;inset:0;background:var(--brand);transform:scaleX(0);transform-origin:left;will-change:transform;}
+.chaxis i{position:absolute;inset:0;background:var(--brand);
+  transform:scaleX(var(--p,0));transform-origin:left;will-change:transform;}
 .chsteps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);}
 .chsteps li{position:relative;padding:20px clamp(12px,1.4vw,22px) 0 0;opacity:.5;transition:opacity .55s var(--e);}
 .chsteps li::before{content:"";position:absolute;top:-5px;left:0;width:8px;height:8px;background:var(--hair);
@@ -534,15 +736,30 @@ h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
 .chsteps li.inc.on{opacity:1;}
 .chsteps .inc-tag{font-family:'Arian AMU Serif',Georgia,serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--brand-ink);display:inline-block;margin-left:9px;}
-.chsteps .inc-tag::before{content:" b7";margin-right:9px;color:rgba(13,36,64,.3);}
+.chsteps .inc-tag::before{content:"·";margin-right:9px;color:rgba(13,36,64,.3);}
 .chsteps .n{display:inline-block;font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.18em;color:var(--brand-ink);margin-bottom:7px;}
 .chsteps .t{display:block;font-size:16px;line-height:1.45;color:var(--fg);max-width:20ch;margin-top:8px;}
+/* Ниже 960 ось шкалы встаёт вертикально. Горизонтальная шкала с пятью точками
+   не сходится с списком в две колонки: отметки второго и третьего рядов
+   повисали в воздухе, не привязанные ни к чему. Последовательность и смысл те
+   же, читается сверху вниз, отметки снова стоят на оси. */
+@media (max-width:960px){
+  .chain{display:grid;grid-template-columns:2px 1fr;column-gap:18px;align-items:stretch;}
+  .chaxis{height:auto;width:2px;}
+  .chaxis i{transform:scaleY(var(--p,0));transform-origin:top;}
+  .chsteps{grid-template-columns:1fr;row-gap:20px;}
+  .chsteps li{padding:0;}
+  .chsteps li::before{top:5px;left:-23px;}
+  .chsteps li.inc::before{top:3.5px;left:-24.5px;}
+  .chsteps .t{max-width:none;}
+}
+
 
 /* industries grid */
 .other{margin-top:10px;background:var(--inv);color:var(--inv-fg);padding:clamp(26px,3.4vw,44px);display:flex;justify-content:space-between;align-items:center;gap:26px;flex-wrap:wrap;border-radius:2px;}
-.other .no{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.14em;color:rgba(243,238,233,.58);}
+.other .no{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.14em;color:rgba(246,241,233,.58);}
 .other h3{font-size:clamp(21px,2.4vw,32px);margin:12px 0 10px;}
-.other p{color:rgba(243,238,233,.66);font-size:16px;line-height:1.7;max-width:52ch;}
+.other p{color:rgba(246,241,233,.66);font-size:16px;line-height:1.7;max-width:52ch;}
 .other .btn{background:var(--brand);color:var(--brand-on);}
 .other .btn::before{background:var(--bg);}
 .other .btn:hover span{color:var(--fg);}
@@ -569,7 +786,7 @@ h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
 /* the row's contents shift, not the row: transforming the row would drag its rule along */
 .list div>*{transition:transform .45s var(--e);}
 .list div:hover>*{transform:translateX(8px);}
-.list .n{font-family:'Arian AMU Serif',Georgia,serif;font-size:10px;letter-spacing:.14em;color:var(--brand-ink);}
+.list .n{font-family:'Arian AMU Serif',Georgia,serif;font-size:11px;letter-spacing:.12em;color:var(--brand-ink);}
 /* the standards footnote: quiet, but legible — it carries the method */
 .note{font-size:14px;line-height:1.7;color:var(--fg-mid);margin-top:30px;padding-top:16px;
   border-top:1px solid var(--hair2);max-width:54ch;}
@@ -585,39 +802,47 @@ h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
 .asg .card:hover::before{transform:scaleX(1);}
 .asg .hd{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
 .asg .no{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.14em;color:var(--fg-soft);}
-.asg .tag{font-family:'Arian AMU Serif',Georgia,serif;font-size:10px;letter-spacing:.16em;color:var(--brand-ink);text-transform:uppercase;}
-.asg h3{font-size:clamp(19px,2vw,26px);margin:14px 0 10px;}
+.asg .tag{font-family:'Arian AMU Serif',Georgia,serif;font-size:11px;letter-spacing:.13em;color:var(--brand-ink);text-transform:uppercase;}
+/* карточка без названия: отступ, который держал заголовок, переходит абзацу */
+.asg .hd+p{margin-top:16px;}
 .asg p{font-size:14px;line-height:1.7;color:var(--fg-mid);}
 
 /* measure chips */
-.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:34px;}
-.chips span{box-shadow:inset 0 0 0 1px var(--hair);padding:11px 16px;font-size:14px;color:var(--fg);border-radius:2px;background:var(--panel);}
 
 /* company */
-/* the approach reads as a route: staggered blocks threaded by one trace */
-.pr{position:relative;margin-top:clamp(36px,4.6vw,68px);}
-.pr .p{position:relative;z-index:1;width:46%;padding:18px 0 0 30px;border-top:1px solid var(--hair);
-  margin-bottom:clamp(30px,3.8vw,64px);}
-.pr .p:nth-of-type(1){margin-left:0;}
-.pr .p:nth-of-type(2){margin-left:48%;}
-.pr .p:nth-of-type(3){margin-left:20%;}
-.pr .p:last-child{margin-bottom:0;}
-.pr .p .mk{position:absolute;left:0;top:-3.5px;width:7px;height:7px;background:var(--brand);}
-.coflow{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;color:var(--fg);}
-.coflow .base{fill:none;stroke:currentColor;stroke-opacity:.34;stroke-width:1.2;}
-.coflow .sub{fill:none;stroke:currentColor;stroke-opacity:.15;stroke-width:1;}
-.coflow .pulse{fill:none;stroke:var(--brand);stroke-width:1.6;stroke-linecap:round;}
-.pr .p .no{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.16em;color:var(--brand-ink);}
-.pr .p h3{font-size:clamp(18px,1.9vw,25px);margin:12px 0 9px;}
-.pr .p p{font-size:16px;line-height:1.72;color:rgba(13,36,64,.82);margin-top:9px;max-width:44ch;}
-.sub{margin-top:clamp(50px,7vw,90px);}
-.sub h3{font-size:clamp(24px,3vw,40px);}
+/* Три главы истории, а не карточки: подпись с номером, утверждение и абзац.
+   Утверждение слева, абзац справа — глаз читает по строке, а не по плитке.
+   Волосяная линия сверху повторяет язык остальных разделов. */
+/* Три блока идут ступенькой вправо: раздел читается как серия отсчётов,
+   снятых в разных точках, а не как список одинаковых карточек. Подпись сидит
+   НА волосяной линии и разрывает её собой — так на чертеже размерная линия
+   прерывается своим значением. Слева у линии короткий штрих: начало отсчёта. */
+.story{margin-top:clamp(46px,6vw,92px);display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  column-gap:clamp(14px,1.8vw,26px);row-gap:clamp(54px,7vw,110px);}
+.story .sb{position:relative;display:block;grid-column:1 / span 6;
+  border-top:1px solid var(--hair);}
+.story .sb:nth-child(2){grid-column:4 / span 6;}
+.story .sb:nth-child(3){grid-column:7 / span 6;}
+.story .sb::before{content:"";position:absolute;left:0;top:-5px;
+  width:1px;height:11px;background:var(--hair);}
+.story .lb{font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;letter-spacing:.16em;
+  color:var(--brand-ink);line-height:1;transform:translateY(-50%);}
+.story .lb span{background:var(--bg);padding:0 15px 0 13px;}
+/* Ограничения измерения нет: переносы в утверждениях заданы разметкой, и лимит в
+   22 знака ломал бы авторскую строку ещё раз, на третью. Ширину держит колонка. */
+.story p{font-size:17px;line-height:1.7;color:var(--fg-mid);
+  max-width:46ch;margin:20px 0 0;}
+@media (max-width:860px){.story{grid-template-columns:1fr;row-gap:clamp(38px,8vw,58px);}
+  .story .sb,.story .sb:nth-child(2),.story .sb:nth-child(3){grid-column:1 / -1;}
+  .story p{max-width:none;}
+}
 
 /* contact plate */
 .plate{background:linear-gradient(180deg,#0D2440 0%,#12294A 58%,#183256 100%);color:var(--inv-fg);}
 .plate .wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,70px);align-items:center;padding-top:clamp(70px,9vw,130px);padding-bottom:clamp(70px,9vw,130px);}
 .plate h2{color:var(--inv-fg);}
-.plate p{color:rgba(243,238,233,.68);font-size:16px;line-height:1.75;max-width:46ch;margin-top:22px;}
+.plate p{color:rgba(246,241,233,.68);font-size:16px;line-height:1.75;max-width:46ch;margin-top:22px;}
 .plate .btn{background:var(--brand);color:var(--brand-on);margin-top:30px;}
 /* heading and call to action are one element, so the phrase is said once */
 /* the CTA reads as a button, so it takes a step below the section titles —
@@ -640,7 +865,7 @@ h2{font-size:clamp(26px,4.1vw,58px);text-wrap:balance;}
 .plate .btn:hover span{color:var(--fg);}
 .chart{position:relative;}
 .chart svg{width:100%;height:auto;display:block;}
-.chart .cap{font-family:'Arian AMU Serif',Georgia,serif;font-size:10px;letter-spacing:.14em;color:rgba(243,238,233,.58);margin-bottom:12px;}
+.chart .cap{font-family:'Arian AMU Serif',Georgia,serif;font-size:11px;letter-spacing:.12em;color:rgba(246,241,233,.58);margin-bottom:12px;}
 footer{border-top:1px solid var(--hair2);padding:32px 0;font-family:'Arian AMU Serif',Georgia,serif;font-size:12px;color:var(--fg-soft);}
 footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wrap;line-height:1.9;}
 
@@ -652,14 +877,14 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
    an opaque chip reads on dark grounds, the hairline ring separates it on light
    ones. Same language as the card's corner mark. */
 .md .x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;
-  background:#162E52;color:#F3EEE9;z-index:5;font-size:15px;line-height:1;
+  background:#162E52;color:#F6F1E9;z-index:5;font-size:15px;line-height:1;
   display:grid;place-items:center;
-  box-shadow:0 0 0 1px rgba(243,238,233,.55);}
+  box-shadow:0 0 0 1px rgba(246,241,233,.55);}
 .md .x:hover{background:var(--brand);color:var(--brand-on);
-  box-shadow:0 0 0 1px rgba(251,249,246,.7);}
+  box-shadow:0 0 0 1px rgba(253,250,244,.7);}
 /* the industry detail: the card opens into a full plate */
 #imd{max-width:880px;}
-#imd .ph{position:relative;aspect-ratio:16/7;background:#DAD2C6;overflow:hidden;}
+#imd .ph{position:relative;aspect-ratio:16/7;background:#DCD3C4;overflow:hidden;}
 #imd .ph img{width:100%;height:100%;object-fit:cover;display:block;}
 /* the index sat in difference blend mode, which inverts against the photograph —
    on mid-tone frames it landed within a hair of the backdrop. It now reads on its
@@ -670,13 +895,13 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 #imd .bd{padding:clamp(22px,3vw,38px);}
 #imd h3{font-size:clamp(24px,3vw,38px);margin:0 0 14px;}
 #imd .p1{font-size:16px;line-height:1.75;color:var(--fg-mid);max-width:62ch;}
-#imd .lb{font-family:'Arian AMU Serif',Georgia,serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand-ink);margin:26px 0 4px;}
+#imd .lb{font-family:'Arian AMU Serif',Georgia,serif;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--brand-ink);margin:26px 0 4px;}
 #imd .fi{display:flex;gap:12px;align-items:baseline;font-size:14px;line-height:1.65;padding:11px 0;border-top:1px solid var(--hair2);}
 #imd .fi em{font-style:normal;width:6px;height:6px;background:var(--brand);flex:0 0 auto;transform:translateY(-1px);}
 #imd .st{margin-top:24px;padding-top:18px;border-top:1px solid var(--hair2);display:flex;gap:22px;align-items:baseline;flex-wrap:wrap;}
 #imd .st .big{font-family:'Arian AMU',sans-serif;font-weight:700;font-size:clamp(32px,4vw,48px);line-height:1;}
 #imd .st .sx{font-size:14px;line-height:1.62;color:var(--fg-mid);max-width:48ch;}
-#imd .st .ss{font-family:'Arian AMU Serif',Georgia,serif;font-size:10px;color:var(--fg-soft);margin-top:7px;}
+#imd .st .ss{font-family:'Arian AMU Serif',Georgia,serif;font-size:11px;color:var(--fg-soft);margin-top:7px;}
 /* form modal */
 #fmd .in{padding:clamp(26px,4vw,46px);}
 #fmd h3{font-size:clamp(23px,2.8vw,30px);margin-bottom:10px;}
@@ -714,17 +939,18 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 
 @media (max-width:960px){
   .hgrid{grid-template-columns:1fr;padding:92px clamp(18px,4vw,26px) 40px;gap:22px;}
-  .stage{position:relative;left:auto;top:auto;transform:none;
-    width:min(100%,520px);margin:0 auto;justify-self:center;}
+  .stage{position:relative;left:auto;top:auto;transform:none;height:auto;
+    width:100%;aspect-ratio:3/2;margin:0;justify-self:stretch;}
   .hero h1{width:auto;max-width:none;}
-  .rd{position:static;margin-top:12px;}
-  .chsteps{grid-template-columns:repeat(2,1fr);}
-  .chsteps li{padding-top:14px;}
+  /* Показание стоит в разметке ПЕРЕД сеткой, и статичным оно уезжало под
+     шапку — цифры печатались поверх логотипа. Порядок задаём раскладкой. */
+  .hero{display:flex;flex-direction:column;}
+  .hgrid{order:1;}
+  .rd{position:static;order:2;margin:0 clamp(18px,4vw,26px) 34px;}
 
   .two,.asg,.plate .wrap{grid-template-columns:1fr;}
   /* same specificity as the staggered rules above, so the meander unwinds */
   .pr .p:nth-of-type(n){width:100%;margin-left:0;margin-bottom:30px;}
-  .coflow{display:none;}
   .stats,.steps,  nav{display:none;}
   .navr{gap:8px;}
   .btn{padding:11px 14px;font-size:12px;}
@@ -748,21 +974,26 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
    --brand-ink  accent for text and hairlines
    --brand-on   what sits on top of a --brand fill
    The light grounds and the graphite plates each get the depth that works on them. */
-:root{--brand:#2E5E99;--brand-ink:#2E5E99;--brand-on:#F3EEE9;}
+:root{--brand:#2E5E99;--brand-ink:#2E5E99;--brand-on:#F6F1E9;
+  --fg:#2B2722;--fg-mid:rgba(43,39,34,.68);--fg-soft:rgba(43,39,34,.68);
+  --hair:rgba(43,39,34,.13);--hair2:rgba(43,39,34,.07);}
 .plate,.plate2,.other,.chart,.ic{--brand:#7BA4D0;--brand-ink:#7BA4D0;--brand-on:#0D2440;}
-/* the invitation card is a brand block, and on the plates the brand is the LIGHTER of
-   the two depths — so its type flips to graphite. Its edge cannot rely on the fill
-   either, so it keeps a hairline. */
-.ic.is-open-card{color:#0D2440;box-shadow:0 0 0 1px rgba(13,36,64,.22);}
+/* Приглашение больше не фирменный блок. Прежде оно заливалось цветом марки
+   и получало чернильный текст — в ряду из шести тёмных плит со светлым
+   названием седьмая выпадала светлой с тёмным. Теперь она той же семьи,
+   а отличается тем, чем и должна: на ней чертёж, а не фотография. */
+.ic.is-open-card{color:#FDFAF4;box-shadow:0 0 0 1px rgba(13,36,64,.5);}
+.ic.is-open-card .ic-art{background:#0D2440;}
+.ic.is-open-card .ic-art svg{color:rgba(123,164,208,.6);}
 /* Сплошные чернила, а не .78: на фирменном фоне карточки .78 давало 4,06:1 в
    синей палитре и 3,54 в тёплой — ниже нормы для 14 пикселей. Приглушать
    абзац теперь приходится кеглем, а не выцветанием: подходящей прозрачности,
    которая проходит норму во всех трёх палитрах, попросту нет. */
-.ic.is-open-card .ic-foot p{color:#0D2440;}
 .ic.is-open-card .ic-art::after{
-  background:linear-gradient(180deg,rgba(123,164,208,.10) 0%,rgba(123,164,208,.94) 100%);}
-/* the hero's breath, in the palette's own chroma */
-.hero::after{background:radial-gradient(58% 52% at 78% 46%,rgba(76,138,203,.075),transparent 70%);}
+  background:linear-gradient(180deg,rgba(13,36,64,.16) 0%,rgba(13,36,64,.04) 46%,
+    rgba(13,36,64,.9) 86%,#0D2440 100%);}
+/* Заливки поверх бумаги героя нет ни в одной палитре: на светлом грунте она давала
+   холодный налёт, и герой отличался цветом от панели указателя и от разделов. */
 </style>
 
 <div id="wipe"></div>
@@ -784,30 +1015,37 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 </svg></a>
   <nav><a class="lk" href="#applications">Ոլորտներ</a><a class="lk" href="#services">Ծառայություններ</a><a class="lk" href="#company">Ընկերություն</a></nav>
   <div class="navr">
-    <button class="ixb" id="ixb" aria-expanded="false" aria-controls="ixp"><b id="ixn">01</b><s>/</s><em id="ixt">08</em></button>
+    <button class="ixb" id="ixb" aria-expanded="false" aria-controls="ixp"><b id="ixn">01</b><s>/</s><em id="ixt">08</em><i class="cv">&#8595;</i></button>
     <a class="lang" href="./index.html">EN</a>
     <button class="btn" data-open-form><span>Նկարագրել խնդիրը</span><i>&#8599;</i></button>
   </div>
 </div>
+<div class="ixsc" id="ixsc"></div>
 <div class="ixp" id="ixp" hidden><div class="ixin"><ol id="ixlist"></ol></div></div>
 </header>
 <main>
 
 <section class="hero" id="top">
+  <div class="rd">
+    <span class="cp">RMS ԼԱՐՈՒՄ · 10-ՐՈՊԵԱՆՈՑ ՄԻՏՈՒՄ</span>
+    <span class="vl"><b class="hv">230.1</b><i>V</i><b class="hz">50.00</b><i>Hz</i></span>
+    <span class="sw"><i class="ind"></i><span class="st" id="stt"></span></span>
+  </div>
   <div class="hgrid">
     <div class="hcol">
       <div class="eyebrow">ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ</div>
       <h1>Ստուգեք, թե ինչպես է աշխատում ձեր <em>էլեկտրացանցը</em></h1>
-      <p class="hp">Գրանցում ենք էլեկտրական համակարգի շեղումներն ու իրադարձությունները։ Տվյալների հիման վրա տալիս ենք հստակ ինժեներական գնահատական։</p>
+      <p class="hp">Gridec-ը համակարգի աշխատանքի ընթացքում չափում և գրանցում է էլեկտրական պարամետրերը, ուսումնասիրում այն տեղում և վերլուծում ստացված տվյալները։ Չափումներն ու դիտարկումները համադրում ենք՝ հստակ ինժեներական գնահատական ներկայացնելու համար։</p>
       <div class="acts"><button class="btn" data-open-form><span>Նկարագրել խնդիրը</span><i>&#8599;</i></button><a class="btn gh" href="#services"><span>Ինչպես է իրականացվում մոնիթորինգը &darr;</span></a></div>
     </div>
     <div class="stage">
       <canvas id="star"></canvas>
-      <div class="rd"><span>RMS ԼԱՐՈՒՄ · 10-ՐՈՊԵԱՆՈՑ ՄԻՏՈՒՄ</span><br><b class="hv">230.1</b> V &middot; <b class="hz">50.00</b> Hz &middot; <span class="st" id="stt">ԱՆՎԱՆԱԿԱՆ</span></div>
+
     </div>
   </div>
 </section>
 
+<div class="sigrun" id="sigrun" aria-hidden="true"></div>
 
 <section class="sec thesis" id="why" data-rail><div class="wrap">
   <div class="rv intro">
@@ -839,10 +1077,10 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 </div></section>
 
 
-<div class="dith" data-dith="#F3EEE9,#0D2440,#2E5E99"></div>
+<div class="dith" data-dith="#F6F1E9,#0D2440,#2E5E99"></div>
 
 <section class="sec plate2" id="services" data-rail><div class="wrap">
-  <div class="rv"><div class="cnt">03</div><div class="eyebrow">ԾԱՌԱՅՈՒԹՅՈՒՆՆԵՐ</div>
+  <div class="rv"><div class="cnt">03</div>
   <h2 style="margin-top:16px">7-օրյա մոնիթորինգ</h2>
   <p class="lede">Էլեկտրաէներգիայի որակի տվյալները գրանցվում են համակարգի փաստացի աշխատանքի ընթացքում և վերլուծվում՝ ուսումնասիրվող խնդրի համատեքստում։</p>
   <p class="lede">Մոնիթորինգի տևողությունն ընտրվում է աշխատանքային պայմանների բնորոշ պատկերը ստանալու համար։ Եթե խնդիրը պարբերաբար չի դրսևորվում կամ սարքավորման աշխատանքային ցիկլն ավելի երկար է, կարող է առաջարկվել ավելի երկար ժամանակահատված։</p></div>
@@ -852,7 +1090,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <a class="alink rv" href="#report">Տեսնել, թե ինչ կարող է բացահայտել մոնիթորինգը ↗</a>
 </div></section>
 
-<div class="dith" data-dith="#162E52,#F3EEE9,#7BA4D0"></div>
+<div class="dith" data-dith="#162E52,#F6F1E9,#7BA4D0"></div>
 
 <section class="sec" id="report" data-rail><div class="wrap two">
   <div class="rv"><div class="cnt">04</div><h2>Հաշվետվություն տեխնիկական որոշումների համար</h2>
@@ -864,26 +1102,25 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 <div class="wrap"><svg class="joint" data-joint="3"></svg></div>
 
 <section class="sec" id="assignments" data-rail><div class="wrap">
-  <div class="rv"><div class="cnt">05</div><h2>Տիպային աշխատանքներ</h2>
-  <p class="lede">Յուրաքանչյուր աշխատանք սահմանվում է տեխնիկական հարցով և անհրաժեշտ տվյալներով։</p></div>
-  <div class="asg rv"><div class="card"><div class="hd"><span class="no">01</span><span class="tag">ԽԱՓԱՆՈՒՄՆԵՐ</span></div><h3>Խափանումների ուսումնասիրություն</h3><p>Գնահատել՝ արդյոք սարքավորումների անջատումները, ազդանշանները կամ գործընթացի ընդհատումները համընկել են գրանցված էլեկտրական իրադարձությունների հետ։</p></div><div class="card"><div class="hd"><span class="no">02</span><span class="tag">ՀԱՆՁՆՈՒՄ-ԸՆԴՈՒՆՈՒՄ</span></div><h3>Անկախ ինժեներական գնահատում</h3><p>Կարգաբերումից հետո՝ հանձնման-ընդունման փուլում կամ երաշխիքային ժամկետի ավարտից առաջ, գրանցում և գնահատում ենք համակարգի աշխատանքային պարամետրերն ու էլեկտրաէներգիայի որակի ցուցանիշները։</p></div><div class="card"><div class="hd"><span class="no">03</span><span class="tag">ԱՐԵՎԱՅԻՆ</span></div><h3>Արևային կայանի միացման գնահատում</h3><p>Գնահատել լարման պայմաններն ու ինվերտորի իրադարձությունները կայանի համապատասխան կետերում և միացման կետում։</p></div><div class="card"><div class="hd"><span class="no">04</span><span class="tag">ՏԵԽՆԻԿԱԿԱՆ ԳՆԱՀԱՏՈՒՄ</span></div><h3>Չափումներ՝ տեխնիկական համալիր գնահատման համար</h3><p>Տրամադրել բեռնվածության, էլեկտրաէներգիայի որակի և դիտարկված աշխատանքային սահմանափակումների անկախ չափումներ՝ տեխնիկական համալիր գնահատման համար։</p></div></div>
+  <div class="rv"><div class="cnt">05</div><h2>Երբ է պետք չափել</h2>
+  <p class="lede">Չափումները պետք է կատարել նախքան սարքավորում գնելը կամ փոխարինելը, վերանորոգման ծավալը որոշելը կամ աշխատանքներն ընդունելը։ Մոնիթորինգի արդյունքները կարող են փոխել տեխնիկական լուծումն ու նախատեսվող ծախսերը։</p></div>
+  <div class="asg rv"><div class="card"><div class="hd"><span class="no">01</span><span class="tag">ԿՐԿՆՎՈՂ ԽԱՓԱՆՈՒՄՆԵՐ</span></div><p>Մոնիթորինգը ցույց է տալիս՝ արդյոք սնուցման պարամետրերի կամ բեռնվածության շեղումները համընկնում են կրկնվող խափանումների հետ, ինչն օգնում է ընտրել համապատասխան շտկող միջոցը։</p></div><div class="card"><div class="hd"><span class="no">02</span><span class="tag">ԸՆԴՈՒՆՈՒՄ ԵՎ ԵՐԱՇԽԻՔ</span></div><p>Բնորոշ բեռնվածության պայմաններում չափումները ցույց են տալիս համակարգի փաստացի էլեկտրական վիճակը՝ այն փուլում, երբ խնդիրները դեռ հնարավոր է լուծել պայմանագրի կամ երաշխիքի շրջանակում։</p></div><div class="card"><div class="hd"><span class="no">03</span><span class="tag">ԸՆԴԼԱՅՆՈՒՄ</span></div><p>Արևային կայանի, նոր սարքավորման կամ լրացուցիչ բեռի միացման դեպքում որոշ ռեժիմներում կարող են առաջանալ հզորության սահմանափակումներ կամ լարման շեղումներ։ Մոնիթորինգը տվյալներ է տրամադրում նախագծման և հզորության պաշարի գնահատման համար։</p></div><div class="card"><div class="hd"><span class="no">04</span><span class="tag">ՁԵՌՔԲԵՐՈՒՄ</span></div><p>Գույքի ձեռքբերումից առաջ չափումները և զննությունը թույլ են տալիս գնահատել էլեկտրական համակարգի փաստացի վիճակը։ Արդյունքները կարելի է հաշվի առնել գինն ու գործարքի պայմանները համաձայնեցնելիս։</p></div></div>
 </div></section>
 
-<div class="dith" data-dith="#F3EEE9,#0D2440,#2E5E99"></div>
+<div class="dith" data-dith="#F6F1E9,#0D2440,#2E5E99"></div>
 
 <section class="sec plate2" id="measure"><div class="wrap rv">
   <div class="cnt">06</div><h2>Ինչ ենք չափում</h2>
   <div class="meas"><div class="mi"><span class="ix">01</span><svg viewBox="0 0 44 30" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.1"><ellipse cx="13" cy="15" rx="6.6" ry="10.4"/><ellipse cx="31" cy="15" rx="6.6" ry="10.4"/></g><ellipse cx="22" cy="15" rx="6.6" ry="10.4" fill="none" stroke="var(--brand)" stroke-width="1.4"/><g stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity=".7"><path d="M2.5 15h10"/><path d="M31.5 15h10"/></g><path d="M19 15h6" stroke="var(--brand)" stroke-width="1.7" stroke-linecap="round"/></svg><span class="lb2">Լարում և հոսանք</span></div><div class="mi"><span class="ix">02</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 21h40" stroke="currentColor" stroke-width="1" opacity=".5"/><g fill="none" stroke="currentColor" stroke-width="1"><rect x="8" y="4" width="3" height="19"/><rect x="13" y="7" width="3" height="16"/><rect x="23" y="13" width="3" height="10"/><rect x="28" y="16" width="3" height="7"/><rect x="33" y="18.4" width="3" height="4.6"/></g><rect x="18" y="10" width="3" height="13" fill="var(--brand)"/></svg><span class="lb2">Հարմոնիկներ և միջհարմոնիկներ</span></div><div class="mi"><span class="ix">03</span><svg viewBox="0 0 44 30" aria-hidden="true"><g stroke="currentColor" stroke-width="1" opacity=".38" stroke-dasharray="3 3"><path d="M4 8h36"/><path d="M4 22h36"/></g><path d="M4 15c2 4 4 4 6 0s4-6 6 0 4 8 6 0 4-6 6 0 4 4 6 0" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M4 15c2 4 4 4 6 0s4-6 6 0 4 8 6 0" fill="none" stroke="var(--brand)" stroke-width="1.4"/></svg><span class="lb2">Ֆլիկեր</span></div><div class="mi"><span class="ix">04</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 10c6 0 7 13 13 13s6-6 12-6 9 1 15 1" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12.5 23h9" stroke="var(--brand)" stroke-width="2.2" stroke-linecap="round"/></svg><span class="lb2">Լարման անկումներ</span></div><div class="mi"><span class="ix">05</span><svg viewBox="0 0 44 30" aria-hidden="true"><g stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M22 15.5 13.5 21"/><path d="M22 15.5 30.5 21"/></g><g fill="currentColor"><circle cx="13.5" cy="21" r="1.9"/><circle cx="30.5" cy="21" r="1.9"/></g><path d="M22 15.5V4" stroke="var(--brand)" stroke-width="1.6" stroke-linecap="round"/><circle cx="22" cy="4" r="2" fill="var(--brand)"/><circle cx="22" cy="15.5" r="2.1" fill="currentColor"/></svg><span class="lb2">Լարման անհամաչափություն</span></div><div class="mi"><span class="ix">06</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 24c8 0 10-13 18-13s10 8 22 4v9z" fill="currentColor" opacity=".14"/><path d="M2 24c8 0 10-13 18-13s10 8 22 4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M2 24h40" stroke="var(--brand)" stroke-width="1.6"/></svg><span class="lb2">Հզորություն և էներգիա</span></div><div class="mi"><span class="ix">07</span><svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 18h14l3-13 3.4 22 2.6-9h17" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><rect x="27" y="10.5" width="3" height="5.4" rx=".9" fill="var(--brand)"/></svg><span class="lb2">Իրադարձություններ</span></div><div class="mi mi-alt"><span class="ix">08</span><svg viewBox="0 0 44 30" aria-hidden="true"><g stroke="currentColor" stroke-width=".8" opacity=".26"><path d="M8 21v5"/><path d="M14 18v8"/><path d="M20 20v6"/><path d="M26 14v12"/><path d="M32 16v10"/></g><path d="M3 24 8 21 14 18 20 20 26 14 32 16 37 11" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><g fill="currentColor"><circle cx="8" cy="21" r="1.4"/><circle cx="14" cy="18" r="1.4"/><circle cx="20" cy="20" r="1.4"/><circle cx="26" cy="14" r="1.4"/><circle cx="32" cy="16" r="1.4"/></g><circle cx="37" cy="11" r="2.5" fill="none" stroke="var(--brand)" stroke-width="1.6"/><path d="M37 1.4 40.1 6.8h-6.2z" fill="var(--brand)"/></svg><span class="lb2">Ռիսկի ցուցանիշներ</span></div></div>
 </div></section>
 
-<div class="dith" data-dith="#162E52,#F3EEE9,#7BA4D0"></div>
+<div class="dith" data-dith="#162E52,#F6F1E9,#7BA4D0"></div>
 
 <section class="sec" id="company" data-rail><div class="wrap">
-  <div class="rv"><div class="cnt">07</div><div class="eyebrow">ԸՆԿԵՐՈՒԹՅՈՒՆ</div>
-  <h2 style="margin-top:16px">Անկախ տվյալներ<br>Հստակ ինժեներական գնահատում</h2>
-  <p class="lede">Gridec-ը ստեղծվել է էլեկտրական խնդիրները չափելի դարձնելու համար։ Մենք գրանցում ենք, թե ինչպես են էլեկտրական համակարգերն աշխատում շահագործման ընթացքում, և եզրակացությունը հիմնում ենք չափված փաստերի, ոչ թե ենթադրությունների վրա։ Gridec-ը Երևանում գործող անկախ ինժեներական ընկերություն է։ Էլեկտրաէներգիայի որակի չափումներ ենք իրականացնում ամբողջ Հայաստանում։</p></div>
-  <div class="sub rv"><h3>Չափման վայրից մինչև հաշվետվություն</h3><p class="lede">Տեղադրումը, գրանցումը և վերլուծությունն իրականացվում են մեկ պատասխանատու ինժեների ղեկավարությամբ։</p></div>
-  <div class="pr rv"><div class="p"><i class="mk"></i><div class="no">01 · ՏԵՂՈՒՄ</div><p>Չափման համակարգի տեղադրումն ու միացումը ստուգվում են նախքան գրանցումը։</p></div><div class="p"><i class="mk"></i><div class="no">02 · ԳՐԱՆՑՈՒՄ</div><p>Էլեկտրական պայմանները գրանցվում են համաձայնեցված ժամանակահատվածում։</p></div><div class="p"><i class="mk"></i><div class="no">03 · ԳՆԱՀԱՏՈՒՄ</div><p>Արդյունքները մեկնաբանվում են խնդրի համատեքստում և փաստաթղթավորվում։</p></div></div>
+  <div class="rv"><div class="cnt">07</div>
+  <h2 style="margin-top:16px">Փոքր ինժեներական ընկերություն՝ հստակ նպատակով</h2>
+  <p class="lede">Gridec-ը Երևանում գործող անկախ էլեկտրատեխնիկական ընկերություն է։ Մենք փոքր թիմ ենք։ Կենտրոնանում ենք մասնագիտացված ինժեներական աշխատանքի և մեր հաճախորդների հետ երկարաժամկետ համագործակցության վրա։</p></div>
+  <div class="story"><div class="sb rv"><div class="lb"><span>01 · ԻՆՉՈՒ ՍԿՍԵՑԻՆՔ</span></div><p>Gridec-ի հիմքում պարզ գաղափար է․ մեր հաճախորդները պետք է կարողանան հասկանալ, թե ինչ է կատարվում իրենց էլեկտրական համակարգում՝ առանց սեփական մասնագիտացված թիմ ունենալու կամ հատուկ չափիչ սարքավորումներ ձեռք բերելու։</p></div><div class="sb rv"><div class="lb"><span>02 · ԻՆՉՊԵՍ ԵՆՔ ՄՏԱԾՈՒՄ</span></div><p>Ինժեներական աշխատանքը սկսվում է ճիշտ հարցերից՝ հասկանալով, թե ինչպես է իրականում աշխատում համակարգը, և եզրակացությունները հիմնավորելով չափումների տվյալներով։ Նպատակը ամեն գնով խնդիր գտնելը չէ։ Երբեմն ամենաօգտակար արդյունքը հաստատելն է, որ համակարգն աշխատում է այնպես, ինչպես պետք է։</p></div><div class="sb rv"><div class="lb"><span>03 · ԻՆՉ ԵՆՔ ԿԱՌՈՒՑՈՒՄ</span></div><p>Gridec-ը ստեղծում ենք երկարաժամկետ նպատակով։ Ուզում ենք, որ մեր աշխատանքը ճանաչվի ճշգրտությամբ, հստակ հաղորդակցությամբ և տվյալներով հիմնավորված տեխնիկական եզրակացություններով։</p></div></div>
 </div></section>
 
 <section class="plate" id="contact"><div class="wrap">
@@ -891,11 +1128,11 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   <h2 class="ct-act"><button data-open-form><span>Ներկայացրեք խնդիրը նախնական գնահատման համար</span><i>&#8599;</i></button></h2></div>
   <div class="chart rv"><div class="cap">RMS ԼԱՐՈՒՄ · 10-ՐՈՊԵԱՆՈՑ ՄԻՏՈՒՄ</div>
     <svg viewBox="0 0 520 240" fill="none">
-      <line x1="0" y1="60" x2="520" y2="60" stroke="rgba(243,238,233,.14)" stroke-dasharray="3 5"/>
-      <text x="0" y="50" fill="rgba(243,238,233,.45)" font-size="10" font-family="'Arian AMU Serif',Georgia,serif" letter-spacing="1.5">ԱՆՎԱՆԱԿԱՆ</text>
+      <line x1="0" y1="60" x2="520" y2="60" stroke="rgba(246,241,233,.14)" stroke-dasharray="3 5"/>
+      <text x="0" y="50" fill="rgba(246,241,233,.45)" font-size="10" font-family="'Arian AMU Serif',Georgia,serif" letter-spacing="1.5">ԱՆՎԱՆԱԿԱՆ</text>
       <path d="M0,62 L150,60 C168,60 172,64 178,96 C184,130 188,132 196,132 L236,132 C244,132 248,128 254,94 C260,64 264,61 282,61 L520,60" stroke="#2E5E99" stroke-width="2" stroke-linecap="round"/>
-      <rect x="178" y="150" width="76" height="1" fill="rgba(243,238,233,.3)"/>
-      <text x="178" y="172" fill="rgba(243,238,233,.55)" font-size="10" font-family="'Arian AMU Serif',Georgia,serif" letter-spacing="1.2">ԼԱՐՄԱՆ ԱՆԿՈՒՄ · 180 ՄՎՐԿ</text>
+      <rect x="178" y="150" width="76" height="1" fill="rgba(246,241,233,.3)"/>
+      <text x="178" y="172" fill="rgba(246,241,233,.55)" font-size="10" font-family="'Arian AMU Serif',Georgia,serif" letter-spacing="1.2">ԼԱՐՄԱՆ ԱՆԿՈՒՄ · 180 ՄՎՐԿ</text>
     </svg>
   </div>
 </div></section>
@@ -948,26 +1185,26 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 </div></div></div>
 
 <script>
-window.PT={"ring": [["01", "ԼԱՐՈՒՄ", "ՀՈՍԱՆՔ", 0], ["02", "ՀԱՐՄՈՆԻԿՆԵՐ", "", 0], ["03", "ՖԼԻԿԵՐ", "", 0], ["04", "ԼԱՐՄԱՆ", "ԱՆԿՈՒՄՆԵՐ", 0], ["05", "ԱՆՀԱՄԱՉԱՓՈՒԹՅՈՒՆ", "", 0], ["06", "ՀԶՈՐՈՒԹՅՈՒՆ", "ԷՆԵՐԳԻԱ", 0], ["07", "ԴԵՊՔԵՐ", "", 0], ["08", "ՌԻՍԿԻ", "ԳՆԱՀԱՏՈՒՄ", 1]], "canvasFont": "\"Arian AMU Serif\",Georgia,serif", "rdNominal": "ԱՆՎԱՆԱԿԱՆ", "rdDip": "ԼԱՐՄԱՆ ԱՆԿՈՒՄ · 180 ՄՎՐԿ", "incident": "Միջադեպ", "seq": [["01", "Բնականոն աշխատանք"], ["02", "Էլեկտրական համակարգում իրադարձություն"], ["03", "Սարքավորման անջատում կամ ազդանշան"], ["04", "Համակարգի աշխատանքի վերականգնում"], ["05", "Գրանցումը պահպանվում է վերլուծության համար"]], "viewDetails": "Մանրամասներ", "hint1": " ֆայլ · ", "hintN": " ֆայլ · ", "hintSuf": " / 10 ՄԲ", "hint0": "Առավելագույնը՝ 10 ՄԲ։", "appTypes": ["Արտադրություն", "Արևային կայան", "Բժշկական կենտրոն կամ լաբորատորիա", "Տվյալների կենտրոն կամ ՏՏ ենթակառուցվածք", "Կոմերցիոն տարածք", "Ներդրումային և տեխնիկական գնահատում", "Այլ"], "cards": [{"title": "Արտադրություն", "img": "IMG0", "p1": "Պահուստային գեներատորը նախատեսված է այլ տևողության ընդհատումների համար։ Լարման կարճատև անկումը կարող է ազդել սարքավորման վրա մինչև սնուցումը պահուստային աղբյուրին փոխանցելը, ուստի իրադարձությունը պետք է գրանցվի հենց տեղի ունենալու պահին։", "findings": ["Գրանցված լարման անկումների ժամանակը, տևողությունը, նվազագույն RMS լարումը և այն ֆազերը, որոնցում դրանք գրանցվել են։", "Շարժիչների աշխատանքի համար նշանակալի լարման անհամաչափությունն ու հոսանքային բեռնվածությունը։", "Արդյոք ռեակտիվ հզորությունը կամ հարմոնիկ աղավաղումը պահանջում են լրացուցիչ ինժեներական ուսումնասիրություն։"], "statLabel": "ՏԵԽՆԻԿԱԿԱՆ ՆՇՈՒՄ", "statText": "Լարման անկումներն ու կարճատև ընդհատումները կարող են անջատել էլեկտրոնային և էլեկտրամեխանիկական սարքերը և կանգնեցնել արտադրական գծերը։", "statSource": "Աղբյուր՝ EPRI"}, {"title": "Արևային կայաններ", "img": "IMG1", "p1": "Լարման բարձրացումը կարող է պայմանավորված լինել կայանի արտադրած հզորության, ներքին դիմադրության և արտաքին ցանցի պայմանների փոխազդեցությամբ։ Համապատասխան կետերում կատարված չափումները օգնում են տարբերակել կայանի ներսում և արտաքին ցանցում առաջացող գործոնները։", "findings": ["Լարման պայմանները ինվերտորի անջատման կամ ակտիվ հզորության սահմանափակման պահին։", "Լարման և հարմոնիկ աղավաղման համապատասխանությունը միացման կիրառելի պահանջներին։", "Անկախ չափման տվյալներ՝ գործարկման ընդունման կամ EPC աշխատանքների գնահատման համար։"], "note": "Ժամանակային նշումներով անկախ չափումները հնարավորություն են տալիս սեփականատիրոջը, EPC կապալառուին և ցանցի օպերատորին կայանի և միացման կետի էլեկտրական պայմանները գնահատել նույն տվյալների հիման վրա։"}, {"title": "Բժշկական կենտրոններ և լաբորատորիաներ", "img": "IMG2", "p1": "Երաշխիքային կամ սպասարկման գնահատման համար կարող են պահանջվել տվյալներ այն էլեկտրասնուցման պայմանների մասին, որոնցում սարքավորումն աշխատել է։ Մեկանգամյա չափումը կարող է չգրանցել պարբերաբար ի հայտ եկող իրադարձությունները։", "findings": ["Գրանցված էլեկտրասնուցման պայմանների համեմատությունն արտադրողի պահանջների հետ։", "Տվյալներ՝ էլեկտրասնուցմամբ պայմանավորված իրադարձությունները սարքավորման խափանումներից տարբերակելու համար։", "Հաջորդ ստուգումների առաջարկվող հերթականությունը՝ ըստ տեխնիկական կարևորության և աշխատանքի վրա ազդեցության։"], "statLabel": "ՏԵԽՆԻԿԱԿԱՆ ՆՇՈՒՄ", "statText": "IEC 60601-1-2-ը ներառում է բժշկական էլեկտրասարքավորումների՝ լարման անկումների և կարճատև ընդհատումների նկատմամբ խանգարումակայունության փորձարկումներ։", "statSource": "Աղբյուր՝ IEC"}, {"title": "Տվյալների կենտրոններ և ՏՏ ենթակառուցվածք", "img": "IMG3", "p1": "Գեներատորի գործարկումն ու սնուցման փոխանցումը կատարվում են այլ ժամանակային մասշտաբով, քան միլիվայրկյան տևող խանգարումները։ Ժամանակային նշումներով մոնիթորինգի տվյալները կարելի է համադրել UPS-ի և ՏՏ համակարգերի գրանցած իրադարձությունների հետ։", "findings": ["UPS-ի մուտքային բեռնվածությունը՝ անվանական հզորության համեմատ։", "Վերագործարկումների, մարտկոցից սնուցման ռեժիմի և գրանցված էլեկտրասնուցման խանգարումների միջև կապը։", "Պլանավորվող ընդլայնման համար նշանակալի բեռնվածության գրաֆիկները։"], "stat": "57%", "statLabel": "ՎԻՃԱԿԱԳՐՈՒԹՅՈՒՆ", "statText": "Uptime Institute-ի 2025 թ. տարեկան հարցման մասնակիցների այն բաժինը, որոնք նշել են, որ իրենց վերջին խոշոր խափանման արժեքը գերազանցել է 100 000 ԱՄՆ դոլարը։", "statSource": "Աղբյուր՝ Uptime Institute, Annual Outage Analysis 2026"}, {"title": "Կոմերցիոն տարածքներ", "img": "IMG4", "p1": "Չափումները կարող են օգնել տարբերակել արտաքին մատակարարման ցանցի պայմանները շենքի ներքին ցանցում կամ վարձակալների սարքավորումներից առաջացող խանգարումներից։", "findings": ["Տվյալներ խանգարման հավանական աղբյուրը գնահատելու համար։", "Գերտաքացման կամ պաշտպանիչ սարքերի գործարկման հետ կապված էլեկտրական պայմանները։", "Հզորության գործակիցը, ռեակտիվ հզորությունը և բեռնվածության միտումները՝ վճարների կամ հասանելի հզորության գնահատման համար։"], "statLabel": "ՏԵԽՆԻԿԱԿԱՆ ՆՇՈՒՄ", "statText": "Էլեկտրաէներգիայի որակի իրադարձությունները կարող են առաջանալ սպառողի հաշվիչի երկու կողմում՝ մատակարարման կամ ներքին ցանցում։", "statSource": "Աղբյուր՝ U.S. DOE / LBNL"}, {"title": "Ներդրումային և տեխնիկական գնահատում", "img": "IMG5", "p1": "Ախտորոշիչ կամ շարունակական մոնիթորինգը համակարգի փաստացի աշխատանքի անկախ գրանցում է ապահովում։ Արդյունքները կարող են օգտագործվել տեխնիկական համալիր գնահատման, հանձնման, երաշխիքային ստուգման կամ աշխատանքի արդյունավետության գնահատման համար։", "findings": ["Համապատասխան կետերում դիտարկված բեռնվածությունն ու էլեկտրաէներգիայի որակը։", "Ընդհատումների կամ արտադրողականության նվազման հետ կապված գրանցված պայմանները։", "Սահմանափակումները, ռիսկերը և առաջարկվող լրացուցիչ ստուգումները։"], "note": "Հաշվետվությունը կարող է պատրաստվել հայերեն, ռուսերեն կամ անգլերեն։"}], "otherT": "Այլ կարևոր էլեկտրական համակարգեր", "otherP": "Չե՞ք գտնում ձեր ոլորտն այստեղ։ Նկարագրեք խնդիրը և դրա ազդեցությունը սարքավորման աշխատանքի վրա։", "imgs": {"IMG0": "../uploads/img/02_manufacturing_industrial_robot.jpg", "IMG1": "../uploads/img/03_solar_power_plant.jpg", "IMG2": "../uploads/img/06_healthcare_laboratory.jpg", "IMG3": "../uploads/img/05_data_center.jpg", "IMG4": "../uploads/img/04_commercial_building.jpg", "IMG5": "../uploads/img/08_finance_investment.jpg"}};
+window.PT={"ring": [["01", "ԼԱՐՈՒՄ", "ՀՈՍԱՆՔ", 0], ["02", "ՀԱՐՄՈՆԻԿՆԵՐ", "", 0], ["03", "ՖԼԻԿԵՐ", "", 0], ["04", "ԼԱՐՄԱՆ", "ԱՆԿՈՒՄՆԵՐ", 0], ["05", "ԱՆՀԱՄԱՉԱՓՈՒԹՅՈՒՆ", "", 0], ["06", "ՀԶՈՐՈՒԹՅՈՒՆ", "ԷՆԵՐԳԻԱ", 0], ["07", "ԴԵՊՔԵՐ", "", 0], ["08", "ՌԻՍԿԻ", "ԳՆԱՀԱՏՈՒՄ", 1]], "rdDip": "ԼԱՐՄԱՆ ԱՆԿՈՒՄ · 180 ՄՎՐԿ", "incident": "Միջադեպ", "seq": [["01", "Բնականոն աշխատանք"], ["02", "Էլեկտրական համակարգում իրադարձություն"], ["03", "Սարքավորման անջատում կամ ազդանշան"], ["04", "Համակարգի աշխատանքի վերականգնում"], ["05", "Գրանցումը պահպանվում է վերլուծության համար"]], "viewDetails": "Մանրամասներ", "hint1": " ֆայլ · ", "hintN": " ֆայլ · ", "hintSuf": " / 10 ՄԲ", "hint0": "Առավելագույնը՝ 10 ՄԲ։", "appTypes": ["Արտադրություն", "Արևային կայան", "Բժշկական կենտրոն կամ լաբորատորիա", "Տվյալների կենտրոն կամ ՏՏ ենթակառուցվածք", "Կոմերցիոն տարածք", "Ներդրումային և տեխնիկական գնահատում", "Այլ"], "cards": [{"title": "Արտադրություն", "img": "IMG0", "p1": "Լարման կարճատև անկումը կարող է ազդել սարքավորման վրա, ուստի իրադարձությունը պետք է գրանցվի հենց տեղի ունենալու պահին։", "findings": ["Գրանցված լարման անկումների ժամանակը, տևողությունը, նվազագույն RMS լարումը և այն ֆազերը, որոնցում դրանք գրանցվել են։", "Շարժիչների աշխատանքի համար նշանակալի լարման անհամաչափությունն ու բեռնվածության կորերը։", "Հարմոնիկայի չափում։ Դրա առկայության հնարավոր ազդեցությունները։"], "statLabel": "ՏԵԽՆԻԿԱԿԱՆ ՆՇՈՒՄ", "statText": "Լարման անկումներն ու կարճատև ընդհատումները կարող են անջատել էլեկտրոնային և էլեկտրամեխանիկական սարքերը և կանգնեցնել արտադրական գծերը։", "statSource": "Աղբյուր՝ EPRI"}, {"title": "Արևային կայաններ", "img": "IMG1", "p1": "Լարման բարձրացումը կարող է պայմանավորված լինել կայանի արտադրած հզորության, ներքին դիմադրության և արտաքին ցանցի պայմանների փոխազդեցությամբ։ Համապատասխան կետերում կատարված չափումները օգնում են տարբերակել կայանի ներսում և արտաքին ցանցում առաջացող գործոնները։", "findings": ["Լարման պայմանները ինվերտորի անջատման կամ ակտիվ հզորության սահմանափակման պահին։", "Լարման և հարմոնիկ աղավաղման համապատասխանությունը միացման կիրառելի պահանջներին։", "Անկախ չափման տվյալներ՝ գործարկման ընդունման կամ EPC աշխատանքների գնահատման համար։"], "note": "Ժամանակային նշումներով անկախ չափումները հնարավորություն են տալիս սեփականատիրոջը, EPC կապալառուին և ցանցի օպերատորին կայանի և միացման կետի էլեկտրական պայմանները գնահատել նույն տվյալների հիման վրա։"}, {"title": "Բժշկական կենտրոններ և լաբորատորիաներ", "img": "IMG2", "p1": "Երաշխիքային կամ սպասարկման գնահատման համար կարող են պահանջվել տվյալներ այն էլեկտրասնուցման պայմանների մասին, որոնցում սարքավորումն աշխատել է։ Մեկանգամյա չափումը կարող է չգրանցել պարբերաբար ի հայտ եկող իրադարձությունները։", "findings": ["Գրանցված էլեկտրասնուցման պայմանների համեմատությունն արտադրողի պահանջների հետ։", "Տվյալներ՝ էլեկտրասնուցմամբ պայմանավորված իրադարձությունները սարքավորման խափանումներից տարբերակելու համար։", "Հաջորդ ստուգումների առաջարկվող հերթականությունը՝ ըստ տեխնիկական կարևորության և աշխատանքի վրա ազդեցության։"], "statLabel": "ՏԵԽՆԻԿԱԿԱՆ ՆՇՈՒՄ", "statText": "IEC 60601-1-2-ը ներառում է բժշկական էլեկտրասարքավորումների՝ լարման անկումների և կարճատև ընդհատումների նկատմամբ խանգարումակայունության փորձարկումներ։", "statSource": "Աղբյուր՝ IEC"}, {"title": "Տվյալների կենտրոններ և ՏՏ ենթակառուցվածք", "img": "IMG3", "p1": "Գեներատորի գործարկումն ու սնուցման փոխանցումը կատարվում են այլ ժամանակային մասշտաբով, քան միլիվայրկյան տևող խանգարումները։ Ժամանակային նշումներով մոնիթորինգի տվյալները կարելի է համադրել UPS-ի և ՏՏ համակարգերի գրանցած իրադարձությունների հետ։", "findings": ["UPS-ի մուտքային բեռնվածությունը՝ անվանական հզորության համեմատ։", "Վերագործարկումների, մարտկոցից սնուցման ռեժիմի և գրանցված էլեկտրասնուցման խանգարումների միջև կապը։", "Պլանավորվող ընդլայնման համար նշանակալի բեռնվածության գրաֆիկները։"], "stat": "57%", "statLabel": "ՎԻՃԱԿԱԳՐՈՒԹՅՈՒՆ", "statText": "Uptime Institute-ի 2025 թ. տարեկան հարցման մասնակիցների այն բաժինը, որոնք նշել են, որ իրենց վերջին խոշոր խափանման արժեքը գերազանցել է 100 000 ԱՄՆ դոլարը։", "statSource": "Աղբյուր՝ Uptime Institute, Annual Outage Analysis 2026"}, {"title": "Կոմերցիոն տարածքներ", "img": "IMG4", "p1": "Չափումները կարող են օգնել տարբերակել արտաքին մատակարարման ցանցի պայմանները շենքի ներքին ցանցում կամ վարձակալների սարքավորումներից առաջացող խանգարումներից։", "findings": ["Տվյալներ խանգարման հավանական աղբյուրը գնահատելու համար։", "Գերտաքացման կամ պաշտպանիչ սարքերի գործարկման հետ կապված էլեկտրական պայմանները։", "Հզորության գործակիցը, ռեակտիվ հզորությունը և բեռնվածության միտումները՝ վճարների կամ հասանելի հզորության գնահատման համար։"], "statLabel": "ՏԵԽՆԻԿԱԿԱՆ ՆՇՈՒՄ", "statText": "Էլեկտրաէներգիայի որակի իրադարձությունները կարող են առաջանալ սպառողի հաշվիչի երկու կողմում՝ մատակարարման կամ ներքին ցանցում։", "statSource": "Աղբյուր՝ U.S. DOE / LBNL"}, {"title": "Ներդրումային և տեխնիկական գնահատում", "img": "IMG5", "p1": "Ժամանակավոր կամ շարունակական մոնիթորինգը հնարավորություն է տալիս անկախ կերպով գրանցել համակարգի փաստացի աշխատանքը։ Արդյունքները կարող են օգտագործվել տեխնիկական համալիր գնահատման, հանձնման, երաշխիքային ստուգման կամ աշխատանքի արդյունավետության գնահատման համար։", "findings": ["Համապատասխան կետերում դիտարկված բեռնվածությունն ու էլեկտրաէներգիայի որակը։", "Ընդհատումների կամ արտադրողականության նվազման հետ կապված գրանցված պայմանները։", "Սահմանափակումները, ռիսկերը և առաջարկվող լրացուցիչ ստուգումները։"], "note": "Հաշվետվությունը կարող է պատրաստվել հայերեն, ռուսերեն կամ անգլերեն։"}], "otherT": "Այլ կարևոր էլեկտրական համակարգեր", "otherP": "Չե՞ք գտնում ձեր ոլորտն այստեղ։ Նկարագրեք խնդիրը և դրա ազդեցությունը սարքավորման աշխատանքի վրա։", "imgs": {"IMG0": "../uploads/img/02_manufacturing_industrial_robot.jpg", "IMG1": "../uploads/img/03_solar_power_plant.jpg", "IMG2": "../uploads/img/06_healthcare_laboratory.jpg", "IMG3": "../uploads/img/05_data_center.jpg", "IMG4": "../uploads/img/04_commercial_building.jpg", "IMG5": "../uploads/img/08_finance_investment.jpg"}};
 (function(){
 var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
 var PT=window.PT;
 
-/* ============ OCTAGON FIELD — the hero centrepiece ============ */
+/* ============ WAVE BAND — the hero centrepiece ============ */
 /* An octagon strung from its centre: points spaced along the perimeter, each
    tied to the middle by a fine string. Strings bend under a slow drift and are
    pushed aside by the cursor; a soft light travels along a few of them. Events
    pull one sector inward, and the readout below follows the same dip. */
+/* Состояние импульса события. Сам импульс живёт на сигнальной жиле, которую
+   строит buildSigRun; заводится из кадра холста при отклонении. */
+var SEAM={pulse:null,halo:null,len:0,t:-1,box:null};
+
 var cv=document.getElementById('star'),cx=cv.getContext('2d');
-var SIDES=8,PER_EDGE=11,N=SIDES*PER_EDGE;
-var W=0,H=0,dpr=1,tt=0,CXp=0,CYp=0,R=0,OCT_R=0,rot=0;
-var strings=[];
-var arcs=[],arcT=0;   /* live discharge channels over the quiet field */
-var mouse={x:-9999,y:-9999,on:false};
-var EV_FIRST=2.6,EV_EVERY=7.5,EV_DUR=1.5,evNext=EV_FIRST,evT=0,evAngle=0;
+var W=0,H=0,dpr=1,tt=0,CYp=0;
+var EV_FIRST=2.6,EV_EVERY=7.5,EV_DUR=1.5,evNext=EV_FIRST,evT=0,evX=0.5,EV_W=0.085;
+var sigX=0,BHv=0,bracketY=0,sigTop=0;   /* жила стоит там, где записано отклонение */
 var MILK='255,251,249',GLOW='255,255,255';
-var OF={stiff:11,damp:3.9,mouseR:165,push:78,drift:27,driftHz:.13,
-  line:.20,litHi:.52,core:.34,glide:.13,band:.30};
+var TAU=Math.PI*2,NL=44,NS=104;   /* линий в ленте и шагов вдоль оси */
 function readWaveTheme(){
   var cs=getComputedStyle(cv.parentElement);
   var a=(cs.getPropertyValue('--wv-line')||'').trim(),b=(cs.getPropertyValue('--wv-glow')||'').trim();
@@ -980,305 +1217,131 @@ function size(){
   W=r.width;H=r.height;
   cv.width=Math.max(1,Math.round(W*dpr));cv.height=Math.max(1,Math.round(H*dpr));
   cx.setTransform(dpr,0,0,dpr,0,0);
-  /* the shape sits a little left of centre: the strip on the right belongs to the
-     annotations, so no label ever has to sit on top of the drawing */
-  CXp=W*0.50;CYp=H/2;R=Math.min(W,H)*(W<430?0.275:0.335);
-  OCT_R=R*Math.cos(Math.PI/SIDES);            /* inradius — the flat sides */
-}
-/* a vertex of the octagon, flat side up */
-function vertex(k,rad){
-  var a=(k/SIDES)*Math.PI*2+Math.PI/SIDES-Math.PI/2+rot;
-  return [CXp+Math.cos(a)*rad,CYp+Math.sin(a)*rad];
-}
-function build(){
-  strings=[];
-  for(var i=0;i<N;i++){
-    strings.push({
-      edge:Math.floor(i/PER_EDGE),
-      t:(i%PER_EDGE)/PER_EDGE,          /* position along that edge */
-      bend:0,vel:0,
-      ph:(i*0.44)%(Math.PI*2),
-      spd:0.8+((i*3)%5)*0.16,
-      carries:(i%4===1),                /* a quarter of them carry light */
-      off:(i*0.113)%1,
-      lit:0.5+((i*5)%4)*0.17
-    });
-  }
-  buildArcs();
-}
-/* A handful of channels conduct at any moment, the way a discharge does: each
-   one runs from the centre out to a point on the perimeter, deviating around
-   that line and forking once or twice before it dies out. */
-var ARCS=7,ARC_SEG=17;
-function buildArcs(){
-  arcs=[];
-  for(var a=0;a<ARCS;a++)arcs.push({i:0,jit:[],tgt:null,branch:undefined,life:0,vis:0});
-  arcs.forEach(function(a){a.vis=0;reseedArc(a,true);});
-}
-function reseedArc(arc,moveAnchor){
-  if(moveAnchor||!arc.tgt){
-    arc.i=Math.floor(Math.random()*N);
-    arc.vis=0;                                   /* fades in on its new run */
-  }
-  arc.tgt=[];
-  for(var k=0;k<=ARC_SEG;k++)arc.tgt.push((Math.random()*2-1));
-  if(!arc.jit||!arc.jit.length)arc.jit=arc.tgt.slice();
-  /* a fork leaves somewhere in the outer half and stops short of the rim */
-  if(moveAnchor||arc.branch===undefined)arc.branch=(Math.random()<0.72)?{
-    at:0.42+Math.random()*0.3,
-    len:0.3+Math.random()*0.26,
-    turn:(Math.random()*2-1)*0.7,
-    jit:Array.apply(null,{length:9}).map(function(){return Math.random()*2-1;})
-  }:null;
-  arc.life=0.9+Math.random()*0.5;
-}
-/* ease the current shape toward the target, so the channel flows */
-function easeArc(arc,dt){
-  var r=Math.min(1,dt*5.5);
-  for(var k=0;k<arc.jit.length;k++)arc.jit[k]+=(arc.tgt[k]-arc.jit[k])*r;
-  arc.vis+=((1-arc.vis))*Math.min(1,dt*3.4);
-}
-/* a smooth run through the points: quadratics via segment midpoints */
-function strokeSmooth(pts,col,w){
-  cx.beginPath();cx.moveTo(pts[0][0],pts[0][1]);
-  for(var k=1;k<pts.length-1;k++){
-    var mx=(pts[k][0]+pts[k+1][0])/2,my=(pts[k][1]+pts[k+1][1])/2;
-    cx.quadraticCurveTo(pts[k][0],pts[k][1],mx,my);
-  }
-  cx.lineTo(pts[pts.length-1][0],pts[pts.length-1][1]);
-  cx.strokeStyle=col;cx.lineWidth=w;cx.lineJoin='round';cx.lineCap='round';cx.stroke();
-}
-/* the jagged run from the centre to an anchor, with the string's own bend */
-function arcPath(arc,amp){
-  var st=strings[arc.i],A=anchor(st,R);
-  var dx=A[0]-CXp,dy=A[1]-CYp,len=Math.hypot(dx,dy)||1;
-  var nx=-dy/len,ny=dx/len;
-  var pts=[];
-  for(var k=0;k<=ARC_SEG;k++){
-    var u=k/ARC_SEG;
-    var bell=Math.sin(u*Math.PI);                 /* straight at both ends */
-    var off=arc.jit[k]*amp*bell+st.bend*bell*1.1;
-    pts.push(clampIn(CXp+dx*u+nx*off,CYp+dy*u+ny*off,1.5));
-  }
-  return {pts:pts,nx:nx,ny:ny,dx:dx,dy:dy,len:len};
-}
-/* the point on the perimeter this string is tied to */
-/* Annotations sit in eight fixed sectors around the centre: the centre is the
-   point of connection, and clockwise from the top the sectors read as the chain
-   of processing — what is taken directly, then what follows from the shape of
-   the curve, then from the value over time, then U times I, then the record in
-   time, and last the one thing produced rather than measured. That eighth
-   position carries the accent. The sectors stay put while the shape inside them
-   keeps turning: a rotor in a fixed scale. */
-var RING=PT.ring||[],ringIn=0;
-function ringDraw(dt){
-  if(!RING.length)return;
-  ringIn=Math.min(1,ringIn+dt*0.85);                 /* appears once, in order */
-  var i,n=RING.length,/* Departure Mono живёт на сетке 11 пикселей: ниже неё выпадают штрихи. */fs=(PT.canvasFont.indexOf('Departure')>=0?11:(W>500?10:(W>430?9:8)));
-  for(i=0;i<n;i++){
-    var a=-Math.PI/2+(i+0.5)*Math.PI*2/n;            /* middle of sector i */
-    var nx=Math.cos(a),ny=Math.sin(a);
-    var app=Math.max(0,Math.min(1,(ringIn-i/n*0.55)*3));
-    if(app<=0.01)continue;
-    /* leader out of the perimeter, and a node where the text starts */
-    var r0=R*1.02,r1=R*1.02+(W>500?13:9);
-    cx.strokeStyle='rgba('+MILK+','+(0.26*app).toFixed(3)+')';cx.lineWidth=1;
-    cx.beginPath();
-    cx.moveTo(CXp+nx*r0,CYp+ny*r0);cx.lineTo(CXp+nx*r1,CYp+ny*r1);cx.stroke();
-    var qx=CXp+nx*r1,qy=CYp+ny*r1,accent=RING[i][3];
-    cx.fillStyle=accent?'rgba('+GLOW+','+(0.95*app).toFixed(3)+')'
-                       :'rgba('+MILK+','+(0.55*app).toFixed(3)+')';
-    cx.fillRect(qx-1.5,qy-1.5,3,3);
-    /* side and baseline follow the sector's own direction */
-    var pad=6,tx=qx+nx*pad,ty=qy+ny*pad;
-    cx.textAlign=nx>0.35?'left':(nx<-0.35?'right':'center');
-    cx.textBaseline=ny>0.35?'top':(ny<-0.35?'alphabetic':'middle');
-    /* fit the type to the room this sector actually has. The Armenian terms run
-       far longer than the English ones, and neither may spill off the canvas. */
-    var lines=[RING[i][1]];if(RING[i][2])lines.push(RING[i][2]);
-    var room=nx>0.35?(W-4-tx):(nx<-0.35?(tx-4):(Math.min(tx,W-tx)*2-8));
-    var fz=fs,j,wm;
-    for(;;){
-      cx.font='600 '+fz+'px '+PT.canvasFont;
-      wm=0;
-      for(j=0;j<lines.length;j++)wm=Math.max(wm,cx.measureText(lines[j]).width);
-      if(wm<=room||fz<=7)break;
-      fz-=0.5;
-    }
-    if(wm>room)continue;            /* rather no label than one off the canvas */
-    /* the position number sits above the term, offset against the direction */
-    var lh=fz+3,two=lines.length-1;
-    var numY=ty-(ny<-0.35?(lh*(1+two)):(ny>0.35?0:(lh*(0.5+two*0.5))));
-    cx.font='600 '+(fz-1.5)+'px '+PT.canvasFont;
-    cx.fillStyle='rgba('+MILK+','+(0.66*app).toFixed(3)+')';
-    cx.fillText(RING[i][0],tx,numY);
-    cx.font='600 '+fz+'px '+PT.canvasFont;
-    cx.fillStyle=accent?'rgba('+GLOW+','+(0.95*app).toFixed(3)+')'
-                       :'rgba('+MILK+','+(0.86*app).toFixed(3)+')';
-    for(j=0;j<lines.length;j++)cx.fillText(lines[j],tx,numY+lh*(j+1));
-  }
-}
-function anchor(st,rad){
-  var p0=vertex(st.edge,rad),p1=vertex(st.edge+1,rad);
-  return [p0[0]+(p1[0]-p0[0])*st.t,p0[1]+(p1[1]-p0[1])*st.t];
-}
-/* pull a point back inside the octagon along its own radius. Checking the three
-   nearest edge normals is enough: radial scaling shrinks every projection at once. */
-function clampIn(x,y,pad){
-  var dx=x-CXp,dy=y-CYp,lim=OCT_R-(pad||0);
-  var step=Math.PI*2/SIDES,base=step-Math.PI/2+rot;
-  var k=Math.round((Math.atan2(dy,dx)-base)/step),worst=0;
-  for(var j=k-1;j<=k+1;j++){
-    var phi=j*step+base,d=dx*Math.cos(phi)+dy*Math.sin(phi);
-    if(d>worst)worst=d;
-  }
-  if(worst<=lim)return [x,y];
-  var sc=lim/worst;
-  return [CXp+dx*sc,CYp+dy*sc];
-}
-/* where the perimeter is at a given height — from the polygon's own support lines,
-   so it tracks the rotation instead of assuming a circle */
-function octRightAt(yAbs){
-  var y=yAbs-CYp,step=Math.PI*2/SIDES,base=step-Math.PI/2+rot,best=1e9;
-  for(var k=0;k<SIDES;k++){
-    var phi=k*step+base,c=Math.cos(phi),si=Math.sin(phi);
-    if(c>1e-3){var lim=(OCT_R-y*si)/c;if(lim<best)best=lim;}
-  }
-  return CXp+Math.max(0,best);
-}
-/* soft travelling light: cosine bell over the string */
-function lightAt(u,head,band){
-  var d=u-head;
-  if(d<-.5)d+=1;else if(d>.5)d-=1;
-  var t=Math.abs(d)/(band*.5);
-  if(t>=1)return 0;
-  return .5*(1+Math.cos(t*Math.PI));
+  /* 0.50 и 0.174 — прежние центр и полувысота ленты, пересчитанные от
+     полной высоты героя вместо прежних 58%. Рисунок не сдвинулся. */
+  CYp=H*0.50;
+  BHv=H*0.174;
+  bracketY=CYp+BHv*1.32;   /* поперечина скобы */
+  sigTop=bracketY+28;      /* жила начинается под подписью длительности */
+  sigX=-4+(W+8)*evX;       /* точка фиксации в координатах холста */
+  placeReadout();buildSigRun();
+  if(rm)requestAnimationFrame(frame);   /* после ресайза кадр надо перерисовать */
 }
 function frame(ts){
   var dt=(ts-(frame.p||ts))/1000;if(!(dt>0)||dt>.05)dt=.016;frame.p=ts;
-  tt+=dt;rot+=dt*0.032;                          /* a slow, visible turn */
-  if(tt>=evNext){evT=EV_DUR;evAngle=Math.random()*Math.PI*2;evNext=tt+EV_EVERY;}
+  if(rm)dt=0;            /* при reduce рисуем один неподвижный кадр, а не пустоту */
+  tt+=dt;
+  if(tt>=evNext){
+    evT=EV_DUR;evX=0.24+Math.random()*0.52;evNext=tt+EV_EVERY;
+    sigX=-4+(W+8)*evX;buildSigRun();   /* жила переезжает к новой точке */
+    seamFire();
+  }
+  seamStep(dt);
+  if(SEAM.box)SEAM.box.classList.toggle('lit',evT>0||SEAM.t>=0);
   if(evT>0)evT=Math.max(0,evT-dt);
   var evP=evT>0?Math.sin((1-evT/EV_DUR)*Math.PI):0;
   cx.clearRect(0,0,W,H);
+  cx.lineCap='round';cx.lineJoin='round';
 
-  /* the octagon outline — crisp straight runs, drawn once */
-  cx.beginPath();
-  for(var k=0;k<=SIDES;k++){
-    var v=vertex(k,R);
-    if(k===0)cx.moveTo(v[0],v[1]);else cx.lineTo(v[0],v[1]);
-  }
-  cx.strokeStyle='rgba('+MILK+',.30)';cx.lineWidth=1;cx.stroke();
-  /* a second, quieter octagon just outside it */
-  cx.beginPath();
-  for(var k2=0;k2<=SIDES;k2++){
-    var v2=vertex(k2,R*1.055);
-    if(k2===0)cx.moveTo(v2[0],v2[1]);else cx.lineTo(v2[0],v2[1]);
-  }
-  cx.strokeStyle='rgba('+MILK+',.11)';cx.lineWidth=1;cx.stroke();
-
-  for(var i=0;i<N;i++){
-    var st=strings[i];
-    var A=anchor(st,R);
-    var dx=A[0]-CXp,dy=A[1]-CYp,len=Math.hypot(dx,dy)||1;
-    var nx=-dy/len,ny=dx/len;                    /* across the string */
-    /* slow drift, so the bundle is never static */
-    var target=Math.sin(tt*Math.PI*2*OF.driftHz*st.spd+st.ph)*OF.drift;
-    /* the event pulls one sector inward */
-    if(evT>0){
-      var ang=Math.atan2(dy,dx),d2=Math.abs(((ang-evAngle+Math.PI*3)%(Math.PI*2))-Math.PI);
-      if(d2<0.9){var w=.5*(1+Math.cos(d2/0.9*Math.PI));target+=w*evP*46;}
+  /* ---- лента: одна волна, взятая сорока четырьмя сдвигами фазы ----
+     Тёмные места — не заливка, а сгущение линий: вес и прозрачность у всех
+     одинаковые. Сдвиг между крайними линиями гуляет от четверти периода до
+     полного, поэтому лента то стягивается в узел, то раскрывается веером.
+     Вторая, более медленная волна складывает её саму на себя. */
+  var BX0=-4,BX1=W+4,BH=BHv;
+  function bandY(t,u){
+    var sp=Math.PI*(0.28+2.15*(0.5+0.5*Math.sin(t*TAU*0.72+tt*0.15))),
+        en=0.32+0.68*(0.5+0.5*Math.sin(t*TAU*0.52-tt*0.19+1.3)),
+        y=CYp+BH*en*Math.sin(t*TAU*1.55+tt*0.30+u*sp)
+            +BH*0.30*Math.sin(t*TAU*0.85-tt*0.22+u*sp*0.45)
+            +u*BH*0.11*en;
+    if(evP>0){
+      var d=Math.abs(t-evX);
+      if(d<EV_W)y=CYp+(y-CYp)*(1-0.62*0.5*(1+Math.cos(d/EV_W*Math.PI))*evP);
     }
-    /* the cursor pushes strings aside */
-    if(mouse.on){
-      var mx=CXp+dx*0.5+nx*st.bend*0.5,my=CYp+dy*0.5+ny*st.bend*0.5;
-      var md=Math.hypot(mx-mouse.x,my-mouse.y);
-      if(md<OF.mouseR){
-        var f=Math.pow(1-md/OF.mouseR,1.7)*OF.push;
-        var side=((mx-mouse.x)*nx+(my-mouse.y)*ny)>=0?1:-1;
-        target+=side*f;
+    return y;
+  }
+  cx.save();
+  var li,sj,uu,tu;
+  for(li=0;li<NL;li++){
+    uu=li/(NL-1)-0.5;
+    cx.beginPath();
+    for(sj=0;sj<=NS;sj++){
+      tu=sj/NS;
+      var xx=BX0+(BX1-BX0)*tu,yy=bandY(tu,uu);
+      sj?cx.lineTo(xx,yy):cx.moveTo(xx,yy);
+    }
+    cx.strokeStyle='rgba('+MILK+',.30)';cx.lineWidth=0.9;cx.stroke();
+  }
+  /* тот же участок ещё раз, цветом марки: событие зафиксировано */
+  if(evP>0){
+    for(li=0;li<NL;li++){
+      uu=li/(NL-1)-0.5;
+      cx.beginPath();var run=false;
+      for(sj=0;sj<=NS;sj++){
+        tu=sj/NS;
+        if(Math.abs(tu-evX)>EV_W){run=false;continue;}
+        var x2=BX0+(BX1-BX0)*tu,y2=bandY(tu,uu);
+        run?cx.lineTo(x2,y2):cx.moveTo(x2,y2);run=true;
       }
+      cx.strokeStyle='rgba('+GLOW+','+(0.62*evP).toFixed(3)+')';
+      cx.lineWidth=1;cx.stroke();
     }
-    var acc=-OF.stiff*(st.bend-target)-OF.damp*st.vel;
-    st.vel+=acc*dt;st.bend+=st.vel*dt;
-    var q=clampIn(CXp+dx*0.5+nx*st.bend,CYp+dy*0.5+ny*st.bend,2);
-    var qx=q[0],qy=q[1];
+    /* скоба с длительностью — внутри обода, чтобы не спорить с показанием */
+    var ba=BX0+(BX1-BX0)*(evX-EV_W),bb=BX0+(BX1-BX0)*(evX+EV_W),by=CYp+BH*1.32;
+    cx.save();cx.setLineDash([3,4]);
+    cx.strokeStyle='rgba('+GLOW+','+(evP*0.45).toFixed(3)+')';cx.lineWidth=1;
+    cx.beginPath();cx.moveTo(ba,CYp-BH*1.24);cx.lineTo(ba,by);
+    cx.moveTo(bb,CYp-BH*1.24);cx.lineTo(bb,by);cx.stroke();cx.restore();
+    cx.strokeStyle='rgba('+GLOW+','+(evP*0.75).toFixed(3)+')';cx.lineWidth=1.4;
+    cx.beginPath();cx.moveTo(ba,by);cx.lineTo(bb,by);cx.stroke();
+    cx.font='11px "Departure Mono",monospace';
+    cx.textAlign='center';cx.textBaseline='middle';
+    cx.fillStyle='rgba('+GLOW+','+(evP*0.85).toFixed(3)+')';
+    cx.fillText('180 MS',(ba+bb)/2,by+14);
+    /* Спуск от точки фиксации — до поперечины скобы и не дальше. Гаснет вместе
+       с ней: постоянная линия через весь герой читалась случайной, а не частью
+       события. */
+    cx.beginPath();cx.moveTo(sigX,CYp);cx.lineTo(sigX,by);
+    cx.strokeStyle='rgba('+MILK+','+(0.10*evP).toFixed(3)+')';
+    cx.lineWidth=3.4;cx.stroke();
+    cx.strokeStyle='rgba('+MILK+','+(0.42*evP).toFixed(3)+')';
+    cx.lineWidth=1;cx.stroke();
+    /* поперечина в самой точке: отсюда снят отсчёт */
+    cx.beginPath();cx.moveTo(sigX-7,CYp);cx.lineTo(sigX+7,CYp);
+    cx.strokeStyle='rgba('+GLOW+','+(0.9*evP).toFixed(3)+')';
+    cx.lineWidth=1.4;cx.stroke();
+  }
+  cx.restore();
 
-    /* the string itself — the curve cannot leave the shape once its control
-       point is inside it, the octagon being convex */
-    cx.beginPath();cx.moveTo(CXp,CYp);cx.quadraticCurveTo(qx,qy,A[0],A[1]);
-    cx.strokeStyle='rgba('+MILK+','+(OF.line*st.lit).toFixed(3)+')';
-    cx.lineWidth=.9;cx.stroke();
-
-    /* light travelling outward along the few that carry it */
-    if(st.carries){
-      var head=(tt*OF.glide+st.off)%1;
-      var g=cx.createLinearGradient(CXp,CYp,A[0],A[1]);
-      for(var gi=0;gi<=8;gi++){
-        var gu=gi/8;
-        g.addColorStop(gu,'rgba('+GLOW+','+(lightAt(gu,head,OF.band)*OF.litHi*st.lit).toFixed(4)+')');
-      }
-      cx.strokeStyle=g;cx.lineWidth=1.4;cx.stroke();
-    }
-
-    /* the point on the perimeter */
-    cx.beginPath();cx.arc(A[0],A[1],1.5,0,Math.PI*2);
-    cx.fillStyle='rgba('+MILK+',.5)';cx.fill();
+  /* В широком варианте лента проходит под заголовком и съедает текст. Гасим её
+     слева градиентом по маске: это один проход по холсту, а не разбиение каждой
+     из сорока четырёх линий на отрезки с разной прозрачностью. */
+  if(innerWidth>960){
+    var mg=cx.createLinearGradient(0,0,W*0.52,0);
+    mg.addColorStop(0,'rgba(0,0,0,1)');
+    mg.addColorStop(0.62,'rgba(0,0,0,.72)');
+    mg.addColorStop(1,'rgba(0,0,0,0)');
+    cx.save();cx.globalCompositeOperation='destination-out';
+    cx.fillStyle=mg;cx.fillRect(0,0,W*0.52,H);cx.restore();
   }
 
-  /* live channels: reseeded on a flicker, so the discharge never repeats */
-  arcT-=dt;
-  if(arcT<=0){
-    arcT=0.20+Math.random()*0.16;
-    /* mostly a new shape for the same run; now and then the run itself moves */
-    reseedArc(arcs[Math.floor(Math.random()*arcs.length)],Math.random()<0.22);
-  }
-  for(var ae=0;ae<arcs.length;ae++)easeArc(arcs[ae],dt);
-  var amp=R*0.070*(1+evP*1.5);
-  for(var ai=0;ai<arcs.length;ai++){
-    var arc=arcs[ai],run=arcPath(arc,amp);
-    var glow=(0.30+0.34*evP)*arc.life*arc.vis;
-    strokeSmooth(run.pts,'rgba('+MILK+','+(glow*0.5).toFixed(3)+')',2.4);
-    strokeSmooth(run.pts,'rgba('+GLOW+','+glow.toFixed(3)+')',1);
-    if(arc.branch){
-      var b=arc.branch,i0=Math.round(b.at*ARC_SEG);
-      var p0=run.pts[i0];
-      var bl=run.len*b.len;
-      var ca=Math.cos(b.turn),sa=Math.sin(b.turn);
-      var bdx=(run.dx/run.len)*ca-(run.dy/run.len)*sa;
-      var bdy=(run.dx/run.len)*sa+(run.dy/run.len)*ca;
-      var bp=[];
-      for(var k2=0;k2<b.jit.length;k2++){
-        var u2=k2/(b.jit.length-1),bell2=Math.sin(u2*Math.PI);
-        bp.push([p0[0]+bdx*bl*u2+(-bdy)*b.jit[k2]*amp*0.8*bell2,
-                 p0[1]+bdy*bl*u2+( bdx)*b.jit[k2]*amp*0.8*bell2]);
-      }
-      strokeSmooth(bp,'rgba('+GLOW+','+(glow*0.55).toFixed(3)+')',.9);
-    }
-  }
 
-  /* the corners are marked, the way a drawing marks its stations */
-  for(var c=0;c<SIDES;c++){
-    var vc=vertex(c,R);
-    cx.fillStyle='rgba('+MILK+',.85)';
-    cx.fillRect(vc[0]-2.5,vc[1]-2.5,5,5);
-  }
-
-  ringDraw(dt);
   /* readout follows the same event, steadily */
   if(!frame.hm||ts-frame.hm>500){frame.hm=ts;
-    var vTxt=(230.0-evP*44).toFixed(1),fTxt=(50.00-evP*.05).toFixed(2),
-        sTxt=evP>.15?PT.rdDip:PT.rdNominal;
+    /* просадка до 0,66 о.е. — ровно та, что показывает вектор на диаграмме */
+    var vTxt=(230.0-evP*78).toFixed(1),fTxt=(50.00-evP*.05).toFixed(2),
+        /* спокойное состояние словом не подписывается: остаётся только индикатор */
+        sTxt=evP>.15?PT.rdDip:'';
     var hv=document.querySelector('.hv'),hz=document.querySelector('.hz'),stt=document.getElementById('stt');
     if(hv&&hv.textContent!==vTxt)hv.textContent=vTxt;
     if(hz&&hz.textContent!==fTxt)hz.textContent=fTxt;
-    if(stt&&stt.textContent!==sTxt)stt.textContent=sTxt;}
-  requestAnimationFrame(frame);
+    if(stt&&stt.textContent!==sTxt)stt.textContent=sTxt;
+    if(stt&&stt.parentElement)stt.parentElement.classList.toggle('is-ev',evP>.15);}
+  if(!rm)requestAnimationFrame(frame);
 }
-size();build();
-cv.addEventListener('pointermove',function(e){var r=cv.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;mouse.on=true;});
-cv.addEventListener('pointerleave',function(){mouse.on=false;});
-if(!rm)requestAnimationFrame(frame);
+size();
+requestAnimationFrame(frame);
 
 /* ============ JOINT TRACES ============ */
 function route(pts,r){
@@ -1317,6 +1380,9 @@ function buildJoints(){
       var off=t*15;
       var pts=spec.map(function(p,idx){return [p[0]*w+off,p[1]*h+(t?off*0.4:0)];});
       var d=route(pts,20);
+      var sh=document.createElementNS(ns,'path');
+      sh.setAttribute('d',d);sh.setAttribute('class','sheath');
+      svg.appendChild(sh);
       var base=document.createElementNS(ns,'path');
       base.setAttribute('d',d);base.setAttribute('class','base');base.setAttribute('stroke','url(#'+gid+')');
       svg.appendChild(base);
@@ -1325,6 +1391,10 @@ function buildJoints(){
       var L=0;try{L=base.getTotalLength();}catch(e){L=h*2;}
       pl.setAttribute('stroke-dasharray',(L*0.11).toFixed(0)+' '+(L*0.99).toFixed(0));
       pl.dataset.len=L;pl.dataset.tr=t;
+      /* Ореол носит класс pulse, поэтому его двигает тот же paintJoints — отдельного
+         кода на него не нужно. */
+      var hl=pl.cloneNode(false);hl.setAttribute('class','pulse halo');
+      svg.appendChild(hl);
       svg.appendChild(pl);
     }
   });
@@ -1346,10 +1416,104 @@ function paintJoints(){
   });
 }
 
+
+/* ============ СИГНАЛЬНАЯ ЖИЛА ============
+   От показания вниз, за пределы героя, в раздел 01, к видимому торцу. */
+function buildSigRun(){
+  var box=document.getElementById('sigrun');if(!box)return;
+  SEAM.box=box;
+  box.innerHTML='';SEAM.pulse=null;SEAM.halo=null;SEAM.t=-1;
+  if(innerWidth<1100)return;
+  /* Жила отвязана от блока показаний: она начинается там, где на ленте
+     записано отклонение, и переезжает вместе с ним. Сюда приходит продолжение
+     спуска, нарисованного на холсте. */
+  var st=document.querySelector('.stage');if(!st)return;
+  var b=box.getBoundingClientRect(),sb=st.getBoundingClientRect();
+  var W=Math.round(b.width),H=Math.round(b.height);
+  if(!(W>0))return;
+  var x=Math.round(sb.left-b.left+sigX),
+      y0=Math.round(sb.top-b.top+sigTop);   /* от отметки под скобой */
+  /* Спина раздела 01 — та же координата, что и в buildRails: svg трассы стоит на
+     clamp(4,1.4vw,18), сама линия внутри него на 8. Считаем тем же выражением,
+     иначе стык разъедется на другой ширине. */
+  var railX=Math.round(Math.min(18,Math.max(4,innerWidth*.014))+8);
+  var hero=document.querySelector('.hero');
+  /* Поворот поднят внутрь героя: раньше он лежал в промежутке между экранами,
+     и половина пути импульса проходила за нижней кромкой. Теперь весь путь виден,
+     пока герой на экране, а вертикаль слева начинается ровно на этом повороте и
+     без стыка продолжается трассой второго раздела. */
+  var hbo=Math.round(hero.getBoundingClientRect().bottom-b.top);
+  var lane=hbo-96;
+  var y1=hbo+150;                                     /* заходит в трассу и сливается с ней */
+  var ns='http://www.w3.org/2000/svg';
+  var svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  function P(cls,d,op){var p=document.createElementNS(ns,'path');
+    p.setAttribute('class',cls);p.setAttribute('d',d);
+    if(op!==undefined)p.setAttribute('opacity',op);svg.appendChild(p);return p;}
+  var d=route([[x,y0],[x,lane],[railX,lane],[railX,y1]],18);
+  P('sheath',d);P('sig',d);
+  var halo=P('sp halo',d,0),pulse=P('sp',d,0);
+  box.appendChild(svg);
+  SEAM.pulse=pulse;SEAM.halo=halo;SEAM.len=pulse.getTotalLength();
+  var dash=(SEAM.len*.30).toFixed(0)+' '+(SEAM.len*1.5).toFixed(0);
+  pulse.setAttribute('stroke-dasharray',dash);halo.setAttribute('stroke-dasharray',dash);
+}
+/* ============ ПРОВОДНИКИ В ГЕРОЕ ============
+   Три фазы идут вертикально правее кольца, на каждой — катушка Роговского, и внизу
+   героя линии скруглённо уходят вправо и растворяются. Строится скриптом: колонка
+   ставится от ПРАВОГО КРАЯ КОЛЬЦА, а его радиус знает только холст.
+   Начинаются ниже шапки — иначе проходили бы за логотипом и навигацией. */
+/* Схемы до прибора больше нет: шина, проводники, трансформаторы тока,
+   вторичные цепи, кабель и клеммник сняты по решению владельца — на широкой
+   ленте они читались вторым, спорящим рисунком. Осталось поставить показание;
+   всё, что идёт ПОСЛЕ него, строит buildSigRun.
+
+   Ширину резервируем по самому длинному состоянию: при событии подпись
+   сменяется на «VOLTAGE DIP · 180 MS», и без резерва строка прыгала бы. */
+function placeReadout(){
+  var hero=document.querySelector('.hero'),st=document.querySelector('.stage');
+  if(!hero||!st)return;
+  var rd=document.querySelector('.rd'),stt=document.getElementById('stt');
+  if(!rd)return;
+  if(innerWidth<=960){rd.style.right='';rd.style.top='';rd.style.minWidth='';return;}
+  if(stt&&PT.rdDip){
+    var keep=stt.textContent;
+    rd.style.minWidth='0px';
+    stt.textContent=PT.rdDip;
+    rd.style.minWidth=Math.ceil(rd.getBoundingClientRect().width)+'px';
+    stt.textContent=keep;
+  }
+  var hb=hero.getBoundingClientRect(),sb=st.getBoundingClientRect();
+  rd.style.right='70px';
+  /* под лентой, но не ниже нижнего поля героя */
+  var top=Math.round(sb.bottom-hb.top)+10,
+      lim=Math.round(hb.height-rd.getBoundingClientRect().height)-34;
+  rd.style.top=Math.min(top,lim)+'px';
+}
+
+/* Импульс уходит по жиле в тот момент, когда показание фиксирует отклонение, —
+   не по таймеру и не по прокрутке. Заводится из кадра холста, там же, где
+   начинается само событие. */
+function seamFire(){if(SEAM.pulse)SEAM.t=0;}
+function seamStep(dt){
+  if(!SEAM.pulse||SEAM.t<0)return;
+  SEAM.t+=dt/5.0;
+  var lit=[SEAM.pulse,SEAM.halo].filter(Boolean);
+  if(SEAM.t>=1){SEAM.t=-1;lit.forEach(function(p){p.setAttribute('opacity','0');});return;}
+  var L=SEAM.len,off=(L*.16-SEAM.t*L*1.16).toFixed(1);
+  lit.forEach(function(p){p.setAttribute('stroke-dashoffset',off);p.setAttribute('opacity','1');});
+}
+
 /* ============ TEXT RAILS — traces running alongside section copy ============ */
 function buildRails(){
   if(innerWidth<1100)return document.querySelectorAll('.srail').forEach(function(s){s.remove();});
-  document.querySelectorAll('section[data-rail]').forEach(function(sec){
+  /* Длинной вертикали через весь раздел больше нет. Остаётся короткий отвод к
+     заголовку с квадратной отметкой на конце, и синий доходит ровно до неё:
+     сигнал ведёт читателя от заголовка к заголовку, а не тянется полосой вдоль
+     всего текста. В первом разделе отвод начинается от самой кромки — туда
+     приходит жила из героя. */
+  document.querySelectorAll('section[data-rail]').forEach(function(sec,si){
     var old=sec.querySelector('.srail');if(old)old.remove();
     var h2=sec.querySelector('h2');if(!h2)return;
     var H=sec.offsetHeight,W2=110;
@@ -1360,14 +1524,10 @@ function buildRails(){
     svg.setAttribute('viewBox','0 0 '+W2+' '+H);
     svg.setAttribute('preserveAspectRatio','none');
     svg.style.cssText='position:absolute;top:0;left:clamp(4px,1.4vw,18px);width:'+W2+'px;height:'+H+'px;pointer-events:none;overflow:visible;';
-    /* base: vertical spine + elbow pointing into the heading */
-    var spine=document.createElementNS(ns,'path');
-    spine.setAttribute('d',route([[8,0],[8,H]],0));
-    spine.setAttribute('fill','none');spine.setAttribute('stroke','currentColor');
-    spine.setAttribute('stroke-opacity','.13');spine.setAttribute('stroke-width','1');
-    svg.appendChild(spine);
+    var top=si===0?0:Math.max(0,yh-46);
+    var dEl=route([[8,top],[8,yh],[W2-14,yh]],16);
     var elbow=document.createElementNS(ns,'path');
-    elbow.setAttribute('d',route([[8,yh-46],[8,yh],[W2-14,yh]],16));
+    elbow.setAttribute('d',dEl);
     elbow.setAttribute('fill','none');elbow.setAttribute('stroke','currentColor');
     elbow.setAttribute('stroke-opacity','.22');elbow.setAttribute('stroke-width','1');
     svg.appendChild(elbow);
@@ -1378,87 +1538,33 @@ function buildRails(){
     svg.appendChild(tick);
     /* pulse rides the spine with scroll */
     var pl=document.createElementNS(ns,'path');
-    pl.setAttribute('d',route([[8,0],[8,H]],0));
+    pl.setAttribute('d',dEl);
     pl.setAttribute('class','pulse');pl.setAttribute('fill','none');
     pl.style.stroke='var(--brand-ink)';pl.setAttribute('stroke-width','1.6');
     pl.setAttribute('stroke-linecap','round');
-    pl.setAttribute('stroke-dasharray',(H*0.14).toFixed(0)+' '+(H*0.96).toFixed(0));
-    pl.dataset.len=H;
     svg.appendChild(pl);
     sec.style.position='relative';
     sec.appendChild(svg);
+    /* длину берём у самого пути: отвод короткий и у каждого раздела свой */
+    var PL=pl.getTotalLength();
+    pl.setAttribute('stroke-dasharray',(PL*0.34).toFixed(1)+' '+(PL*1.4).toFixed(1));
+    pl.dataset.len=PL;
+    svg.dataset.yh=yh;
   });
   paintRails();
 }
 function paintRails(){
   var vh=innerHeight;
   document.querySelectorAll('.srail').forEach(function(svg){
-    var r=svg.getBoundingClientRect();
-    var p=(vh*0.92-r.top)/(r.height+vh*0.6);
+    /* Ход считаем по заголовку, а не по всей высоте раздела: путь стал коротким,
+       и на прежней шкале импульс полз бы через весь экран. */
+    var r=svg.getBoundingClientRect(),yh=+svg.dataset.yh||0;
+    var p=(vh*0.80-(r.top+yh))/(vh*0.30);
     p=Math.max(0,Math.min(1,p));
     var pl=svg.querySelector('.pulse'),L=+pl.dataset.len;
-    pl.setAttribute('stroke-dashoffset',(L*0.14-p*L*1.14).toFixed(1));
+    pl.setAttribute('stroke-dashoffset',(L*0.34-p*L*1.34).toFixed(1));
     pl.setAttribute('opacity',(p>0.005&&p<0.999?1:0));
   });
-}
-
-/* ============ APPROACH ROUTE — one trace threading the staggered blocks ============ */
-function buildCoFlow(){
-  var pr=document.querySelector('#company .pr');
-  if(!pr)return;
-  var old=pr.querySelector('.coflow');if(old)old.remove();
-  if(innerWidth<900)return;
-  var items=[].slice.call(pr.querySelectorAll('.p'));
-  if(!items.length)return;
-  var pb=pr.getBoundingClientRect(),W=pr.offsetWidth,H=pr.offsetHeight;
-  /* anchor beside each block's marker */
-  var nodes=items.map(function(el){
-    var r=el.getBoundingClientRect();
-    return [Math.round(r.left-pb.left)+2,
-            Math.max(2,Math.round(r.top-pb.top))];
-  });
-  /* orthogonal meander: drop, jog across, drop again */
-  var raw=[[nodes[0][0],0]];
-  nodes.forEach(function(n,i){
-    if(i===0){raw.push([n[0],n[1]]);return;}
-    raw.push([nodes[i-1][0],n[1]]);
-    raw.push([n[0],n[1]]);
-  });
-  raw.push([nodes[nodes.length-1][0],H]);
-  /* drop coincident points — they would emit zero-length corners */
-  var pts=[];
-  raw.forEach(function(p){
-    var q=pts[pts.length-1];
-    if(!q||Math.abs(q[0]-p[0])>1||Math.abs(q[1]-p[1])>1)pts.push(p);
-  });
-  if(pts.length<2)return;
-  var ns='http://www.w3.org/2000/svg';
-  var svg=document.createElementNS(ns,'svg');
-  svg.setAttribute('class','coflow');
-  svg.setAttribute('viewBox','0 0 '+W+' '+H);
-  svg.setAttribute('preserveAspectRatio','none');
-  var d=route(pts,20);
-  var sub=document.createElementNS(ns,'path');
-  sub.setAttribute('d',route(pts.map(function(p){return [p[0]+9,p[1]+9];}),20));
-  sub.setAttribute('class','sub');svg.appendChild(sub);
-  var base=document.createElementNS(ns,'path');
-  base.setAttribute('d',d);base.setAttribute('class','base');svg.appendChild(base);
-  var pl=document.createElementNS(ns,'path');
-  pl.setAttribute('d',d);pl.setAttribute('class','pulse');
-  var L=0;try{L=base.getTotalLength();}catch(e){L=H*2;}
-  pl.setAttribute('stroke-dasharray',(L*0.1).toFixed(0)+' '+(L*0.99).toFixed(0));
-  pl.dataset.len=L;svg.appendChild(pl);
-  pr.insertBefore(svg,pr.firstChild);
-  paintCoFlow();
-}
-function paintCoFlow(){
-  var svg=document.querySelector('#company .coflow');if(!svg)return;
-  var pl=svg.querySelector('.pulse'),L=+pl.dataset.len;
-  var r=svg.getBoundingClientRect(),vh=innerHeight;
-  var p=(vh*0.9-r.top)/(r.height+vh*0.5);
-  p=p<0?0:(p>1?1:p);
-  pl.setAttribute('stroke-dashoffset',(L*0.1-p*L*1.1).toFixed(1));
-  pl.setAttribute('opacity',(p>0.004&&p<0.998?1:0));
 }
 
 /* ============ EVENT CHAIN — one line, lit by scroll ============ */
@@ -1486,7 +1592,7 @@ function seqUpd(){
      section fills most of the viewport. */
   var p=(innerHeight*0.95-r.top)/(innerHeight*0.29);
   p=p<0?0:(p>1?1:p);
-  chainFill.style.transform='scaleX('+p.toFixed(4)+')';
+  chainFill.style.setProperty('--p',p.toFixed(4));
   var lit=Math.ceil(p*STEPS.length-0.001);
   for(var i=0;i<chsteps.children.length;i++)
     chsteps.children[i].classList.toggle('on',i<lit);
@@ -1567,9 +1673,11 @@ CARDS.forEach(function(o,i){
   slide.innerHTML='<article class="ic'+(o.invite?' is-open-card':'')+'" tabindex="0">'+
     '<div class="ic-top"><span class="ic-go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.7 12.3 12.3 3.7"/><path d="M12.3 8.7V3.7H7.3"/></svg></span></div>'+
     '<div class="ic-art">'+visual+'</div>'+
-    '<div class="ic-foot"><h3></h3><p></p></div></article>';
+    '<div class="ic-foot"><h3></h3></div></article>';
+  /* На карточке ленты остаётся только название: короткий текст повторял первый
+     абзац модалки слово в слово, и его место отдано фотографии. Сам текст никуда
+     не делся — p1 по-прежнему открывается в модалке. */
   slide.querySelector('h3').textContent=o.title;
-  slide.querySelector('.ic-foot p').textContent=o.p1;
   var card=slide.querySelector('.ic');
   var act=function(){if(dragMoved)return;if(o.invite)openForm();else openInd(o);};
   card.addEventListener('click',act);
@@ -1645,20 +1753,16 @@ function sxRender(x){
     var e=sxEase(prox);
     var sc=SX.scaleMin+(1-SX.scaleMin)*e;
     var y=SX.lift-SX.lift*e;
-    /* Whole device pixels. A promoted layer is rasterised once and then
-       resampled by the scale, so a fractional scale frays its edge into
-       transparency and the light page shows through as a moving rim. Landing
-       the scaled width on a whole device pixel makes that edge step instead
-       of shimmer; the focus-point effect itself is unchanged. */
-    var _dp=window.devicePixelRatio||1,_w=shells[i].offsetWidth||1;
-    sc=Math.round(_w*sc*_dp)/(_w*_dp);
-    y=Math.round(y*_dp)/_dp;
-    shells[i].style.transform='translate3d(0,'+y+'px,0) scale('+sc.toFixed(5)+')';
+    /* Масштаб и подъём тоже идут дробными. Прежде ширина карточки сажалась на
+       целый пиксель, и рост шёл заметными ступенями — примерно по одной на
+       каждые пятнадцать пикселей прокрутки. Против дрожания кромки работает
+       backface-visibility в таблице стилей, а не квантование движения. */
+    shells[i].style.transform='translate3d(0,'+y.toFixed(2)+'px,0) scale('+sc.toFixed(5)+')';
     var im=shells[i].querySelector('.ic-art img');
     if(im){var rel=(centre-SX.focus)/SX.focus;
       /* translateX, not translate3d: a 3D transform promotes the image to its own
          layer, and that layer is then resampled by the rail's scale. */
-      im.style.transform='scale(1.06) translateX('+Math.round(-rel*12)+'px)';}
+      im.style.transform='scale(1.06) translateX('+(-rel*12).toFixed(2)+'px)';}
   }
 }
 function suiteUpd(){
@@ -1666,8 +1770,10 @@ function suiteUpd(){
   var p=suiteProgress();
   var tp=p/SX.window; tp=tp<0?0:tp>1?1:tp;      /* the last stretch is the hold */
   var x=SX.startX+(SX.endX-SX.startX)*tp;
-  var _dpt=window.devicePixelRatio||1;
-  sxTrack.style.transform='translate3d('+(Math.round(x*_dpt)/_dpt)+'px,0,0)';
+  /* Без округления до целого пикселя. Оно ставилось против дрожания кромки, но
+     при медленной прокрутке лента шла ступеньками: кадр стоит, кадр прыгает на
+     пиксель. Композитор сам сглаживает дробный сдвиг. */
+  sxTrack.style.transform='translate3d('+x.toFixed(2)+'px,0,0)';
   sxRender(x);
   railBar(tp);
 }
@@ -1817,6 +1923,74 @@ function wipeToTop(){
   h.style.scrollBehavior=prev;
   history.replaceState(null,'','#top');
 }
+/* ЯКОРЬ ЧЕРЕЗ ЗАКРЕПЛЁННУЮ ЛЕНТУ.
+   Между героем и разделом услуг лежит лента отраслей: раздел высокий, его кадр
+   залипает, а прокрутка внутри него листает карточки. Плавный переход по якорю
+   честно проматывал всю эту длину, и карточки отыгрывали анимацию на скорости —
+   мельтешение. Такой перелёт прячем под плашками тем же переходом, что и логотип:
+   плашки сходятся, страница встаёт на месте, плашки расходятся.
+   Обработчик стоит на перехвате и выше по документу, чем плавная прокрутка,
+   поэтому работает и там, где своя прокрутка выключена (тач, reduce-motion). */
+function hashJump(y,id){
+  /* Координату считаем ЗАНОВО в момент посадки. Прежде она бралась в клике, а
+     между кликом и прыжком проходит перекрытие: закрепляемая лента и блоки,
+     которые ещё не проявились, успевают пересчитать высоты, и страница
+     приезжала мимо раздела. Вторая и третья посадка добирают то, что
+     пересчиталось уже после прыжка. */
+  var el=document.getElementById(id);
+  function land(){
+    var yy=el?el.getBoundingClientRect().top+window.pageYOffset-(id==='top'?0:26):y;
+    var h=document.documentElement,prev=h.style.scrollBehavior;
+    h.style.scrollBehavior='auto';
+    window.scrollTo(0,yy);
+    if(typeof PS!=='undefined'){PS.t=PS.c=yy;}
+    h.style.scrollBehavior=prev;
+  }
+  land();
+  requestAnimationFrame(land);
+  setTimeout(land,150);
+  history.replaceState(null,'','#'+id);
+}
+function crossesRail(from,to){
+  var sec=document.querySelector('.suite');if(!sec)return false;
+  var top=sec.getBoundingClientRect().top+window.pageYOffset,bot=top+sec.offsetHeight;
+  var a=Math.min(from,to),b=Math.max(from,to);
+  /* сорок пикселей допуска, чтобы прыжок К САМОЙ ленте не считался пролётом сквозь */
+  return b-a>innerHeight*0.6&&b>top+40&&a<bot-40;
+}
+document.addEventListener('click',function(e){
+  if(e.metaKey||e.ctrlKey||e.shiftKey)return;
+  var a=e.target.closest&&e.target.closest('a[href^="#"]');
+  if(!a||a.classList.contains('brand'))return;
+  var id=a.getAttribute('href').slice(1);if(!id)return;
+  var el=document.getElementById(id);if(!el)return;
+  var y=el.getBoundingClientRect().top+window.pageYOffset-(id==='top'?0:26);
+  /* Из выпадающего списка — ВСЕГДА через перекрытие, независимо от расстояния.
+     Прежде короткий ход шёл плавной прокруткой, и одно и то же действие вело
+     себя по-разному: то плашки, то прокрутка. Ссылки внутри текста остаются
+     как были — там перекрытие оправдано только на длинном перелёте. */
+  var fromIx=a.closest('#ixp');
+  if(!fromIx&&!crossesRail(window.pageYOffset,y))return;
+  e.preventDefault();
+  e.stopPropagation();                               /* иначе плавная прокрутка тоже стартует */
+  /* Клик остановлен на перехвате, и до собственного обработчика панели он не
+     доходил — на длинных прыжках список разделов оставался открытым поверх
+     нового раздела. Закрываем его здесь, и в правильном порядке: отклик на
+     строке, лист уходит, потом перекрытие. */
+  var run=function(){
+    if(rm||document.visibilityState!=='visible'){hashJump(y,id);return;}
+    wipeCoverThen(function(){hashJump(y,id);wipeReveal();});
+  };
+  if(fromIx){
+    a.classList.add('picked');
+    setTimeout(function(){
+      ixOpen(false);a.classList.remove('picked');run();
+    },170);
+    return;
+  }
+  run();
+},true);
+
 var brandA=document.querySelector('.brand');
 if(brandA)brandA.addEventListener('click',function(e){
   if(e.metaKey||e.ctrlKey||e.shiftKey)return;
@@ -1953,34 +2127,76 @@ var ixItems=[].slice.call(document.querySelectorAll('section')).map(function(sec
   var t=h2.cloneNode(true);
   [].slice.call(t.querySelectorAll('br')).forEach(function(b){b.replaceWith(' ');});
   [].slice.call(t.querySelectorAll('i,svg')).forEach(function(x){x.remove();});
-  var eb=sec.querySelector('.eyebrow');
   return {id:sec.id,no:cnt.textContent.trim(),
-          title:t.textContent.replace(/\s+/g,' ').trim(),
-          label:eb?eb.textContent.replace(/\s+/g,' ').trim():'',sec:sec};
+          title:t.textContent.replace(/\s+/g,' ').trim(),sec:sec};
 }).filter(Boolean);
 if(ixt)ixt.textContent=ixItems.length<10?('0'+ixItems.length):String(ixItems.length);
 ixItems.forEach(function(it){
   var li=document.createElement('li');
   li.innerHTML='<a href="#'+it.id+'"><span class="no"></span><span class="tl"></span></a>';
   li.querySelector('.no').textContent=it.no;
-  li.querySelector('.tl').textContent=it.title;
+  letterize(li.querySelector('.tl'),it.title);
+  li.querySelector('a').setAttribute('aria-label',it.no+' '+it.title);
+  li.style.setProperty('--i',ixlist.children.length);
   ixlist.appendChild(li);
 });
 /* variant 1 shows the sheet you are on, right in the bar */
 var sheet=document.createElement('span');sheet.className='sheet';ixb.appendChild(sheet);
+var ixsc=document.getElementById('ixsc');
+if(ixsc)ixsc.addEventListener('click',function(){ixOpen(false);});
 function ixOpen(on){
   if(on){ixp.hidden=false;setTimeout(function(){ixp.classList.add('on');},16);}
   else{ixp.classList.remove('on');setTimeout(function(){if(!ixp.classList.contains('on'))ixp.hidden=true;},360);}
+  if(ixsc)ixsc.classList.toggle('on',on);
   ixb.setAttribute('aria-expanded',on?'true':'false');
 }
 ixb.addEventListener('click',function(){ixOpen(ixp.hidden||!ixp.classList.contains('on'));});
-ixp.addEventListener('click',function(e){if(e.target.closest('a'))ixOpen(false);});
+ixp.addEventListener('click',function(e){
+  var a=e.target.closest('a');if(!a)return;
+  /* Короткий отклик на выбранной строке, и только потом лист уходит: раньше он
+     схлопывался в тот же кадр, и выбор ничем не подтверждался. */
+  a.classList.add('picked');
+  setTimeout(function(){ixOpen(false);a.classList.remove('picked');},150);
+});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!ixp.hidden)ixOpen(false);});
 document.addEventListener('click',function(e){
   if(ixp.hidden)return;
   if(e.target.closest('#ixp')||e.target.closest('#ixb'))return;
   ixOpen(false);
 });
+/* Название раскладывается на буквы: при наведении каждая уезжает вверх, а
+   снизу встаёт её двойник. Порядок срыва перемешан, а не слева направо, —
+   отсюда ощущение живого набора, а не бегущей строки. Буквы держатся словами,
+   иначе длинное название рвалось бы посередине слова.
+   Для чтения с экрана всё это скрыто: доступное имя ссылки задано отдельно. */
+function letterize(el,text){
+  el.textContent='';el.setAttribute('aria-hidden','true');
+  var n=text.length,order=[],i,j,tmp;
+  for(i=0;i<n;i++)order.push(i);
+  for(i=n-1;i>0;i--){j=Math.floor(Math.random()*(i+1));tmp=order[i];order[i]=order[j];order[j]=tmp;}
+  var rank=[];for(i=0;i<n;i++)rank[order[i]]=i;
+  /* Шаг 25 мс хорош на коротком слове, но названия здесь до сорока знаков, и
+     весь пробег растягивался на полторы секунды. Держим сам пробег около 300 мс
+     и не превышаем 25 мс на букву: короткие названия идут как в оригинале,
+     длинные не тянут. */
+  var step=Math.min(25,300/Math.max(1,n-1));
+  var word=null;
+  for(i=0;i<n;i++){
+    var ch=text.charAt(i);
+    if(ch===' '){
+      word=null;
+      var sp=document.createElement('span');sp.className='sp';sp.textContent=' ';
+      el.appendChild(sp);continue;
+    }
+    if(!word){word=document.createElement('span');word.className='wd';el.appendChild(word);}
+    var lt=document.createElement('span');lt.className='lt';
+    lt.style.setProperty('--d',(rank[i]*step).toFixed(1)+'ms');
+    var a=document.createElement('i'),b=document.createElement('i');
+    a.textContent=ch;b.textContent=ch;
+    lt.appendChild(a);lt.appendChild(b);word.appendChild(lt);
+  }
+}
+
 /* which sheet are we on, and what tone is under the bar */
 function ixSpy(){
   var probe=innerHeight*0.34,cur=null;
@@ -1997,7 +2213,7 @@ function ixSpy(){
       if(ixItems[j].sec.getBoundingClientRect().top<=probe)cur=ixItems[j];
     if(!cur)cur=ixItems[0];
   }
-  if(cur){ixn.textContent=cur.no;sheet.textContent=cur.label||cur.title.slice(0,26);}
+  if(cur){ixn.textContent=cur.no;sheet.textContent=cur.title.slice(0,26);}
   var links=ixlist.querySelectorAll('a');
   for(var k=0;k<links.length;k++)
     links[k].classList.toggle('here',!!cur&&links[k].getAttribute('href')==='#'+cur.id);
@@ -2073,6 +2289,12 @@ function psFrame(ts){
 }
 function psPush(dy){
   PS.t=Math.max(0,Math.min(psMax(),PS.t+dy));
+  /* Цель не убегает от страницы дальше, чем на полтора экрана. Резкий бросок по
+     тачпаду накапливал в цели несколько тысяч пикселей, и дальше страница просто
+     телепортировалась мимо всего — движение переставало быть управляемым. С
+     потолком быстрый жест остаётся быстрым, но остаётся ходом, а не прыжком. */
+  var cap=innerHeight*1.5;
+  PS.t=Math.max(PS.c-cap,Math.min(PS.c+cap,PS.t));
   if(!PS.raf){PS.last=0;PS.raf=requestAnimationFrame(psFrame);}
 }
 function psTo(y){
@@ -2092,7 +2314,29 @@ function psStart(){
     var dy=e.deltaMode===1?e.deltaY*16:e.deltaMode===2?e.deltaY*innerHeight:e.deltaY;
     psPush(dy*PS.mult);
   },{passive:false});
-  /* keyboard, scrollbar drags and hash jumps move the page without us — resync */
+  /* КЛАВИАТУРА едет тем же ходом, что и колесо. Без этого страница вела себя как
+     два разных сайта: колесом — плавно, стрелкой или пробелом — рывком. Поля ввода
+     и собственные прокрутки внутри модалок не трогаем. */
+  addEventListener('keydown',function(e){
+    if(e.ctrlKey||e.metaKey||e.altKey||e.defaultPrevented)return;
+    var el=document.activeElement;
+    if(el&&/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))return;
+    if(el&&el.isContentEditable)return;
+    if(psInner(el||document.body))return;
+    var page=innerHeight*0.86,step=innerHeight*0.16,d=null;
+    switch(e.key){
+      case 'ArrowDown': d=step;break;
+      case 'ArrowUp': d=-step;break;
+      case 'PageDown': d=page;break;
+      case 'PageUp': d=-page;break;
+      case ' ': d=e.shiftKey?-page:page;break;
+      case 'Home': e.preventDefault();psTo(0);return;
+      case 'End': e.preventDefault();psTo(psMax());return;
+      default: return;
+    }
+    e.preventDefault();psPush(d);
+  },{passive:false});
+  /* scrollbar drags and hash jumps move the page without us — resync */
   addEventListener('scroll',function(){
     if(PS.self||PS.raf)return;
     PS.t=PS.c=window.pageYOffset;
@@ -2113,14 +2357,14 @@ function psStart(){
 psStart();
 /* capture-phase on document catches wrapper scrolling too; paint synchronously — no frame lag */
 document.addEventListener('scroll',function(){
-  seqUpd();suiteUpd();paintJoints();paintRails();paintCoFlow();paintDither();navSpy();revealPass();
+  seqUpd();suiteUpd();paintJoints();paintRails();paintDither();navSpy();revealPass();
   headerTheme();toneUnderBar();ixSpy();
 },{passive:true,capture:true});
-buildJoints();buildRails();buildCoFlow();
-addEventListener('resize',function(){clearTimeout(size.t);size.t=setTimeout(function(){size();buildJoints();buildWipe();buildRails();buildCoFlow();buildDither();layoutSuite();},220);});
+buildJoints();buildRails();
+addEventListener('resize',function(){clearTimeout(size.t);size.t=setTimeout(function(){size();buildJoints();buildWipe();buildRails();buildDither();layoutSuite();buildSigRun();},220);});
 /* rails depend on final layout (fonts) */
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){buildRails();buildCoFlow();});
-addEventListener('load',function(){buildRails();buildCoFlow();layoutSuite();});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){buildRails();placeReadout();buildSigRun();});
+addEventListener('load',function(){buildRails();layoutSuite();placeReadout();buildSigRun();});
 })();
 </script>
 
