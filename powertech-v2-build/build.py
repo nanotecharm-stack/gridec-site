@@ -105,8 +105,13 @@ def stats_html(items):
     return ''.join('<div class="stat"><b>%s</b><span>%s</span></div>' % (b, s) for b, s in items)
 
 def steps_html(items):
-    return ''.join('<div class="step"><div class="no">%s</div><h3>%s</h3><p>%s</p></div>' % (n, t, p)
-                   for n, t, p in items)
+    """Шаг — это номер и фраза, без названия.
+
+    Название повторяло первые слова самого абзаца: каждый из шести начинается
+    с действия и читается сам по себе.
+    """
+    return ''.join('<div class="step"><div class="no">%s</div><p>%s</p></div>' % (n, p)
+                   for n, p in items)
 
 def list_html(items):
     return ''.join('<div><span class="n">%02d</span><span>%s</span></div>' % (i + 1, x)
@@ -253,9 +258,9 @@ EN = {
                           ('1', 'structured engineering report')]),
  'SVC_DISPLAY': 'Measured<br>under actual<br><i>load</i>',
  'SVC_STEPS': steps_html([
-    ('01', 'Define the objective', 'We clarify what needs to be verified, the equipment involved and the decision the findings should support.'),
-    ('02', 'Monitor in operation', 'Measurements are carried out while the electrical system operates under representative operating conditions.'),
-    ('03', 'Deliver an engineering assessment', 'The findings are assessed in context and presented in a clear technical report, with conclusions supported by the recorded data and recommended next steps.')]),
+    ('01', 'We clarify what needs to be verified, the equipment involved and the decision the findings should support.'),
+    ('02', 'Measurements are carried out while the electrical system operates under representative operating conditions.'),
+    ('03', 'The findings are assessed in context and presented in a clear technical report, with conclusions supported by the recorded data and recommended next steps.')]),
  'SVC_LINK': 'See what monitoring can reveal',
  'REP_H2': 'A report built for technical decisions',
  'REP_P': 'The report separates measured facts from engineering interpretation and recommendations.',
@@ -399,7 +404,8 @@ HY = {
  # Шкала подобрана так, чтобы блок заголовка совпадал с английским по высоте:
  # расхождение не больше трёх пикселей от 1024 до 1440, три строки везде.
  'H1SIZE': 'clamp(28px,4.3vw,64px)', 'H2SIZE': 'clamp(26px,4.1vw,58px)',
- 'DISPSIZE': 'clamp(34px,6vw,84px)',   # прежний: армянская страница не трогается
+ 'DISPSIZE': 'clamp(23px,3.96vw,55px)',   # та же шкала, что и в английской: прежние
+ # 84 px давали блок выше английского в полтора раза
  'LANG_HREF': './index.html', 'LANG_LABEL': 'EN',
  'NAV_SERVICES': 'Ծառայություններ', 'NAV_INDUSTRIES': 'Ոլորտներ', 'NAV_COMPANY': 'Ընկերություն',
  'CTA': 'Նկարագրել խնդիրը',
@@ -423,9 +429,9 @@ HY = {
                           ('1', 'կառուցվածքային ինժեներական հաշվետվություն')]),
  'SVC_DISPLAY': 'Չափումներ՝<br>փաստացի<br><i>բեռնվածությամբ</i>',
  'SVC_STEPS': steps_html([
-    ('01', 'Սահմանում ենք նպատակը', 'Հստակեցնում ենք՝ ինչ պետք է ստուգվի, որ սարքավորումն է ներգրավված և ինչ որոշման պետք է աջակցեն արդյունքները։'),
-    ('02', 'Մոնիթորինգ՝ աշխատանքային ռեժիմում', 'Չափումները կատարվում են էլեկտրական համակարգի աշխատանքի ընթացքում՝ բնորոշ աշխատանքային պայմաններում։'),
-    ('03', 'Ներկայացնում ենք ինժեներական գնահատում', 'Արդյունքները գնահատվում են խնդրի համատեքստում և ներկայացվում տեխնիկական հաշվետվությամբ՝ գրանցված տվյալներով հիմնավորված եզրահանգումներով և առաջարկվող հաջորդ քայլերով։')]),
+    ('01', 'Հստակեցնում ենք՝ ինչ պետք է ստուգվի, որ սարքավորումն է ներգրավված և ինչ որոշման պետք է աջակցեն արդյունքները։'),
+    ('02', 'Չափումները կատարվում են էլեկտրական համակարգի աշխատանքի ընթացքում՝ բնորոշ աշխատանքային պայմաններում։'),
+    ('03', 'Արդյունքները գնահատվում են խնդրի համատեքստում և ներկայացվում տեխնիկական հաշվետվությամբ՝ գրանցված տվյալներով հիմնավորված եզրահանգումներով և առաջարկվող հաջորդ քայլերով։')]),
  'SVC_LINK': 'Տեսնել, թե ինչ կարող է բացահայտել մոնիթորինգը',
  'REP_H2': 'Հաշվետվություն տեխնիկական որոշումների համար',
  'REP_P': 'Հաշվետվությունում չափված փաստերը տարանջատվում են ինժեներական մեկնաբանությունից և առաջարկություններից։',
@@ -662,14 +668,14 @@ def wrap(tokens, body, extra_head=''):
 #   which is the answer to "терракота кричащий": the loudness was chroma, not hue.
 PALETTES = {
     'mint': dict(
-        paper='#F3F6F5', hi='#F9FBFA', lo='#EBF0EE', tint='#EEF3F1', tint2='#F6F9F8',
+        paper='#F3F6F5', lo='#EBF0EE', tint='#EEF3F1', tint2='#F6F9F8',
         ph='#DBE1DF', offwhite='#F9FCFB',
         ink='#25272C', ink2='#2A2C32', ink3='#2E3138', ink4='#313439', ink5='#292B31',
         shadow='#1C1E22',
         light='#18624C', dark='#B8F7E4', glow='#35B68F', deep='#0F2A22', err='#9E2B25',
     ),
     'warm': dict(
-        paper='#F4F5F5', hi='#FAFAFA', lo='#ECEDEE', tint='#EFF0F1', tint2='#F7F8F8',
+        paper='#F4F5F5', lo='#ECEDEE', tint='#EFF0F1', tint2='#F7F8F8',
         ph='#DCDEE0', offwhite='#FBFCFC',
         ink='#25272C', ink2='#2A2C32', ink3='#2E3138', ink4='#313439', ink5='#292B31',
         shadow='#1C1E22',
@@ -686,7 +692,7 @@ PALETTES = {
     # которой считается контраст, поэтому читаемость не могла пострадать. Премиальность
     # тут берётся разностью температур: тёплая бумага против холодных чернил.
     'blue': dict(
-        paper='#F6F1E9', hi='#FAF7F0', lo='#EBE4D8', tint='#F0EAE0', tint2='#F9F5EE',
+        paper='#F6F1E9', lo='#EBE4D8', tint='#F0EAE0', tint2='#F9F5EE',
         ph='#DCD3C4', offwhite='#FDFAF4',
         # чернила ТЕКСТА и мелкой графики на светлом. Светлота та же, что у синих
         # (15%), поэтому контраст не падает.
@@ -725,7 +731,7 @@ def palette_map(p):
         # -- grounds
         ('#EFEDEA', p['paper']), ('rgba(239,237,234', 'rgba(%s' % _rgb(p['paper'])),
         ('#F4F3F1', p['tint']), ('rgba(244,243,241', 'rgba(%s' % _rgb(p['tint'])),
-        ('#F7F5F4', p['tint2']), ('#F7F5F2', p['hi']), ('#E9E6E2', p['lo']),
+        ('#F7F5F4', p['tint2']), ('#E9E6E2', p['lo']),
         ('#DDD9D2', p['ph']),
         ('#FFFBF9', p['offwhite']), ('rgba(255,251,249', 'rgba(%s' % _rgb(p['offwhite'])),
         ('rgba(252,251,250', 'rgba(%s' % _rgb(p['offwhite'])),
