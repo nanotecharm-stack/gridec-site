@@ -990,11 +990,12 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 /* modals */
 .ovl{position:fixed;inset:0;z-index:120;background:rgba(28,30,34,.66);backdrop-filter:blur(4px);display:none;justify-content:center;padding:34px 18px;overflow-y:auto;}
 .ovl.open{display:flex;}
-.md{background:var(--bg);color:var(--fg);max-width:760px;width:100%;margin:auto;position:relative;border-radius:4px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.4);}
+.md{background:var(--bg);color:var(--fg);max-width:760px;width:100%;margin:auto;position:relative;border-radius:2px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.4);}
 /* the close control sits over photography, so it cannot be a translucent wash:
    an opaque chip reads on dark grounds, the hairline ring separates it on light
    ones. Same language as the card's corner mark. */
-.md .x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;
+/* Квадрат, а не круг: круглых элементов на сайте нет ни одного. */
+.md .x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:2px;
   background:#2E3138;color:#F3F6F5;z-index:5;font-size:15px;line-height:1;
   display:grid;place-items:center;
   box-shadow:0 0 0 1px rgba(243,246,245,.55);}
@@ -1031,33 +1032,72 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 #fmd h3{font-size:clamp(23px,2.8vw,30px);margin-bottom:10px;}
 #fmd h3 i{font-style:normal;color:var(--brand-ink);}
 #fmd .intro{font-size:14px;line-height:1.7;color:var(--fg-mid);margin-bottom:28px;max-width:56ch;}
-#fmd .gl{font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-soft);margin:22px 0 12px;}
+/* Та же строка, что открывает раздел на странице: подпись в разрядку и
+   волосяная линейка до края. Форма перестаёт быть отдельным островом. */
+#fmd .gl{font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--fg-soft);margin:30px 0 14px;display:flex;align-items:center;gap:14px;}
+#fmd .gl::after{content:"";flex:1;height:1px;background:var(--hair2);max-width:190px;}
 #fmd .gl em{font-style:normal;color:var(--brand-ink);}
 #fmd .gl small{font-weight:400;text-transform:none;letter-spacing:0;color:var(--fg-soft);font-size:12px;}
-#fmd .fr{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
-#fmd label{display:block;font-size:12px;font-weight:600;margin-bottom:7px;}
+#fmd .fr{display:grid;grid-template-columns:1fr 1fr;gap:18px 16px;}
+/* Полужирный текстовый набор был единственным местом на сайте, где мелкая
+   служебная подпись выглядела так. Приводим к общему виду: разрядка,
+   верхний регистр, тот же кегль, что у номеров и категорий. */
+#fmd label{display:block;font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;font-weight:400;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--fg-soft);margin-bottom:9px;}
 #fmd label em{font-style:normal;color:var(--brand-ink);}
-#fmd input[type=text],#fmd input[type=email],#fmd input[type=tel],#fmd textarea{width:100%;background:var(--panel);border:1px solid var(--hair);border-radius:2px;padding:13px 15px;font-size:14px;font-family:inherit;outline:none;color:var(--fg);}
-#fmd input:focus,#fmd textarea:focus{border-color:var(--brand-ink);}
-#fmd input.err,#fmd textarea.err{border-color:#9E2B25;}
+/* Кромка ушла в тень внутрь, как у всех плашек сайта: рамка снаружи меняла
+   высоту поля при фокусе, а тень — нет. Заливка не белая, а на ступень выше
+   бумаги: чистый белый на тёплом грунте читался вставкой из другого набора. */
+#fmd input[type=text],#fmd input[type=email],#fmd input[type=tel],#fmd textarea{
+  width:100%;background:#F6F9F8;border:0;border-radius:2px;padding:14px 15px;
+  font-size:14px;font-family:inherit;color:var(--fg);
+  box-shadow:inset 0 0 0 1px var(--hair);outline:none;
+  transition:box-shadow .25s var(--e),background .25s var(--e);}
+/* Технические строки — в начертании показаний, как всё измеримое на сайте */
+#fmd input[type=email],#fmd input[type=tel]{font-family:'Departure Mono',monospace;
+  font-size:13px;letter-spacing:.02em;}
+#fmd input::placeholder,#fmd textarea::placeholder{color:rgba(37,39,44,.38);}
+/* Фокус виден и с клавиатуры: кромка марки плюс кольцо с отступом */
+#fmd input:focus,#fmd textarea:focus{background:var(--panel);
+  box-shadow:inset 0 0 0 1px var(--brand-ink),0 0 0 1px var(--brand-ink);}
+#fmd input.err,#fmd textarea.err{box-shadow:inset 0 0 0 1px #9E2B25;}
 #fmd textarea{min-height:118px;line-height:1.6;resize:vertical;}
 #fmd .tps{display:flex;gap:8px;flex-wrap:wrap;}
-#fmd .tps button{font-size:14px;font-weight:500;padding:9px 15px;border:1px solid var(--hair);border-radius:2px;background:transparent;color:var(--fg-mid);}
-#fmd .tps button.on{background:var(--inv);color:var(--inv-fg);border-color:var(--inv);}
-#fmd .drop{border:1.5px dashed var(--hair);border-radius:2px;padding:20px;cursor:pointer;text-align:center;transition:.25s;background:var(--panel);}
-#fmd .drop.on{border-color:var(--brand-ink);background:rgba(24,98,76,.05);}
+/* Категория — это ярлык, и на сайте ярлык выглядит так: мелкая подпись в
+   разрядку на волосяной кромке. Прежде это был текст в полкегля крупнее
+   самой формы. */
+#fmd .tps button{font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.13em;
+  text-transform:uppercase;padding:11px 14px;border:0;border-radius:2px;
+  background:transparent;color:var(--fg-mid);box-shadow:inset 0 0 0 1px var(--hair);
+  transition:box-shadow .25s var(--e),background .25s var(--e),color .25s var(--e);}
+#fmd .tps button:hover{box-shadow:inset 0 0 0 1px rgba(37,39,44,.3);color:var(--fg);}
+#fmd .tps button.on{background:var(--inv);color:var(--inv-fg);box-shadow:none;}
+#fmd .tps button:focus-visible{outline:1px solid var(--brand-ink);outline-offset:2px;}
+/* Пунктира на сайте нет ни в одном месте — кромка волосяная, как у плашек. */
+#fmd .drop{border:0;border-radius:2px;padding:22px;cursor:pointer;text-align:center;
+  background:#F6F9F8;box-shadow:inset 0 0 0 1px var(--hair);
+  transition:box-shadow .25s var(--e),background .25s var(--e);}
+#fmd .drop:hover{box-shadow:inset 0 0 0 1px rgba(37,39,44,.26);}
+#fmd .drop.on{background:rgba(24,98,76,.05);
+  box-shadow:inset 0 0 0 1px var(--brand-ink);}
 #fmd .drop b{display:block;font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;font-weight:600;}
 #fmd .drop span{font-size:14px;line-height:1.65;color:var(--fg-soft);}
-#fmd .att{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--hair2);border-radius:2px;padding:8px 12px;margin-top:8px;font-size:14px;}
+#fmd .att{display:flex;align-items:center;gap:10px;background:#F6F9F8;border:0;
+  box-shadow:inset 0 0 0 1px var(--hair2);border-radius:2px;padding:9px 12px;
+  margin-top:8px;font-size:14px;}
 #fmd .att b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:400;}
 #fmd .att .sz{font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;color:var(--fg-soft);}
-#fmd .att button{width:22px;height:22px;border-radius:50%;background:var(--hair2);font-size:14px;line-height:1;}
+#fmd .att button{width:22px;height:22px;border-radius:2px;background:var(--hair2);
+  font-size:14px;line-height:1;}
 #fmd .att button:hover{background:#9E2B25;color:#fff;}
 #fmd .hint{font-size:12px;color:var(--fg-soft);margin:10px 0 24px;}
 #fmd .errline{font-size:14px;color:#9E2B25;margin-bottom:14px;display:none;}
 #fmd .contactline{font-size:14px;line-height:1.75;color:var(--fg-soft);margin-top:26px;border-top:1px solid var(--hair2);padding-top:18px;}
 #fmd .done{display:none;text-align:center;padding:36px 0;}
-#fmd .done .ok{width:52px;height:52px;border-radius:50%;background:var(--brand);color:var(--brand-on);font-size:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
+#fmd .done .ok{width:46px;height:46px;border-radius:2px;background:var(--brand);
+  color:var(--brand-on);font-size:20px;display:flex;align-items:center;
+  justify-content:center;margin:0 auto 20px;}
 #fmd .done b{display:block;font-size:21px;font-weight:600;margin-bottom:9px;}
 #fmd .done p{font-size:14px;line-height:1.7;color:var(--fg-mid);max-width:40ch;margin:0 auto 26px;}
 
