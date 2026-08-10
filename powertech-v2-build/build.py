@@ -287,7 +287,7 @@ EN = {
  'MEA_CHIPS': meas_html(['Voltage & Current', 'Harmonics & Interharmonics', 'Flicker',
                           'Voltage Dips', 'Unbalance', 'Power & Energy', 'Events',
                           'Risk Indicators'], alt=1),
- 'CO_H2': 'A small engineering company<br>with a clear purpose',
+ 'CO_H2': 'About us',
  'CO_P': 'Gridec is an independent electrical engineering company based in Yerevan. We are a small team focused on specialised engineering work and long-term cooperation with our partners.',
  # \u041f\u0435\u0440\u0435\u043d\u043e\u0441\u044b \u0432 \u0443\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u044f\u0445 \u0437\u0430\u0434\u0430\u043d\u044b \u0437\u0430\u043a\u0430\u0437\u0447\u0438\u043a\u043e\u043c \u043f\u043e\u0441\u0442\u0440\u043e\u0447\u043d\u043e \u0438 \u0441\u0442\u043e\u044f\u0442 \u0440\u0430\u0437\u043c\u0435\u0442\u043a\u043e\u0439, \u0430 \u043d\u0435
  # \u043e\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u044b \u043d\u0430 \u0432\u043e\u043b\u044e \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f.
@@ -464,7 +464,7 @@ HY = {
  # Заголовки обычным регистром: на армянской странице стили не поднимают h1—h3 в
  # капс. Принудительных переносов нет — в этой редакции их не задавали, строки
  # раскладывает колонка.
- 'CO_H2': 'Փոքր ինժեներական ընկերություն՝ հստակ նպատակով',
+ 'CO_H2': 'Մեր մասին',
  'CO_P': 'Gridec-ը Երևանում գործող անկախ էլեկտրատեխնիկական ընկերություն է։ Մենք փոքր թիմ ենք։ Կենտրոնանում ենք մասնագիտացված ինժեներական աշխատանքի և մեր գործընկերների հետ երկարաժամկետ համագործակցության վրա։',
  'CO_STORY': story_html([
     # неразрывный пробел перед последним словом: без него «լինի» повисало
