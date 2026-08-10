@@ -251,7 +251,7 @@ EN = {
  # переключателя заодно стала симметричной — на HY-странице стоит «EN».
  'LANG_HREF': './hy.html', 'LANG_LABEL': 'HY',
  'NAV_SERVICES': 'Services', 'NAV_INDUSTRIES': 'Industries', 'NAV_COMPANY': 'Company',
- 'CTA': 'Describe the issue',
+ 'CTA': 'Describe the issue', 'NAV_CTA': 'Get in touch',
  'HERO_EYEBROW': 'POWER QUALITY MONITORING',
  'HERO_H1': 'See how your<br>electrical system<br><em>performs</em>',
  'HERO_P': 'Gridec measures electrical parameters while your system is operating and assesses the system on site. We combine the measured data with our observations to provide a clear engineering assessment.',
@@ -428,7 +428,7 @@ HY = {
  # 84 px давали блок выше английского в полтора раза
  'LANG_HREF': './index.html', 'LANG_LABEL': 'EN',
  'NAV_SERVICES': 'Ծառայություններ', 'NAV_INDUSTRIES': 'Ոլորտներ', 'NAV_COMPANY': 'Ընկերություն',
- 'CTA': 'Նկարագրել խնդիրը',
+ 'CTA': 'Նկարագրել խնդիրը', 'NAV_CTA': 'Կապ մեզ հետ',
  'HERO_EYEBROW': 'ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ',
  'HERO_H1': 'Ստուգեք, թե ինչպես է աշխատում ձեր <em>էլեկտրացանցը</em>',
  'HERO_P': 'Gridec-ը համակարգի աշխատանքի ընթացքում չափում և գրանցում է էլեկտրական պարամետրերը, ուսումնասիրում այն տեղում և վերլուծում ստացված տվյալները։ Չափումներն ու դիտարկումները համադրում ենք՝ հստակ ինժեներական գնահատական ներկայացնելու համար։',
