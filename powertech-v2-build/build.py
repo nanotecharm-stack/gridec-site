@@ -104,6 +104,20 @@ IMGD = {'IMG%d' % i: b64_small(os.path.join(IMGS, f)) for i, f in enumerate(IMG_
 def stats_html(items):
     return ''.join('<div class="stat"><b>%s</b><span>%s</span></div>' % (b, s) for b, s in items)
 
+# Указатель разделов в подвале собирается из тех же строк, что стоят на самих
+# разделах: копия не разъедется с страницей и переводится сама.
+FOOT_IDS = [('why', 'WHY_H2'), ('applications', 'APP_H2'), ('services', 'SVC_H2'),
+            ('report', 'REP_H2'), ('assignments', 'ASG_H2'), ('measure', 'MEA_H2'),
+            ('company', 'CO_H2'), ('contact', 'CT_H2')]
+
+def foot_links(d):
+    out = []
+    for i, (sid, tok) in enumerate(FOOT_IDS, 1):
+        t = re.sub(r'<[^>]+>', ' ', d[tok])
+        t = re.sub(r'\s+', ' ', t).strip()
+        out.append('<li><a href="#%s"><i>%02d</i><span>%s</span></a></li>' % (sid, i, t))
+    return ''.join(out)
+
 def steps_html(items):
     """Шаг — это номер и фраза, без названия.
 
@@ -302,6 +316,8 @@ EN = {
  'CT_P': 'Describe the event, the affected equipment and when it occurred or tends to occur. We will assess whether monitoring can answer the question and what scope is required.',
  'CT_CAP': 'RMS VOLTAGE · 10-MIN TREND', 'CT_NOM': 'NOMINAL', 'CT_DIP': 'VOLTAGE DIP · 180 MS',
  'FOOT_ADDR': 'Davtashen 1, 13-25, Yerevan 0058, Armenia',
+ 'FOOT_SECTIONS': 'Sections', 'FOOT_CONTACT': 'Contact',
+ 'FOOT_HOURS': 'Mon–Fri 09:00–18:00 (UTC+4)',
  'IM_FINDLB': 'What the report can address',
  'F_H3': 'Describe the <i>electrical issue</i>',
  'F_INTRO': 'Tell us what happened, when it occurred or tends to occur, and which equipment is affected. We will assess whether monitoring can answer the question and what information is needed.',
@@ -319,7 +335,6 @@ EN = {
  'F_HINT0': 'Up to 10 MB total.',
  'F_FORM_ERR': 'Please fill in all fields: name, company, a valid email, phone and a short description.',
  'F_SEND': 'Send the details',
- 'F_CONTACTLINE': 'sales@powertech.am · +374 41 00 00 14 · Davtashen 1, 13-25, Yerevan 0058 · Mon-Fri 09:00-18:00 (UTC+4)',
  'F_OK_T': 'Thank you.',
  'F_OK_P': 'We will review the information and contact you to clarify the measurement scope.',
  'F_CLOSE': 'Close',
@@ -484,6 +499,8 @@ HY = {
  'CT_P': 'Նշեք՝ ինչ է տեղի ունեցել, որ սարքավորման վրա է դա ազդել, և երբ է խնդիրը դրսևորվել կամ սովորաբար կրկնվում։ Մենք կգնահատենք՝ կարող է արդյոք մոնիթորինգը պատասխանել հարցին և չափումների ինչ շրջանակ է անհրաժեշտ։',
  'CT_CAP': 'RMS ԼԱՐՈՒՄ · 10-ՐՈՊԵԱՆՈՑ ՄԻՏՈՒՄ', 'CT_NOM': 'ԱՆՎԱՆԱԿԱՆ', 'CT_DIP': 'ԼԱՐՄԱՆ ԱՆԿՈՒՄ · 180 ՄՎՐԿ',
  'FOOT_ADDR': 'Դավթաշեն 1, 13-25, Երևան 0058, Հայաստան',
+ 'FOOT_SECTIONS': 'Բաժիններ', 'FOOT_CONTACT': 'Կապ',
+ 'FOOT_HOURS': 'Երկ-Ուրբ 09:00–18:00 (UTC+4)',
  'IM_FINDLB': 'ԻՆՉ ՀԱՐՑԵՐԻ ԿԱՐՈՂ Է ՊԱՏԱՍԽԱՆԵԼ ՀԱՇՎԵՏՎՈՒԹՅՈՒՆԸ',
  'F_H3': 'Նկարագրեք <i>էլեկտրական խնդիրը</i>',
  'F_INTRO': 'Նշեք՝ ինչ է տեղի ունեցել, երբ է խնդիրը դրսևորվել կամ սովորաբար կրկնվում, և որ սարքավորման վրա է այն ազդել։ Մենք կգնահատենք՝ կարող է արդյոք մոնիթորինգը պատասխանել հարցին և ինչ տվյալներ են անհրաժեշտ։',
@@ -501,7 +518,6 @@ HY = {
  'F_HINT0': 'Առավելագույնը՝ 10 ՄԲ։',
  'F_FORM_ERR': 'Լրացրեք բոլոր դաշտերը՝ անուն, ընկերություն, վավեր էլ. փոստ, հեռախոս և կարճ նկարագրություն։',
  'F_SEND': 'Ուղարկել տվյալները',
- 'F_CONTACTLINE': 'sales@powertech.am · +374 41 00 00 14 · Դավթաշեն 1, 13-25, Երևան 0058 · Երկ-Ուրբ 09:00-18:00 (UTC+4)',
  'F_OK_T': 'Շնորհակալություն։',
  'F_OK_P': 'Մենք կուսումնասիրենք տրամադրված տեղեկատվությունը և կկապվենք ձեզ հետ՝ չափումների շրջանակը հստակեցնելու համար։',
  'F_CLOSE': 'Փակել',
@@ -583,6 +599,9 @@ EN_DATA['otherT'] = EN['OTHER_T']
 EN_DATA['otherP'] = EN['OTHER_P']
 HY_DATA['otherT'] = HY['OTHER_T']
 HY_DATA['otherP'] = HY['OTHER_P']
+
+for _d in (EN, HY):
+    _d['FOOT_LINKS'] = foot_links(_d)
 
 # ---------------------------------------------------------------- deploy variants (files by URL, not base64)
 def font_face_url(fam, weight, fn):

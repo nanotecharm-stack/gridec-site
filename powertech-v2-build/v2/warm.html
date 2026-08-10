@@ -80,15 +80,15 @@ header a,header button,header nav,header .navr{pointer-events:auto;}
 .brand .lock .mk{fill:var(--acc);transition:fill .5s var(--e);}
 header.on-dark .brand{--acc:currentColor;}
 /* centre group — the sections, enclosed like one control */
-nav{justify-self:center;display:flex;align-items:center;gap:2px;padding:4px;font-size:14px;
+header nav{justify-self:center;display:flex;align-items:center;gap:2px;padding:4px;font-size:14px;
   border-radius:3px;box-shadow:inset 0 0 0 1px rgba(37,39,44,.12);background:rgba(251,252,252,.9);
   -webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1);
   transition:box-shadow .5s var(--e),background .5s var(--e);}
 /* section names carry the label voice — the serif in Armenian, the body face in English */
-nav a{font-family:inherit;position:relative;padding:8px 15px;white-space:nowrap;border-radius:2px;color:rgba(37,39,44,.82);
+header nav a{font-family:inherit;position:relative;padding:8px 15px;white-space:nowrap;border-radius:2px;color:rgba(37,39,44,.82);
   transition:color .35s var(--e),background .35s var(--e);}
-nav a:hover{color:#25272C;background:rgba(37,39,44,.07);}
-nav a.here{color:var(--inv-fg);background:var(--inv);}
+header nav a:hover{color:#25272C;background:rgba(37,39,44,.07);}
+header nav a.here{color:var(--inv-fg);background:var(--inv);}
 /* ============ HEADER VARIANTS (under review) ============================
    0 = the glass capsule as built, 1 = titleblock, 2 = hairline rail, 3 = chips.
    The section list is out of the bar in every variant; it lives in the index. */
@@ -244,7 +244,7 @@ body::before{opacity:1;z-index:-1;mix-blend-mode:soft-light;
 /* ---- 1 titleblock: the bar is a real strip of paper -------------------- */
 html[data-nav="1"] header{background:var(--bg);box-shadow:0 1px 0 var(--hair);pointer-events:auto;}
 html[data-nav="1"] .hin{height:58px;grid-template-columns:auto 1fr auto;}
-html[data-nav="1"] nav{display:none;}
+html[data-nav="1"] header nav{display:none;}
 html[data-nav="1"] .ixb{justify-self:start;background:none;box-shadow:none;padding:9px 0 9px 22px;
   position:relative;color:var(--fg-mid);}
 html[data-nav="1"] .ixb::before{content:"";position:absolute;left:0;top:50%;width:11px;height:1px;
@@ -259,7 +259,7 @@ html[data-nav="1"] .ixp{box-shadow:0 1px 0 var(--hair),0 24px 40px -30px rgba(37
 /* ---- 2 hairline rail: no plate at all, tone follows the section -------- */
 html[data-nav="2"] .hin{height:66px;grid-template-columns:auto 1fr auto;
   box-shadow:inset 0 -1px 0 rgba(37,39,44,.12);transition:box-shadow .45s var(--e);}
-html[data-nav="2"] nav{display:none;}
+html[data-nav="2"] header nav{display:none;}
 html[data-nav="2"] .ixb,html[data-nav="2"] .lang{background:none;box-shadow:none;padding:9px 8px;}
 html[data-nav="2"] .ixb{justify-self:end;}
 /* the sheet name belongs to the titleblock only; the rail and the chips keep the counter */
@@ -337,7 +337,7 @@ html[data-nav="2"] header[data-scrim] .navr::after{opacity:1;}
 /* ---- 3 instrument chips: two opaque plates, nothing between ------------ */
 html[data-nav="3"] .hin{height:76px;grid-template-columns:auto 1fr auto;align-items:start;
   padding-top:12px;}
-html[data-nav="3"] nav{display:none;}
+html[data-nav="3"] header nav{display:none;}
 /* Логотип вернулся к своей прежней плашке: лист бумаги с волосяной кромкой,
    который переворачивается вместе с разделом под ним. Тёмное стекло осталось
    только под правой группой — счётчиком, языком и кнопкой. На бумаге знак
@@ -407,7 +407,7 @@ html[data-nav="3"] .ixp{margin-top:12px;}
 /* the surface has to answer the press — nothing here had an :active state */
 .btn{transition:transform .16s var(--e);}
 .btn:active{transform:translateY(1px) scale(.995);}
-.lang:active,.alink:active,nav a:active,.md .x:active,.ic-go:active{transform:translateY(1px);}
+.lang:active,.alink:active,header nav a:active,.md .x:active,.ic-go:active{transform:translateY(1px);}
 .lang,.md .x{transition:transform .16s var(--e),background .35s var(--e),color .35s var(--e);}
 /* dark surfaces: the untinted brand is the one with contrast there */
 .plate,.plate2,.other,.chart,.ixp,.navr,.brand{--brand-ink:#C8856A;}
@@ -984,8 +984,69 @@ h2{font-size:clamp(20px,3.17vw,48px);text-wrap:balance;}
 .chart{position:relative;}
 .chart svg{width:100%;height:auto;display:block;}
 .chart .cap{font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.12em;color:rgba(244,245,245,.58);margin-bottom:12px;}
-footer{border-top:1px solid var(--hair2);padding:32px 0;font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;color:var(--fg-soft);}
-footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wrap;line-height:1.9;}
+/* ---- подвал: плита, которую открывает уходящая страница ---------------- */
+/* Обрезка обёртки делает её системой координат для закреплённого потомка —
+   тот же приём, что в присланном примере, только без библиотеки. Высота обёртки
+   равна высоте подвала: ровно столько страница и «проедет», открывая его. */
+/* Высота подобрана по содержимому: столько страница и проезжает, открывая плиту.
+   Больше — и между колонками и нижней полосой повисает пустое поле. */
+footer,.footrev{--foot-h:530px;}
+.footrev{position:relative;height:var(--foot-h,620px);
+  clip-path:polygon(0 0,100% 0,100% 100%,0 100%);}
+/* Два слоя, как в примере, и оба нужны. Закреплённый слой внутри обрезанной
+   обёртки считает свой низ от неё, а не от экрана, — сам по себе он едет
+   вместе со страницей. Ход даёт липкий подвал внутри: он встаёт у нижней
+   кромки экрана и стоит, пока обёртка проезжает мимо. */
+.footrev>.fpin{position:fixed;bottom:0;left:0;width:100%;height:var(--foot-h,620px);}
+.footrev footer{position:sticky;top:calc(100svh - var(--foot-h,620px));
+  height:var(--foot-h,620px);
+  display:flex;flex-direction:column;justify-content:space-between;
+  /* самая глубокая поверхность сайта: страница уходит вверх и открывает основание */
+  background:#25272C;color:#F4F5F5;padding:clamp(44px,6vw,86px) 0 26px;
+  box-shadow:inset 0 1px 0 rgba(244,245,245,.14);}
+footer .fgrid{display:grid;grid-template-columns:minmax(220px,1fr) 1.15fr .85fr;
+  gap:clamp(28px,4vw,64px);align-items:start;}
+footer .fbrand .lock{height:30px;width:auto;display:block;fill:currentColor;}
+footer .fbrand .lock .mk{fill:#7BA4D0;}
+footer .fbrand p{margin-top:20px;font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;
+  letter-spacing:.2em;text-transform:uppercase;color:rgba(244,245,245,.5);max-width:24ch;
+  line-height:1.9;}
+footer h3{font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.18em;font-weight:400;
+  text-transform:uppercase;color:rgba(244,245,245,.5);margin-bottom:20px;
+  display:flex;align-items:center;gap:12px;}
+footer h3::after{content:"";flex:1;height:1px;background:rgba(244,245,245,.14);}
+footer ul{list-style:none;margin:0;padding:0;}
+footer .flist li+li,footer .fcon li+li{margin-top:11px;}
+footer .flist a{display:grid;grid-template-columns:26px 1fr;gap:0 12px;align-items:baseline;
+  font-size:14px;line-height:1.5;color:rgba(244,245,245,.72);
+  transition:color .3s var(--e);}
+footer .flist a i{font-style:normal;font-family:'Departure Mono',monospace;font-size:11px;
+  letter-spacing:.1em;color:var(--brand-ink);}
+footer .flist a:hover{color:#fff;}
+footer .fcon li{font-size:14px;line-height:1.6;color:rgba(244,245,245,.72);}
+footer .fcon a{color:rgba(244,245,245,.72);transition:color .3s var(--e);}
+footer .fcon a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px;}
+/* В колоночном флексе поля auto ужимают полосу до содержимого и ставят её
+   посередине — ширину задаём явно, иначе строка копирайта висит в центре. */
+footer .fbot{width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding-top:22px;border-top:1px solid rgba(244,245,245,.14);
+  font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(244,245,245,.42);}
+footer .flang{color:rgba(244,245,245,.6);padding:7px 11px;border-radius:2px;
+  box-shadow:inset 0 0 0 1px rgba(244,245,245,.2);transition:.3s var(--e);}
+footer .flang:hover{color:#25272C;background:#F4F5F5;}
+footer a:focus-visible,.flang:focus-visible{outline:1px solid #7BA4D0;outline-offset:3px;}
+/* Появление с задержкой по колонкам — то же, что делает пример своим stagger. */
+footer .rv{transition-delay:calc(var(--i,0) * .09s);}
+@media (max-width:960px){
+  /* Приём с закреплённой плитой на узком экране не нужен и мешает: подвал выше
+     половины экрана, а закреплённый слой на телефоне ведёт себя своевольно. */
+  .footrev{height:auto;clip-path:none;}
+  .footrev>.fpin{position:static;height:auto;}
+  .footrev footer{position:static;height:auto;top:auto;}
+  footer .fgrid{grid-template-columns:1fr;gap:38px;}
+  footer .fbot{flex-direction:column;align-items:flex-start;gap:12px;}
+}
 
 /* modals */
 .ovl{position:fixed;inset:0;z-index:120;background:rgba(28,30,34,.66);backdrop-filter:blur(4px);display:none;justify-content:center;padding:34px 18px;overflow-y:auto;}
@@ -1093,7 +1154,6 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 #fmd .att button:hover{background:#A8341F;color:#fff;}
 #fmd .hint{font-size:12px;color:var(--fg-soft);margin:10px 0 24px;}
 #fmd .errline{font-size:14px;color:#A8341F;margin-bottom:14px;display:none;}
-#fmd .contactline{font-size:14px;line-height:1.75;color:var(--fg-soft);margin-top:26px;border-top:1px solid var(--hair2);padding-top:18px;}
 #fmd .done{display:none;text-align:center;padding:36px 0;}
 #fmd .done .ok{width:46px;height:46px;border-radius:2px;background:var(--brand);
   color:var(--brand-on);font-size:20px;display:flex;align-items:center;
@@ -1115,7 +1175,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
      оставался без показателей и без трёх шагов — то есть без своей сути.
      Прячем только меню: его заменяет указатель разделов. Остальное встаёт
      в колонку. */
-  nav{display:none;}
+  header nav{display:none;}
   .stats,.steps{grid-template-columns:1fr;gap:22px;}
   .navr{gap:8px;}
   .btn{padding:11px 14px;font-size:12px;}
@@ -1313,7 +1373,49 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 </div></section>
 
 </main>
-<footer><div class="wrap in"><span>Gridec</span><span>sales@powertech.am · +374 41 00 00 14</span><span>Davtashen 1, 13-25, Yerevan 0058, Armenia</span></div></footer>
+<!-- Плита, которую страница открывает, съезжая с неё: обрезка делает обёртку
+     системой координат для закреплённого подвала, поэтому он стоит на месте,
+     а последний экран уходит вверх. Ни скрипта, ни библиотеки. -->
+<div class="footrev"><div class="fpin">
+<footer>
+  <div class="wrap fgrid">
+    <div class="fbrand rv"><svg class="lock" viewBox="0 -100.0 820.42 200.0" aria-hidden="true">
+  <g class="mk" transform="translate(86.6025 0)">
+    <path d="M-86.603 -50 L-6 -96.536 L-6 -3.464 L-86.603 43.072 Z"/>
+    <path d="M86.603 -50 L6 -96.536 L6 -3.464 L86.603 43.072 Z"/>
+    <path d="M-86.603 56.928 L0 6.928 L86.603 56.928 L0 100 Z"/>
+  </g>
+<g>
+    <path transform="translate(249.42 65.36) scale(0.18945 -0.18945)" d="M75 163V527Q75 690 238 690H531L590 644V579H241Q197 579 197 536V154Q197 111 241 111H488V302H342V413H610V0H238Q75 0 75 163Z"/>
+    <path transform="translate(377.30 65.36) scale(0.18945 -0.18945)" d="M71 0V460Q107 525 209 525H314L367 486V423H236Q202 423 188 406V0Z"/>
+    <path transform="translate(451.75 65.36) scale(0.18945 -0.18945)" d="M72 616V735H195V616ZM75 0V525H192V0Z"/>
+    <path transform="translate(502.33 65.36) scale(0.18945 -0.18945)" d="M67 158V367Q67 525 225 525H395V740H512V0H225Q67 0 67 158ZM184 148Q184 102 230 102H395V423H230Q184 423 184 377Z"/>
+    <path transform="translate(613.54 65.36) scale(0.18945 -0.18945)" d="M67 158V367Q67 525 225 525H355Q512 525 512 367V219H184V148Q184 102 230 102H492V39L439 0H225Q67 0 67 158ZM184 310H395V377Q395 423 349 423H230Q184 423 184 377Z"/>
+    <path transform="translate(723.23 65.36) scale(0.18945 -0.18945)" d="M67 158V367Q67 525 225 525H414L467 486V423H230Q184 423 184 377V148Q184 102 230 102H467V39L414 0H225Q67 0 67 158Z"/>
+</g>
+</svg>
+      <p>POWER QUALITY MONITORING</p>
+    </div>
+    <nav class="fcol rv" style="--i:1" aria-label="Sections">
+      <h3>Sections</h3>
+      <ul class="flist"><li><a href="#why"><i>01</i><span>The event may be over before anyone can inspect it</span></a></li><li><a href="#applications"><i>02</i><span>Where monitoring helps</span></a></li><li><a href="#services"><i>03</i><span>Seven-day monitoring</span></a></li><li><a href="#report"><i>04</i><span>Report</span></a></li><li><a href="#assignments"><i>05</i><span>When to measure before you commit</span></a></li><li><a href="#measure"><i>06</i><span>What we measure</span></a></li><li><a href="#company"><i>07</i><span>About us</span></a></li><li><a href="#contact"><i>08</i><span>Start with what happened</span></a></li></ul>
+    </nav>
+    <div class="fcol rv" style="--i:2">
+      <h3>Contact</h3>
+      <ul class="fcon">
+        <li><a href="mailto:sales@powertech.am">sales@powertech.am</a></li>
+        <li><a href="tel:+37441000014">+374 41 00 00 14</a></li>
+        <li>Davtashen 1, 13-25, Yerevan 0058, Armenia</li>
+        <li>Mon–Fri 09:00–18:00 (UTC+4)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap fbot rv" style="--i:3">
+    <span>&copy; 2026 Gridec</span>
+    <a class="flang" href="./hy.html">HY</a>
+  </div>
+</footer>
+</div></div>
 
 <div class="ovl" id="iovl"><div class="md" id="imd">
   <button class="x" data-close>&times;</button>
@@ -1351,7 +1453,6 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
     <div class="hint" id="ptfHint">Up to 10 MB total.</div>
     <div class="errline" id="ptfFormErr">Please fill in all fields: name, company, a valid email, phone and a short description.</div>
     <button class="btn" id="ptfSubmit"><span>Send the details ↗</span></button>
-    <div class="contactline">sales@powertech.am · +374 41 00 00 14 · Davtashen 1, 13-25, Yerevan 0058 · Mon-Fri 09:00-18:00 (UTC+4)</div>
   </div>
   <div class="done" id="f_done">
     <div class="ok">✓</div><b>Thank you.</b><p>We will review the information and contact you to clarify the measurement scope.</p>
