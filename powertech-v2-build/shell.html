@@ -130,6 +130,39 @@ nav a.here{color:var(--inv-fg);background:var(--inv);}
 .ixp a.here .no{font-weight:600;}
 .ixp a.here .tl{color:var(--brand-ink);}
 .ixp a.here::after{background:var(--brand);}
+
+
+/* ============ МАТЕРИАЛЬНОСТЬ ПОВЕРХНОСТИ ============
+   Ни одной тени и ни одного подъёма карточек: их уже пробовали и откатили как
+   дешёвые. Плоскость бумажного макета лечится самой поверхностью — зерном и
+   косым светом по листу. Оба слоя лежат ПОД содержимым, поэтому текст остаётся
+   чистым, а тёмные плиты просто перекрывают их собой. */
+/* Зерно уходит ПОД содержимое. Прежде слой лежал поверх всего, и на шести
+   процентах он зашумлял десятипиксельные подписи. Отрицательный z-index ставит
+   его выше фона страницы, но ниже любого текста; светлые разделы прозрачны,
+   поэтому бумага фактуру сохраняет. */
+/* Тот же режим, что и у героя. Прежде страница получала зерно обычным
+   наложением на 6 %, а герой — через soft-light: два грунта сходились к разным
+   тонам, и на стыке была видна ступенька. Теперь обработка одна на оба. */
+body::before{opacity:1;z-index:-1;mix-blend-mode:soft-light;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.25' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)'/%3E%3C/svg%3E");}
+/* У героя собственная непрозрачная заливка — она перекрыла бы нижний слой,
+   поэтому фактура добавляется прямо в его фон, под его же текст. */
+
+
+/* Косой свет: лист не залит одним тоном, а получает еле заметный перепад
+   яркости от верхнего левого угла к нижнему правому — примерно два процента.
+   Ровно столько, сколько отличает бумагу от заливки. */
+.rake{display:block;
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  /* Тоже под содержимое. Тёмные плиты непрозрачны и перекрывают слой собой —
+     пятно в углу синего раздела исчезает без режимов наложения, а бумага свет
+     получает. */
+  background:linear-gradient(152deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 36%,
+    rgba(13,36,64,.03) 80%,rgba(13,36,64,.055) 100%);}
+
+
+
 /* motion: a sheet sliding out from under the bar, nothing bouncing */
 /* Раскрытие собрано из трёх движений, а не одного. Лист опускается; по его
    верхней кромке проводится линия цветом марки — прибор ставит базовую черту;
@@ -317,7 +350,12 @@ html[data-nav="3"] .ixp{margin-top:12px;}
   /* Низ героя приходит ровно в бумагу страницы. Прежний последний тон был темнее
      фона (#E9E6E2 против #EFEDEA), и на стыке через весь экран стояла ступенька —
      та самая «линия», которая перерезала рисунок. Верх остаётся светлее. */
-  background:linear-gradient(178deg,#F7F5F2 0%,#EFEDEA 72%);}
+  /* Зерно поверх бумаги, но в режиме soft-light: обесцвеченный шум, положенный
+     обычным способом, подменял тон — грунт уходил в нейтральный серый. Здесь он
+     меняет только светлоту, цвет остаётся бумажным. Слой в фоне, то есть под
+     собственным текстом героя. */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.25' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)'/%3E%3C/svg%3E"),linear-gradient(178deg,#F7F5F2 0%,#EFEDEA 72%);
+  background-blend-mode:soft-light,normal;}
 /* Волосяной линии по нижней кромке героя больше нет: граница читается самим
    рисунком на стыке, а сплошная черта через весь экран его перерезала. */
 /* Радиальной заливки поверх бумаги героя больше нет. Она красила фирменным, и на
@@ -364,7 +402,13 @@ html[data-nav="3"] .ixp{margin-top:12px;}
   grid-template-columns:minmax(0,1fr) minmax(0,1fr);
   align-items:center;gap:clamp(18px,3vw,52px);
   min-height:100svh;max-width:none;margin:0;
-  padding:clamp(104px,12vh,132px) 0 clamp(44px,6vh,72px) clamp(14px,2.1vw,30px);}
+  /* Герой полновылетный, и его поле НЕ обязано совпадать с колонкой разделов
+     на широких экранах — владелец выбрал более левое положение по снимку.
+     До 1280 поле в точности равно полю разделов, дальше растёт медленнее:
+     коэффициент 0.42 от прироста центровки. На 1920 это 190 px против 376 у
+     колонки, на 1600 — 123, на 1280 и уже — совпадение. */
+  padding:clamp(104px,12vh,132px) 0 clamp(44px,6vh,72px)
+          calc(max(0px,(100% - 1280px)/2) * 0.42 + clamp(18px,4vw,56px));}
 h1{font-size:%%H1SIZE%%;margin-top:20px;text-wrap:balance;}
 /* the headline keeps its full measure: it may reach past its column into the
    quiet left part of the wave field rather than break into extra lines */
@@ -374,7 +418,7 @@ h1{font-size:%%H1SIZE%%;margin-top:20px;text-wrap:balance;}
 .hero h1{color:var(--fg);width:max-content;max-width:100%;}
 h1 em{font-style:normal;color:var(--brand-ink);}
 .hero h1 em{color:var(--brand-ink);}
-.hero .hp{max-width:38ch;font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.76;color:var(--fg-mid);margin-top:30px;}
+.hero .hp{max-width:52ch;font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.76;color:var(--fg-mid);margin-top:30px;}
 .acts{display:flex;gap:11px;margin-top:26px;flex-wrap:wrap;}
 .hero .eyebrow{color:var(--brand-ink);}
 .hero .eyebrow::before{background:var(--brand-ink);}
@@ -531,7 +575,11 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
    выглядел случайным. Заодно это возвращало долг кадру: --cardh считается так,
    чтобы карточка влезала в закреплённый экран, а с минимумом она его перерастала.
    Разницу забирает .ic-art (flex:1 1 auto) — фотография, а не текст. */
-.icard{backface-visibility:hidden;}
+/* Слоя здесь быть не должно. backface-visibility выносит карточку в отдельный
+   слой, слой растрируется один раз, и дальше лента пересэмплирует его масштабом
+   на каждом кадре — фотография вместо перерисовки растягивается и сыплется
+   зерном. Ровно об этом предупреждает комментарий ниже; я добавил подсказку,
+   когда убирал ступенчатость, и получил взамен грязную картинку. */
 .ic{position:relative;display:flex;flex-direction:column;overflow:hidden;
   height:var(--cardh,clamp(300px,38vw,470px));
   border:1px solid #101218;
@@ -940,6 +988,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 </style>
 
 <div id="wipe"></div>
+<div class="rake" aria-hidden="true"></div>
 <header id="hdr" data-tone="paper"><div class="hin">
   <a class="brand" href="#top" aria-label="Gridec"><svg class="lock" viewBox="0 -100.0 815.62 200.0" aria-hidden="true">
   <g transform="translate(86.6025 0)">
@@ -1085,7 +1134,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 
 <div class="ovl" id="iovl"><div class="md" id="imd">
   <button class="x" data-close>&times;</button>
-  <div class="ph"><img id="im_img" alt=""></div>
+  <div class="ph" id="im_ph"></div>
   <div class="bd">
     <h3 id="im_t"></h3>
     <p class="p1" id="im_p1"></p>
@@ -1144,8 +1193,22 @@ var SEAM={pulse:null,halo:null,len:0,t:-1,box:null};
 
 var cv=document.getElementById('star'),cx=cv.getContext('2d');
 var W=0,H=0,dpr=1,tt=0,CYp=0;
-var EV_FIRST=2.6,EV_EVERY=7.5,EV_DUR=1.5,evNext=EV_FIRST,evT=0,evX=0.5,EV_W=0.085;
+var EV_FIRST=2.6,EV_EVERY=7.5,EV_DUR=1.5,evNext=EV_FIRST,evT=0,evX=0.76,EV_W=0.085;   /* стартовое положение — в той же зоне справа от текста */
 var sigX=0,BHv=0,bracketY=0,sigTop=0;   /* жила стоит там, где записано отклонение */
+var MASK=0.52;   /* доля ширины, на которой лента гаснет под текстом */
+/* Границы зоны события. Слева — там, где лента перестаёт гаснуть под текстом.
+   Справа — не доходя до показания: жила спускается по точке фиксации и уводит
+   горизонталь влево, то есть прошла бы прямо через цифры. Ширина блока в двух
+   языках разная, поэтому предел берётся с него, а не задаётся числом. */
+function evZone(){
+  var lo=MASK+EV_W+0.04,hi=0.96-EV_W;
+  if(innerWidth<=960||!W)return [lo,hi];        /* там показание стоит в потоке */
+  var rd=document.querySelector('.rd'),hero=document.querySelector('.hero');
+  if(!rd||!hero)return [lo,hi];
+  var lim=(rd.getBoundingClientRect().left-hero.getBoundingClientRect().left-28)/W;
+  hi=Math.min(hi,lim-EV_W);
+  return [lo,Math.max(lo,hi)];
+}
 var MILK='255,251,249',GLOW='255,255,255';
 var TAU=Math.PI*2,NL=44,NS=104;   /* линий в ленте и шагов вдоль оси */
 function readWaveTheme(){
@@ -1166,6 +1229,8 @@ function size(){
   BHv=H*0.174;
   bracketY=CYp+BHv*1.32;   /* поперечина скобы */
   sigTop=bracketY+28;      /* жила начинается под подписью длительности */
+  var ez0=evZone();
+  if(evX<ez0[0]||evX>ez0[1])evX=(ez0[0]+ez0[1])/2;   /* и старт, и после ресайза */
   sigX=-4+(W+8)*evX;       /* точка фиксации в координатах холста */
   placeReadout();buildSigRun();
   if(rm)requestAnimationFrame(frame);   /* после ресайза кадр надо перерисовать */
@@ -1175,7 +1240,10 @@ function frame(ts){
   if(rm)dt=0;            /* при reduce рисуем один неподвижный кадр, а не пустоту */
   tt+=dt;
   if(tt>=evNext){
-    evT=EV_DUR;evX=0.24+Math.random()*0.52;evNext=tt+EV_EVERY;
+    evT=EV_DUR;
+    var ez=evZone();
+    evX=ez[0]+Math.random()*(ez[1]-ez[0]);
+    evNext=tt+EV_EVERY;
     sigX=-4+(W+8)*evX;buildSigRun();   /* жила переезжает к новой точке */
     seamFire();
   }
@@ -1261,12 +1329,12 @@ function frame(ts){
      слева градиентом по маске: это один проход по холсту, а не разбиение каждой
      из сорока четырёх линий на отрезки с разной прозрачностью. */
   if(innerWidth>960){
-    var mg=cx.createLinearGradient(0,0,W*0.52,0);
+    var mg=cx.createLinearGradient(0,0,W*MASK,0);
     mg.addColorStop(0,'rgba(0,0,0,1)');
     mg.addColorStop(0.62,'rgba(0,0,0,.72)');
     mg.addColorStop(1,'rgba(0,0,0,0)');
     cx.save();cx.globalCompositeOperation='destination-out';
-    cx.fillStyle=mg;cx.fillRect(0,0,W*0.52,H);cx.restore();
+    cx.fillStyle=mg;cx.fillRect(0,0,W*MASK,H);cx.restore();
   }
 
 
@@ -1394,7 +1462,19 @@ function buildSigRun(){
   function P(cls,d,op){var p=document.createElementNS(ns,'path');
     p.setAttribute('class',cls);p.setAttribute('d',d);
     if(op!==undefined)p.setAttribute('opacity',op);svg.appendChild(p);return p;}
-  var d=route([[x,y0],[x,lane],[railX,lane],[railX,y1]],18);
+  /* Жила доводится до самой отметки у заголовка, а не обрывается на полпути.
+     Прежде она кончалась на 150 px внутри раздела, а поворот трассы к заголовку
+     идёт ниже — импульс гас в воздухе, не дойдя до цели. Координаты берём у
+     самой трассы, чтобы два пути совпадали, а не сходились примерно. */
+  var pts=[[x,y0],[x,lane],[railX,lane]];
+  var rsec=document.querySelector('section[data-rail]');
+  var rail=rsec&&rsec.querySelector('.srail'),tick=rail&&rail.querySelector('rect');
+  if(rail&&tick&&rail.dataset.yh){
+    var cy=Math.round(rsec.getBoundingClientRect().top-b.top)+(+rail.dataset.yh);
+    var tb=tick.getBoundingClientRect();
+    pts.push([railX,cy],[Math.round(tb.left-b.left+tb.width/2),cy]);
+  }else pts.push([railX,y1]);
+  var d=route(pts,18);
   P('sheath',d);P('sig',d);
   var halo=P('sp halo',d,0),pulse=P('sp',d,0);
   box.appendChild(svg);
@@ -1581,8 +1661,10 @@ function cardArt(seed){
 
 var iovl=document.getElementById('iovl');
 function openInd(o){
-  var img=document.getElementById('im_img'),ph=img.parentElement;
-  if(o.img!==undefined&&PT.imgs[o.img]){img.src=PT.imgs[o.img];img.alt=o.title;ph.style.display='';}
+  var ph=document.getElementById('im_ph'),img=ph.firstElementChild;
+  if(o.img!==undefined&&PT.imgs[o.img]){
+    if(!img){img=document.createElement('img');ph.appendChild(img);}
+    img.src=PT.imgs[o.img];img.alt=o.title;ph.style.display='';}
   else ph.style.display='none';
   document.getElementById('im_t').textContent=o.title;
   document.getElementById('im_p1').textContent=o.p1;
@@ -1638,8 +1720,13 @@ var suiteSec=document.querySelector('.suite'),suitePinned=false;
    the first card sits on the focus point, and where it ends so the last card has
    passed it by the exit tail. Nothing here is read again during scrolling. */
 var SX={centres:[],startX:0,endX:0,travel:0,dist:0,railLeft:0,focus:0,
-        radius:0,scaleMin:0.78,lift:22,tail:0.22,window:0.88};
+        radius:0,dimMin:0.66,lift:34,tail:0.22,window:0.88};
 function sxShells(){return [].slice.call(sxTrack.children);}
+/* Дробный сдвиг слоя заставляет компоновщик пересэмплировать текстуру — на
+   фотографии это читается как дрожание. Сажаем сдвиги на целый пиксель
+   устройства. Со ступенчатостью, из-за которой привязку когда-то сняли, это
+   не связано: её давал квантованный МАСШТАБ карточки, а его больше нет. */
+function sxSnap(v){var d=window.devicePixelRatio||1;return Math.round(v*d)/d;}
 function sxCanPin(){
   return innerWidth>=981 && matchMedia('(hover:hover)').matches
       && matchMedia('(pointer:fine)').matches && !rm;
@@ -1694,18 +1781,21 @@ function sxRender(x){
     var d=Math.abs(centre-SX.focus);
     var prox=1-d/SX.radius; prox=prox<0?0:prox>1?1:prox;
     var e=sxEase(prox);
-    var sc=SX.scaleMin+(1-SX.scaleMin)*e;
     var y=SX.lift-SX.lift*e;
-    /* Масштаб и подъём тоже идут дробными. Прежде ширина карточки сажалась на
-       целый пиксель, и рост шёл заметными ступенями — примерно по одной на
-       каждые пятнадцать пикселей прокрутки. Против дрожания кромки работает
-       backface-visibility в таблице стилей, а не квантование движения. */
-    shells[i].style.transform='translate3d(0,'+y.toFixed(2)+'px,0) scale('+sc.toFixed(5)+')';
+    var dim=SX.dimMin+(1-SX.dimMin)*e;
+    /* Ни одного масштаба на карточке. Трансформация scale заставляет браузер
+       растрировать содержимое один раз и дальше пересэмплировать текстуру под
+       каждый новый множитель — фотография сыплется зерном и дрожит на ходу.
+       Снэп по целым пикселям это глушил, но давал ступенчатый рост. Фокус
+       показывают подъём и приглушение: сдвиг и прозрачность компоновщик
+       применяет к готовому слою, не трогая растр. */
+    shells[i].style.transform='translate3d(0,'+sxSnap(y)+'px,0)';
+    shells[i].style.opacity=dim.toFixed(3);
     var im=shells[i].querySelector('.ic-art img');
     if(im){var rel=(centre-SX.focus)/SX.focus;
       /* translateX, not translate3d: a 3D transform promotes the image to its own
          layer, and that layer is then resampled by the rail's scale. */
-      im.style.transform='scale(1.06) translateX('+(-rel*12).toFixed(2)+'px)';}
+      im.style.transform='scale(1.06) translateX('+sxSnap(-rel*12)+'px)';}
   }
 }
 function suiteUpd(){
@@ -1716,7 +1806,7 @@ function suiteUpd(){
   /* Без округления до целого пикселя. Оно ставилось против дрожания кромки, но
      при медленной прокрутке лента шла ступеньками: кадр стоит, кадр прыгает на
      пиксель. Композитор сам сглаживает дробный сдвиг. */
-  sxTrack.style.transform='translate3d('+x.toFixed(2)+'px,0,0)';
+  sxTrack.style.transform='translate3d('+sxSnap(x)+'px,0,0)';
   sxRender(x);
   railBar(tp);
 }
