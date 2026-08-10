@@ -655,7 +655,8 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
    карточку целиком, вместе с набором: на латинице это проходило незаметно, а
    армянский засечный шрифт растрируется дороже — и армянская версия шла рывками
    там, где английская шла ровно. */
-.icard{will-change:transform,opacity;}
+/* Прозрачность у карточек больше не меняется — обещать её компоновщику незачем */
+.icard{will-change:transform;}
 .ic{position:relative;display:flex;flex-direction:column;overflow:hidden;
   height:var(--cardh,clamp(300px,38vw,470px));
   border:1px solid #102745;
@@ -2000,7 +2001,7 @@ var suiteSec=document.querySelector('.suite'),suitePinned=false;
    the first card sits on the focus point, and where it ends so the last card has
    passed it by the exit tail. Nothing here is read again during scrolling. */
 var SX={centres:[],startX:0,endX:0,travel:0,dist:0,railLeft:0,focus:0,
-        radius:0,dimMin:0.66,lift:34,tail:0.22,window:0.88};
+        radius:0,lift:34,tail:0.22,window:0.88};
 function sxShells(){return [].slice.call(sxTrack.children);}
 /* Дробный сдвиг слоя заставляет компоновщик пересэмплировать текстуру — на
    фотографии это читается как дрожание. Сажаем сдвиги на целый пиксель
@@ -2062,15 +2063,18 @@ function sxRender(x){
     var prox=1-d/SX.radius; prox=prox<0?0:prox>1?1:prox;
     var e=sxEase(prox);
     var y=SX.lift-SX.lift*e;
-    var dim=SX.dimMin+(1-SX.dimMin)*e;
     /* Ни одного масштаба на карточке. Трансформация scale заставляет браузер
        растрировать содержимое один раз и дальше пересэмплировать текстуру под
        каждый новый множитель — фотография сыплется зерном и дрожит на ходу.
        Снэп по целым пикселям это глушил, но давал ступенчатый рост. Фокус
-       показывают подъём и приглушение: сдвиг и прозрачность компоновщик
-       применяет к готовому слою, не трогая растр. */
+       показывает подъём: сдвиг компоновщик применяет к готовому слою, не
+       трогая растр.
+
+       Прозрачности здесь больше нет. На светлой бумаге приглушить тёмную
+       карточку прозрачностью нельзя: сквозь неё просвечивает грунт, и вместо
+       приглушения выходит белёсый налёт — тем сильнее, чем дальше карточка
+       от середины. */
     shells[i].style.transform='translate3d(0,'+sxSnap(y)+'px,0)';
-    shells[i].style.opacity=dim.toFixed(3);
     var im=shells[i].querySelector('.ic-art img');
     if(im){var rel=(centre-SX.focus)/SX.focus;
       /* translateX, not translate3d: a 3D transform promotes the image to its own
