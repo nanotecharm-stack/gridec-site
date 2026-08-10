@@ -1006,8 +1006,10 @@ footer,.footrev{--foot-h:530px;}
   box-shadow:inset 0 1px 0 rgba(243,246,245,.14);}
 footer .fgrid{display:grid;grid-template-columns:minmax(220px,1fr) 1.15fr .85fr;
   gap:clamp(28px,4vw,64px);align-items:start;}
-footer .fbrand .lock{height:30px;width:auto;display:block;fill:currentColor;}
-footer .fbrand .lock .mk{fill:#7BA4D0;}
+/* Не знак, а имя компании тем же начертанием, что весь набор: сюда придут
+   реквизиты, и знак над ними читался бы вывеской, а не шапкой документа. */
+footer .fbrand .fname{margin:0;font-family:inherit;font-size:22px;font-weight:600;
+  letter-spacing:-.01em;text-transform:none;color:#F3F6F5;line-height:1.2;}
 footer .fbrand p{margin-top:20px;font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;
   letter-spacing:.2em;text-transform:uppercase;color:rgba(243,246,245,.5);max-width:24ch;
   line-height:1.9;}
@@ -1252,7 +1254,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
     <!-- Ведёт к разделу контактов, а не открывает окно: форма остаётся на кнопке
          героя и на заголовке восьмого раздела. Стрелка та же, что у ссылок
          внутри страницы. -->
-    <a class="btn" href="#contact"><span>Get in touch</span><i>&#8599;</i></a>
+    <a class="btn" href="#end"><span>Get in touch</span><i>&#8599;</i></a>
   </div>
 </div>
 <div class="ixsc" id="ixsc"></div>
@@ -1382,28 +1384,11 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 <div class="footrev"><div class="fpin">
 <footer>
   <div class="wrap fgrid">
-    <div class="fbrand rv"><svg class="lock" viewBox="0 -100.0 820.42 200.0" aria-hidden="true">
-  <g class="mk" transform="translate(86.6025 0)">
-    <path d="M-86.603 -50 L-6 -96.536 L-6 -3.464 L-86.603 43.072 Z"/>
-    <path d="M86.603 -50 L6 -96.536 L6 -3.464 L86.603 43.072 Z"/>
-    <path d="M-86.603 56.928 L0 6.928 L86.603 56.928 L0 100 Z"/>
-  </g>
-<g>
-    <path transform="translate(249.42 65.36) scale(0.18945 -0.18945)" d="M75 163V527Q75 690 238 690H531L590 644V579H241Q197 579 197 536V154Q197 111 241 111H488V302H342V413H610V0H238Q75 0 75 163Z"/>
-    <path transform="translate(377.30 65.36) scale(0.18945 -0.18945)" d="M71 0V460Q107 525 209 525H314L367 486V423H236Q202 423 188 406V0Z"/>
-    <path transform="translate(451.75 65.36) scale(0.18945 -0.18945)" d="M72 616V735H195V616ZM75 0V525H192V0Z"/>
-    <path transform="translate(502.33 65.36) scale(0.18945 -0.18945)" d="M67 158V367Q67 525 225 525H395V740H512V0H225Q67 0 67 158ZM184 148Q184 102 230 102H395V423H230Q184 423 184 377Z"/>
-    <path transform="translate(613.54 65.36) scale(0.18945 -0.18945)" d="M67 158V367Q67 525 225 525H355Q512 525 512 367V219H184V148Q184 102 230 102H492V39L439 0H225Q67 0 67 158ZM184 310H395V377Q395 423 349 423H230Q184 423 184 377Z"/>
-    <path transform="translate(723.23 65.36) scale(0.18945 -0.18945)" d="M67 158V367Q67 525 225 525H414L467 486V423H230Q184 423 184 377V148Q184 102 230 102H467V39L414 0H225Q67 0 67 158Z"/>
-</g>
-</svg>
+    <div class="fbrand rv">
+      <p class="fname">Gridec LLC</p>
       <p>POWER QUALITY MONITORING</p>
     </div>
-    <nav class="fcol rv" style="--i:1" aria-label="Sections">
-      <h3>Sections</h3>
-      <ul class="flist"><li><a href="#why"><i>01</i><span>The event may be over before anyone can inspect it</span></a></li><li><a href="#applications"><i>02</i><span>Where monitoring helps</span></a></li><li><a href="#services"><i>03</i><span>Seven-day monitoring</span></a></li><li><a href="#report"><i>04</i><span>Report</span></a></li><li><a href="#assignments"><i>05</i><span>When to measure before you commit</span></a></li><li><a href="#measure"><i>06</i><span>What we measure</span></a></li><li><a href="#company"><i>07</i><span>About us</span></a></li><li><a href="#contact"><i>08</i><span>Start with what happened</span></a></li></ul>
-    </nav>
-    <div class="fcol rv" style="--i:2">
+    <div class="fcol rv" style="--i:1">
       <h3>Contact</h3>
       <ul class="fcon">
         <li><a href="mailto:sales@powertech.am">sales@powertech.am</a></li>
@@ -1412,6 +1397,10 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
         <li>Mon–Fri 09:00–18:00 (UTC+4)</li>
       </ul>
     </div>
+    <nav class="fcol rv" style="--i:2" aria-label="Sections">
+      <h3>Sections</h3>
+      <ul class="flist"><li><a href="#why"><i>01</i><span>The event may be over before anyone can inspect it</span></a></li><li><a href="#applications"><i>02</i><span>Where monitoring helps</span></a></li><li><a href="#services"><i>03</i><span>Seven-day monitoring</span></a></li><li><a href="#report"><i>04</i><span>Report</span></a></li><li><a href="#assignments"><i>05</i><span>When to measure before you commit</span></a></li><li><a href="#measure"><i>06</i><span>What we measure</span></a></li><li><a href="#company"><i>07</i><span>About us</span></a></li><li><a href="#contact"><i>08</i><span>Start with what happened</span></a></li></ul>
+    </nav>
   </div>
   <div class="wrap fbot rv" style="--i:3">
     <span>&copy; 2026 Gridec</span>
@@ -1419,6 +1408,10 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   </div>
 </footer>
 </div></div>
+<!-- Метка конца страницы. Кнопка шапки целится сюда, а не в восьмой раздел:
+     плита подвала открывается по мере ухода страницы, и на середине хода
+     она обрезана — имя компании оставалось наполовину за кромкой. -->
+<div id="end" aria-hidden="true"></div>
 
 <div class="ovl" id="iovl"><div class="md" id="imd">
   <button class="x" data-close>&times;</button>
