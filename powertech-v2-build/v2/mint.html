@@ -804,6 +804,13 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 /* sections */
 .sec{padding:clamp(56px,7vw,104px) 0 clamp(64px,8vw,120px);}
 h2{font-size:clamp(20px,3.17vw,48px);text-wrap:balance;}
+/* Заголовок, снятый с экрана, но оставшийся странице. Указатель разделов
+   строится из пары «номер + h2», и удаление тега выкинуло бы раздел из
+   списка целиком: в счётчике стало бы семь разделов вместо восьми. Здесь
+   заголовок только не показывается — навигация, оглавление документа и
+   поисковая выдача его по-прежнему видят. */
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
 .thesis h2{max-width:24ch;}
 /* Строчная ссылка была высотой 13 px — вдвое ниже минимальной цели нажатия
    24x24. Поле уходит в область нажатия, а не в отступы: верхний margin
@@ -1201,8 +1208,8 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 <div class="dith" data-dith="#2E3138,#F3F6F5,#B8F7E4"></div>
 
 <section class="sec" id="report" data-rail><div class="wrap two">
-  <div class="rv"><div class="cnt">04</div><h2>A report built for technical decisions</h2>
-    <p class="lede">The report separates measured facts from engineering interpretation and recommendations.</p>
+  <div class="rv"><div class="cnt">04</div><h2 class="vh">A report built for technical decisions</h2>
+    <p class="lede">The report brings together the measurement results, engineering analysis and conclusions to support further technical decisions.</p>
     <p class="note">Power quality parameters are measured using IEC 61000-4-30 Class S methods. Harmonic and interharmonic measurements are evaluated using IEC 61000-4-7 where applicable.</p></div>
   <div class="list rv"><div><span class="n">01</span><span>Measurement scope and points</span></div><div><span class="n">02</span><span>Monitoring period and operating context</span></div><div><span class="n">03</span><span>Recorded events and trends</span></div><div><span class="n">04</span><span>Engineering interpretation</span></div><div><span class="n">05</span><span>Limitations of the available evidence</span></div><div><span class="n">06</span><span>Recommended next steps</span></div></div>
 </div></section>
