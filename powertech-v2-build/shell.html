@@ -167,11 +167,19 @@ body::before{opacity:1;z-index:-1;mix-blend-mode:soft-light;
 /* Раскрытие собрано из трёх движений, а не одного. Лист опускается; по его
    верхней кромке проводится линия цветом марки — прибор ставит базовую черту;
    строки приходят одна за другой с шагом 34 мс, и у каждой следом вытягивается
-   своя линейка. Закрытие идёт без задержек и быстрее: уходить нужно разом. */
-.ixp{max-height:0;opacity:0;
-  transition:max-height .5s var(--e),opacity .34s var(--e);}
-.ixp.on{max-height:70svh;overflow-y:auto;opacity:1;
-  transition:max-height .5s var(--e),opacity .2s var(--e);}
+   своя линейка. Закрытие идёт без задержек и быстрее: уходить нужно разом.
+
+   Высоту ведёт дорожка сетки, а не max-height. Вид тот же — лист опускается, —
+   но браузер интерполирует одну величину дорожки вместо того, чтобы на каждом
+   кадре пересчитывать ограничение высоты по всему поддереву. Прокрутка при
+   переполнении переехала на внутренний слой: у элемента сетки она бы конфликтовала
+   с анимируемой дорожкой. */
+.ixp{display:grid;grid-template-rows:0fr;opacity:0;
+  transition:grid-template-rows .5s var(--e),opacity .34s var(--e);}
+.ixp.on{grid-template-rows:1fr;opacity:1;
+  transition:grid-template-rows .5s var(--e),opacity .2s var(--e);}
+.ixp>.ixin{min-height:0;overflow:hidden;}
+.ixp.on>.ixin{overflow-y:auto;max-height:70svh;}
 .ixp::before{content:"";position:absolute;left:0;top:0;height:1px;width:100%;
   background:var(--brand);transform:scaleX(0);transform-origin:left;
   transition:transform .62s var(--e);}
