@@ -34,10 +34,6 @@ p{margin:0;}a{color:inherit;text-decoration:none;}button{font-family:inherit;cur
 /* Два вводных абзаца подряд стояли теснее, чем абзац к своему заголовку, и
    читались одним куском. Разводим их на строку. */
 .lede + .lede{margin-top:34px;}
-/* Раздел, у которого заголовок снят с экрана, начинался почти вплотную к
-   номеру: двадцать три пикселя против восьмидесяти шести у остальных, где
-   между ними стоит сам заголовок. Возвращаем разделу вход. */
-.vh + .lede{margin-top:56px;}
 .rv{opacity:0;transform:translateY(20px);transition:opacity .9s var(--e),transform .9s var(--e);}
 .rv.in{opacity:1;transform:none;}
 
@@ -802,13 +798,6 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 /* sections */
 .sec{padding:clamp(56px,7vw,104px) 0 clamp(64px,8vw,120px);}
 h2{font-size:%%H2SIZE%%;text-wrap:balance;}
-/* Заголовок, снятый с экрана, но оставшийся странице. Указатель разделов
-   строится из пары «номер + h2», и удаление тега выкинуло бы раздел из
-   списка целиком: в счётчике стало бы семь разделов вместо восьми. Здесь
-   заголовок только не показывается — навигация, оглавление документа и
-   поисковая выдача его по-прежнему видят. */
-.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;
-  overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
 .thesis h2{max-width:24ch;}
 /* Строчная ссылка была высотой 13 px — вдвое ниже минимальной цели нажатия
    24x24. Поле уходит в область нажатия, а не в отступы: верхний margin
@@ -1176,7 +1165,7 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
 <div class="dith" data-dith="#14161C,#EFEDEA,#C8603D"></div>
 
 <section class="sec" id="report"><div class="wrap two">
-  <div class="rv"><div class="cnt">04</div><h2 class="vh">%%REP_H2%%</h2>
+  <div class="rv"><div class="cnt">04</div><h2>%%REP_H2%%</h2>
     <p class="lede">%%REP_P%%</p>
     <p class="note">%%REP_NOTE%%</p></div>
   <div class="list rv">%%REP_LIST%%</div>

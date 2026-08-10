@@ -263,7 +263,7 @@ EN = {
     ('03', 'The findings are assessed in context and presented in a clear technical report, with conclusions supported by the recorded data and recommended next steps.')]),
  'SVC_LINK': 'See what monitoring can reveal',
  'REP_H2': 'Report',
- 'REP_P': 'The report brings together the measurement results, engineering analysis and conclusions to support further technical decisions.',
+ 'REP_P': 'Measurement results, engineering analysis and conclusions provide the basis for further technical decisions.',
  'REP_NOTE': 'Power quality parameters are measured using IEC 61000-4-30 Class S methods. Harmonic and interharmonic measurements are evaluated using IEC 61000-4-7 where applicable.',
  'REP_LIST': list_html(['Measurement scope and points', 'Monitoring period and operating context',
                         'Recorded events and trends', 'Engineering interpretation',
