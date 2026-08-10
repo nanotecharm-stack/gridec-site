@@ -669,7 +669,9 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
    --cardh опускается к 260, фотографии с минимумом 150 не хватало места вместе с
    подвалом (до 141 при заголовке в две строки) — подрезался бы текст. */
 .ic-art{position:relative;flex:1 1 auto;min-height:110px;overflow:hidden;
-  background:#101218;
+  /* Чернила снизу — не просто заглушка, а нижний конец дуотона: обесцвеченный
+     снимок осветляет их, и тени кадра приходят ровно в цвет тёмных разделов. */
+  background:#0D0E13;isolation:isolate;
   /* No layer here either. That mattered only while .icard was promoted: the
      photograph then landed in the parent texture and was stretched. With the
      card unpromoted the whole thing repaints at the true scale every frame,
@@ -677,8 +679,19 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .ic-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
   transform:scale(1.04);transform-origin:52% 45%;
   transition:transform 1.15s cubic-bezier(.16,1,.3,1),filter .7s var(--e);
-  filter:saturate(.85) contrast(1.03);}
-.ic-art::after{content:"";position:absolute;pointer-events:none;
+  /* Прежде было обесцвечивание на 15 % и контраст на 3 % — почти ничего:
+     шесть снимков оставались шестью снимками со своим светом и цветом.
+     Теперь цвет снимается полностью, а вся тональная шкала ложится между
+     двумя фирменными цветами: lighten поднимает тени до чернил подложки,
+     а ::before опускает света до бумаги страницы. Ряд читается набором. */
+  filter:grayscale(1) contrast(1.05) brightness(.97);mix-blend-mode:lighten;}
+/* Верхний конец дуотона. Со своим слоем, потому что ::after занят шторкой
+   под подписью, а порядок важен: краска, потом бумага, потом шторка. */
+.ic-art::before{content:"";position:absolute;inset:-1px;z-index:1;
+  pointer-events:none;background:#EFEDEA;mix-blend-mode:darken;}
+/* На карточке-приглашении фотографии нет — там чертёж, и сводить его не к чему */
+.ic.is-open-card .ic-art::before{display:none;}
+.ic-art::after{content:"";position:absolute;pointer-events:none;z-index:2;
   /* One pixel past every edge, not flush with them. The art box is a fractional
      height (271.469px here), so an overlay at inset:0 has a half-covered bottom
      row, and the photograph shows through it as a light line right where the
@@ -978,8 +991,14 @@ footer .in{display:flex;justify-content:space-between;gap:12px 28px;flex-wrap:wr
   box-shadow:0 0 0 1px rgba(255,251,249,.7);}
 /* the industry detail: the card opens into a full plate */
 #imd{max-width:880px;}
-#imd .ph{position:relative;aspect-ratio:16/7;background:#DDD9D2;overflow:hidden;}
-#imd .ph img{width:100%;height:100%;object-fit:cover;display:block;}
+#imd .ph{position:relative;aspect-ratio:16/7;overflow:hidden;
+  /* тот же дуотон, что на карточках: цветной снимок в окне вываливался бы
+     из палитры страницы */
+  background:#0D0E13;isolation:isolate;}
+#imd .ph img{width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(1) contrast(1.05) brightness(.97);mix-blend-mode:lighten;}
+#imd .ph::before{content:"";position:absolute;inset:0;z-index:1;
+  pointer-events:none;background:#EFEDEA;mix-blend-mode:darken;}
 /* the index sat in difference blend mode, which inverts against the photograph —
    on mid-tone frames it landed within a hair of the backdrop. It now reads on its
    own corner scrim, which is a photographic device rather than a box. */
