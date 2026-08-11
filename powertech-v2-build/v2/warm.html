@@ -15,13 +15,15 @@
 <meta property="og:description" content="Gridec measures electrical parameters while your system is operating and assesses the system on site. We combine the measured data with our observations to provide a clear…">
 <meta property="og:locale" content="en_US">
 <meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="./index.html">
+<link rel="alternate" hreflang="en" href="./index.html">
+<link rel="alternate" hreflang="hy" href="./hy.html">
+<link rel="alternate" hreflang="x-default" href="./index.html">
 </head>
 <body>
 <style>
-@font-face{font-family:'Big Shoulders Display';font-weight:700;font-display:swap;src:url(../fonts/big-shoulders-display-700-latin.woff2) format('woff2');}
-@font-face{font-family:'Archivo';font-weight:400;font-display:swap;src:url(../fonts/archivo-400-latin.woff2) format('woff2');}
-@font-face{font-family:'Archivo';font-weight:600;font-display:swap;src:url(../fonts/archivo-600-latin.woff2) format('woff2');}
-@font-face{font-family:'Martian Mono';font-weight:600;font-display:swap;src:url(../fonts/martian-mono-600-latin.woff2) format('woff2');}
+@font-face{font-family:'Overused Grotesk';font-weight:300 900;font-display:swap;src:url(../fonts/overused-grotesk-latin.woff2) format('woff2');}
+@font-face{font-family:'Departure Mono';font-weight:100 900;font-display:swap;src:url(../fonts/departure-mono.woff2) format('woff2');}
 :root{--brand:#9D5B43;--brand-ink:#9D5B43;/* small coral TEXT on light surfaces: 4.77:1 on milk */--e:cubic-bezier(.16,1,.3,1);
   --gut:clamp(18px,4vw,56px);--inset:calc(max(0px,(100vw - 1280px)/2) + clamp(18px,4vw,56px));
 --bg:#F4F5F5;--panel:#FFFFFF;--fg:#25272C;--fg-mid:rgba(37,39,44,.68);/* .64 давало на бумаге 4,58 — впритык; .68 держит 4,92 и оставляет запас
@@ -1434,25 +1436,30 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   <div id="f_main">
     <h3>Describe the <i>electrical issue</i></h3>
     <p class="intro">Tell us what happened, when it occurred or tends to occur, and which equipment is affected. We will assess whether monitoring can answer the question and what information is needed.</p>
-    <div class="gl">Contact details</div>
+    <!-- Настоящая форма: Enter отправляет, поля объявлены обязательными.
+         novalidate — потому что сообщения об ошибках у нас свои и переведённые. -->
+    <form id="ptfForm" novalidate>
+    <div class="gl" id="glContact">Contact details</div>
     <div class="fr">
-      <div><label>Name <em>*</em></label><input id="ptfName" type="text" placeholder="Your name"></div>
-      <div><label>Company <em>*</em></label><input id="ptfCompany" type="text" placeholder="Company name"></div>
-      <div><label>Email <em>*</em></label><input id="ptfEmail" type="email" placeholder="name@company.com"></div>
-      <div><label>Phone <em>*</em></label><input id="ptfPhone" type="tel" placeholder="+374 ..."></div>
+      <div><label for="ptfName">Name <em>*</em></label><input id="ptfName" type="text" placeholder="Your name" required aria-required="true"></div>
+      <div><label for="ptfCompany">Company <em>*</em></label><input id="ptfCompany" type="text" placeholder="Company name" required aria-required="true"></div>
+      <div><label for="ptfEmail">Email <em>*</em></label><input id="ptfEmail" type="email" placeholder="name@company.com" required aria-required="true"></div>
+      <div><label for="ptfPhone">Phone <em>*</em></label><input id="ptfPhone" type="tel" placeholder="+374 ..." required aria-required="true"></div>
     </div>
-    <div class="gl">Application</div>
-    <div class="tps" id="ptfTypes"></div>
-    <div class="gl">What happened? <em>*</em></div>
-    <textarea id="ptfMsg" placeholder="Describe the trip, alarm, shutdown or recurring condition. Include approximate times, affected equipment and available error codes or logs."></textarea>
-    <div class="gl">Attachments <small>(optional)</small></div>
+    <div class="gl" id="glApp">Application</div>
+    <div class="tps" id="ptfTypes" role="group" aria-labelledby="glApp"></div>
+    <div class="gl" id="glWhat">What happened? <em>*</em></div>
+    <textarea id="ptfMsg" placeholder="Describe the trip, alarm, shutdown or recurring condition. Include approximate times, affected equipment and available error codes or logs." required aria-required="true"
+      aria-labelledby="glWhat"></textarea>
+    <div class="gl" id="glAtt">Attachments <small>(optional)</small></div>
     <div class="drop" id="ptfDrop"><b>Drop files here or click to browse</b><span>Single-line diagram, panel photo, alarm screenshot, inverter or UPS log, previous report.</span>
-      <input id="ptfInput" type="file" multiple accept="image/*,.pdf,.csv,.txt,.log,.xls,.xlsx,.doc,.docx,.zip" style="display:none"></div>
+      <input id="ptfInput" type="file" aria-labelledby="glAtt" multiple accept="image/*,.pdf,.csv,.txt,.log,.xls,.xlsx,.doc,.docx,.zip" style="display:none"></div>
     <div id="ptfList"></div>
     <div class="errline" id="ptfSizeErr">Attachments exceed the 10 MB limit. Please remove some files.</div>
     <div class="hint" id="ptfHint">Up to 10 MB total.</div>
     <div class="errline" id="ptfFormErr">Please fill in all fields: name, company, a valid email, phone and a short description.</div>
-    <button class="btn" id="ptfSubmit"><span>Send the details ↗</span></button>
+    <button class="btn" id="ptfSubmit" type="submit"><span>Send the details ↗</span></button>
+    </form>
   </div>
   <div class="done" id="f_done">
     <div class="ok">✓</div><b>Thank you.</b><p>We will review the information and contact you to clarify the measurement scope.</p>
@@ -2361,7 +2368,7 @@ finput.addEventListener('change',function(){files=files.concat([].slice.call(fin
 drop.addEventListener('dragleave',function(){drop.classList.remove('on');});
 drop.addEventListener('drop',function(e){e.preventDefault();drop.classList.remove('on');if(e.dataTransfer&&e.dataTransfer.files)files=files.concat([].slice.call(e.dataTransfer.files));renderFiles();});
 function gv(id){var el=document.getElementById(id);return el?el.value:'';}
-document.getElementById('ptfSubmit').addEventListener('click',function(){
+document.getElementById('ptfForm').addEventListener('submit',function(e){e.preventDefault();
   if(sending)return;
   var nm=gv('ptfName').trim(),co=gv('ptfCompany').trim(),em=gv('ptfEmail').trim(),ph=gv('ptfPhone').trim(),ms=gv('ptfMsg').trim();
   var emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);

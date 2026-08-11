@@ -15,6 +15,10 @@
 <meta property="og:description" content="Gridec-ը համակարգի աշխատանքի ընթացքում չափում և գրանցում է էլեկտրական պարամետրերը, ուսումնասիրում այն տեղում և վերլուծում ստացված տվյալները։ Չափումներն ու դիտարկումները…">
 <meta property="og:locale" content="hy_AM">
 <meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="./hy.html">
+<link rel="alternate" hreflang="en" href="./index.html">
+<link rel="alternate" hreflang="hy" href="./hy.html">
+<link rel="alternate" hreflang="x-default" href="./index.html">
 </head>
 <body>
 <style>
@@ -22,6 +26,7 @@
 @font-face{font-family:'Arian AMU';font-weight:600 900;font-display:swap;src:url(../fonts/arian-amu-700.woff2) format('woff2');}
 @font-face{font-family:'Arian AMU Serif';font-weight:400 500;font-display:swap;src:url(../fonts/arian-amu-serif-400.woff2) format('woff2');}
 @font-face{font-family:'Arian AMU Serif';font-weight:600 900;font-display:swap;src:url(../fonts/arian-amu-serif-700.woff2) format('woff2');}
+@font-face{font-family:'Departure Mono';font-weight:100 900;font-display:swap;src:url(../fonts/departure-mono.woff2) format('woff2');}
 :root{--brand:#2E5E99;--brand-ink:#2E5E99;/* small coral TEXT on light surfaces: 4.77:1 on milk */--e:cubic-bezier(.16,1,.3,1);
   --gut:clamp(18px,4vw,56px);--inset:calc(max(0px,(100vw - 1280px)/2) + clamp(18px,4vw,56px));
 --bg:#F6F1E9;--panel:#FFFFFF;--fg:#0D2440;--fg-mid:rgba(13,36,64,.68);/* .64 давало на бумаге 4,58 — впритык; .68 держит 4,92 и оставляет запас
@@ -1416,25 +1421,30 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   <div id="f_main">
     <h3>Նկարագրեք <i>էլեկտրական խնդիրը</i></h3>
     <p class="intro">Նշեք՝ ինչ է տեղի ունեցել, երբ է խնդիրը դրսևորվել կամ սովորաբար կրկնվում, և որ սարքավորման վրա է այն ազդել։ Մենք կգնահատենք՝ կարող է արդյոք մոնիթորինգը պատասխանել հարցին և ինչ տվյալներ են անհրաժեշտ։</p>
-    <div class="gl">ԿՈՆՏԱԿՏԱՅԻՆ ՏՎՅԱԼՆԵՐ</div>
+    <!-- Настоящая форма: Enter отправляет, поля объявлены обязательными.
+         novalidate — потому что сообщения об ошибках у нас свои и переведённые. -->
+    <form id="ptfForm" novalidate>
+    <div class="gl" id="glContact">ԿՈՆՏԱԿՏԱՅԻՆ ՏՎՅԱԼՆԵՐ</div>
     <div class="fr">
-      <div><label>Անուն <em>*</em></label><input id="ptfName" type="text" placeholder="Ձեր անունը"></div>
-      <div><label>Ընկերություն <em>*</em></label><input id="ptfCompany" type="text" placeholder="Ընկերության անվանումը"></div>
-      <div><label>Էլ. փոստ <em>*</em></label><input id="ptfEmail" type="email" placeholder="name@company.com"></div>
-      <div><label>Հեռախոս <em>*</em></label><input id="ptfPhone" type="tel" placeholder="+374 ..."></div>
+      <div><label for="ptfName">Անուն <em>*</em></label><input id="ptfName" type="text" placeholder="Ձեր անունը" required aria-required="true"></div>
+      <div><label for="ptfCompany">Ընկերություն <em>*</em></label><input id="ptfCompany" type="text" placeholder="Ընկերության անվանումը" required aria-required="true"></div>
+      <div><label for="ptfEmail">Էլ. փոստ <em>*</em></label><input id="ptfEmail" type="email" placeholder="name@company.com" required aria-required="true"></div>
+      <div><label for="ptfPhone">Հեռախոս <em>*</em></label><input id="ptfPhone" type="tel" placeholder="+374 ..." required aria-required="true"></div>
     </div>
-    <div class="gl">ՈԼՈՐՏ</div>
-    <div class="tps" id="ptfTypes"></div>
-    <div class="gl">Ի՞ՆՉ Է ՏԵՂԻ ՈՒՆԵՑԵԼ <em>*</em></div>
-    <textarea id="ptfMsg" placeholder="Նկարագրեք անջատումը, ազդանշանը, աշխատանքի դադարեցումը կամ կրկնվող խնդիրը։ Նշեք մոտավոր ժամանակը, ազդված սարքավորումը և առկա սխալի կոդերը կամ համակարգի գրանցած իրադարձությունները։"></textarea>
-    <div class="gl">ԿՑՎՈՂ ՖԱՅԼԵՐ <small>(ըստ ցանկության)</small></div>
+    <div class="gl" id="glApp">ՈԼՈՐՏ</div>
+    <div class="tps" id="ptfTypes" role="group" aria-labelledby="glApp"></div>
+    <div class="gl" id="glWhat">Ի՞ՆՉ Է ՏԵՂԻ ՈՒՆԵՑԵԼ <em>*</em></div>
+    <textarea id="ptfMsg" placeholder="Նկարագրեք անջատումը, ազդանշանը, աշխատանքի դադարեցումը կամ կրկնվող խնդիրը։ Նշեք մոտավոր ժամանակը, ազդված սարքավորումը և առկա սխալի կոդերը կամ համակարգի գրանցած իրադարձությունները։" required aria-required="true"
+      aria-labelledby="glWhat"></textarea>
+    <div class="gl" id="glAtt">ԿՑՎՈՂ ՖԱՅԼԵՐ <small>(ըստ ցանկության)</small></div>
     <div class="drop" id="ptfDrop"><b>Գցեք ֆայլերն այստեղ կամ սեղմեք ընտրելու համար</b><span>Միագիծ սխեմա, վահանակի լուսանկար, ազդանշանի էկրանի պատկեր, ինվերտորի կամ UPS-ի գրանցումների արտահանված ֆայլ, նախորդ հաշվետվություն։</span>
-      <input id="ptfInput" type="file" multiple accept="image/*,.pdf,.csv,.txt,.log,.xls,.xlsx,.doc,.docx,.zip" style="display:none"></div>
+      <input id="ptfInput" type="file" aria-labelledby="glAtt" multiple accept="image/*,.pdf,.csv,.txt,.log,.xls,.xlsx,.doc,.docx,.zip" style="display:none"></div>
     <div id="ptfList"></div>
     <div class="errline" id="ptfSizeErr">Կցված ֆայլերը գերազանցում են 10 ՄԲ սահմանը։ Հեռացրեք մի քանիսը։</div>
     <div class="hint" id="ptfHint">Առավելագույնը՝ 10 ՄԲ։</div>
     <div class="errline" id="ptfFormErr">Լրացրեք բոլոր դաշտերը՝ անուն, ընկերություն, վավեր էլ. փոստ, հեռախոս և կարճ նկարագրություն։</div>
-    <button class="btn" id="ptfSubmit"><span>Ուղարկել տվյալները ↗</span></button>
+    <button class="btn" id="ptfSubmit" type="submit"><span>Ուղարկել տվյալները ↗</span></button>
+    </form>
   </div>
   <div class="done" id="f_done">
     <div class="ok">✓</div><b>Շնորհակալություն։</b><p>Մենք կուսումնասիրենք տրամադրված տեղեկատվությունը և կկապվենք ձեզ հետ՝ չափումների շրջանակը հստակեցնելու համար։</p>
@@ -2343,7 +2353,7 @@ finput.addEventListener('change',function(){files=files.concat([].slice.call(fin
 drop.addEventListener('dragleave',function(){drop.classList.remove('on');});
 drop.addEventListener('drop',function(e){e.preventDefault();drop.classList.remove('on');if(e.dataTransfer&&e.dataTransfer.files)files=files.concat([].slice.call(e.dataTransfer.files));renderFiles();});
 function gv(id){var el=document.getElementById(id);return el?el.value:'';}
-document.getElementById('ptfSubmit').addEventListener('click',function(){
+document.getElementById('ptfForm').addEventListener('submit',function(e){e.preventDefault();
   if(sending)return;
   var nm=gv('ptfName').trim(),co=gv('ptfCompany').trim(),em=gv('ptfEmail').trim(),ph=gv('ptfPhone').trim(),ms=gv('ptfMsg').trim();
   var emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);

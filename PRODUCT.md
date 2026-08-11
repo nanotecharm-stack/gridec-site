@@ -83,13 +83,20 @@ from engineering interpretation and recommendation.
 - One page, static, no backend. The enquiry form posts to a third-party form service.
 - Measurement methodology referenced on the site: **IEC 61000-4-30 Class S**. Reference
   standard for limits: **EN 50160**. No instrument class beyond Class S may be claimed.
-- **Open decision — the company name.** "PowerTech" failed a name check and is being
-  replaced. Candidates under consideration: **Metrion**, **Attesta**, **Stuyg**. Until it
-  is settled, nothing carrying the name is final: wordmark, page title, metadata, the mark
-  itself, and every occurrence of the name in copy.
-- Visual identity work (mark, palette) is deferred behind the name decision. Binding
-  visual constraints already agreed with the owner live in `CLAUDE.md` and
-  `SITE_BRIEF.md`; the implemented system lives in the code under `powertech-v2-build/`.
+- **The company name is settled: Gridec.** "PowerTech" failed a name check; the
+  candidates once under consideration (Metrion, Attesta, Stuyg) are closed. The legal
+  form used on the page is **Gridec LLC**. The name is already built in everywhere —
+  wordmark, page title, metadata, the mark, and every occurrence in copy.
+- **Identity is decided and implemented.** Palette: blue (accent `#2E5E99` on paper,
+  `#7BA4D0` on the plates, ink `#0D2440`, warm paper `#F6F1E9`, warm text ink `#2B2722`).
+  Mark: the outlined cube, single-colour — blue on light grounds, light on dark ones.
+  Wordmark: Oxanium 600, drawn as curves so no font ships for it. Binding visual
+  constraints agreed with the owner live in `CLAUDE.md` and `SITE_BRIEF.md`; the
+  implemented system lives in the code under `powertech-v2-build/` and is not yet written
+  up as a DESIGN.md.
+- **The domain is not bought yet.** Anything needing an absolute URL is therefore
+  deferred: `og:url`, `og:image`, and lifting `robots: noindex,nofollow` from the deploy
+  build. The email on the page is still `sales@powertech.am`.
 
 ## Brand Commitments
 

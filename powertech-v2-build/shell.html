@@ -1359,25 +1359,30 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   <div id="f_main">
     <h3>%%F_H3%%</h3>
     <p class="intro">%%F_INTRO%%</p>
-    <div class="gl">%%F_CONTACT%%</div>
+    <!-- Настоящая форма: Enter отправляет, поля объявлены обязательными.
+         novalidate — потому что сообщения об ошибках у нас свои и переведённые. -->
+    <form id="ptfForm" novalidate>
+    <div class="gl" id="glContact">%%F_CONTACT%%</div>
     <div class="fr">
-      <div><label>%%F_NAME%% <em>*</em></label><input id="ptfName" type="text" placeholder="%%F_NAME_PH%%"></div>
-      <div><label>%%F_COMPANY%% <em>*</em></label><input id="ptfCompany" type="text" placeholder="%%F_COMPANY_PH%%"></div>
-      <div><label>%%F_EMAIL%% <em>*</em></label><input id="ptfEmail" type="email" placeholder="name@company.com"></div>
-      <div><label>%%F_PHONE%% <em>*</em></label><input id="ptfPhone" type="tel" placeholder="+374 ..."></div>
+      <div><label for="ptfName">%%F_NAME%% <em>*</em></label><input id="ptfName" type="text" placeholder="%%F_NAME_PH%%" required aria-required="true"></div>
+      <div><label for="ptfCompany">%%F_COMPANY%% <em>*</em></label><input id="ptfCompany" type="text" placeholder="%%F_COMPANY_PH%%" required aria-required="true"></div>
+      <div><label for="ptfEmail">%%F_EMAIL%% <em>*</em></label><input id="ptfEmail" type="email" placeholder="name@company.com" required aria-required="true"></div>
+      <div><label for="ptfPhone">%%F_PHONE%% <em>*</em></label><input id="ptfPhone" type="tel" placeholder="+374 ..." required aria-required="true"></div>
     </div>
-    <div class="gl">%%F_APP%%</div>
-    <div class="tps" id="ptfTypes"></div>
-    <div class="gl">%%F_WHAT%% <em>*</em></div>
-    <textarea id="ptfMsg" placeholder="%%F_MSG_PH%%"></textarea>
-    <div class="gl">%%F_ATT%% <small>%%F_ATT_OPT%%</small></div>
+    <div class="gl" id="glApp">%%F_APP%%</div>
+    <div class="tps" id="ptfTypes" role="group" aria-labelledby="glApp"></div>
+    <div class="gl" id="glWhat">%%F_WHAT%% <em>*</em></div>
+    <textarea id="ptfMsg" placeholder="%%F_MSG_PH%%" required aria-required="true"
+      aria-labelledby="glWhat"></textarea>
+    <div class="gl" id="glAtt">%%F_ATT%% <small>%%F_ATT_OPT%%</small></div>
     <div class="drop" id="ptfDrop"><b>%%F_DROP1%%</b><span>%%F_DROP2%%</span>
-      <input id="ptfInput" type="file" multiple accept="image/*,.pdf,.csv,.txt,.log,.xls,.xlsx,.doc,.docx,.zip" style="display:none"></div>
+      <input id="ptfInput" type="file" aria-labelledby="glAtt" multiple accept="image/*,.pdf,.csv,.txt,.log,.xls,.xlsx,.doc,.docx,.zip" style="display:none"></div>
     <div id="ptfList"></div>
     <div class="errline" id="ptfSizeErr">%%F_SIZE_ERR%%</div>
     <div class="hint" id="ptfHint">%%F_HINT0%%</div>
     <div class="errline" id="ptfFormErr">%%F_FORM_ERR%%</div>
-    <button class="btn" id="ptfSubmit"><span>%%F_SEND%% ↗</span></button>
+    <button class="btn" id="ptfSubmit" type="submit"><span>%%F_SEND%% ↗</span></button>
+    </form>
   </div>
   <div class="done" id="f_done">
     <div class="ok">✓</div><b>%%F_OK_T%%</b><p>%%F_OK_P%%</p>
@@ -2286,7 +2291,7 @@ finput.addEventListener('change',function(){files=files.concat([].slice.call(fin
 drop.addEventListener('dragleave',function(){drop.classList.remove('on');});
 drop.addEventListener('drop',function(e){e.preventDefault();drop.classList.remove('on');if(e.dataTransfer&&e.dataTransfer.files)files=files.concat([].slice.call(e.dataTransfer.files));renderFiles();});
 function gv(id){var el=document.getElementById(id);return el?el.value:'';}
-document.getElementById('ptfSubmit').addEventListener('click',function(){
+document.getElementById('ptfForm').addEventListener('submit',function(e){e.preventDefault();
   if(sending)return;
   var nm=gv('ptfName').trim(),co=gv('ptfCompany').trim(),em=gv('ptfEmail').trim(),ph=gv('ptfPhone').trim(),ms=gv('ptfMsg').trim();
   var emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);

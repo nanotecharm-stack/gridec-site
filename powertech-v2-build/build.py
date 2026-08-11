@@ -616,17 +616,24 @@ def font_face_url(fam, weight, fn):
     return ("@font-face{font-family:'%s';font-weight:%s;font-display:swap;"
             "src:url(../fonts/%s) format('woff2');}" % (fam, weight, fn))
 
+# Здесь объявляются РОВНО те начертания, на которые ссылаются правила. Блок
+# отстал от замены гарнитур: объявлял Archivo, Big Shoulders Display и Martian
+# Mono, которых в стилях уже нет, и не объявлял Overused Grotesk с Departure
+# Mono, на которых держится вся страница. В превью-сборке шрифты вшиты в base64,
+# поэтому на глаз это не ловилось — а выложенная страница уходила в системный.
 FF_EN_D = '\n'.join([
-    font_face_url('Big Shoulders Display', 700, 'big-shoulders-display-700-latin.woff2'),
-    font_face_url('Archivo', 400, 'archivo-400-latin.woff2'),
-    font_face_url('Archivo', 600, 'archivo-600-latin.woff2'),
-    font_face_url('Martian Mono', 600, 'martian-mono-600-latin.woff2'),
+    font_face_url('Overused Grotesk', '300 900', 'overused-grotesk-latin.woff2'),
+    font_face_url('Departure Mono', '100 900', 'departure-mono.woff2'),
 ])
+
 FF_HY_D = '\n'.join([
     font_face_url('Arian AMU', '400 500', 'arian-amu-400.woff2'),
     font_face_url('Arian AMU', '600 900', 'arian-amu-700.woff2'),
     font_face_url('Arian AMU Serif', '400 500', 'arian-amu-serif-400.woff2'),
     font_face_url('Arian AMU Serif', '600 900', 'arian-amu-serif-700.woff2'),
+    # Цифры показаний, счётчика и номеров разделов на армянской странице тоже
+    # пиксельные — без этой строки они падали в системный моноширинный.
+    font_face_url('Departure Mono', '100 900', 'departure-mono.woff2'),
 ])
 IMGD_D = {'IMG%d' % i: '../uploads/img/' + f for i, f in enumerate(IMG_FILES)}
 
@@ -853,7 +860,18 @@ def render(tokens, data, out_body, out_full, post=None):
 
 def render_deploy(tokens, data, ff, out_path, post=None):
     s = fill(tokens, data, ff, IMGD_D)
-    full = wrap(tokens, s, '<meta name="robots" content="noindex,nofollow">\n')
+    # Две языковые версии одной страницы должны знать друг о друге, иначе поиск
+    # считает их конкурентами и показывает не ту. Ссылки относительные: домен
+    # ещё не куплен, а hreflang и canonical относительный путь принимают.
+    # og:url и og:image ждут домена — без него они бессмысленны.
+    me = './index.html' if tokens['LANG'] == 'en' else './hy.html'
+    head = ('<meta name="robots" content="noindex,nofollow">\n'
+            '<link rel="canonical" href="%s">\n'
+            '<link rel="alternate" hreflang="en" href="./index.html">\n'
+            '<link rel="alternate" hreflang="hy" href="./hy.html">\n'
+            '<link rel="alternate" hreflang="x-default" href="./index.html">\n'
+            % me)
+    full = wrap(tokens, s, head)
     if post:
         full = post(full)
     io.open(out_path, 'w', encoding='utf-8').write(full)
