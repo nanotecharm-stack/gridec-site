@@ -277,6 +277,26 @@
         "displayName": "Title",
         "purpose": "Заголовки карточек."
       },
+      "action-headline": {
+        "displayName": "Action Headline",
+        "purpose": "Закрывающий раздел: заголовок и призыв — один элемент."
+      },
+      "dialog-headline": {
+        "displayName": "Dialog Headline",
+        "purpose": "Окно отрасли, открытое с карточки ленты."
+      },
+      "dialog-title": {
+        "displayName": "Dialog Title",
+        "purpose": "Окно запроса: ступенью тише окна отрасли."
+      },
+      "invitation-title": {
+        "displayName": "Invitation Title",
+        "purpose": "Седьмая карточка ленты — та, что с чертежом."
+      },
+      "confirmation": {
+        "displayName": "Confirmation",
+        "purpose": "Строка «отправлено»: единственный полужирный заголовок в системе."
+      },
       "body": {
         "displayName": "Body",
         "purpose": "Вводные абзацы. Мера строки 46ch."

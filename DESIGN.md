@@ -42,6 +42,27 @@ typography:
     fontSize: "clamp(19px, 1.9vw, 26px)"
     fontWeight: 700
     lineHeight: 0.92
+  action-headline:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "clamp(24px, 3.1vw, 44px)"
+    fontWeight: 700
+    lineHeight: 1.06
+  dialog-headline:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "clamp(24px, 3vw, 38px)"
+    fontWeight: 700
+  dialog-title:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "clamp(23px, 2.8vw, 30px)"
+    fontWeight: 700
+  invitation-title:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "clamp(21px, 2.4vw, 32px)"
+    fontWeight: 700
+  confirmation:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "21px"
+    fontWeight: 600
   body:
     fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
     fontSize: "16px"
@@ -243,6 +264,11 @@ A warm paper ground, ink plates that read as the back of the sheet, and a single
 - **Headline** (700, `clamp(20px, 3.17vw, 48px)`, line-height 0.92, uppercase in English): section headings.
 - **Section Display** (700, `clamp(23px, 3.96vw, 55px)`, line-height 0.96): the oversized statement inside a section, set over three short lines.
 - **Title** (700, `clamp(19px, 1.9vw, 26px)`): card headings.
+- **Action Headline** (700, `clamp(24px, 3.1vw, 44px)`, line-height 1.06): the closing section, where the heading and the call to action are one element so the phrase is said once. A step below a section heading on purpose — the Armenian label runs about 2.4× the English one and would otherwise stack five lines deep.
+- **Dialog Headline** (700, `clamp(24px, 3vw, 38px)`): the sector modal opened from an industry card.
+- **Dialog Title** (700, `clamp(23px, 2.8vw, 30px)`): the enquiry dialog — a step quieter than the sector modal, because the dialog is a form to fill rather than a story to read.
+- **Invitation Title** (700, `clamp(21px, 2.4vw, 32px)`): the seventh card of the industry rail, the one that carries a drawing instead of a photograph.
+- **Confirmation** (600, 21px): the line that says the enquiry was sent. The only place in the system where a heading is set at semibold rather than bold — it reports, it does not announce.
 - **Body** (400, 16px / 1.75, measure capped at 46ch): lede paragraphs.
 - **Body Small** (400, 14px / 1.7): step text, notes, attribution.
 - **Body Story** (400, 17px / 1.7): the staggered story column in the company section.

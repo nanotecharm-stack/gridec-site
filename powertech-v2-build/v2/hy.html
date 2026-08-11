@@ -739,7 +739,9 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
    под ним не снимок, а линии, и им нужно больше воздуха. */
 .ic.is-open-card .ic-art::after{
   background:linear-gradient(180deg,rgba(13,36,64,.18) 0%,rgba(13,36,64,.05) 46%,rgba(16,39,69,.9) 86%,#102745 100%);}
-.ic.is-open-card .ic-art{background:#0D1524;}
+/* Грунт под чертежом был вписан литералом мимо палитрового прохода — в мятной
+   и тёплой версиях он оставался синим. Берём чернила плиты. */
+.ic.is-open-card .ic-art{background:#0D2440;}
 .ic.is-open-card .ic-art svg{color:rgba(46,94,153,.55);}
 .ic.is-open-card .ic-foot p{color:rgba(253,250,244,.86);}
 .suite .spin>.wrap{width:100%;}
@@ -1052,7 +1054,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 /* modals */
 .ovl{position:fixed;inset:0;z-index:120;background:rgba(8,26,49,.66);backdrop-filter:blur(4px);display:none;justify-content:center;padding:34px 18px;overflow-y:auto;}
 .ovl.open{display:flex;}
-.md{background:var(--bg);color:var(--fg);max-width:760px;width:100%;margin:auto;position:relative;border-radius:2px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.4);}
+.md{background:var(--bg);color:var(--fg);max-width:760px;width:100%;margin:auto;position:relative;border-radius:2px;overflow:hidden;box-shadow:0 24px 80px rgba(8,26,49,.4);}
 /* the close control sits over photography, so it cannot be a translucent wash:
    an opaque chip reads on dark grounds, the hairline ring separates it on light
    ones. Same language as the card's corner mark. */
