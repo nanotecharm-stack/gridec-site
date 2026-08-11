@@ -342,7 +342,7 @@ EN = {
  # момент меняет. Отсюда сквозное «Before you ...» — четыре точки перед тратой.
  # Границы ролей соблюдены: цифры отдаются проектировщику, ответственность —
  # подрядчику, стоимость работ мы не считаем.
- 'ASG_H2': 'When to measure before you commit',
+ 'ASG_H2': 'Measure before you decide',
  'ASG_P': 'Measured data can change what is repaired, accepted, ordered or purchased. Monitoring matters most before cost, scope or responsibility is fixed.',
  'ASG_CARDS': asg_html([
     # названия карточек сняты и здесь: обе версии обходятся тегом и абзацем
