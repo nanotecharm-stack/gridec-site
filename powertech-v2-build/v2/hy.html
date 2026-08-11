@@ -686,9 +686,10 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
    --cardh опускается к 260, фотографии с минимумом 150 не хватало места вместе с
    подвалом (до 141 при заголовке в две строки) — подрезался бы текст. */
 .ic-art{position:relative;flex:1 1 auto;min-height:110px;overflow:hidden;
-  /* Чернила снизу — не просто заглушка, а нижний конец дуотона: обесцвеченный
-     снимок осветляет их, и тени кадра приходят ровно в цвет тёмных разделов. */
-  background:#0D2440;isolation:isolate;
+  /* Нижний конец дуотона. Не самая глубокая ступень плиты, а на две выше:
+     тени кадра приходят светлее, чем тёмный раздел под лентой, и он остаётся
+     первым по-настоящему тёмным местом страницы. */
+  background:#183256;isolation:isolate;
   /* No layer here either. That mattered only while .icard was promoted: the
      photograph then landed in the parent texture and was stretched. With the
      card unpromoted the whole thing repaints at the true scale every frame,
@@ -698,10 +699,17 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   transition:transform 1.15s cubic-bezier(.16,1,.3,1),filter .7s var(--e);
   /* Прежде было обесцвечивание на 15 % и контраст на 3 % — почти ничего:
      шесть снимков оставались шестью снимками со своим светом и цветом.
-     Теперь цвет снимается полностью, а вся тональная шкала ложится между
-     двумя фирменными цветами: lighten поднимает тени до чернил подложки,
-     а ::before опускает света до бумаги страницы. Ряд читается набором. */
-  filter:grayscale(1) contrast(1.05) brightness(.97);mix-blend-mode:lighten;}
+     Теперь цвет сведён почти полностью, а тональная шкала ложится между двумя
+     фирменными цветами: lighten поднимает тени до подложки, ::before опускает
+     света до бумаги. Ряд читается набором.
+
+     Диапазон при этом СЖАТ, и это главное. На полном диапазоне тени уходили
+     в самую глубокую плиту: карточки становились почти такими же тёмными, как
+     раздел под ними, обработка выпирала, а страница дважды подряд уходила
+     в темноту. Контраст 0,84 и яркость 1,08 сжимают шкалу перед наложением,
+     подложка взята не самой глубокой ступенью, и десятая доля цвета оставлена
+     живой — снимок читается тонированным, а не перекрашенным. */
+  filter:grayscale(.9) contrast(.84) brightness(1.08);mix-blend-mode:lighten;}
 /* Верхний конец дуотона. Со своим слоем, потому что ::after занят шторкой
    под подписью, а порядок важен: краска, потом бумага, потом шторка. */
 .ic-art::before{content:"";position:absolute;inset:-1px;z-index:1;
@@ -1068,11 +1076,10 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 /* the industry detail: the card opens into a full plate */
 #imd{max-width:880px;}
 #imd .ph{position:relative;aspect-ratio:16/7;overflow:hidden;
-  /* тот же дуотон, что на карточках: цветной снимок в окне вываливался бы
-     из палитры страницы */
-  background:#0D2440;isolation:isolate;}
+  /* тот же сжатый дуотон, что на карточках */
+  background:#183256;isolation:isolate;}
 #imd .ph img{width:100%;height:100%;object-fit:cover;display:block;
-  filter:grayscale(1) contrast(1.05) brightness(.97);mix-blend-mode:lighten;}
+  filter:grayscale(.9) contrast(.84) brightness(1.08);mix-blend-mode:lighten;}
 #imd .ph::before{content:"";position:absolute;inset:0;z-index:1;
   pointer-events:none;background:#F6F1E9;mix-blend-mode:darken;}
 /* the index sat in difference blend mode, which inverts against the photograph —
