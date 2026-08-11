@@ -1,0 +1,514 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-11T00:00:00Z",
+  "title": "Design System: Gridec",
+  "extensions": {
+    "colorMeta": {
+      "brand": {
+        "role": "primary",
+        "displayName": "Цвет марки / Brand Blue",
+        "canonical": "#2E5E99",
+        "tonalRamp": [
+          "#12243B",
+          "#1F4068",
+          "#2D5B94",
+          "#3A77C1",
+          "#6595D1",
+          "#92B4DE",
+          "#BFD3EC",
+          "#EBF2F9"
+        ]
+      },
+      "brand-on-plate": {
+        "role": "primary",
+        "displayName": "Цвет марки на плите / Brand Blue on Plate",
+        "canonical": "#7BA4D0",
+        "tonalRamp": [
+          "#142638",
+          "#234263",
+          "#335F8E",
+          "#427CB9",
+          "#6B99CA",
+          "#96B7DA",
+          "#C1D4E9",
+          "#ECF2F8"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Тёплая бумага / Warm Paper",
+        "canonical": "#F6F1E9",
+        "tonalRamp": [
+          "#362A16",
+          "#604A27",
+          "#896A38",
+          "#B28A49",
+          "#C5A571",
+          "#D6BF9A",
+          "#E7D9C4",
+          "#F8F3ED"
+        ]
+      },
+      "paper-tint": {
+        "role": "neutral",
+        "displayName": "Тёплая бумага, светлее / Paper Tint",
+        "canonical": "#F9F5EE",
+        "tonalRamp": [
+          "#392B14",
+          "#644C23",
+          "#8F6D32",
+          "#BA8E42",
+          "#CBA86B",
+          "#DAC196",
+          "#E9DBC1",
+          "#F8F4EC"
+        ]
+      },
+      "paper-shade": {
+        "role": "neutral",
+        "displayName": "Тёплая бумага, глубже / Paper Shade",
+        "canonical": "#F0EAE0",
+        "tonalRamp": [
+          "#342A19",
+          "#5B492C",
+          "#82693F",
+          "#A98952",
+          "#BEA478",
+          "#D1BE9F",
+          "#E4D9C7",
+          "#F7F3EE"
+        ]
+      },
+      "paper-deep": {
+        "role": "neutral",
+        "displayName": "Тёплая бумага, глубже вдвое / Paper Deep",
+        "canonical": "#EBE4D8",
+        "tonalRamp": [
+          "#33291A",
+          "#59492E",
+          "#806941",
+          "#A68855",
+          "#BBA37B",
+          "#CFBEA1",
+          "#E3D9C8",
+          "#F6F3EE"
+        ]
+      },
+      "paper-placeholder": {
+        "role": "neutral",
+        "displayName": "Место под изображение / Placeholder",
+        "canonical": "#DCD3C4",
+        "tonalRamp": [
+          "#30291C",
+          "#554832",
+          "#796748",
+          "#9E865E",
+          "#B4A181",
+          "#CABCA6",
+          "#E0D8CA",
+          "#F6F3EF"
+        ]
+      },
+      "whitewash": {
+        "role": "neutral",
+        "displayName": "Белило / Whitewash",
+        "canonical": "#FDFAF4",
+        "tonalRamp": [
+          "#412F0C",
+          "#725315",
+          "#A3771E",
+          "#D59B27",
+          "#E0B255",
+          "#E9C887",
+          "#F2DFB8",
+          "#FBF5E9"
+        ]
+      },
+      "ink-warm": {
+        "role": "neutral",
+        "displayName": "Тёплые чернила / Warm Ink",
+        "canonical": "#2B2722",
+        "tonalRamp": [
+          "#2B2722",
+          "#4B443C",
+          "#6C6255",
+          "#8C7F6F",
+          "#A79C8F",
+          "#C0B9B0",
+          "#DAD6D0",
+          "#F4F2F1"
+        ]
+      },
+      "ink-plate": {
+        "role": "neutral",
+        "displayName": "Чернильная плита / Ink Plate",
+        "canonical": "#0D2440",
+        "tonalRamp": [
+          "#0D2440",
+          "#173F70",
+          "#215AA0",
+          "#2A76D1",
+          "#5894DD",
+          "#89B3E7",
+          "#B9D2F1",
+          "#EAF1FB"
+        ]
+      },
+      "ink-plate-low": {
+        "role": "neutral",
+        "displayName": "Плита, низ ступени / Ink Plate Low",
+        "canonical": "#102745",
+        "tonalRamp": [
+          "#0E233E",
+          "#193E6D",
+          "#24599D",
+          "#2F73CC",
+          "#5C93D9",
+          "#8CB2E4",
+          "#BBD2EF",
+          "#EAF1FA"
+        ]
+      },
+      "ink-plate-mid": {
+        "role": "neutral",
+        "displayName": "Плита, середина / Ink Plate Mid",
+        "canonical": "#12294A",
+        "tonalRamp": [
+          "#0F223E",
+          "#1A3C6C",
+          "#26569B",
+          "#3170CA",
+          "#5E90D8",
+          "#8DB0E3",
+          "#BCD1EF",
+          "#EAF1FA"
+        ]
+      },
+      "ink-plate-high": {
+        "role": "neutral",
+        "displayName": "Плита, выше / Ink Plate High",
+        "canonical": "#162E52",
+        "tonalRamp": [
+          "#10223C",
+          "#1D3C6A",
+          "#295598",
+          "#356FC6",
+          "#618FD5",
+          "#8FB0E1",
+          "#BDD0ED",
+          "#EBF1FA"
+        ]
+      },
+      "ink-plate-top": {
+        "role": "neutral",
+        "displayName": "Плита, верх ступени / Ink Plate Top",
+        "canonical": "#183256",
+        "tonalRamp": [
+          "#11233C",
+          "#1D3D69",
+          "#2A5897",
+          "#3772C5",
+          "#6292D3",
+          "#90B2E0",
+          "#BDD1ED",
+          "#EBF1F9"
+        ]
+      },
+      "error": {
+        "role": "tertiary",
+        "displayName": "Ошибка / Error",
+        "canonical": "#A32C26",
+        "tonalRamp": [
+          "#3E110E",
+          "#6D1E19",
+          "#9D2A25",
+          "#CC3730",
+          "#D9635D",
+          "#E4908C",
+          "#EFBEBB",
+          "#FAEBEA"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Заголовок героя, только он. В английской версии капсом."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Заголовки разделов."
+      },
+      "section-display": {
+        "displayName": "Section Display",
+        "purpose": "Крупное утверждение внутри раздела, в три коротких строки."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Заголовки карточек."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Вводные абзацы. Мера строки 46ch."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Шаги, примечания, атрибуция источников."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Надстрочники, заголовки групп, подписи полей, ярлыки."
+      },
+      "readout": {
+        "displayName": "Readout",
+        "purpose": "Номера разделов, счётчик, единицы, подписи показаний."
+      },
+      "readout-value": {
+        "displayName": "Readout Value",
+        "purpose": "Живое измеренное значение в герое."
+      }
+    },
+    "shadows": [
+      {
+        "name": "lifted-sheet",
+        "value": "0 26px 48px -26px rgba(13,36,64,.55)",
+        "purpose": "Лист, положенный ПОВЕРХ страницы — панель указателя разделов. Смещение вниз и отрицательный разброс: направленная тень, а не ореол."
+      },
+      {
+        "name": "modal",
+        "value": "0 24px 80px rgba(0,0,0,.4)",
+        "purpose": "Диалог: он вне страницы целиком."
+      },
+      {
+        "name": "hairline-paper",
+        "value": "inset 0 0 0 1px rgba(43,39,34,.13)",
+        "purpose": "Кромка на бумаге. Тень внутрь, а не рамка: габарит не меняется при фокусе."
+      },
+      {
+        "name": "hairline-plate",
+        "value": "inset 0 0 0 1px rgba(246,241,233,.14)",
+        "purpose": "Та же кромка на чернильной плите."
+      },
+      {
+        "name": "focus-field",
+        "value": "inset 0 0 0 1px #2E5E99, 0 0 0 1px #2E5E99",
+        "purpose": "Фокус поля ввода: удвоенная линия цвета марки."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-house",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "Одна кривая на всю систему. Резкий старт, длинное успокоение."
+      },
+      {
+        "name": "press",
+        "value": "160ms",
+        "purpose": "Нажатие, смена тона мелкого элемента."
+      },
+      {
+        "name": "state",
+        "value": "250-350ms",
+        "purpose": "Наведение, смена кромки, раскрытие ярлыка."
+      },
+      {
+        "name": "ground",
+        "value": "450ms",
+        "purpose": "Смена грунта под шапкой, перелив плашек."
+      },
+      {
+        "name": "reveal",
+        "value": "900ms",
+        "purpose": "Появление блока при прокрутке: opacity + translateY(20px)."
+      },
+      {
+        "name": "stagger-index",
+        "value": "34ms",
+        "purpose": "Задержка между строками указателя разделов."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "Все переходы и анимации снимаются, .rv показывается сразу; холст героя рисует один статический кадр."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "index-columns",
+        "value": "760px"
+      },
+      {
+        "name": "header-compact",
+        "value": "900px"
+      },
+      {
+        "name": "header-tight",
+        "value": "430px"
+      },
+      {
+        "name": "stack",
+        "value": "960px"
+      },
+      {
+        "name": "rail-touch",
+        "value": "980px | (hover: none) | (pointer: coarse)"
+      },
+      {
+        "name": "signal-wire-off",
+        "value": "1099px"
+      },
+      {
+        "name": "measure-grid",
+        "value": "1100px / 640px"
+      },
+      {
+        "name": "story-straighten",
+        "value": "860px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Главное действие. Стрелка живёт в собственном квадрате внутри кнопки.",
+      "html": "<button class=\"ds-btn-primary\"><span>Describe the issue</span><i>↗</i></button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:9px;background:#0D2440;color:#F6F1E9;font:600 14px/1 'Overused Grotesk',Helvetica,Arial,sans-serif;padding:13px 20px;border:0;border-radius:2px;position:relative;overflow:hidden;isolation:isolate;cursor:pointer;transition:color .4s cubic-bezier(.16,1,.3,1)}.ds-btn-primary i{display:grid;place-items:center;width:22px;height:22px;border-radius:2px;background:rgba(246,241,233,.16);font-style:normal;font-size:12px;transition:transform .45s cubic-bezier(.16,1,.3,1),background .4s cubic-bezier(.16,1,.3,1)}.ds-btn-primary:hover i{transform:translate(2px,-2px);background:rgba(255,255,255,.22)}.ds-btn-primary:active{transform:translateY(1px)}.ds-btn-primary:focus-visible{outline:2px solid #2E5E99;outline-offset:3px}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Второе действие рядом с главным: только кромка.",
+      "html": "<a class=\"ds-btn-ghost\" href=\"#\"><span>How monitoring works ↓</span></a>",
+      "css": ".ds-btn-ghost{display:inline-flex;align-items:center;gap:9px;background:transparent;color:#2B2722;font:600 14px/1 'Overused Grotesk',Helvetica,Arial,sans-serif;padding:13px 20px;border-radius:2px;text-decoration:none;box-shadow:inset 0 0 0 1px rgba(43,39,34,.13);transition:box-shadow .3s cubic-bezier(.16,1,.3,1)}.ds-btn-ghost:hover{box-shadow:inset 0 0 0 1px rgba(43,39,34,.3)}.ds-btn-ghost:active{transform:translateY(1px)}.ds-btn-ghost:focus-visible{outline:2px solid #2E5E99;outline-offset:3px}"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip-filter",
+      "description": "Выбор отрасли в форме запроса. Выбранный ярлык переворачивается в плиту.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\">Manufacturing</button><button class=\"ds-chip ds-chip-on\">Solar PV</button><button class=\"ds-chip\">Data center</button></div>",
+      "css": ".ds-chips{display:flex;gap:8px;flex-wrap:wrap}.ds-chip{font:400 11px/1 'Overused Grotesk',Helvetica,Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase;padding:11px 14px;border:0;border-radius:2px;background:transparent;color:rgba(43,39,34,.68);box-shadow:inset 0 0 0 1px rgba(43,39,34,.13);cursor:pointer;transition:box-shadow .25s cubic-bezier(.16,1,.3,1),background .25s cubic-bezier(.16,1,.3,1),color .25s cubic-bezier(.16,1,.3,1)}.ds-chip:hover{box-shadow:inset 0 0 0 1px rgba(43,39,34,.3);color:#2B2722}.ds-chip-on{background:#0D2440;color:#F6F1E9;box-shadow:none}.ds-chip:focus-visible{outline:1px solid #2E5E99;outline-offset:2px}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-text",
+      "description": "Поле формы: подтон бумаги, кромка тенью внутрь, фокус удваивает линию.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-f1\">Name <em>*</em></label><input id=\"ds-f1\" type=\"text\" placeholder=\"Your name\"></div>",
+      "css": ".ds-field label{display:block;font:400 11px/1 'Overused Grotesk',Helvetica,Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:rgba(43,39,34,.68);margin-bottom:9px}.ds-field label em{font-style:normal;color:#2E5E99}.ds-field input{width:100%;background:#F9F5EE;border:0;border-radius:2px;padding:14px 15px;font:400 14px/1.4 'Overused Grotesk',Helvetica,Arial,sans-serif;color:#2B2722;box-shadow:inset 0 0 0 1px rgba(43,39,34,.13);outline:none;transition:box-shadow .25s cubic-bezier(.16,1,.3,1),background .25s cubic-bezier(.16,1,.3,1)}.ds-field input::placeholder{color:rgba(13,14,19,.38)}.ds-field input:focus{background:#fff;box-shadow:inset 0 0 0 1px #2E5E99,0 0 0 1px #2E5E99}"
+    },
+    {
+      "name": "Section Opener",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Подпись раздела: пиксельный номер, волосяная линейка, заголовок, лид. Самый сильный структурный сигнал страницы.",
+      "html": "<div class=\"ds-open\"><div class=\"ds-open-no\">04</div><h2>Report</h2><p>Measurement results, engineering analysis and conclusions provide the basis for further technical decisions.</p></div>",
+      "css": ".ds-open{max-width:640px}.ds-open-no{display:flex;align-items:center;gap:14px;font:400 11px/1 'Departure Mono',monospace;letter-spacing:.22em;color:rgba(43,39,34,.68);margin-bottom:20px}.ds-open-no::after{content:'';flex:1;height:1px;background:rgba(43,39,34,.07);max-width:190px}.ds-open h2{margin:0;font:700 clamp(20px,3.17vw,48px)/0.92 'Overused Grotesk',Helvetica,Arial,sans-serif;letter-spacing:.006em;text-transform:uppercase;color:#2B2722;text-wrap:balance}.ds-open p{max-width:46ch;margin-top:24px;font:400 16px/1.75 'Overused Grotesk',Helvetica,Arial,sans-serif;color:rgba(43,39,34,.68)}"
+    },
+    {
+      "name": "Instrument Readout",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Показание прибора в герое: подпись, значение в пиксельном наборе, строка состояния, которая синеет на событии.",
+      "html": "<div class=\"ds-readout\"><span class=\"ds-rd-cap\">RMS VOLTAGE · 10-MIN TREND</span><span class=\"ds-rd-val\">230.0<i>V</i><b>50.00 Hz</b></span><span class=\"ds-rd-st\"><s></s>VOLTAGE DIP · 180 MS</span></div>",
+      "css": ".ds-readout{display:flex;flex-direction:column;gap:9px;color:rgba(43,39,34,.68);line-height:1.4}.ds-rd-cap{font:400 11px/1 'Departure Mono',monospace;letter-spacing:.17em}.ds-rd-val{display:flex;align-items:baseline;gap:6px;font:400 22px/1 'Departure Mono',monospace;letter-spacing:.02em;color:#2B2722}.ds-rd-val i{font-style:normal;font-size:11px;letter-spacing:.08em}.ds-rd-val b{font-weight:400;font-size:11px;margin-left:10px;color:rgba(43,39,34,.68)}.ds-rd-st{display:flex;align-items:center;gap:9px;font:400 11px/1 'Departure Mono',monospace;letter-spacing:.17em;color:#2E5E99}.ds-rd-st s{width:6px;height:6px;background:#2E5E99;text-decoration:none}"
+    },
+    {
+      "name": "Figure Cell",
+      "kind": "card",
+      "refersTo": "cell-stat",
+      "description": "Показатель на тёмной плите: крупное число и одна строка подписи.",
+      "html": "<div class=\"ds-stats\"><div class=\"ds-stat\"><b>7</b><span>Days of monitoring</span></div><div class=\"ds-stat\"><b>24/7</b><span>Continuous data recording</span></div></div>",
+      "css": ".ds-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.ds-stat{background:rgba(246,241,233,.045);box-shadow:inset 0 0 0 1px rgba(246,241,233,.1);border-radius:2px;padding:22px;color:#F6F1E9}.ds-stat b{display:block;font:700 clamp(36px,4.6vw,62px)/1 'Overused Grotesk',Helvetica,Arial,sans-serif}.ds-stat span{display:block;margin-top:8px;font:400 14px/1.5 'Overused Grotesk',Helvetica,Arial,sans-serif;color:rgba(239,237,234,.66)}"
+    },
+    {
+      "name": "Industry Card",
+      "kind": "card",
+      "refersTo": "card-industry",
+      "description": "Карточка отрасли в ленте: фотография сведена к дуотону между чернилами и бумагой, название на шторке.",
+      "html": "<article class=\"ds-card\" tabindex=\"0\"><div class=\"ds-card-art\"></div><div class=\"ds-card-foot\"><h3>Data centers and IT infrastructure</h3></div><span class=\"ds-card-go\">↗</span></article>",
+      "css": ".ds-card{position:relative;display:flex;flex-direction:column;width:320px;height:430px;overflow:hidden;border:1px solid #102745;border-radius:2px;background:#0D2440;color:#F6F1E9}.ds-card-art{position:relative;flex:1 1 auto;background:linear-gradient(135deg,#183256,#0D2440 60%,#12294A);isolation:isolate}.ds-card-art::after{content:'';position:absolute;inset:-1px;background:linear-gradient(180deg,rgba(13,36,64,.5) 0%,rgba(13,36,64,.05) 42%,rgba(16,39,69,.92) 86%,#102745 100%)}.ds-card-foot{position:relative;z-index:2;padding:0 16px 18px;margin-top:-8px}.ds-card-foot h3{margin:0;font:700 clamp(19px,1.9vw,26px)/0.92 'Overused Grotesk',Helvetica,Arial,sans-serif;letter-spacing:.006em;text-transform:uppercase}.ds-card-go{position:absolute;top:14px;right:14px;z-index:3;display:grid;place-items:center;width:34px;height:34px;border-radius:2px;background:#F6F1E9;color:#0D2440;font-size:15px}.ds-card:focus-visible{outline:2px solid #FDFAF4;outline-offset:3px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Instrument Sheet",
+    "overview": "Gridec measures how an electrical network actually behaves and writes a conclusion a bank or a contractor can act on. The site is built as the first page of that document rather than as an advertisement for it. Warm paper carries a raking light and a trace of grain; ink plates turn over like the reverse of a sheet; numbers, counters and values are set in a pixel face because they come off an instrument, not out of a marketing department.\n\nRestraint here is not a style preference — it is the credibility argument. In this market a quiet, exact page reads as competence, and a loud one reads as a sales operation with nothing measured behind it. So the accent appears only where something was actually measured, surfaces stay flat unless a sheet is genuinely lifted off the page, and every state change moves tone rather than shape.\n\nThe world is deliberately not a dark technical dashboard, a startup landing page with gradient headlines, or a card wall floating on soft shadows. Each was tried or proposed here and rejected.",
+    "keyCharacteristics": [
+      "Warm paper ground with a directional light and 6 % grain — never a flat fill, never a cool grey",
+      "Hairlines instead of frames; 2 px radius everywhere",
+      "One blue, spent only on measured things",
+      "Pixel type for anything an instrument would print",
+      "Two languages on one type scale, matched by cap height rather than by point size",
+      "Depth by sheet order, not by shadow"
+    ],
+    "rules": [
+      {
+        "name": "The Measured-Only Rule",
+        "body": "The brand blue marks something that was measured, counted or selected. If a proposed use cannot answer \"what was measured here?\", it is decoration and does not ship.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Paper Rule",
+        "body": "There is a single light ground. When a light surface needs to feel different, change the light on it or the sheet it sits on — never introduce a second beige.",
+        "section": "colors"
+      },
+      {
+        "name": "The Warm Ink Rule",
+        "body": "Text on paper is #2B2722, not the plate ink. The plate ink on paper reads cold and pulls the page toward a screen; the warm ink keeps it a document.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Overused Grotesk speaks for the company; Departure Mono speaks for the instrument. The pixel face is allowed on numbers, counters, units, event labels and values — never on a sentence. On the Armenian page it is allowed on digits only: the font has zero Armenian glyphs.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Scale Rule",
+        "body": "English and Armenian use the same headline ramp, number for number. Parity is judged by rendered cap height, not by point size.",
+        "section": "typography"
+      },
+      {
+        "name": "The Stack-Don't-Hide Rule",
+        "body": "A narrow screen may restack, reflow or re-letter a component, but may not remove content.",
+        "section": "layout"
+      },
+      {
+        "name": "The Paper-Layers Rule",
+        "body": "Depth equals the order of sheets. A sheet above another gets an edge; only a sheet actually lifted off the page gets a shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Light-Not-Shadow Rule",
+        "body": "To make a light surface feel material, change the light on it — the raking gradient, the grain, a step of paper tone. Adding a soft drop shadow under a card is the rejected failure mode.",
+        "section": "elevation"
+      },
+      {
+        "name": "The No-Dash, No-Circle Rule",
+        "body": "No dashed borders and no circular elements anywhere.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do spend the brand blue only on something measured, counted or selected — the Measured-Only Rule.",
+      "Do draw edges as box-shadow: inset 0 0 0 1px so hover and focus can change an edge without moving the layout.",
+      "Do keep one radius (2 px) and one easing curve (cubic-bezier(.16, 1, .3, 1)) across every component; durations run 0.16 s for a press to 0.45 s for a ground change.",
+      "Do set numbers, units, counters and values in Departure Mono, and sentences in the text face.",
+      "Do change the English and Armenian type scales together, and verify parity by rendered cap height rather than by point size.",
+      "Do verify contrast numerically against WCAG AA, including composited alpha and gradient backdrops.",
+      "Do restack on narrow screens instead of hiding content."
+    ],
+    "donts": [
+      "Don't add soft drop shadows under cards or panels to suggest depth.",
+      "Don't dim an element with opacity on a light ground — the paper shows through and becomes a white haze.",
+      "Don't use dashed borders or circular elements anywhere.",
+      "Don't introduce gradient text, coloured glow shadows or startup-style gradients.",
+      "Don't put a second beige on the page; there is one paper.",
+      "Don't use the plate ink for text on paper — text is warm ink.",
+      "Don't apply the pixel face to Armenian words; it has no Armenian glyphs.",
+      "Don't animate a keyboard-repeatable action, and don't let any UI transition exceed 0.6 s."
+    ]
+  }
+}
