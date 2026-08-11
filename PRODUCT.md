@@ -83,10 +83,9 @@ from engineering interpretation and recommendation.
 - One page, static, no backend. The enquiry form posts to a third-party form service.
 - Measurement methodology referenced on the site: **IEC 61000-4-30 Class S**. Reference
   standard for limits: **EN 50160**. No instrument class beyond Class S may be claimed.
-- **The company name is settled: Gridec.** "PowerTech" failed a name check; the
-  candidates once under consideration (Metrion, Attesta, Stuyg) are closed. The legal
-  form used on the page is **Gridec LLC**. The name is already built in everywhere —
-  wordmark, page title, metadata, the mark, and every occurrence in copy.
+- **The company name is Gridec**; the legal form used on the page is **Gridec LLC**.
+  It is built in everywhere — wordmark, page title, metadata, the mark, and every
+  occurrence in copy.
 - **Identity is decided and implemented.** Palette: blue (accent `#2E5E99` on paper,
   `#7BA4D0` on the plates, ink `#0D2440`, warm paper `#F6F1E9`, warm text ink `#2B2722`).
   Mark: the outlined cube, single-colour — blue on light grounds, light on dark ones.
