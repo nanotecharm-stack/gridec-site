@@ -48,6 +48,18 @@ READOUT_EN = """
 .ixp a .no,.mi .ix,.list .n,.asg .no{letter-spacing:.07em;}
 .chsteps .n{letter-spacing:.09em;}
 .step .no{letter-spacing:.08em;}
+/* Надписи шагов на шкале — тоже показание: так просил владелец. Кегль 13, а не
+   прежние 16: у Departure Mono та же высота строчной берётся меньшим кеглем
+   (8 против 8 у Overused на 16), а моноширина иначе растянула бы строку почти
+   на четверть и добавила переносов в пятиколонной шкале. На армянской странице
+   этого правила нет и быть не может: армянских знаков у шрифта ноль. */
+.chsteps .t{font-family:'Departure Mono',monospace;font-size:13px;
+  letter-spacing:.01em;line-height:1.6;
+  /* Ширина в знаках: у моноширинного знак шире, и прежние 20ch держали строку
+     уже, чем позволяет колонка, — переносов становилось больше на ровном месте. */
+  max-width:25ch;}
+.chsteps .inc-tag{font-family:'Departure Mono',monospace;font-size:11px;
+  letter-spacing:.12em;}
 /* число и слово лежат в одном элементе — слово возвращается прежнему шрифту */
 .ixb .sheet{font-family:%(mono)s;font-size:12px;letter-spacing:.1em;}
 .rd>span:not(.st){font-family:%(mono)s;font-size:12px;}
