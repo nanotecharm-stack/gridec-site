@@ -214,6 +214,36 @@
           "#EBF1F9"
         ]
       },
+      "ink-shadow": {
+        "role": "neutral",
+        "displayName": "Тень плиты / Ink Shadow",
+        "canonical": "#081A31",
+        "tonalRamp": [
+          "#0B2342",
+          "#133D74",
+          "#1B58A6",
+          "#2373D8",
+          "#5392E3",
+          "#85B2EB",
+          "#B7D1F3",
+          "#E9F1FB"
+        ]
+      },
+      "highlight": {
+        "role": "neutral",
+        "displayName": "Блик / Highlight",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#262626",
+          "#434343",
+          "#616161",
+          "#7E7E7E",
+          "#9B9B9B",
+          "#B8B8B8",
+          "#D5D5D5",
+          "#F2F2F2"
+        ]
+      },
       "error": {
         "role": "tertiary",
         "displayName": "Ошибка / Error",
@@ -255,9 +285,41 @@
         "displayName": "Body Small",
         "purpose": "Шаги, примечания, атрибуция источников."
       },
+      "body-story": {
+        "displayName": "Body Story",
+        "purpose": "Лестница рассказа в разделе о компании."
+      },
+      "action": {
+        "displayName": "Action",
+        "purpose": "Текст кнопки."
+      },
+      "action-compact": {
+        "displayName": "Action Compact",
+        "purpose": "Кнопка в шапке и в диалоге."
+      },
       "label": {
         "displayName": "Label",
-        "purpose": "Надстрочники, заголовки групп, подписи полей, ярлыки."
+        "purpose": "Надстрочники, подписи полей, ярлыки."
+      },
+      "label-lead": {
+        "displayName": "Label Lead",
+        "purpose": "Ступень выше подписи: номера разделов, заголовки групп, нижняя полоса подвала. Самый частый мелкий кегль."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Три показателя семидневного раздела, и только они."
+      },
+      "display-hy": {
+        "displayName": "Display (HY)",
+        "purpose": "Заголовок героя армянской версии: та же шкала, без капса."
+      },
+      "body-hy": {
+        "displayName": "Body (HY)",
+        "purpose": "Вводные абзацы армянской версии."
+      },
+      "label-hy": {
+        "displayName": "Label (HY)",
+        "purpose": "Мелкие подписи армянской версии — засечный Arian AMU Serif."
       },
       "readout": {
         "displayName": "Readout",
@@ -463,6 +525,11 @@
       {
         "name": "The Two Voices Rule",
         "body": "Overused Grotesk speaks for the company; Departure Mono speaks for the instrument. The pixel face is allowed on numbers, counters, units, event labels and values — never on a sentence. On the Armenian page it is allowed on digits only: the font has zero Armenian glyphs.",
+        "section": "typography"
+      },
+      {
+        "name": "The Named-Step Rule",
+        "body": "New work uses a role from the ramp; a new size is drift until it earns a role. The system does not obey this everywhere yet: four overlay and card headings each invented their own size (enquiry dialog, photo dialog, contact call to action, invitation card), plus the success title and the close glyph. Resolving them onto Title and Headline is open work; adding a fifth is not.",
         "section": "typography"
       },
       {

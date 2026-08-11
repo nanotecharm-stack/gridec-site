@@ -14,6 +14,8 @@ colors:
   ink-plate-high: "#162E52"
   ink-plate-top: "#183256"
   ink-plate-low: "#102745"
+  ink-shadow: "#081A31"
+  highlight: "#FFFFFF"
   brand: "#2E5E99"
   brand-on-plate: "#7BA4D0"
   error: "#A32C26"
@@ -50,8 +52,49 @@ typography:
     fontSize: "14px"
     fontWeight: 400
     lineHeight: 1.7
+  body-story:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "17px"
+    fontWeight: 400
+    lineHeight: 1.7
+  action:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "14px"
+    fontWeight: 600
+    lineHeight: 1
+  action-compact:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "13px"
+    fontWeight: 600
+    lineHeight: 1
   label:
     fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "11px"
+    fontWeight: 400
+    letterSpacing: "0.13em"
+  label-lead:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "12px"
+    fontWeight: 400
+    letterSpacing: "0.14em"
+  figure:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "clamp(36px, 4.6vw, 62px)"
+    fontWeight: 700
+    lineHeight: 1
+  display-hy:
+    fontFamily: "Arian AMU, Helvetica Neue, sans-serif"
+    fontSize: "clamp(32px, 4.75vw, 77px)"
+    fontWeight: 700
+    lineHeight: 1
+    letterSpacing: "-0.012em"
+  body-hy:
+    fontFamily: "Arian AMU, Helvetica Neue, sans-serif"
+    fontSize: "16px"
+    fontWeight: 400
+    lineHeight: 1.75
+  label-hy:
+    fontFamily: "Arian AMU Serif, Georgia, serif"
     fontSize: "11px"
     fontWeight: 400
     letterSpacing: "0.13em"
@@ -156,6 +199,8 @@ A warm paper ground, ink plates that read as the back of the sheet, and a single
 - **Белило / Whitewash** (`#FDFAF4`): type and marks on ink plates; the warm light end of the raking gradient.
 - **Тёплые чернила / Warm Ink** (`#2B2722`): all body text and small graphics on paper. Warm, not black — it sits at the same lightness as the blues, so contrast does not drop when the two meet.
 - **Чернильная плита / Ink Plate** (`#0D2440`) with its ramp (`#102745`, `#12294A`, `#162E52`, `#183256`): the dark sections, the industry cards, the index panel, the footer. The ramp exists so a plate can be a gradient of itself rather than a different colour.
+- **Тень плиты / Ink Shadow** (`#081A31`): the darkest member of the ink family, used only inside shadow and scrim values — never as a fill.
+- **Блик / Highlight** (`#FFFFFF`): pure white exists in exactly one role — the peak of a hover state on an ink ground (button text and the arrow chip's wash). It is never a surface. On paper the light end is Whitewash, not white.
 - **Ошибка / Error** (`#A32C26`): form validation only.
 
 ### Named Rules
@@ -183,13 +228,19 @@ A warm paper ground, ink plates that read as the back of the sheet, and a single
 - **Title** (700, `clamp(19px, 1.9vw, 26px)`): card headings.
 - **Body** (400, 16px / 1.75, measure capped at 46ch): lede paragraphs.
 - **Body Small** (400, 14px / 1.7): step text, notes, attribution.
-- **Label** (400, 11px, tracking 0.13–0.22em, uppercase): eyebrows, group headings, field labels, chips.
+- **Body Story** (400, 17px / 1.7): the staggered story column in the company section.
+- **Action** (600, 14px) and **Action Compact** (600, 13px): button text; the compact step is the header and the dialog.
+- **Label** (400, 11px, tracking 0.13–0.22em, uppercase): eyebrows, field labels, chips.
+- **Label Lead** (400, 12px, tracking 0.14–0.22em, uppercase): the step above Label — section counters, group headings in the dialog, the footer bar. This is the most-used label size on the page; reach for it before 11px.
+- **Figure** (700, `clamp(36px, 4.6vw, 62px)`): the three statistics in the seven-day section, and nothing else.
 - **Readout** (Departure Mono, 11px, tracking 0.17em): section numbers, the counter, units, captions.
 - **Readout Value** (Departure Mono, 22px): the live measured value in the hero.
 
 ### Named Rules
 
 **The Two Voices Rule.** Overused Grotesk speaks for the company; Departure Mono speaks for the instrument. The pixel face is allowed on numbers, counters, units, event labels and values — never on a sentence the company is saying. On the Armenian page the pixel face is allowed on digits only: it contains zero Armenian glyphs (682 characters, 26 Latin capitals, 0 Armenian).
+
+**The Named-Step Rule.** New work uses a role from the ramp above; a new size is drift until it earns a role. The system does not currently obey this everywhere, and the exceptions are listed rather than hidden: four overlay and card headings each invented their own size — the enquiry dialog (`clamp(23px, 2.8vw, 30px)`), the photo dialog (`clamp(24px, 3vw, 38px)`), the contact call to action (`clamp(24px, 3.1vw, 44px)`) and the invitation card (`clamp(21px, 2.4vw, 32px)`) — plus the success title (21px) and the close glyph (15px). Four sizes for four headings of the same rank is the one place where this type system is not yet a system. Resolving them onto Title and Headline is open work; adding a fifth is not.
 
 **The One Scale Rule.** English and Armenian use the same headline ramp, number for number. Parity is judged by rendered cap height, not by point size: Arian AMU and Overused Grotesk share the same cap and x-height ratios (0.72 and 0.53), so equal values give equal presence. A change that only works in one language is not finished.
 
