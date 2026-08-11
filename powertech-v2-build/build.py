@@ -362,7 +362,7 @@ EN = {
     ('01 \u00b7 WHY WE STARTED',
      'Specialist measurements and analysis should not require a permanent in-house team or equipment that spends most of its time unused. Gridec gives companies access to both when the need arises.'),
     ('02 \u00b7 HOW WE WORK',
-     'A useful investigation starts with the question that needs answering. We measure the system under real operating conditions and base the conclusion on what the data shows \u2014 whether that points to a problem or confirms normal operation.'),
+     'A useful investigation starts with the question that needs answering. We measure the system under real operating conditions and base the conclusion on what the data shows, whether that points to a problem or confirms normal operation.'),
     ('03 \u00b7 WHAT WE ARE BUILDING',
      'Gridec is being built in Armenia as a focused engineering company: careful work, clear communication and technical conclusions we are prepared to stand behind. Growth matters, but not at the expense of the work itself.')]),
  'CT_H2': 'Start with what happened',
