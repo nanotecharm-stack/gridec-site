@@ -1082,6 +1082,12 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
    одна — строка протокола: пиксельный номер и название обычным регистром.
    Номера ведёт счётчик, поэтому их нельзя рассинхронить руками. */
 #fmd form{counter-reset:fld;}
+/* Название секции — единственный капс в форме: это марка раздела,
+   а не подпись строки, и номера он не получает. */
+#fmd .ghd{font-family:%%MONOFONT%%;font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:color-mix(in srgb,var(--fg) 62%,transparent);
+  margin:0 0 18px;display:flex;align-items:center;gap:14px;}
+#fmd .ghd::after{content:"";flex:1;height:1px;background:var(--hair2);max-width:190px;}
 #fmd .gl,#fmd label{display:flex;align-items:baseline;gap:12px;
   font-family:%%BODYFONT%%;font-size:13px;font-weight:500;letter-spacing:0;
   text-transform:none;color:var(--fg);margin:0 0 10px;}
@@ -1411,6 +1417,9 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
     <!-- Настоящая форма: Enter отправляет, поля объявлены обязательными.
          novalidate — потому что сообщения об ошибках у нас свои и переведённые. -->
     <form id="ptfForm" novalidate>
+    <!-- Название секции: отдельный класс, а не .gl, иначе счётчик строк
+         примет его за строку протокола и сдвинет всю нумерацию. -->
+    <div class="ghd">%%F_CONTACT%%</div>
     <div class="fr">
       <div><label for="ptfName">%%F_NAME%% <em>*</em></label><input id="ptfName" type="text" placeholder="%%F_NAME_PH%%" required aria-required="true"></div>
       <div><label for="ptfCompany">%%F_COMPANY%% <em>*</em></label><input id="ptfCompany" type="text" placeholder="%%F_COMPANY_PH%%" required aria-required="true"></div>
