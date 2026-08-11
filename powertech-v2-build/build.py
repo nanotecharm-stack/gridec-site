@@ -43,6 +43,11 @@ READOUT_EN = """
    сетка бледнеет и теряет вес рядом с основным текстом. */
 .cnt,.ixb,.ixp a .no,.rd,.mi .ix,.chsteps .n,.step .no,.list .n,.asg .no{
   font-family:'Departure Mono',monospace;font-size:11px;}
+/* Кейс-пунктуация. Строки показаний набраны прописными, а «·» и дефис по
+   умолчанию выровнены по строчным и проседают. У пиксельного шрифта функция
+   case есть — включаем; у текстовой гарнитуры её нет, там не лечится. */
+.cnt,.rd,.chsteps .n,.step .no,.list .n,.asg .no,.mi .ix,.ixp a .no{
+  font-feature-settings:'case' 1;}
 .cnt{letter-spacing:.11em;}
 .ixb{letter-spacing:.05em;}
 .ixp a .no,.mi .ix,.list .n,.asg .no{letter-spacing:.07em;}
@@ -72,6 +77,11 @@ READOUT_HY = """
    Только цифры: армянского у пиксельного шрифта нет, слова остаются прежними. */
 .cnt,.ixp a .no,.mi .ix,.chsteps .n,.step .no,.list .n,.asg .no,.rd b,.ixb b,.ixb em{
   font-family:'Departure Mono',monospace;font-size:11px;}
+/* Кейс-пунктуация. Строки показаний набраны прописными, а «·» и дефис по
+   умолчанию выровнены по строчным и проседают. У пиксельного шрифта функция
+   case есть — включаем; у текстовой гарнитуры её нет, там не лечится. */
+.cnt,.rd,.chsteps .n,.step .no,.list .n,.asg .no,.mi .ix,.ixp a .no{
+  font-feature-settings:'case' 1;}
 .cnt{letter-spacing:.11em;}
 .ixp a .no,.mi .ix,.list .n,.asg .no{letter-spacing:.07em;}
 .chsteps .n{letter-spacing:.09em;}
@@ -129,6 +139,38 @@ def foot_links(d):
         t = re.sub(r'\s+', ' ', t).strip()
         out.append('<li><a href="#%s"><i>%02d</i><span>%s</span></a></li>' % (sid, i, t))
     return ''.join(out)
+
+# ---------------------------------------------------------------- висячие слова
+# Встроенный в шрифт типограф работает внутри строки и переносить слова не умеет.
+# Короткие служебные слова приклеиваются к следующему здесь, при сборке.
+# Разметку не трогаем: строка режется на теги и текст, меняется только текст.
+NB = ' '   # шаблон замены в re.sub не понимает \uXXXX
+# Только служебные слова. Вопросительные и знаменательные («how», «what», «with»)
+# не приклеиваем: в крупном заголовке это создаёт длинные неразрывные куски,
+# а кончать ими строку не грех.
+GLUE_EN = 'a an the in of to on at is as by for and or per up vs no if it we'
+GLUE_HY = 'և ու թե որ կամ ըստ ի մեր ձեր այս այն'
+UNIT = re.compile(r'(\d)\s+(?=[A-Za-z\u0530-\u058F%])')
+
+def _glue(text, words):
+    for w in words.split():
+        text = re.sub(r'(?<![\w\u0530-\u058F])(' + w + r')\s+(?=[\w\u0530-\u058F(])',
+                      '\\1' + NB, text, flags=re.IGNORECASE)
+    return UNIT.sub('\\1' + NB, text)
+
+def nbsp(value, lang):
+    """Склеивает короткие слова с последующим и число с единицей."""
+    if not isinstance(value, str) or '%%' in value:
+        return value
+    words = GLUE_HY if lang == 'hy' else GLUE_EN
+    return ''.join(part if part.startswith('<') else _glue(part, words)
+                   for part in re.split(r'(<[^>]*>)', value))
+
+# Технические строки: пути, размеры, гарнитуры, готовые блоки разметки.
+NO_GLUE = {'LANG', 'LANG_HREF', 'LANG_LABEL', 'FONTFACES', 'READOUT', 'BODYFONT',
+           'HEADFONT', 'MONOFONT', 'NAVFONT', 'HEADTT', 'HEADLH', 'HEADLS',
+           'H1SIZE', 'H2SIZE', 'DISPSIZE', 'SVC_STATS', 'SVC_STEPS', 'REP_LIST',
+           'CO_STORY', 'ASG_CARDS', 'MEA_CELLS', 'FOOT_LINKS'}
 
 def steps_html(items):
     """Шаг — это номер и фраза, без названия.
@@ -646,7 +688,10 @@ def fill(tokens, data, ff, imgs):
     d['imgs'] = imgs
     s = s.replace('%%DATA%%', json.dumps(d, ensure_ascii=False))
     t = dict(tokens); t['FONTFACES'] = ff
+    lang = tokens.get('LANG', 'en')
     for k, v in t.items():
+        if k not in NO_GLUE:
+            v = nbsp(v, lang)
         s = s.replace('%%' + k + '%%', v)
     left = re.findall(r'%%[A-Z0-9_]+%%', s)
     if left:

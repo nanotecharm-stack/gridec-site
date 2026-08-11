@@ -28,6 +28,13 @@ p{margin:0;}a{color:inherit;text-decoration:none;}button{font-family:inherit;cur
 .plate .cnt::after,.plate2 .cnt::after{background:rgba(239,237,234,.16);}
 .cnt{font-family:%%MONOFONT%%;font-size:12px;letter-spacing:.22em;color:var(--fg-soft);display:flex;align-items:center;gap:14px;margin-bottom:20px;}
 .cnt::after{content:"";flex:1;height:1px;background:var(--hair2);max-width:190px;}
+/* Имитация оптического размера: на одиннадцати пикселях текстовая гарнитура
+   бледнеет рядом с крупным набором, и разрядки одной мало. Берём ступень
+   веса — ровно тот приём, которым имитируют оптический размер, когда его нет
+   в шрифте. Пиксельного шрифта это не касается: он одного начертания, и
+   запрос жира браузер подделает, размазав штрихи. */
+.tag,.asg .tag,.chart .cap,footer h3,footer .fbrand p,footer .fbot,
+#fmd .ghd,#imd .lb,#imd .st .ss{font-weight:500;}
 .eyebrow{font-family:%%MONOFONT%%;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--brand-ink);}
 .lede{max-width:46ch;font-size:16px;line-height:1.75;color:var(--fg-mid);margin-top:24px;}
 /* Два вводных абзаца подряд стояли теснее, чем абзац к своему заголовку, и
@@ -888,6 +895,12 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
 .list div:hover>*{transform:translateX(8px);}
 .list .n{font-family:%%MONOFONT%%;font-size:11px;letter-spacing:.12em;color:var(--brand-ink);}
 /* the standards footnote: quiet, but legible — it carries the method */
+/* Технические строки: номера стандартов, контакты, показатели. Табличные
+   цифры держат разряды на одной ширине, перечёркнутый ноль — приборный
+   знак и отличает 0 от O в «61000-4-30» и «0058». В прозе не включаем.
+   Армянский набор эти функции просто игнорирует: у Arian AMU их нет. */
+.note,.stat b,footer .fcon,.chart .cap{
+  font-variant-numeric:tabular-nums slashed-zero;}
 .note{font-size:14px;line-height:1.7;color:var(--fg-mid);margin-top:30px;padding-top:16px;
   border-top:1px solid var(--hair2);max-width:54ch;}
 
