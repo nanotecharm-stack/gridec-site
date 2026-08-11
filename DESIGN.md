@@ -67,6 +67,18 @@ typography:
     fontSize: "13px"
     fontWeight: 600
     lineHeight: 1
+  field:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "16px"
+    fontWeight: 400
+  field-area:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "15px"
+    fontWeight: 400
+  field-label:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "13px"
+    fontWeight: 500
   label:
     fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
     fontSize: "11px"
@@ -145,10 +157,15 @@ components:
     textColor: "{colors.ink-warm}"
     rounded: "{rounded.sm}"
     padding: "22px"
-  input-text:
+  field-rule:
+    backgroundColor: "transparent"
+    textColor: "{colors.ink-warm}"
+    typography: "{typography.field}"
+    padding: "9px 2px"
+  field-area:
     backgroundColor: "{colors.paper-tint}"
     textColor: "{colors.ink-warm}"
-    typography: "{typography.body-small}"
+    typography: "{typography.field-area}"
     rounded: "{rounded.sm}"
     padding: "14px 15px"
   chip-filter:
@@ -303,11 +320,16 @@ The recurring silhouette is the rectangle divided by hairlines: cells that share
 - **Shadow Strategy:** none. See Elevation & Depth.
 
 ### Inputs / Fields
-- **Style:** paper-tint fill (`#F9F5EE`), 1 px inset hairline, 2 px radius, 14 px / 15 px padding. Never white — a pure white field on warm paper reads as a component borrowed from another site.
-- **Focus:** the fill lifts to white and the edge becomes a doubled brand line — `inset 0 0 0 1px` plus `0 0 0 1px`. The box never changes size, because the edge is a shadow rather than a border.
-- **Labels:** label typography above the field, always associated with `for`; a group heading may act as the label via `aria-labelledby`.
-- **Error:** the inset edge turns `#A32C26`, and one translated sentence appears above the submit button. Native browser validation is suppressed so the page keeps one voice.
-- **Technical fields:** email and phone are set in the readout face — they are instrument strings, not prose.
+
+The enquiry form is set as a sheet of a measurement protocol, not as a web form. Each row carries a pixel number in the brand blue and a name in sentence case; the numbering runs continuously through the whole form and is driven by a CSS counter, so it cannot drift out of order by hand.
+
+- **Line fields** (name, company, email, phone): no box and no fill — the text is written on a rule (`inset 0 -1px 0` hairline) at 16 px. Focus thickens the rule to 2 px and turns it brand blue; an error turns it `#A32C26`. This is the single biggest reason the form reads as a document: four boxes became four writing lines.
+- **The one box** is the description field — it is a region rather than a line, and it is the most important field in the form. Paper-tint fill, hairline inset, 2 px radius, 15 px.
+- **Labels** are 13 px in sentence case, never caps; the only caps in the dialog is the section marker above the contact rows, and it takes no number.
+- **Placeholders** are the same ink as the value, only lighter (5.0:1 against 13.7:1), so an example can never be mistaken for an entry.
+- **Attachments** is an action line on the same rule as the fields, opened by a pixel `+`.
+
+**The One Box Rule.** A form has exactly one filled box, and it is the field that carries the most content. Everything else is written on a line. Twelve outlined rectangles of equal weight is what the previous version looked like, and it read as a grey wall.
 
 ### Navigation
 - **Header:** the wordmark on a paper chip with a hairline at the left; a dark glass group at the right holding the section counter, the language switch and the call to action. The glass is one state on any ground: 72 % ink with an 18 px blur, opening to 44 % over a dark section.

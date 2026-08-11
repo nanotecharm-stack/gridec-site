@@ -297,6 +297,18 @@
         "displayName": "Action Compact",
         "purpose": "Кнопка в шапке и в диалоге."
       },
+      "field": {
+        "displayName": "Field",
+        "purpose": "Строка ввода на линейке: имя, компания, почта, телефон."
+      },
+      "field-area": {
+        "displayName": "Field Area",
+        "purpose": "Единственная коробка формы — описание проблемы."
+      },
+      "field-label": {
+        "displayName": "Field Label",
+        "purpose": "Название строки протокола: обычный регистр, не капс."
+      },
       "label": {
         "displayName": "Label",
         "purpose": "Надстрочники, подписи полей, ярлыки."
