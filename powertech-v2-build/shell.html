@@ -2,6 +2,13 @@
 %%FONTFACES%%
 :root{--brand:#C8603D;--brand-ink:#AC4A29;/* small coral TEXT on light surfaces: 4.77:1 on milk */--e:cubic-bezier(.16,1,.3,1);
   --gut:clamp(18px,4vw,56px);--inset:calc(max(0px,(100vw - 1280px)/2) + clamp(18px,4vw,56px));
+  /* Шкала отступов. Одна роль — одно значение. Сейчас по странице ходят 9, 10 и 11
+     пикселей, потом 13, 14, 15 и 16: разные числа делают одну работу, и глаз
+     читает это не как выбор, а как небрежность. Ряд удваивается; половинная
+     ступень стоит там, где удвоение уже слишком грубо (16→24→32).
+     Пока применена в разделах 05 и 07 — на пробу. */
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;
+  --s6:32px;--s7:48px;--s8:64px;--s9:96px;--s10:128px;
 --bg:#EFEDEA;--panel:#FFFFFF;--fg:#0D0E13;--fg-mid:rgba(13,14,19,.68);/* .64 давало на бумаге 4,58 — впритык; .68 держит 4,92 и оставляет запас
      на светлых подложках вроде верха героя. */--fg-soft:rgba(13,14,19,.68);/* .66 = 4,87:1 на бумаге. Пол для этой пары — .64 (4,58); всё, что ниже,
      не проходит норму для текста мельче 24px, а на --fg-soft сидят подписи
@@ -905,17 +912,17 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
 /* assignments */
 .asg .card{transition:box-shadow .45s var(--e),transform .5s var(--e);}
 .asg .card:hover{transform:none;}
-.asg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:42px;}
+.asg{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);margin-top:var(--s7);}
 .asg .card{position:relative;background:none;box-shadow:none;border-top:1px solid var(--hair);
-  padding:clamp(20px,2.4vw,30px) clamp(18px,2vw,26px) clamp(24px,2.6vw,34px) 0;border-radius:0;}
+  padding:clamp(var(--s4),2.4vw,var(--s6)) clamp(var(--s4),2vw,var(--s5)) clamp(var(--s5),2.6vw,var(--s6)) 0;border-radius:0;}
 .asg .card::before{content:"";position:absolute;top:-1px;left:0;width:100%;height:1px;background:var(--brand);
   transform:scaleX(.09);transform-origin:left;transition:transform .55s var(--e);}
 .asg .card:hover::before{transform:scaleX(1);}
-.asg .hd{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+.asg .hd{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);}
 .asg .no{font-family:%%MONOFONT%%;font-size:12px;letter-spacing:.14em;color:var(--fg-soft);}
 .asg .tag{font-family:%%MONOFONT%%;font-size:11px;letter-spacing:.13em;color:var(--brand-ink);text-transform:uppercase;}
 /* карточка без названия: отступ, который держал заголовок, переходит абзацу */
-.asg .hd+p{margin-top:16px;}
+.asg .hd+p{margin-top:var(--s4);}
 .asg p{font-size:14px;line-height:1.7;color:var(--fg-mid);}
 
 /* measure chips */
@@ -928,23 +935,30 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
    снятых в разных точках, а не как список одинаковых карточек. Подпись сидит
    НА волосяной линии и разрывает её собой — так на чертеже размерная линия
    прерывается своим значением. Слева у линии короткий штрих: начало отсчёта. */
-.story{margin-top:clamp(46px,6vw,92px);display:grid;
+/* Отбивка от заголовка и промежуток между главами теперь стоят в одном ряду и
+   в отношении 3:4 — главы разведены шире, чем раздел отбит от своей шапки.
+   Раньше это было 92 и 110: разница в восемнадцать пикселей ниоткуда. */
+.story{margin-top:clamp(var(--s7),6vw,var(--s9));display:grid;
   grid-template-columns:repeat(12,minmax(0,1fr));
-  column-gap:clamp(14px,1.8vw,26px);row-gap:clamp(54px,7vw,110px);}
+  column-gap:clamp(var(--s4),1.8vw,var(--s5));row-gap:clamp(var(--s8),7vw,var(--s10));}
 .story .sb{position:relative;display:block;grid-column:1 / span 6;
   border-top:1px solid var(--hair);}
 .story .sb:nth-child(2){grid-column:4 / span 6;}
 .story .sb:nth-child(3){grid-column:7 / span 6;}
-.story .sb::before{content:"";position:absolute;left:0;top:-5px;
-  width:1px;height:11px;background:var(--hair);}
+/* Штрих в двенадцать пикселей и смещение в шесть: теперь он сидит ровно
+   посередине линии, а не на пиксель выше, как при 11 и −5. */
+.story .sb::before{content:"";position:absolute;left:0;top:calc(var(--s3) / -2);
+  width:1px;height:var(--s3);background:var(--hair);}
 .story .lb{font-family:%%MONOFONT%%;font-size:12px;letter-spacing:.16em;
   color:var(--brand-ink);line-height:1;transform:translateY(-50%);}
-.story .lb span{background:var(--bg);padding:0 15px 0 13px;}
+/* Разрыв линии подписью остаётся несимметричным — справа шире, слева короткий
+   заход, — но обе стороны теперь ступени ряда, а не 15 и 13. */
+.story .lb span{background:var(--bg);padding:0 var(--s4) 0 var(--s3);}
 /* Ограничения измерения нет: переносы в утверждениях заданы разметкой, и лимит в
    22 знака ломал бы авторскую строку ещё раз, на третью. Ширину держит колонка. */
 .story p{font-size:17px;line-height:1.7;color:var(--fg-mid);
-  max-width:46ch;margin:20px 0 0;}
-@media (max-width:860px){.story{grid-template-columns:1fr;row-gap:clamp(38px,8vw,58px);}
+  max-width:46ch;margin:var(--s4) 0 0;}
+@media (max-width:860px){.story{grid-template-columns:1fr;row-gap:clamp(var(--s6),8vw,var(--s8));}
   .story .sb,.story .sb:nth-child(2),.story .sb:nth-child(3){grid-column:1 / -1;}
   .story p{max-width:none;}
 }
