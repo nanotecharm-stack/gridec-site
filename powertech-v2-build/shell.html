@@ -892,13 +892,24 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);align-items:start;}
 /* what the report contains, read as a numbered sheet rather than a panel */
 .list{border-top:1px solid var(--hair);}
-.list div{display:grid;grid-template-columns:34px 1fr;gap:0 16px;align-items:baseline;
-  padding:15px 0;font-size:16px;line-height:1.55;color:var(--fg);
-  border-bottom:1px solid var(--hair2);}
+/* Модуль строки. Межстрочник — ровно половина модуля, поля сверху и снизу —
+   четверть за вычетом линейки. Тогда одна строка даёт модуль, две — полтора,
+   три — два, и так далее: ряд не может сбиться, сколько бы текста ни пришло.
+   Английская версия уже шла ровно; армянская, где текст длиннее, давала на
+   обёрнутой строке 1.44 модуля — число не из ряда, и глаз это ловил. */
+.list div{--row:56px;
+  display:grid;grid-template-columns:34px 1fr;gap:0 16px;align-items:baseline;
+  padding:calc(var(--row) / 4 - .5px) 0;font-size:16px;line-height:calc(var(--row) / 2);
+  color:var(--fg);border-bottom:1px solid var(--hair2);}
 /* the row's contents shift, not the row: transforming the row would drag its rule along */
 .list div>*{transition:transform .45s var(--e);}
 .list div:hover>*{transform:translateX(8px);}
-.list .n{font-family:%%MONOFONT%%;font-size:11px;letter-spacing:.12em;color:var(--brand-ink);}
+/* Номер выровнен по базовой линии текста, но его собственная коробка должна
+   умещаться внутрь строки, а не растягивать её: у пиксельного шрифта базовая
+   линия сидит в коробке иначе, и на межстрочнике в 28 это давало ряду лишние
+   один-два пикселя. Плотная коробка убирает вклад номера в высоту. */
+.list .n{font-family:%%MONOFONT%%;font-size:11px;letter-spacing:.12em;color:var(--brand-ink);
+  line-height:1;}
 /* the standards footnote: quiet, but legible — it carries the method */
 /* Технические строки: номера стандартов, контакты, показатели. Табличные
    цифры держат разряды на одной ширине, перечёркнутый ноль — приборный
