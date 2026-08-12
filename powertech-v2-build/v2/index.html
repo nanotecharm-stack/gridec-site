@@ -699,7 +699,9 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
      card unpromoted the whole thing repaints at the true scale every frame,
      so neither the edge nor the image is ever resampled. */}
 .ic-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
-  transform:scale(1.04);transform-origin:52% 45%;
+  /* Постоянное увеличение. Задано стилем, а не скриптом: множитель не меняется,
+     поэтому растр считается один раз и дальше только показывается. */
+  transform:scale(1.06);transform-origin:52% 45%;
   transition:transform 1.15s cubic-bezier(.16,1,.3,1),filter .7s var(--e);
   /* Прежде было обесцвечивание на 15 % и контраст на 3 % — почти ничего:
      шесть снимков оставались шестью снимками со своим светом и цветом.
@@ -2168,12 +2170,16 @@ function sxRender(x){
        карточку прозрачностью нельзя: сквозь неё просвечивает грунт, и вместо
        приглушения выходит белёсый налёт — тем сильнее, чем дальше карточка
        от середины. */
+    /* Единственное, что меняется на кадре, — сдвиг карточки. Он идёт по слою,
+       который компоновщик уже держит готовым, и растр не трогает.
+
+       Внутреннего параллакса у снимка больше нет. Он писал снимку свой transform
+       на каждом кадре, а снимок с появлением дуотона несёт фильтр и режим
+       наложения: любое его изменение заставляет перерисовать весь слой карточки
+       вместе с наложением и заголовком. На армянской странице это било сильнее —
+       засечный набор дороже в растеризации, и карточки дёргались. Двенадцать
+       пикселей сноса не стоят кадра. */
     shells[i].style.transform='translate3d(0,'+sxSnap(y)+'px,0)';
-    var im=shells[i].querySelector('.ic-art img');
-    if(im){var rel=(centre-SX.focus)/SX.focus;
-      /* translateX, not translate3d: a 3D transform promotes the image to its own
-         layer, and that layer is then resampled by the rail's scale. */
-      im.style.transform='scale(1.06) translateX('+sxSnap(-rel*12)+'px)';}
   }
 }
 function suiteUpd(){
