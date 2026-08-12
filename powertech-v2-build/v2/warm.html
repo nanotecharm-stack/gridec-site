@@ -2563,9 +2563,20 @@ var ixsc=document.getElementById('ixsc');
 if(ixsc)ixsc.addEventListener('click',function(){ixOpen(false);});
 function ixOpen(on){
   if(on){ixp.hidden=false;setTimeout(function(){ixp.classList.add('on');},16);}
-  else{ixp.classList.remove('on');setTimeout(function(){if(!ixp.classList.contains('on'))ixp.hidden=true;},360);}
+  else{ixp.classList.remove('on');setTimeout(function(){
+    if(!ixp.classList.contains('on')){ixp.hidden=true;
+      /* Панель прячется по окончании перехода, и только тогда тон снова
+         считается по разделу под шапкой. Вызов ниже, при закрытии, приходит
+         раньше этого момента и видит панель ещё открытой. */
+      if(typeof toneUnderBar==='function')toneUnderBar();}
+  },360);}
   if(ixsc)ixsc.classList.toggle('on',on);
   ixb.setAttribute('aria-expanded',on?'true':'false');
+  /* Тон под шапкой пересчитывается прокруткой, а раскрытие панели — не
+     прокрутка: без этого вызова шапка оставалась в прежнем тоне до первого
+     движения колеса. Открытие меняет то, на чём она стоит, значит это событие
+     тона. Закрытие — тоже: там же снимается чернильный тон. */
+  if(typeof toneUnderBar==='function')toneUnderBar();
 }
 ixb.addEventListener('click',function(){ixOpen(ixp.hidden||!ixp.classList.contains('on'));});
 ixp.addEventListener('click',function(e){
@@ -2665,7 +2676,11 @@ function toneUnderBar(){
       overBand=true;break;
     }
   }
-  if(!ixp.hidden){tone='paper';overBand=false;}   /* the index is paper */
+  /* Пока открыт указатель, шапка стоит на нём, а он — чернильная плита. Строка
+     осталась с тех пор, когда панель была бумажной: она держала тон светлым,
+     и плашка логотипа выходила белой коробкой на тёмной панели. Тон теперь
+     чернильный, плашка переворачивается вместе с ним. */
+  if(!ixp.hidden){tone='ink';overBand=false;}
   hdr.setAttribute('data-tone',tone);
   /* a band always keeps some cells of the opposite colour, so a bar with no plate
      of its own needs one exactly there */
