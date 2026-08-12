@@ -925,9 +925,10 @@ h2{font-size:clamp(20px,3.17vw,48px);text-wrap:balance;}
   display:grid;grid-template-columns:34px 1fr;gap:0 16px;align-items:baseline;
   padding:calc(var(--row) / 4 - .5px) 0;font-size:16px;line-height:calc(var(--row) / 2);
   color:var(--fg);border-bottom:1px solid var(--hair2);}
-/* the row's contents shift, not the row: transforming the row would drag its rule along */
-.list div>*{transition:transform .45s var(--e);}
-.list div:hover>*{transform:translateX(8px);}
+/* Наведения здесь нет намеренно. Строки списка — перечень содержания отчёта,
+   а не ссылки: ни адреса, ни обработчика, ни фокуса. Сдвиг содержимого вбок
+   обещал действие, которого не происходит, и в ряду с линейками сверху и снизу
+   читался как съехавшая вёрстка, а не как отклик. */
 /* Номер выровнен по базовой линии текста, но его собственная коробка должна
    умещаться внутрь строки, а не растягивать её: у пиксельного шрифта базовая
    линия сидит в коробке иначе, и на межстрочнике в 28 это давало ряду лишние
