@@ -4,8 +4,13 @@ import base64, io, json, os, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # The site repo (a worktree) supplies the real fonts for the base64 preview build and
-# receives the deploy pair. PT_SITE points at it; by default it is the sibling `assets`.
-SITE = os.environ.get('PT_SITE') or os.path.join(HERE, '..', 'assets')
+# receives the deploy pair. PT_SITE points at it.
+#
+# По умолчанию — своя папка, если шрифты лежат в ней: они были перенесены сюда,
+# когда рабочая копия сайта перестала их отдавать, и сборка падала на первой же
+# строке с FileNotFoundError. Прежний путь на соседний `assets` остаётся запасным.
+_LOCAL = HERE if os.path.isdir(os.path.join(HERE, 'fonts')) else None
+SITE = os.environ.get('PT_SITE') or _LOCAL or os.path.join(HERE, '..', 'assets')
 FONTS = os.path.join(SITE, 'fonts')
 IMGS = os.path.join(HERE, 'img')
 
@@ -173,17 +178,19 @@ NO_GLUE = {'LANG', 'LANG_HREF', 'LANG_LABEL', 'FONTFACES', 'READOUT', 'BODYFONT'
            'CO_STORY', 'ASG_CARDS', 'MEA_CELLS', 'FOOT_LINKS'}
 
 def steps_html(items):
-    """Шаг — это номер и фраза, без названия.
+    """Шаг — это фраза, без названия и без номера.
 
     Название повторяло первые слова самого абзаца: каждый из шести начинается
     с действия и читается сам по себе.
+
+    Номер в разметку не идёт (см. «одна нумерация» в DESIGN.md): три шага стоят
+    в ряд слева направо, и порядок виден без цифры. В данных он оставлен —
+    он документирует последовательность, и решение обратимо одной строкой.
     """
-    return ''.join('<div class="step"><div class="no">%s</div><p>%s</p></div>' % (n, p)
-                   for n, p in items)
+    return ''.join('<div class="step"><p>%s</p></div>' % p for _n, p in items)
 
 def list_html(items):
-    return ''.join('<div><span class="n">%02d</span><span>%s</span></div>' % (i + 1, x)
-                   for i, x in enumerate(items))
+    return ''.join('<div><span>%s</span></div>' % x for x in items)
 
 def asg_html(items):
     """Пустой заголовок карточки не печатается вовсе.
@@ -192,10 +199,10 @@ def asg_html(items):
     без названия собирается из шапки и абзаца — так устроена армянская версия.
     """
     out = []
-    for n, tg, t, p in items:
-        out.append('<div class="card"><div class="hd"><span class="no">%s</span>'
+    for _n, tg, t, p in items:
+        out.append('<div class="card"><div class="hd">'
                    '<span class="tag">%s</span></div>%s<p>%s</p></div>'
-                   % (n, tg, ('<h3>%s</h3>' % t) if t else '', p))
+                   % (tg, ('<h3>%s</h3>' % t) if t else '', p))
     return ''.join(out)
 
 # Each parameter gets its own measurement signature. Drawn to the owner's sketches
@@ -267,10 +274,13 @@ def meas_html(items, alt=0):
     out = []
     for i, label in enumerate(items):
         cls = 'mi mi-alt' if i >= len(items) - alt else 'mi'
-        out.append('<div class="%s"><span class="ix">%02d</span>'
+        # Порядкового номера у ячейки нет: сетка величин не упорядочена, а её
+        # 01–08 совпадали с 01–08 счётчиков разделов — на странице получалось
+        # два разных «05» одним и тем же моно.
+        out.append('<div class="%s">'
                    '<svg viewBox="0 0 44 30" aria-hidden="true">%s</svg>'
                    '<span class="lb2">%s</span></div>'
-                   % (cls, i + 1, MEAS_ICONS[i % len(MEAS_ICONS)], label))
+                   % (cls, MEAS_ICONS[i % len(MEAS_ICONS)], label))
     return ''.join(out)
 
 def chips_html(items):
@@ -387,6 +397,8 @@ EN = {
  'F_HINT0': 'Up to 10 MB',
  'F_FORM_ERR': 'Please fill in all fields: name, company, a valid email, phone and a short description.',
  'F_SEND': 'Send the details',
+ # Имя кнопки закрытия: символ «×» экранный диктор читает как знак умножения
+ 'A_CLOSE': 'Close',
  'F_OK_T': 'Thank you.',
  'F_OK_P': 'We will review the information and contact you to clarify the measurement scope.',
  'F_CLOSE': 'Close',
@@ -570,6 +582,7 @@ HY = {
  'F_HINT0': 'Մինչև 10 ՄԲ',
  'F_FORM_ERR': 'Լրացրեք բոլոր դաշտերը՝ անուն, ընկերություն, վավեր էլ. փոստ, հեռախոս և կարճ նկարագրություն։',
  'F_SEND': 'Ուղարկել տվյալները',
+ 'A_CLOSE': 'Փակել',
  'F_OK_T': 'Շնորհակալություն։',
  'F_OK_P': 'Մենք կուսումնասիրենք տրամադրված տեղեկատվությունը և կկապվենք ձեզ հետ՝ չափումների շրջանակը հստակեցնելու համար։',
  'F_CLOSE': 'Փակել',

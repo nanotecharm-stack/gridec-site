@@ -306,9 +306,29 @@ A warm paper ground, ink plates that read as the back of the sheet, and a single
 
 One column of content, 1280 px maximum, with a gutter of `clamp(18px, 4vw, 56px)`. Sections breathe on a vertical rhythm of `clamp(56px, 7vw, 104px)` above and `clamp(64px, 8vw, 120px)` below, so a section always sits lower in its own space than it starts.
 
+**Three section roles, not one.** That base rhythm is the middle role, not the only one. Eight headings at one size with one interval between them said that nothing on the page mattered more than anything else — the claim the whole service rests on was announced exactly as loudly as the table of contents of a report. Role is carried by size and by the pause before the section:
+
+| role | sections | heading | pause above |
+| --- | --- | --- | --- |
+| statement | 01 | `clamp(30px, 4.9vw, 68px)` | `clamp(76px, 10.5vw, 158px)` |
+| section | 02, 03, 05, 07 | `H2SIZE` (base) | base |
+| annex | 04, 06 | `clamp(19px, 2vw, 28px)` | `clamp(26px, 3vw, 46px)` |
+
+An annex is not a smaller topic, it is the *result* of the section immediately above it — the report is what the seven days produce, the quantities are what the assignments measure. The short pause is what makes it read as a continuation, so the section it belongs to also closes short (`clamp(30px, 3.4vw, 52px)`), otherwise a long pause below cancels the short pause above. Section 07 keeps the base heading with the statement's long pause: the company is a change of subject, but "about us" is a reference, not a claim.
+
+**One break of the rail.** Everything on the page stands on a single left rail, and exactly one element leaves it: the event axis in section 01 runs the full width of the page. The break is admissible because it is semantic — that element is an *axis*, and axes run through. A second break of the same kind would spend what the first one buys. The step labels stay in the column via `--inset`; only the scale itself crosses. Below 960 px the axis turns vertical and returns to the column entirely: a vertical rule pinned to the screen edge would only detach from its own labels.
+
+Measure page width from `--vwpx` (set from `clientWidth`), never `100vw`: `100vw` counts the scrollbar, so anything bled to the edge by it overshoots by the scrollbar's width on each side.
+
 Every section opens the same way: a pixel number, a hairline running to the right of it, then the heading 20 px below, then the lede 24 px below that. That three-beat opening is the strongest structural signal on the page and should not be rearranged per section.
 
 Content that is measured or enumerated goes into cells divided by hairlines rather than into cards: the parameter grid, the report list, the seven-day steps. Cards are reserved for things with a photograph.
+
+The report list broke this rule in code for a long time: it sat on whitewash (`#FDFAF4`) with an inset ring and a 2 px radius, which made it the only element on the paper carrying its own ground — a second, lighter, cooler sheet on a warm one. Whitewash is for type and marks **on ink plates**; it is not a paper-side surface. The list is now built like the parameter grid — transparent ground, a hairline above, a hairline under every row including the last, and no side padding, so its rows start at the column edge. Nothing on the paper has a ground of its own.
+
+**One numbering system.** The page ran nine independent counters, all in the same 11 px pixel face, every one of them starting at `01`, and two of them reaching `08` — the section counters and the measured quantities. A reader who saw "05" could not know which was meant. Numbers now belong to sections only (`.cnt`, plus the header index that navigates them). Everywhere the order is already visible — stations on the axis, the three steps in a row, the report list, the assignment cards, the parameter grid — the digits are gone from the markup, not merely hidden. Add a counter only where sequence is load-bearing *and* invisible; that condition is currently met nowhere else on the page.
+
+When removing a number, remove the space it occupied. The report list kept a `34px 1fr` grid after its digits went, which left every row with fifty pixels of empty margin and the text hanging away from its own rule.
 
 Breakpoints, in the order they actually do work: 1100 and 640 rewire the measurement grid; 1099 drops the signal wire; 980 (or any coarse pointer) turns the pinned industry rail into a touch-scrolled row; 960 restacks the hero, the two-column sections, the timeline and the footer; 900 and 430 compact the header; 860 straightens the staggered story column; 760 collapses the index panel to one column.
 
@@ -372,6 +392,15 @@ The enquiry form is set as a sheet of a measurement protocol, not as a web form.
 
 **The One Box Rule.** A form has exactly one filled box, and it is the field that carries the most content. Everything else is written on a line. Twelve outlined rectangles of equal weight is what the previous version looked like, and it read as a grey wall.
 
+**The Dialog Contract.** Both overlays — the sector modal and the enquiry dialog — are `.md` boxes carrying `role="dialog"`, `aria-modal="true"`, `aria-labelledby` pointing at their own heading, and `tabindex="-1"`. Without those three attributes the panel is a `div`: a screen reader announces nothing when it opens and keeps reading the page behind it, which is still fully exposed. Four behaviours go with them, and a new overlay is not finished until it has all four:
+
+1. **Focus enters the box itself**, not its first control, so the heading is announced before the fields.
+2. **Tab wraps inside the overlay.** `aria-modal` does not do this — it governs the reader's virtual cursor and not the Tab key. Without a trap, focus walks onto the page underneath, where it is invisible because the elements are covered, and the close button can only be reached by tabbing blindly through the whole document.
+3. **Focus returns to whatever opened the overlay** when it closes; otherwise the reader is dropped at the top of the document and loses their place.
+4. **A state change inside the dialog takes focus with it.** When the enquiry form is replaced by its confirmation, focus moves to the confirmation — it was sitting on a submit button that no longer exists.
+
+Escape closes, the backdrop closes, and the page behind is scroll-locked while an overlay is open. `.md:focus` carries no outline: the box is only ever focused by script, so a ring around the whole panel would read as a fault rather than as a cue. Controls inside keep their own `:focus-visible`.
+
 ### Navigation
 - **Header:** the wordmark on a paper chip with a hairline at the left; a dark glass group at the right holding the section counter, the language switch and the call to action. The glass is one state on any ground: 72 % ink with an 18 px blur, opening to 44 % over a dark section.
 - **Section index:** the counter chip opens a full-width sheet — an ink gradient panel with the eight sections in two columns, each row a pixel number and a title separated by a rule above. Rows stagger in at 34 ms intervals; the title letters shuffle once on hover.
@@ -399,7 +428,10 @@ The page ends on a fixed ink plate that the content slides off: the company name
 - **Don't** dim an element with opacity on a light ground. The paper shows through a dark card and the result is a white haze that grows toward the edge of the screen, not a dimmed card. Dim by changing tone, or move the element instead.
 - **Don't** use dashed borders or circular elements anywhere.
 - **Don't** introduce gradient text, coloured glow shadows or startup-style gradients.
-- **Don't** put a second beige on the page; there is one paper.
+- **Don't** put a second beige on the page; there is one paper. This includes whitewash: on paper it is a lighter, cooler sheet, and whatever sits on it becomes the one foreign object in the section. Bound a block on paper with hairlines, never with a ground.
 - **Don't** use the plate ink for text on paper — text is warm ink.
 - **Don't** apply the pixel face to Armenian words; it has no Armenian glyphs and will fall back to a system monospace.
 - **Don't** animate a keyboard-repeatable action, and don't let any UI transition exceed 0.6 s.
+- **Don't** start a second counter at `01`. The page has one numbering system and it belongs to the sections; a local sequence beside it produces two different "05" in the same face.
+- **Don't** give a second element the full width of the page. The event axis is the one break of the rail, and it earns it by being an axis.
+- **Don't** set every section at the base heading and the base interval. Decide its role first — statement, section or annex — and let the size and the pause say so.
