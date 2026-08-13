@@ -78,6 +78,21 @@ typography:
     fontSize: "17px"
     fontWeight: 400
     lineHeight: 1.7
+  footnote:
+    fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
+    fontSize: "13px"
+    fontWeight: 400
+    lineHeight: 1.75
+  standard:
+    fontFamily: "Departure Mono, monospace"
+    fontSize: "12px"
+    fontWeight: 400
+    letterSpacing: "0.03em"
+  standard-hy:
+    fontFamily: "Departure Mono, monospace"
+    fontSize: "13px"
+    fontWeight: 400
+    letterSpacing: "0.03em"
   action:
     fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
     fontSize: "14px"
