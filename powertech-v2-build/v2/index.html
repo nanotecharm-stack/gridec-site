@@ -1022,7 +1022,10 @@ html[lang="hy"] .note .std{font-size:13px;}
   transform:scaleX(.09);transform-origin:left;transition:transform .55s var(--e);}
 .asg .card:hover::before{transform:scaleX(1);}
 .asg .hd{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3);}
-.asg .no{font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.14em;color:var(--fg-soft);}
+/* Номер карточки — та же роль, что номер пункта в перечне 04 и номер шага:
+   счётчик, набранный технической подписью. Роль одна, значит и цвет один —
+   цвет марки. Здесь он был приглушёнными чернилами и выпадал из ряда. */
+.asg .no{font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.14em;color:var(--brand-ink);}
 .asg .tag{font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.13em;color:var(--brand-ink);text-transform:uppercase;}
 /* карточка без названия: отступ, который держал заголовок, переходит абзацу */
 .asg .hd+p{margin-top:var(--s4);}
