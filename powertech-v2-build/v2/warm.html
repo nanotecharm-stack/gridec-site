@@ -363,6 +363,18 @@ html[data-nav="3"] header nav{display:none;}
    синий, надпись графитовая; над тёмным разделом обе части светлеют. */
 html[data-nav="3"] .brand{padding:8px 13px 8px 10px;background:var(--bg);
   box-shadow:inset 0 0 0 1px rgba(37,39,44,.14);border-radius:2px;--acc:#9D5B43;}
+/* Обе плашки шапки — одной высоты, и высота одна на двоих.
+   Порознь они её набирали из своего содержимого: логотип 8+26+8=42, правая
+   группа 5+39+5=49. Сверху обе стояли на 12, поэтому расхождение уходило
+   вниз — нижние кромки не совпадали на семь пикселей. Теперь число задано
+   один раз: подрастёт кнопка — подрастут обе, разъехаться они не могут.
+   Локап остаётся 26px и центрируется в новом поле: его пропорции — часть
+   знака, их менять нельзя, поэтому высоту добирает поле, а не надпись. */
+@media (min-width:901px){
+  html[data-nav="3"] .hin{--hplate:49px;}
+  html[data-nav="3"] .brand{height:var(--hplate);padding-block:0;}
+  html[data-nav="3"] .navr{height:var(--hplate);}
+}
 html[data-nav="3"] .navr{gap:0;border-radius:2px;padding:5px;
   /* Тёмное стекло — ОДНО состояние на любой фон. Прежде плашка переключала
      светлую и тёмную заливку по тону раздела под ней: два состояния, переход
@@ -389,7 +401,7 @@ html[data-nav="3"] .ixp{margin-top:12px;}
   html[data-nav] .hin{grid-template-columns:auto 1fr auto;height:62px;}
   html[data-nav] .ixb .sheet{display:none;}
   /* на узком экране плашки под логотипом нет — локап ложится прямо на грунт */
-  html[data-nav="3"] .brand{box-shadow:none;background:none;padding:0;}
+  html[data-nav="3"] .brand{box-shadow:none;background:none;padding:0;height:auto;}
 }
 
 /* Узкий экран: армянская надпись на кнопке длиннее английской, и правая группа
