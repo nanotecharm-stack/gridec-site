@@ -2385,9 +2385,14 @@ function buildDither(){
     for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){
       var i=document.createElement('i');
       i.style.background=top;
-      /* a few cells flip to an accent instead of the plain incoming colour */
-      var isAcc=acc&&Math.random()<0.07;
-      cells.push({el:i,to:isAcc?acc:bot});
+      /* Акцент — ВСПЫШКА на фронте волны, а не конечное состояние ячейки.
+         Раньше здесь стояло to:isAcc?acc:bot, и акцентная ячейка приходила
+         в акцент навсегда: когда полоса дорастворялась, соседи уходили в цвет
+         приходящей секции, а несколько ячеек оставались висеть цветными на
+         пустом месте — и висели, потому что при пройденной полосе меняться
+         уже нечему. Теперь цель у всех одна, а акцент живёт позади фронта
+         ограниченным хвостом и гаснет вслед за ним. */
+      cells.push({el:i,to:bot,acc:(acc&&Math.random()<0.07)?acc:null,now:top});
       order.push(cells.length-1);
       band.appendChild(i);
     }
@@ -2398,7 +2403,12 @@ function buildDither(){
       var kx=(rows-1-rx)+Math.random()*2.2,ky=(rows-1-ry)+Math.random()*2.2;
       return kx-ky;
     });
-    dBands.push({el:band,cells:cells,top:top,order:order,count:0});
+    /* Позиции акцентных ячеек В ПОРЯДКЕ ПРОХОДА: их единицы, поэтому хвост
+       пересчитывается перебором только по ним, а не по всей полосе. */
+    var accPos=[];
+    for(var k=0;k<order.length;k++)if(cells[order[k]].acc)accPos.push({k:k,c:cells[order[k]]});
+    dBands.push({el:band,cells:cells,top:top,order:order,count:0,
+      accPos:accPos,trail:Math.max(6,Math.round(cells.length*0.14))});
   });
   paintDither();
 }
@@ -2412,10 +2422,25 @@ function paintDither(){
     p=p<0?0:(p>1?1:p);
     var want=Math.round(p*band.cells.length);
     if(want===band.count)continue;
-    while(band.count<want){var c1=band.cells[band.order[band.count]];c1.el.style.background=c1.to;band.count++;}
-    while(band.count>want){band.count--;var c2=band.cells[band.order[band.count]];c2.el.style.background=band.top;}
+    while(band.count<want){setCell(band.cells[band.order[band.count]],band.cells[band.order[band.count]].to);band.count++;}
+    while(band.count>want){band.count--;setCell(band.cells[band.order[band.count]],band.top);}
+    /* Хвост вспышки: ячейка держит акцент, пока фронт не ушёл от неё дальше
+       чем на trail, потом садится в цвет приходящей секции. При прокрутке
+       вверх всё это разбирается тем же выражением. */
+    var done=band.count>=band.cells.length;
+    for(var a=0;a<band.accPos.length;a++){
+      var ap=band.accPos[a];
+      /* done — иначе хвост не досыхает: фронт упирается в конец полосы
+         и последние вспышки, оказавшиеся к нему ближе чем trail, остаются
+         гореть навсегда. Полоса пройдена — гаснут все. */
+      setCell(ap.c, ap.k>=band.count ? band.top
+        : ((!done && band.count-ap.k<=band.trail) ? ap.c.acc : ap.c.to));
+    }
   }
 }
+/* Пишем в стиль только при настоящей смене цвета: хвост пересчитывается
+   на каждом кадре прокрутки, а лишняя запись — лишняя перерисовка. */
+function setCell(c,v){if(c.now!==v){c.now=v;c.el.style.background=v;}}
 buildDither();
 
 /* ============ PIXEL TRANSITION — a real page transition ============ */
