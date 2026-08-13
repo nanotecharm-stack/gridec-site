@@ -891,7 +891,10 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
 /* report */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);align-items:start;}
 /* what the report contains, read as a numbered sheet rather than a panel */
-.list{border-top:1px solid var(--hair);}
+/* Все ряды равны самому высокому. Ряды заданы через 1fr, а не числом: высота
+   берётся из самой длинной строки сама, и при правке текста — или в другом
+   языке, где он длиннее, — ряд подтянется без вмешательства. */
+.list{border-top:1px solid var(--hair);display:grid;grid-auto-rows:1fr;}
 /* Модуль строки. Межстрочник — ровно половина модуля, поля сверху и снизу —
    четверть за вычетом линейки. Тогда одна строка даёт модуль, две — полтора,
    три — два, и так далее: ряд не может сбиться, сколько бы текста ни пришло.
@@ -899,6 +902,9 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
    обёрнутой строке 1.44 модуля — число не из ряда, и глаз это ловил. */
 .list div{--row:56px;
   display:grid;grid-template-columns:34px 1fr;gap:0 16px;align-items:baseline;
+  /* Ряды теперь равной высоты, и в однострочных остаётся запас. Содержимое
+     центрируем: повешенное на верх, оно отрывалось бы от нижней линейки. */
+  align-content:center;
   padding:calc(var(--row) / 4 - .5px) 0;font-size:16px;line-height:calc(var(--row) / 2);
   color:var(--fg);border-bottom:1px solid var(--hair2);}
 /* Наведения здесь нет намеренно. Строки списка — перечень содержания отчёта,
