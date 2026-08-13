@@ -377,6 +377,12 @@ EN = {
      'Gridec is being built in Armenia as a focused engineering company: careful work, clear communication and technical conclusions we are prepared to stand behind. Growth matters, but not at the expense of the work itself.')]),
  'CT_H2': 'Start with what happened',
  'CT_CAP': 'RMS VOLTAGE · 10-MIN TREND', 'CT_NOM': 'NOMINAL', 'CT_DIP': 'VOLTAGE DIP · 180 MS',
+ 'CO_LEGAL': 'Gridec LLC',
+ # ՀՎՀՀ — армянский учётный номер налогоплательщика. По-английски он
+ # передаётся как TIN (Taxpayer Identification Number): именно так его
+ # называет Комитет госдоходов в своих англоязычных документах.
+ # НЕ «VAT»: регистрация по НДС в Армении отдельная и номер у неё другой.
+ 'CO_TIN_LB': 'TIN', 'CO_TIN': '08331059',
  'FOOT_ADDR': 'Davtashen 1, 13-25, Yerevan 0058, Armenia',
  'FOOT_SECTIONS': 'Sections', 'FOOT_CONTACT': 'Contact',
  'FOOT_HOURS': 'Mon–Fri 09:00–18:00 (UTC+4)',
@@ -562,6 +568,8 @@ HY = {
      'Gridec-ը ստեղծում ենք երկարաժամկետ նպատակով։ Ուզում ենք, որ մեր աշխատանքը ճանաչվի ճշգրտությամբ, հստակ հաղորդակցությամբ և տվյալներով հիմնավորված տեխնիկական եզրակացություններով։')]),
  'CT_H2': 'Ներկայացրեք խնդիրը նախնական գնահատման համար',
  'CT_CAP': 'RMS ԼԱՐՈՒՄ · 10-ՐՈՊԵԱՆՈՑ ՄԻՏՈՒՄ', 'CT_NOM': 'ԱՆՎԱՆԱԿԱՆ', 'CT_DIP': 'ԼԱՐՄԱՆ ԱՆԿՈՒՄ · 180 ՄՎՐԿ',
+ 'CO_LEGAL': 'Գրիդեկ ՍՊԸ',
+ 'CO_TIN_LB': 'ՀՎՀՀ', 'CO_TIN': '08331059',
  'FOOT_ADDR': 'Դավթաշեն 1, 13-25, Երևան 0058, Հայաստան',
  'FOOT_SECTIONS': 'Բաժիններ', 'FOOT_CONTACT': 'Կապ',
  'FOOT_HOURS': 'Երկ-Ուրբ 09:00–18:00 (UTC+4)',

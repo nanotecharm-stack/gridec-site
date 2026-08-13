@@ -1096,7 +1096,7 @@ h2{font-size:clamp(20px,3.17vw,48px);text-wrap:balance;}
    цифры держат разряды на одной ширине, перечёркнутый ноль — приборный
    знак и отличает 0 от O в «61000-4-30» и «0058». В прозе не включаем.
    Армянский набор эти функции просто игнорирует: у Arian AMU их нет. */
-.note,.stat b,footer .fcon,.chart .cap{
+.note,.stat b,footer .fcon,footer .fbrand .freg,.chart .cap{
   font-variant-numeric:tabular-nums slashed-zero;}
 /* Сноска о нормах — не ещё один абзац, а штамп методики на листе. Отличается
    она тремя вещами разом. Первое: обозначения норм набраны приборной
@@ -1235,6 +1235,17 @@ footer .fgrid{display:grid;grid-template-columns:minmax(220px,1fr) 1.15fr .85fr;
    реквизиты, и знак над ними читался бы вывеской, а не шапкой документа. */
 footer .fbrand .fname{margin:0;font-family:inherit;font-size:22px;font-weight:600;
   letter-spacing:-.01em;text-transform:none;color:#F4F5F5;line-height:1.2;}
+/* Учётный номер компании. Он ярче описания над ним, потому что это
+   проверяемый факт, а не подпись: по этому номеру компанию находят в
+   государственном реестре — ради чего он в футере и стоит. Обозначение
+   отделено от номера промежутком, а не двоеточием, как в строке документа.
+   Гарнитуру строка наследует от соседнего описания — своей не задаёт, чтобы
+   две строки под именем читались одним блоком. Пиксельная гарнитура здесь
+   и не участвует: 'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif в этом блоке разрешается в текстовую (Overused
+   Grotesk на английской, Arian AMU Serif на армянской), поэтому «ՀՎՀՀ» не
+   проваливается в системный шрифт, как провалилось бы в приборной. */
+footer .fbrand .freg{margin-top:14px;letter-spacing:.14em;}
+footer .fbrand .freg b{font-weight:400;color:rgba(244,245,245,.86);margin-left:10px;}
 footer .fbrand p{margin-top:20px;font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;
   letter-spacing:.2em;text-transform:uppercase;color:rgba(244,245,245,.5);max-width:24ch;
   line-height:1.9;}
@@ -1698,6 +1709,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
     <div class="fbrand rv">
       <p class="fname">Gridec LLC</p>
       <p>POWER QUALITY MONITORING</p>
+      <p class="freg">TIN <b>08331059</b></p>
     </div>
     <div class="fcol rv" style="--i:1">
       <h3>Contact</h3>
