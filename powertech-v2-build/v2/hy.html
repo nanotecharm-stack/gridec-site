@@ -485,6 +485,12 @@ html[data-nav="3"] .ixp{margin-top:12px;}
 .sigrun svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;
   color:var(--fg);}
 @media (max-width:1099px){.sigrun{display:none;}}
+/* Отвод раздела 01 — продолжение той же жилы: она кончается ровно там, где он
+   начинается. Значит и жить он должен с ней в такт, а не висеть постоянно,
+   пока жила над ним темна. Времена взяты у .sigrun: появление втрое короче
+   угасания, след растворяется, а не выключается. */
+.srail{opacity:0;transition:opacity 1.15s var(--e);}
+.srail.lit{opacity:1;transition:opacity .3s var(--e);}
 /* Two areas across the FULL width: text hard left, wave field running to the
    right edge. No side padding on the hero — the text starts on the same line as
    the logo, the waves bleed off the right edge. */
@@ -1710,7 +1716,7 @@ var PT=window.PT;
    pull one sector inward, and the readout below follows the same dip. */
 /* Состояние импульса события. Сам импульс живёт на сигнальной жиле, которую
    строит buildSigRun; заводится из кадра холста при отклонении. */
-var SEAM={pulse:null,halo:null,len:0,t:-1,box:null};
+var SEAM={pulse:null,halo:null,len:0,t:-1,box:null,rail:null};
 
 var cv=document.getElementById('star'),cx=cv.getContext('2d');
 var W=0,H=0,dpr=1,tt=0,CYp=0;
@@ -1769,7 +1775,9 @@ function frame(ts){
     seamFire();
   }
   seamStep(dt);
-  if(SEAM.box)SEAM.box.classList.toggle('lit',evT>0||SEAM.t>=0);
+  if(SEAM.box){var seamOn=evT>0||SEAM.t>=0;
+    SEAM.box.classList.toggle('lit',seamOn);
+    if(SEAM.rail)SEAM.rail.classList.toggle('lit',seamOn);}
   if(evT>0)evT=Math.max(0,evT-dt);
   var evP=evT>0?Math.sin((1-evT/EV_DUR)*Math.PI):0;
   cx.clearRect(0,0,W,H);
@@ -2051,7 +2059,8 @@ function seamStep(dt){
 
 /* ============ TEXT RAILS — traces running alongside section copy ============ */
 function buildRails(){
-  if(innerWidth<1100)return document.querySelectorAll('.srail').forEach(function(s){s.remove();});
+  if(innerWidth<1100){SEAM.rail=null;
+    return document.querySelectorAll('.srail').forEach(function(s){s.remove();});}
   /* Длинной вертикали через весь раздел больше нет. Остаётся короткий отвод к
      заголовку с квадратной отметкой на конце, и синий доходит ровно до неё:
      сигнал ведёт читателя от заголовка к заголовку, а не тянется полосой вдоль
@@ -2068,6 +2077,8 @@ function buildRails(){
     svg.setAttribute('viewBox','0 0 '+W2+' '+H);
     svg.setAttribute('preserveAspectRatio','none');
     svg.style.cssText='position:absolute;top:0;left:clamp(4px,1.4vw,18px);width:'+W2+'px;height:'+H+'px;pointer-events:none;overflow:visible;';
+    /* тот же выключатель, что у жилы; на пересборке ссылка обновляется */
+    if(si===0)SEAM.rail=svg;
     var top=si===0?0:Math.max(0,yh-46);
     var dEl=route([[8,top],[8,yh],[W2-14,yh]],16);
     var elbow=document.createElementNS(ns,'path');
