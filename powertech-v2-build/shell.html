@@ -374,7 +374,14 @@ html[data-nav="3"] .ixp{margin-top:12px;}
 
 /* narrow: every variant lands on the same compact bar */
 @media (max-width:900px){
-  html[data-nav] .hin{grid-template-columns:auto 1fr auto;height:62px;}
+  /* Компактный бар центрирует содержимое, а не подвешивает его к верхней
+     кромке. Подвес — приём широкого бара: там плашки одной высоты стоят на
+     общей линии в 12px, и это читается как ряд. Здесь высота падает с 76 до
+     62, плашки под логотипом нет вовсе, и прежний padding-top:12px оставлял
+     локап в верхней части поля (12 сверху, 24 снизу), а правую группу упирал
+     в нижнюю кромку — 61 из 62. Центрирование разводит обе по середине. */
+  html[data-nav] .hin{grid-template-columns:auto 1fr auto;height:62px;
+    align-items:center;padding-top:0;}
   html[data-nav] .ixb .sheet{display:none;}
   /* на узком экране плашки под логотипом нет — локап ложится прямо на грунт */
   html[data-nav="3"] .brand{box-shadow:none;background:none;padding:0;height:auto;}
