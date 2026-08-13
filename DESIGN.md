@@ -80,7 +80,7 @@ typography:
     lineHeight: 1.7
   footnote:
     fontFamily: "Overused Grotesk, Helvetica Neue, Helvetica, Arial, sans-serif"
-    fontSize: "13px"
+    fontSize: "14px"
     fontWeight: 400
     lineHeight: 1.75
   standard:
@@ -285,7 +285,7 @@ A warm paper ground, ink plates that read as the back of the sheet, and a single
 - **Invitation Title** (700, `clamp(21px, 2.4vw, 32px)`): the seventh card of the industry rail, the one that carries a drawing instead of a photograph.
 - **Confirmation** (600, 21px): the line that says the enquiry was sent. The only place in the system where a heading is set at semibold rather than bold — it reports, it does not announce.
 - **Body** (400, 16px / 1.75, measure capped at 46ch): lede paragraphs.
-- **Body Small** (400, 14px / 1.7): step text, notes, attribution.
+- **Body Small** (400, 14px / 1.7): notes, attribution, action links. **Not for prose.** It used to carry the seven-day step text and the section-05 card paragraphs — three-line passages a reader actually reads, set at label size. Those moved to Body on 2026-08-13. The test is not length but purpose: if it is read, it is Body; if it is glanced at, it is a label.
 - **Body Story** (400, 17px / 1.7): the staggered story column in the company section.
 - **Action** (600, 14px) and **Action Compact** (600, 13px): button text; the compact step is the header and the dialog.
 - **Label** (400, 11px, tracking 0.13–0.22em, uppercase): eyebrows, field labels, chips.
@@ -421,6 +421,7 @@ The page ends on a fixed ink plate that the content slides off: the company name
 - **Do** set numbers, units, counters and values in Departure Mono, and sentences in the text face.
 - **Do** change the English and Armenian type scales together, and verify parity by rendered cap height rather than by point size.
 - **Do** verify contrast numerically against WCAG AA, including composited alpha and gradient backdrops. The whole page currently passes at 119 text elements with zero violations; keep it there.
+- **Do** treat legibility as a stated requirement, not a preference. The site is read by plant owners and engineers over fifty, and secondary prose sits at `--fg-mid` .78 / `--fg-soft` .76 for that reason — 6.76:1 and 6.35:1 on paper, where .68 gave 4.92:1: AA, but on the line. On the ink plates the same prose runs .76 (8.55:1). Do not push these back down to buy a quieter page.
 - **Do** restack on narrow screens instead of hiding content.
 
 ### Don't:

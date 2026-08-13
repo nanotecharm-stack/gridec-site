@@ -43,8 +43,8 @@
      он отображает литерал #FDFAF4, а #FFFFFF проходил мимо. На тёплой бумаге
      это была единственная холодная поверхность на странице; DESIGN.md всё это
      время описывал её как тёплое белило. Теперь литерал тот, который проход
-     знает, и белило берётся из палитры. */--panel:#FDFAF4;--fg:#0D2440;--fg-mid:rgba(13,36,64,.68);/* .64 давало на бумаге 4,58 — впритык; .68 держит 4,92 и оставляет запас
-     на светлых подложках вроде верха героя. */--fg-soft:rgba(13,36,64,.68);/* .66 = 4,87:1 на бумаге. Пол для этой пары — .64 (4,58); всё, что ниже,
+     знает, и белило берётся из палитры. */--panel:#FDFAF4;--fg:#0D2440;--fg-mid:rgba(13,36,64,.78);/* .64 давало на бумаге 4,58 — впритык; .68 держит 4,92 и оставляет запас
+     на светлых подложках вроде верха героя. */--fg-soft:rgba(13,36,64,.76);/* .66 = 4,87:1 на бумаге. Пол для этой пары — .64 (4,58); всё, что ниже,
      не проходит норму для текста мельче 24px, а на --fg-soft сидят подписи
      от 10 до 14. Иерархию ниже второго уровня приходится держать кеглем. */--hair:rgba(13,36,64,.13);--hair2:rgba(13,36,64,.07);--inv:#0D2440;--inv-fg:#F6F1E9;}
 *{box-sizing:border-box;}
@@ -676,10 +676,10 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .plate2 .cnt{color:rgba(246,241,233,.58);}
 .plate2 .stat{background:rgba(246,241,233,.045);box-shadow:inset 0 0 0 1px rgba(246,241,233,.1);}
 .plate2 .stat span{color:rgba(246,241,233,.66);}
-.plate2 .step p{color:rgba(246,241,233,.64);}
+.plate2 .step p{color:rgba(246,241,233,.76);}
 .plate2 .alink:hover{color:#fff;}
 .plate2 .display{color:#F0EAE0;}
-.plate2 .note{color:rgba(246,241,233,.58);}
+.plate2 .note{color:rgba(246,241,233,.70);}
 .plate2 h2 i,.plate2 .lede i{color:rgba(246,241,233,.4);}
 
 /* industries — horizontal rail, detail opens on click */
@@ -938,8 +938,10 @@ h2{font-size:clamp(20px,3.17vw,48px);text-wrap:balance;}
 /* Ссылка — отдельное действие после блока, а не хвост последнего абзаца:
    семнадцати пикселей на это не хватало. */
 .alink{display:inline-flex;align-items:center;gap:9px;margin-top:34px;
-  padding-block:9px;margin-bottom:-9px;font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;
-  letter-spacing:.14em;text-transform:uppercase;color:var(--brand-ink);}
+  padding-block:9px;margin-bottom:-9px;font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;
+  /* 12px были ниже названной ступени Action (14). Трекинг ослаблен: на большем
+     кегле прежний растягивал строку и мешал читать её как фразу. */
+  letter-spacing:.11em;text-transform:uppercase;color:var(--brand-ink);}
 .alink:hover{text-decoration:underline;text-underline-offset:4px;}
 
 /* sticky sequence */
@@ -1022,7 +1024,7 @@ h2{font-size:clamp(20px,3.17vw,48px);text-wrap:balance;}
 /* У шагов больше нет названий, и промежуток от номера до текста,
    который держал заголовок, берёт на себя сам абзац. */
 /* Отступ сверху был зазором под номером шага; номера нет — нет и зазора */
-.step p{font-size:14px;line-height:1.7;color:var(--fg-mid);}
+.step p{font-size:16px;line-height:1.75;color:var(--fg-mid);}
 
 /* report */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);align-items:start;}
@@ -1117,7 +1119,8 @@ h2{font-size:clamp(20px,3.17vw,48px);text-wrap:balance;}
    Второе: блок вынесен на поле вертикальной линейкой, как примечание в
    чертёжной документации, — верхняя линейка читалась просто как разрыв абзаца
    и снята. Третье: кегль на ступень ниже вводного и тон приглушён. */
-.note{font-size:13px;line-height:1.75;color:var(--fg-soft);
+/* 13px были дрейфом: названная ступень Body Small — 14 */
+.note{font-size:14px;line-height:1.75;color:var(--fg-soft);
   margin-top:var(--s7);padding-left:var(--s5);max-width:52ch;position:relative;}
 .note::before{content:"";position:absolute;left:0;top:.4em;bottom:.4em;width:1px;
   background:var(--hair);transform:scaleY(0);transform-origin:top;
@@ -1154,7 +1157,11 @@ html[lang="hy"] .note .std{font-size:13px;}
 .asg .tag{font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.13em;color:var(--brand-ink);text-transform:uppercase;}
 /* карточка без названия: отступ, который держал заголовок, переходит абзацу */
 .asg .hd+p{margin-top:var(--s4);}
-.asg p{font-size:14px;line-height:1.7;color:var(--fg-mid);}
+/* Роль Body, а не Body Small. Здесь настоящий читаемый текст по три строки,
+   а он был набран кеглем подписи. Побочно это чинит и длину строки: в той же
+   колонке 16px дают около 68 знаков вместо 79 — крупнее и одновременно короче,
+   то есть легче вдвойне. */
+.asg p{font-size:16px;line-height:1.75;color:var(--fg-mid);}
 
 /* measure chips */
 
@@ -1274,7 +1281,10 @@ footer .flist a{display:grid;grid-template-columns:26px 1fr;gap:0 12px;align-ite
 footer .flist a i{font-style:normal;font-family:'Departure Mono',monospace;font-size:11px;
   letter-spacing:.1em;color:var(--brand-ink);}
 footer .flist a:hover{color:#fff;}
-footer .fcon li{font-size:14px;line-height:1.6;color:rgba(246,241,233,.72);}
+/* Роль Body: телефон и адрес — то, ради чего в футер и приходят, их читают,
+   а не проглядывают. Тон поднят с .72 до .82: на чернильной плите это
+   единственные строки, по которым будут звонить. */
+footer .fcon li{font-size:16px;line-height:1.65;color:rgba(246,241,233,.82);}
 footer .fcon a{color:rgba(246,241,233,.72);transition:color .3s var(--e);}
 footer .fcon a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px;}
 /* В колоночном флексе поля auto ужимают полосу до содержимого и ставят её
@@ -1522,16 +1532,14 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 .ixp a .no,.mi .ix,.list .n,.asg .no{letter-spacing:.07em;}
 .chsteps .n{letter-spacing:.09em;}
 .step .no{letter-spacing:.08em;}
-/* Надписи шагов на шкале — тоже показание: так просил владелец. Кегль 13, а не
-   прежние 16: у Departure Mono та же высота строчной берётся меньшим кеглем
-   (8 против 8 у Overused на 16), а моноширина иначе растянула бы строку почти
-   на четверть и добавила переносов в пятиколонной шкале. На армянской странице
-   этого правила нет и быть не может: армянских знаков у шрифта ноль. */
-.chsteps .t{font-family:'Departure Mono',monospace;font-size:13px;
-  letter-spacing:.01em;line-height:1.6;
-  /* Ширина в знаках: у моноширинного знак шире, и прежние 20ch держали строку
-     уже, чем позволяет колонка, — переносов становилось больше на ровном месте. */
-  max-width:25ch;}
+/* Подписи станций шкалы приборной гарнитуре НЕ достаются, хотя прежде
+   доставались: 13px Departure Mono подбирались так, чтобы строчная совпала
+   с основной на 16. Но это фразы, а не показания, и правило двух голосов
+   говорит прямо — пиксельный шрифт не берёт предложение, которое произносит
+   компания. Плюс читаемость: пиксельная сетка на 13 тяжелее грота на 16 для
+   слабого зрения, сколько бы ни совпадала высота строчной. На армянской
+   странице этого правила и не было — у шрифта ноль армянских знаков, — так
+   что теперь обе версии набраны одинаково. */
 .chsteps .inc-tag{font-family:'Departure Mono',monospace;font-size:11px;
   letter-spacing:.12em;}
 /* число и слово лежат в одном элементе — слово возвращается прежнему шрифту */
@@ -1545,7 +1553,11 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
    --brand-on   what sits on top of a --brand fill
    The light grounds and the graphite plates each get the depth that works on them. */
 :root{--brand:#2E5E99;--brand-ink:#2E5E99;--brand-on:#F6F1E9;
-  --fg:#2B2722;--fg-mid:rgba(43,39,34,.68);--fg-soft:rgba(43,39,34,.68);
+  /* .78 и .76, а не .68 у обоих. Сайт читают в том числе люди с ослабленным
+     зрением, и для вторичной прозы контраст значит не меньше кегля: .68
+     давало 4,92:1 — норму AA, но впритык. Держим тот же приглушённый тон,
+     просто не на самой границе. */
+  --fg:#2B2722;--fg-mid:rgba(43,39,34,.78);--fg-soft:rgba(43,39,34,.76);
   --hair:rgba(43,39,34,.13);--hair2:rgba(43,39,34,.07);}
 .plate,.plate2,.other,.chart,.ic{--brand:#7BA4D0;--brand-ink:#7BA4D0;--brand-on:#0D2440;}
 /* Приглашение больше не фирменный блок. Прежде оно заливалось цветом марки
