@@ -682,6 +682,19 @@ IMGD_D = {'IMG%d' % i: '../uploads/img/' + f for i, f in enumerate(IMG_FILES)}
 # ---------------------------------------------------------------- assemble
 shell = io.open(os.path.join(HERE, 'shell.html'), encoding='utf-8').read()
 
+# ------------------------------------------------------------ обозначения норм
+# Обозначение стандарта — это не слово, а величина: набираем его приборной
+# гарнитурой, как показания в остальных разделах. Берём только числовую часть:
+# «ԳՕՍՏ» и «ԻԷԿ» написаны армянскими буквами, которых в пиксельном шрифте нет.
+# Армянский падежный суффикс через дефис («61000-4-7-ի») остаётся снаружи —
+# группа цифр после дефиса обязательна, а буква её не продолжает.
+STD_NUM = re.compile(r'(?<![\w-])(\d{4,5}(?:-\d+){1,3})(?![\w])')
+
+
+def mark_standards(text):
+    return STD_NUM.sub(r'<span class="std">\1</span>', text)
+
+
 def fill(tokens, data, ff, imgs):
     s = shell
     d = dict(data)
@@ -690,6 +703,8 @@ def fill(tokens, data, ff, imgs):
     t = dict(tokens); t['FONTFACES'] = ff
     lang = tokens.get('LANG', 'en')
     for k, v in t.items():
+        if k == 'REP_NOTE':
+            v = mark_standards(v)
         if k not in NO_GLUE:
             v = nbsp(v, lang)
         s = s.replace('%%' + k + '%%', v)

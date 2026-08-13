@@ -918,22 +918,54 @@ h2{font-size:clamp(20px,3.17vw,48px);text-wrap:balance;}
 /* report */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);align-items:start;}
 /* what the report contains, read as a numbered sheet rather than a panel */
-/* Все ряды равны самому высокому. Ряды заданы через 1fr, а не числом: высота
+/* Перечень — это содержание самого отчёта, поэтому он и выглядит как лист,
+   положенный на страницу: та же светлая поверхность и та же волосяная кромка,
+   что у ячеек показателей в 03, — не новый приём, а уже существующий.
+   Все ряды равны самому высокому, и заданы они через 1fr, а не числом: высота
    берётся из самой длинной строки сама, и при правке текста — или в другом
    языке, где он длиннее, — ряд подтянется без вмешательства. */
-.list{border-top:1px solid var(--hair);display:grid;grid-auto-rows:1fr;}
+.list{display:grid;grid-auto-rows:1fr;
+  background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);border-radius:2px;
+  padding:var(--s2) var(--s5);}
 /* Модуль строки. Межстрочник — ровно половина модуля, поля сверху и снизу —
    четверть за вычетом линейки. Тогда одна строка даёт модуль, две — полтора,
    три — два, и так далее: ряд не может сбиться, сколько бы текста ни пришло.
    Английская версия уже шла ровно; армянская, где текст длиннее, давала на
    обёрнутой строке 1.44 модуля — число не из ряда, и глаз это ловил. */
-.list div{--row:56px;
+.list div{--row:56px;--i:0;position:relative;
   display:grid;grid-template-columns:34px 1fr;gap:0 16px;align-items:baseline;
   /* Ряды теперь равной высоты, и в однострочных остаётся запас. Содержимое
      центрируем: повешенное на верх, оно отрывалось бы от нижней линейки. */
   align-content:center;
-  padding:calc(var(--row) / 4 - .5px) 0;font-size:16px;line-height:calc(var(--row) / 2);
-  color:var(--fg);border-bottom:1px solid var(--hair2);}
+  /* Межстрочник — половина модуля, поля — четверть. Линейка ушла в отдельный
+     слой и в габарит больше не входит, поэтому вычета в полпикселя нет. */
+  padding:calc(var(--row) / 4) 0;font-size:16px;line-height:calc(var(--row) / 2);
+  color:var(--fg);
+  transition:background-color .25s var(--e);}
+.list div:nth-child(2){--i:1;}
+.list div:nth-child(3){--i:2;}
+.list div:nth-child(4){--i:3;}
+.list div:nth-child(5){--i:4;}
+.list div:nth-child(6){--i:5;}
+/* Линейка вынесена в отдельный слой, чтобы её можно было прочертить: рамку не
+   оживить. Ряды проявляются сверху вниз с тем же шагом в 34ms, что у указателя
+   разделов, — лист как будто печатается. У последнего ряда линейки нет: снизу
+   его закрывает кромка листа, и две линии рядом читались бы как сбой. */
+.list div::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:var(--hair2);transform:scaleX(0);transform-origin:left;
+  transition:transform .8s var(--e),background-color .3s var(--e);
+  transition-delay:calc(var(--i) * 34ms);}
+.list div:last-child::after{display:none;}
+.list.in div::after{transform:scaleX(1);}
+.list div>*{opacity:0;transform:translateY(5px);
+  transition:opacity .6s var(--e),transform .6s var(--e);
+  transition-delay:calc(var(--i) * 34ms);}
+.list.in div>*{opacity:1;transform:none;}
+/* Наведение подсвечивает ряд, как строку в таблице, и не двигает его: сдвиг
+   обещал переход, которого нет, — этот жест мы уже снимали. */
+@media (hover:hover){
+  .list div:hover{background:color-mix(in srgb,var(--fg) 3%,transparent);}
+  .list div:hover::after{background:var(--hair);}}
 /* Наведения здесь нет намеренно. Строки списка — перечень содержания отчёта,
    а не ссылки: ни адреса, ни обработчика, ни фокуса. Сдвиг содержимого вбок
    обещал действие, которого не происходит, и в ряду с линейками сверху и снизу
@@ -951,8 +983,32 @@ h2{font-size:clamp(20px,3.17vw,48px);text-wrap:balance;}
    Армянский набор эти функции просто игнорирует: у Arian AMU их нет. */
 .note,.stat b,footer .fcon,.chart .cap{
   font-variant-numeric:tabular-nums slashed-zero;}
-.note{font-size:14px;line-height:1.7;color:var(--fg-mid);margin-top:30px;padding-top:16px;
-  border-top:1px solid var(--hair2);max-width:54ch;}
+/* Сноска о нормах — не ещё один абзац, а штамп методики на листе. Отличается
+   она тремя вещами разом. Первое: обозначения норм набраны приборной
+   гарнитурой — то же, чем набраны показания, и глаз узнаёт их как величины.
+   Второе: блок вынесен на поле вертикальной линейкой, как примечание в
+   чертёжной документации, — верхняя линейка читалась просто как разрыв абзаца
+   и снята. Третье: кегль на ступень ниже вводного и тон приглушён. */
+.note{font-size:13px;line-height:1.75;color:var(--fg-soft);
+  margin-top:var(--s7);padding-left:var(--s5);max-width:52ch;position:relative;}
+.note::before{content:"";position:absolute;left:0;top:.4em;bottom:.4em;width:1px;
+  background:var(--hair);transform:scaleY(0);transform-origin:top;
+  transition:transform .9s var(--e) .2s;}
+.rv.in .note::before{transform:scaleY(1);}
+/* Приборная гарнитура задаётся напрямую, а не через 'Arian AMU Serif',Georgia,serif: тот токен
+   несёт подписную гарнитуру языка — грóтеск в английской, засечную в армянской.
+   Внутри спана только цифры и дефисы, поэтому пиксельный шрифт годится обоим
+   языкам: армянских букв в нём нет вовсе, но здесь они и не нужны.
+   case поднимает дефисы к высоте цифр, tnum держит разряды на одной ширине,
+   zero отличает ноль от буквы O в «61000-4-30». */
+.note .std{font-family:'Departure Mono',monospace;font-size:12px;letter-spacing:.03em;
+  color:var(--brand-ink);white-space:nowrap;
+  font-feature-settings:'case' 1,'tnum' 1,'zero' 1;}
+/* Кегль подобран по отрисованной высоте цифры, а не по числу в объявлении: в
+   английском наборе 12px дают ровно те же 9,00, что и проза, а в армянском
+   проза выше — 10,00, и туда нужен 13px, который даёт ровно столько же.
+   Обозначение нормы должно стоять на одном уровне с текстом, который её вводит. */
+html[lang="hy"] .note .std{font-size:13px;}
 
 /* assignments */
 .asg .card{transition:box-shadow .45s var(--e),transform .5s var(--e);}
@@ -1289,7 +1345,13 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   .btn{padding:11px 14px;font-size:12px;}
       #fmd .fr{grid-template-columns:1fr;}
 }
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}.rv{opacity:1;transform:none;}}
+/* Снятые переходы не отменяют начальных состояний: без этих сбросов ряды
+   списка остались бы прозрачными, а линейки — нулевой длины. */
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}
+  .rv{opacity:1;transform:none;}
+  .list div>*{opacity:1;transform:none;}
+  .list div::after{transform:scaleX(1);}
+  .note::before{transform:scaleY(1);}}
 
 
 /* ============ ПОКАЗАНИЯ ============
@@ -1439,7 +1501,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 <section class="sec" id="report"><div class="wrap two">
   <div class="rv"><div class="cnt">04</div><h2>Հաշվետվություն</h2>
     <p class="lede">Ներկայացնում է չափման արդյունքները, դրանց ինժեներական վերլուծությունն ու եզրակացությունները՝ հետագա տեխնիկական որոշումների համար։</p>
-    <p class="note">Էլեկտրաէներգիայի որակի պարամետրերը չափվում են ԳՕՍՏ ԻԷԿ 61000-4-30-2017 ստանդարտով սահմանված S դասի մեթոդներով։ Հարմոնիկ և միջհարմոնիկ բաղադրիչները գնահատվում են ԻԷԿ 61000-4-7-ի համաձայն, երբ կիրառելի է։ Մատակարարման կետում արդյունքները կարող են համեմատվել Հայաստանում գործող ԳՕՍՏ 32144-2013-ի նորմերի հետ՝ չափման նպատակից և չափման կետից կախված։</p></div>
+    <p class="note">Էլեկտրաէներգիայի որակի պարամետրերը չափվում են ԳՕՍՏ ԻԷԿ <span class="std">61000-4-30-2017</span> ստանդարտով սահմանված S դասի մեթոդներով։ Հարմոնիկ և միջհարմոնիկ բաղադրիչները գնահատվում են ԻԷԿ <span class="std">61000-4-7</span>-ի համաձայն, երբ կիրառելի է։ Մատակարարման կետում արդյունքները կարող են համեմատվել Հայաստանում գործող ԳՕՍՏ <span class="std">32144-2013</span>-ի նորմերի հետ՝ չափման նպատակից և չափման կետից կախված։</p></div>
   <div class="list rv"><div><span class="n">01</span><span>Չափումների շրջանակն ու կետերը</span></div><div><span class="n">02</span><span>Մոնիթորինգի ժամանակահատվածն ու աշխատանքային պայմանները</span></div><div><span class="n">03</span><span>Գրանցված իրադարձություններն ու միտումները</span></div><div><span class="n">04</span><span>Ինժեներական մեկնաբանություն</span></div><div><span class="n">05</span><span>Առկա տվյալների սահմանափակումները</span></div><div><span class="n">06</span><span>Առաջարկվող հաջորդ քայլերը</span></div></div>
 </div></section>
 
