@@ -7,11 +7,18 @@
      100vw считается вместе с полосой прокрутки и промахивается на её толщину. */
   --gut:clamp(18px,4vw,56px);
   --inset:calc(max(0px,(var(--vwpx,100vw) - 1280px)/2) + clamp(18px,4vw,56px));
-  /* Шкала отступов. Одна роль — одно значение. Сейчас по странице ходят 9, 10 и 11
-     пикселей, потом 13, 14, 15 и 16: разные числа делают одну работу, и глаз
-     читает это не как выбор, а как небрежность. Ряд удваивается; половинная
-     ступень стоит там, где удвоение уже слишком грубо (16→24→32).
-     Пока применена в разделах 05 и 07 — на пробу. */
+  /* Шкала отступов. Ряд удваивается; половинная ступень стоит там, где удвоение
+     уже слишком грубо (16→24→32).
+
+     Правило, по которому она применена: значение, попадающее на ступень, пишется
+     токеном — все 52 таких вхождения переведены, ни одна ступень не объявлена
+     впустую. Значение, не попадающее на ступень, остаётся числом: это оптическая
+     подгонка под конкретное место, и притворяться системой ей незачем.
+
+     Незакрытый долг: таких чисел 218, и среди них ходят 9, 10 и 11 пикселей,
+     потом 13, 14, 15 — разные числа делают одну работу. Свести их к ступеням
+     нельзя механически: каждое сведение сдвигает вёрстку на 1–3 пикселя, и
+     решение принимается глазом, а не заменой. */
   --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;
   --s6:32px;--s7:48px;--s8:64px;--s9:96px;--s10:128px;
 --bg:#EFEDEA;/* Поверхность поднятых плоскостей — ячейки показателей, лист перечня,
@@ -42,9 +49,20 @@ h1,h2,h3{font-family:%%HEADFONT%%;font-weight:700;margin:0;line-height:%%HEADLH%
 p{margin:0;}a{color:inherit;text-decoration:none;}button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
 .wrap{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,56px);}
 .plate .cnt,.plate2 .cnt{color:rgba(239,237,234,.58);}
-.plate .cnt::after,.plate2 .cnt::after{background:rgba(239,237,234,.16);}
 .cnt{font-family:%%MONOFONT%%;font-size:12px;letter-spacing:.22em;color:var(--fg-soft);display:flex;align-items:center;gap:14px;margin-bottom:20px;}
-.cnt::after{content:"";flex:1;height:1px;background:var(--hair2);max-width:190px;}
+/* Отметка раздела. Прежде здесь лежала волосяная линейка на 190px — приём,
+   который стоит на каждом втором шаблоне, и работы он не делал никакой.
+   Теперь прогон из восьми квадратов, по одному на раздел, свой залит цветом
+   марки: знак отвечает на «где я среди восьми», чего сам номер не отвечал.
+   Квадрат тот же, что перед надзаголовком и в дизер-полосах между разделами,
+   поэтому это не новый элемент, а уже существующий мотив на новом месте.
+   Прогон рисует скрипт: порядок разделов он и так знает — по нему собирается
+   панель. Без скрипта остаётся чистый номер, и это рабочее состояние. */
+.cnt .cbs{display:flex;align-items:center;gap:8px;}
+.cnt .cbs i{width:6px;height:6px;background:var(--hair);}
+.cnt .cbs i.on{background:var(--brand);}
+.plate .cnt .cbs i,.plate2 .cnt .cbs i{background:rgba(239,237,234,.22);}
+.plate .cnt .cbs i.on,.plate2 .cnt .cbs i.on{background:var(--brand);}
 /* Имитация оптического размера: на одиннадцати пикселях текстовая гарнитура
    бледнеет рядом с крупным набором, и разрядки одной мало. Берём ступень
    веса — ровно тот приём, которым имитируют оптический размер, когда его нет
@@ -53,7 +71,12 @@ p{margin:0;}a{color:inherit;text-decoration:none;}button{font-family:inherit;cur
 .tag,.asg .tag,.chart .cap,footer h3,footer .fbrand p,footer .fbot,
 #fmd .ghd,#imd .lb,#imd .st .ss{font-weight:500;}
 .eyebrow{font-family:%%MONOFONT%%;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--brand-ink);}
-.lede{max-width:46ch;font-size:16px;line-height:1.75;color:var(--fg-mid);margin-top:24px;}
+/* Заголовки разделов 03 и 07 стоят на ступень ниже своего счётчика: у обоих
+   под заголовком идут два вводных абзаца, и без неё счётчик прилипал к строке.
+   Значение то же, что стояло инлайном у этих двух h2. */
+h2.h2gap{margin-top:var(--s4);}
+
+.lede{max-width:46ch;font-size:16px;line-height:1.75;color:var(--fg-mid);margin-top:var(--s5);}
 /* Два вводных абзаца подряд стояли теснее, чем абзац к своему заголовку, и
    читались одним куском. Разводим их на строку. */
 .lede + .lede{margin-top:34px;}
@@ -81,12 +104,12 @@ header a,header button,header nav,header .navr{pointer-events:auto;}
 .brand .lock .mk{fill:var(--acc);transition:fill .5s var(--e);}
 header.on-dark .brand{--acc:currentColor;}
 /* centre group — the sections, enclosed like one control */
-header nav{justify-self:center;display:flex;align-items:center;gap:2px;padding:4px;font-size:14px;
+header nav{justify-self:center;display:flex;align-items:center;gap:2px;padding:var(--s1);font-size:14px;
   border-radius:3px;box-shadow:inset 0 0 0 1px rgba(13,14,19,.12);background:rgba(252,251,250,.9);
   -webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1);
   transition:box-shadow .5s var(--e),background .5s var(--e);}
 /* section names carry the label voice — the serif in Armenian, the body face in English */
-header nav a{font-family:%%NAVFONT%%;position:relative;padding:8px 15px;white-space:nowrap;border-radius:2px;color:rgba(13,14,19,.82);
+header nav a{font-family:%%NAVFONT%%;position:relative;padding:var(--s2) 15px;white-space:nowrap;border-radius:2px;color:rgba(13,14,19,.82);
   transition:color .35s var(--e),background .35s var(--e);}
 header nav a:hover{color:#0D0E13;background:rgba(13,14,19,.07);}
 header nav a.here{color:var(--inv-fg);background:var(--inv);}
@@ -136,7 +159,7 @@ header nav a.here{color:var(--inv-fg);background:var(--inv);}
 .ixp[hidden]{display:none;}
 .ixin{padding:clamp(14px,2vh,26px) clamp(14px,2.1vw,30px) clamp(20px,3vh,34px);}
 .ixp ol{list-style:none;margin:0 auto;padding:0;max-width:1400px;
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(24px,4vw,64px);}
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(var(--s5),4vw,var(--s8));}
 @media (max-width:760px){.ixp ol{grid-template-columns:1fr;}}
 .ixp li{border-top:1px solid rgba(239,237,234,.13);}
 /* Номер и название. Линейки до края колонки больше нет: их было по одной на
@@ -255,12 +278,12 @@ html[data-nav="1"] .ixp{box-shadow:0 1px 0 var(--hair),0 24px 40px -30px rgba(13
 html[data-nav="2"] .hin{height:66px;grid-template-columns:auto 1fr auto;
   box-shadow:inset 0 -1px 0 rgba(13,14,19,.12);transition:box-shadow .45s var(--e);}
 html[data-nav="2"] header nav{display:none;}
-html[data-nav="2"] .ixb,html[data-nav="2"] .lang{background:none;box-shadow:none;padding:9px 8px;}
+html[data-nav="2"] .ixb,html[data-nav="2"] .lang{background:none;box-shadow:none;padding:9px var(--s2);}
 html[data-nav="2"] .ixb{justify-self:end;}
 /* the sheet name belongs to the titleblock only; the rail and the chips keep the counter */
 html[data-nav="2"] .ixb .sheet,html[data-nav="3"] .ixb .sheet{display:none;}
 html[data-nav="2"] .btn{background:none;color:var(--fg);box-shadow:inset 0 0 0 1px rgba(13,14,19,.22);
-  padding:11px 16px;font-size:13px;}
+  padding:11px var(--s4);font-size:13px;}
 html[data-nav="2"] .btn::before{background:var(--fg);}
 html[data-nav="2"] .btn:hover span{color:var(--bg);}
 html[data-nav="2"] .btn i{background:rgba(13,14,19,.09);}
@@ -331,13 +354,13 @@ html[data-nav="2"] header[data-scrim] .brand::after,
 html[data-nav="2"] header[data-scrim] .navr::after{opacity:1;}
 /* ---- 3 instrument chips: two opaque plates, nothing between ------------ */
 html[data-nav="3"] .hin{height:76px;grid-template-columns:auto 1fr auto;align-items:start;
-  padding-top:12px;}
+  padding-top:var(--s3);}
 html[data-nav="3"] header nav{display:none;}
 /* Логотип вернулся к своей прежней плашке: лист бумаги с волосяной кромкой,
    который переворачивается вместе с разделом под ним. Тёмное стекло осталось
    только под правой группой — счётчиком, языком и кнопкой. На бумаге знак
    синий, надпись графитовая; над тёмным разделом обе части светлеют. */
-html[data-nav="3"] .brand{padding:8px 13px 8px 10px;background:var(--bg);
+html[data-nav="3"] .brand{padding:var(--s2) 13px var(--s2) 10px;background:var(--bg);
   box-shadow:inset 0 0 0 1px rgba(13,14,19,.14);border-radius:2px;--acc:#AC4A29;}
 /* Обе плашки шапки — одной высоты, и высота одна на двоих.
    Порознь они её набирали из своего содержимого: логотип 8+26+8=42, правая
@@ -376,14 +399,14 @@ html[data-nav="3"] .btn{padding:10px 15px;font-size:13px;margin-left:5px;}
 html[data-nav="3"] header .btn{white-space:nowrap;}
 html[data-nav="3"] .btn i{width:19px;height:19px;}
 /* контур сохраняем, но тень листа он больше не отменяет */
-html[data-nav="3"] .ixp{margin-top:12px;}
+html[data-nav="3"] .ixp{margin-top:var(--s3);}
 
 /* narrow: every variant lands on the same compact bar */
 @media (max-width:900px){
   /* Компактный бар центрирует содержимое, а не подвешивает его к верхней
      кромке. Подвес — приём широкого бара: там плашки одной высоты стоят на
      общей линии в 12px, и это читается как ряд. Здесь высота падает с 76 до
-     62, плашки под логотипом нет вовсе, и прежний padding-top:12px оставлял
+     62, плашки под логотипом нет вовсе, и прежний padding-top:var(--s3) оставлял
      локап в верхней части поля (12 сверху, 24 снизу), а правую группу упирал
      в нижнюю кромку — 61 из 62. Центрирование разводит обе по середине. */
   html[data-nav] .hin{grid-template-columns:auto 1fr auto;height:62px;
@@ -414,7 +437,7 @@ html[data-nav="3"] .ixp{margin-top:12px;}
      забирала себе, оставаясь в две строки. Двухстрочный призыв в баре высотой
      62px и был настоящим изъяном: группа вырастала до 60px и упиралась
      в кромки. */
-  html[data-nav="3"] header .btn{padding:11px 12px;font-size:13px;gap:7px;}
+  html[data-nav="3"] header .btn{padding:11px var(--s3);font-size:13px;gap:7px;}
   /* Стрелка уходит — только в шапке и только на телефоне; в герое и в разделах
      кнопка остаётся полной. Она стоит 26px (19 значок и 7 промежуток), и это
      ровно та разница, из-за которой армянская надпись не помещалась в строку:
@@ -441,11 +464,11 @@ html[data-nav="3"] .ixp{margin-top:12px;}
 }
 
 /* right group — language, then the enquiry button */
-.navr{justify-self:end;display:flex;align-items:center;gap:12px;}
+.navr{justify-self:end;display:flex;align-items:center;gap:var(--s3);}
 /* «EN» и «HY» — латиница на обеих страницах, поэтому гарнитура задана явно:
    через %%MONOFONT%% армянская версия рисовала их своим шрифтом, и кнопка
    получалась другого размера, чем в английской. */
-.lang{font-family:'Departure Mono',monospace;font-size:11px;letter-spacing:.12em;padding:9px 12px;
+.lang{font-family:'Departure Mono',monospace;font-size:11px;letter-spacing:.12em;padding:9px var(--s3);
   border-radius:2px;color:#FDFAF4;box-shadow:inset 0 0 0 1px rgba(13,14,19,.12);
   background:rgba(252,251,250,.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:.4s var(--e);}
 .lang:hover{color:#0D0E13;box-shadow:inset 0 0 0 1px rgba(13,14,19,.26);}
@@ -544,8 +567,11 @@ h1{font-size:%%H1SIZE%%;margin-top:20px;text-wrap:balance;}
 /* Потолок — своя колонка, а не окно. Заголовок тянется по содержимому, и текст
    без ручных переносов иначе разливается на всю ширину героя, заезжая на фигуру. */
 .hero h1{color:var(--fg);width:max-content;max-width:100%;}
-h1 em{font-style:normal;color:var(--brand-ink);}
-.hero h1 em{color:var(--brand-ink);}
+/* Акцентная часть заголовка. Раньше набиралась <em>/<i> ради цвета: разметка
+   объявляла смысловое выделение там, где его нет, и экранный диктор менял на
+   этом месте интонацию. Тег нейтральный, правило то же. */
+h1 .ac{font-style:normal;color:var(--brand-ink);}
+.hero h1 .ac{color:var(--brand-ink);}
 .hero .hp{max-width:52ch;font-size:clamp(14.5px,1.4vw,16.5px);line-height:1.76;color:var(--fg-mid);margin-top:30px;}
 .acts{display:flex;gap:11px;margin-top:26px;flex-wrap:wrap;}
 .hero .eyebrow{color:var(--brand-ink);}
@@ -582,7 +608,7 @@ h1 em{font-style:normal;color:var(--brand-ink);}
 /* :not(.st) поднимает вес правила выше, чем у общего правила подписей из блока
    показаний, — иначе подпись возвращается к 12 px и ступень иерархии пропадает */
 .rd>.cp:not(.st){display:block;font-size:11px;letter-spacing:.17em;}
-.rd .vl{display:flex;align-items:baseline;gap:7px;margin:12px 0 0;}
+.rd .vl{display:flex;align-items:baseline;gap:7px;margin:var(--s3) 0 0;}
 /* И цифры, и единицы — пиксельным шрифтом, одинаково на обеих языковых версиях.
    Раньше на английской он доставался всему блоку, а на армянской только цифрам, и
    «V» с «Hz» выходили разными гарнитурами — это и была замеченная разница.
@@ -673,7 +699,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .hrail{display:block;overflow:hidden;padding:6px 0 26px;
   scrollbar-width:none;-ms-overflow-style:none;}
 .hrail::-webkit-scrollbar{display:none;}
-.sx-track{display:flex;align-items:flex-start;gap:clamp(18px,2vw,32px);width:max-content;
+.sx-track{display:flex;align-items:flex-start;gap:clamp(18px,2vw,var(--s6));width:max-content;
   transform:translate3d(0,0,0);will-change:transform;}
 .icard{flex:0 0 clamp(270px,28vw,420px);transform-origin:50% 50%;
   /* Deliberately NOT promoted. The rail rescales this box every frame; as its own
@@ -693,11 +719,11 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 }
 .icard:nth-child(7n+1){padding-top:0;}
 .icard:nth-child(7n+2){padding-top:clamp(18px,3vw,56px);}
-.icard:nth-child(7n+3){padding-top:clamp(8px,1.4vw,26px);}
-.icard:nth-child(7n+4){padding-top:clamp(24px,3.8vw,72px);}
-.icard:nth-child(7n+5){padding-top:clamp(4px,.8vw,14px);}
-.icard:nth-child(7n+6){padding-top:clamp(16px,2.6vw,48px);}
-.icard:nth-child(7n+7){padding-top:clamp(10px,1.8vw,32px);}
+.icard:nth-child(7n+3){padding-top:clamp(var(--s2),1.4vw,26px);}
+.icard:nth-child(7n+4){padding-top:clamp(var(--s5),3.8vw,72px);}
+.icard:nth-child(7n+5){padding-top:clamp(var(--s1),.8vw,14px);}
+.icard:nth-child(7n+6){padding-top:clamp(var(--s4),2.6vw,var(--s7));}
+.icard:nth-child(7n+7){padding-top:clamp(10px,1.8vw,var(--s6));}
 /* height, а НЕ min-height. С минимумом карточка росла по своему тексту: заголовок
    в одну строку или в две — и высоты разъезжались на полсотни пикселей, а ряд
    выглядел случайным. Заодно это возвращало долг кадру: --cardh считается так,
@@ -784,14 +810,14 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   inset:-1px;
   background:linear-gradient(180deg,rgba(13,14,19,.5) 0%,rgba(13,14,19,.05) 42%,rgba(16,18,24,.92) 86%,#101218 100%);}
 .ic-art svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;color:rgba(255,251,249,.5);}
-.ic-foot{position:relative;z-index:2;padding:0 16px 18px;margin-top:-8px;
+.ic-foot{position:relative;z-index:2;padding:0 var(--s4) 18px;margin-top:-var(--s2);
   /* Opaque, so the eight pixels it already overlaps are painted over rather
      than blended: the photo-to-background boundary that flickered under the
      title stops existing instead of being colour-matched. Inherited, not a fixed
      colour: the invitation card carries the brand background and dark text, and a
      hard dark fill here hid its copy. */
   background-color:inherit;}
-.ic-foot h3{font-size:clamp(19px,1.9vw,26px);margin:0 0 8px;}
+.ic-foot h3{font-size:clamp(19px,1.9vw,26px);margin:0 0 var(--s2);}
 .ic-foot p{font-size:14px;line-height:1.6;color:rgba(239,237,234,.66);
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
 /* the invitation keeps the brand colour and its drawing */
@@ -833,14 +859,14 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
    slot must read as empty air rather than as a missing tile. */
 .meas{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:transparent;
   margin-top:clamp(28px,3.4vw,46px);border-top:1px solid var(--hair2);}
-.mi{position:relative;padding:clamp(20px,2.2vw,30px) clamp(16px,1.8vw,26px);
-  display:flex;flex-direction:column;gap:16px;
+.mi{position:relative;padding:clamp(20px,2.2vw,30px) clamp(var(--s4),1.8vw,26px);
+  display:flex;flex-direction:column;gap:var(--s4);
   border-left:1px solid var(--hair2);transition:background .45s var(--e);}
 .mi:nth-child(4n+1){border-left:none;}
 .mi:nth-child(n+5){border-top:1px solid var(--hair2);}
 .mi svg{width:52px;height:34px;display:block;overflow:visible;color:var(--fg);
   transition:color .45s var(--e),transform .5s var(--e);}
-.mi .lb2{font-size:14px;line-height:1.42;color:var(--fg);}
+.mi .mlb{font-size:14px;line-height:1.42;color:var(--fg);}
 .mi:hover{background:rgba(13,14,19,.04);}
 .mi:hover svg{transform:translateY(-2px);}
 /* the last cell is not an electrical parameter but a reading OF them, so it is set
@@ -857,7 +883,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 .plate2 .mi{border-left-color:rgba(239,237,234,.13);}
 .plate2 .mi:nth-child(n+5){border-top-color:rgba(239,237,234,.13);}
 .plate2 .mi svg{color:#EFEDEA;}
-.plate2 .mi .lb2{color:rgba(239,237,234,.84);}
+.plate2 .mi .mlb{color:rgba(239,237,234,.84);}
 /* on the plate the accent tint has to come from the light side of the brand */
 .plate2{--alt-wash:rgba(239,237,234,.055);--alt-wash-h:rgba(239,237,234,.09);}
 .plate2 .mi:hover{background:rgba(239,237,234,.05);}
@@ -881,7 +907,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
 }
 
 /* sections */
-.sec{padding:clamp(56px,7vw,104px) 0 clamp(64px,8vw,120px);}
+.sec{padding:clamp(56px,7vw,104px) 0 clamp(var(--s8),8vw,120px);}
 h2{font-size:%%H2SIZE%%;text-wrap:balance;}
 .thesis h2{max-width:19ch;}
 
@@ -933,7 +959,7 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
    скрипт от clientWidth; 100vw оставлен запасом на случай, если скрипт не
    выполнился. */
 .chain{width:var(--vwpx,100vw);margin-left:calc(50% - var(--vwpx,100vw) / 2);
-  margin-top:clamp(48px,6vw,88px);}
+  margin-top:clamp(var(--s7),6vw,88px);}
 .chaxis{position:relative;height:2px;background:var(--hair);}
 .chaxis i{position:absolute;inset:0;background:var(--brand);
   transform:scaleX(var(--p,0));transform-origin:left;will-change:transform;}
@@ -942,7 +968,7 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
    1280 обёртка ещё и отходит от края, и подписи вставали бы на семьдесят
    пикселей левее заголовка. */
 .chsteps{list-style:none;margin:0;padding:0 var(--inset);display:grid;grid-template-columns:repeat(5,1fr);}
-.chsteps li{position:relative;padding:20px clamp(12px,1.4vw,22px) 0 0;opacity:.5;transition:opacity .55s var(--e);}
+.chsteps li{position:relative;padding:20px clamp(var(--s3),1.4vw,22px) 0 0;opacity:.5;transition:opacity .55s var(--e);}
 .chsteps li::before{content:"";position:absolute;top:-5px;left:0;width:8px;height:8px;background:var(--hair);
   transition:background .45s var(--e),transform .45s var(--e);}
 .chsteps li.on{opacity:1;}
@@ -968,7 +994,7 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
      страницу поперёк и оправдывала слом, вертикальная лишь прижалась бы
      к самому краю экрана и оторвалась бы от своих подписей. Возвращаем
      цепочку в колонку целиком. */
-  .chain{width:auto;margin-left:0;margin-top:clamp(24px,3vw,40px);
+  .chain{width:auto;margin-left:0;margin-top:clamp(var(--s5),3vw,40px);
     display:grid;grid-template-columns:2px 1fr;column-gap:18px;align-items:stretch;}
   .chaxis{height:auto;width:2px;}
   .chaxis i{transform:scaleY(var(--p,0));transform-origin:top;}
@@ -983,7 +1009,7 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
 /* industries grid */
 .other{margin-top:10px;background:var(--inv);color:var(--inv-fg);padding:clamp(26px,3.4vw,44px);display:flex;justify-content:space-between;align-items:center;gap:26px;flex-wrap:wrap;border-radius:2px;}
 .other .no{font-family:%%MONOFONT%%;font-size:12px;letter-spacing:.14em;color:rgba(239,237,234,.58);}
-.other h3{font-size:clamp(21px,2.4vw,32px);margin:12px 0 10px;}
+.other h3{font-size:clamp(21px,2.4vw,32px);margin:var(--s3) 0 10px;}
 .other p{color:rgba(239,237,234,.66);font-size:16px;line-height:1.7;max-width:52ch;}
 .other .btn{background:var(--brand);color:#fff;}
 .other .btn::before{background:var(--bg);}
@@ -993,10 +1019,10 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:40px 0 10px;}
 .stat{background:var(--panel);box-shadow:inset 0 0 0 1px var(--hair2);padding:22px;border-radius:2px;}
 .stat b{display:block;font-family:%%HEADFONT%%;font-weight:700;font-size:clamp(36px,4.6vw,62px);line-height:1;}
-.stat span{display:block;margin-top:8px;font-size:14px;color:var(--fg-mid);line-height:1.5;}
-.display{font-family:%%HEADFONT%%;font-weight:700;font-size:%%DISPSIZE%%;line-height:.96;%%HEADTT%%color:var(--fg);margin:clamp(36px,5vw,64px) 0;}
-.display i{font-style:normal;color:var(--brand-ink);}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.4vw,30px);margin-top:10px;}
+.stat span{display:block;margin-top:var(--s2);font-size:14px;color:var(--fg-mid);line-height:1.5;}
+.display{font-family:%%HEADFONT%%;font-weight:700;font-size:%%DISPSIZE%%;line-height:.96;%%HEADTT%%color:var(--fg);margin:clamp(36px,5vw,var(--s8)) 0;}
+.display .ac{font-style:normal;color:var(--brand-ink);}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(var(--s4),2.4vw,30px);margin-top:10px;}
 /* У шагов больше нет названий, и промежуток от номера до текста,
    который держал заголовок, берёт на себя сам абзац. */
 /* Отступ сверху был зазором под номером шага; номера нет — нет и зазора */
@@ -1102,20 +1128,36 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
   background:var(--hair);transform:scaleY(0);transform-origin:top;
   transition:transform .9s var(--e) .2s;}
 .rv.in .note::before{transform:scaleY(1);}
-/* Приборная гарнитура задаётся напрямую, а не через %%MONOFONT%%: тот токен
-   несёт подписную гарнитуру языка — грóтеск в английской, засечную в армянской.
-   Внутри спана только цифры и дефисы, поэтому пиксельный шрифт годится обоим
-   языкам: армянских букв в нём нет вовсе, но здесь они и не нужны.
-   case поднимает дефисы к высоте цифр, tnum держит разряды на одной ширине,
-   zero отличает ноль от буквы O в «61000-4-30». */
-.note .std{font-family:'Departure Mono',monospace;font-size:12px;letter-spacing:.03em;
-  color:var(--brand-ink);white-space:nowrap;
-  font-feature-settings:'case' 1,'tnum' 1,'zero' 1;}
-/* Кегль подобран по отрисованной высоте цифры, а не по числу в объявлении: в
-   английском наборе 12px дают ровно те же 9,00, что и проза, а в армянском
-   проза выше — 10,00, и туда нужен 13px, который даёт ровно столько же.
-   Обозначение нормы должно стоять на одном уровне с текстом, который её вводит. */
-html[lang="hy"] .note .std{font-size:13px;}
+/* Строка под блоком: утверждение, вынесенное из перечня. Пунктом списка оно
+   читалось позицией услуги, отдельной строкой — позицией компании.
+   Знак примечания у неё тот же, что у блока норм выше: вертикальная линейка
+   на поле, вынос на её ширину. Сперва я линейку не поставил, рассудив, что она
+   отмечает отступление, а строка продолжает тот же разговор, — и ошибся: без
+   знака она читается просто абзацем, повисшим под списком. Линейка здесь и
+   есть то, что сообщает «это уточнение, а не следующий пункт».
+   Проявления по прокрутке у неё нет намеренно: в разделе 04 строка лежит
+   рядом с .list rv, а не внутри него, и .rv.in до неё не достаёт — линейка
+   осталась бы сжатой в ноль. Статичная работает в обоих разделах одинаково. */
+.lnote{font-size:14px;line-height:1.75;color:var(--fg-soft);
+  margin-top:var(--s5);padding-left:var(--s5);max-width:52ch;position:relative;}
+.lnote::before{content:"";position:absolute;left:0;top:.4em;bottom:.4em;
+  width:1px;background:var(--hair);}
+.plate2 .lnote{color:rgba(239,237,234,.70);}
+.plate2 .lnote::before{background:rgba(239,237,234,.18);}
+/* Обозначение нормы набрано гарнитурой самой фразы, а не пиксельной.
+   Пиксельная тут стояла как «приборная», и высота цифры была подогнана под
+   прозу вручную — 12px в английском наборе, 13px в армянском. Выглядело
+   выгоревшим, и причина не в цвете: 5,88:1 норму проходит. У пиксельного
+   начертания штрихи тонкие и с просветами, добавить веса нельзя (начертание
+   одно, запрос жира браузер подделает и размажет пиксели), поэтому на
+   двенадцати пикселях оно всегда светлее окружающего текста.
+   Наследуя гарнитуру и кегль фразы, обозначение получает её же плотность, а
+   подгонка по языкам становится ненужной: высота цифры совпадает сама.
+   Пиксельный шрифт остаётся там, где он и означает прибор, — на показаниях.
+   tnum держит разряды на одной ширине; case и zero сняты, они были нужны
+   пиксельному начертанию и в текстовых гарнитурах не объявлены. */
+.note .std{font-family:inherit;font-size:inherit;letter-spacing:.02em;
+  color:var(--brand-ink);white-space:nowrap;font-feature-settings:'tnum' 1;}
 
 /* assignments */
 .asg .card{transition:box-shadow .45s var(--e),transform .5s var(--e);}
@@ -1204,7 +1246,7 @@ html[lang="hy"] .note .std{font-size:13px;}
 .plate .btn:hover span{color:var(--fg);}
 .chart{position:relative;}
 .chart svg{width:100%;height:auto;display:block;}
-.chart .cap{font-family:%%MONOFONT%%;font-size:11px;letter-spacing:.12em;color:rgba(239,237,234,.58);margin-bottom:12px;}
+.chart .cap{font-family:%%MONOFONT%%;font-size:11px;letter-spacing:.12em;color:rgba(239,237,234,.58);margin-bottom:var(--s3);}
 /* ---- подвал: плита, которую открывает уходящая страница ---------------- */
 /* Обрезка обёртки делает её системой координат для закреплённого потомка —
    тот же приём, что в присланном примере, только без библиотеки. Высота обёртки
@@ -1226,7 +1268,7 @@ footer,.footrev{--foot-h:530px;}
   background:#0D0E13;color:#EFEDEA;padding:clamp(44px,6vw,86px) 0 26px;
   box-shadow:inset 0 1px 0 rgba(239,237,234,.14);}
 footer .fgrid{display:grid;grid-template-columns:minmax(220px,1fr) 1.15fr .85fr;
-  gap:clamp(28px,4vw,64px);align-items:start;}
+  gap:clamp(28px,4vw,var(--s8));align-items:start;}
 /* Не знак, а имя компании тем же начертанием, что весь набор: сюда придут
    реквизиты, и знак над ними читался бы вывеской, а не шапкой документа. */
 footer .fbrand .fname{margin:0;font-family:inherit;font-size:22px;font-weight:600;
@@ -1247,15 +1289,13 @@ footer .fbrand p{margin-top:20px;font-family:%%MONOFONT%%;font-size:11px;
   line-height:1.9;}
 footer h3{font-family:%%MONOFONT%%;font-size:11px;letter-spacing:.18em;font-weight:400;
   text-transform:uppercase;color:rgba(239,237,234,.5);margin-bottom:20px;
-  display:flex;align-items:center;gap:12px;}
+  display:flex;align-items:center;gap:var(--s3);}
 footer h3::after{content:"";flex:1;height:1px;background:rgba(239,237,234,.14);}
 footer ul{list-style:none;margin:0;padding:0;}
 footer .flist li+li,footer .fcon li+li{margin-top:11px;}
-footer .flist a{display:grid;grid-template-columns:26px 1fr;gap:0 12px;align-items:baseline;
+footer .flist a{display:block;
   font-size:14px;line-height:1.5;color:rgba(239,237,234,.72);
   transition:color .3s var(--e);}
-footer .flist a i{font-style:normal;font-family:'Departure Mono',monospace;font-size:11px;
-  letter-spacing:.1em;color:var(--brand-ink);}
 footer .flist a:hover{color:#fff;}
 /* Роль Body: телефон и адрес — то, ради чего в футер и приходят, их читают,
    а не проглядывают. Тон поднят с .72 до .82: на чернильной плите это
@@ -1265,10 +1305,18 @@ footer .fcon a{color:rgba(239,237,234,.72);transition:color .3s var(--e);}
 footer .fcon a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px;}
 /* В колоночном флексе поля auto ужимают полосу до содержимого и ставят её
    посередине — ширину задаём явно, иначе строка копирайта висит в центре. */
-footer .fbot{width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;
+footer .fbot{width:100%;display:flex;justify-content:space-between;align-items:center;gap:var(--s4);
   padding-top:22px;border-top:1px solid rgba(239,237,234,.14);
   font-family:%%MONOFONT%%;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
   color:rgba(239,237,234,.42);}
+/* Копирайт и ссылка на политику — одна группа слева, переключатель языка
+   остаётся у правого края. Без обёртки space-between развёл бы их натрое. */
+footer .fbl{display:flex;align-items:center;gap:var(--s4);flex-wrap:wrap;}
+footer .fpp{font:inherit;letter-spacing:inherit;text-transform:inherit;padding:0;
+  color:rgba(239,237,234,.6);text-decoration:underline;text-underline-offset:4px;
+  text-decoration-color:rgba(239,237,234,.3);transition:.3s var(--e);}
+footer .fpp:hover{color:#EFEDEA;text-decoration-color:rgba(239,237,234,.6);}
+footer .fpp:focus-visible{outline:1px solid #7BA4D0;outline-offset:3px;}
 footer .flang{color:rgba(239,237,234,.6);padding:7px 11px;border-radius:2px;
   box-shadow:inset 0 0 0 1px rgba(239,237,234,.2);transition:.3s var(--e);}
 footer .flang:hover{color:#0D0E13;background:#EFEDEA;}
@@ -1282,7 +1330,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   .footrev>.fpin{position:static;height:auto;}
   .footrev footer{position:static;height:auto;top:auto;}
   footer .fgrid{grid-template-columns:1fr;gap:38px;}
-  footer .fbot{flex-direction:column;align-items:flex-start;gap:12px;}
+  footer .fbot{flex-direction:column;align-items:flex-start;gap:var(--s3);}
 }
 
 /* modals */
@@ -1321,21 +1369,43 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 #imd .bd{padding:clamp(22px,3vw,38px);}
 #imd h3{font-size:clamp(24px,3vw,38px);margin:0 0 14px;}
 #imd .p1{font-size:16px;line-height:1.75;color:var(--fg-mid);max-width:62ch;}
-#imd .lb{font-family:%%MONOFONT%%;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--brand-ink);margin:26px 0 4px;}
+#imd .lb{font-family:%%MONOFONT%%;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--brand-ink);margin:26px 0 var(--s1);}
 /* Перечень выводов — настоящий список: он и выглядит перечнем, и читается
    вслух как перечень с числом пунктов. Маркер рисует .fi em, поэтому
    собственный маркер списка снимается. */
 #imd .fil{list-style:none;margin:0;padding:0;}
-#imd .fi{display:flex;gap:12px;align-items:baseline;font-size:14px;line-height:1.65;padding:11px 0;border-top:1px solid var(--hair2);}
+#imd .fi{display:flex;gap:var(--s3);align-items:baseline;font-size:14px;line-height:1.65;padding:11px 0;border-top:1px solid var(--hair2);}
 #imd .fi em{font-style:normal;width:6px;height:6px;background:var(--brand);flex:0 0 auto;transform:translateY(-1px);}
-#imd .st{margin-top:24px;padding-top:18px;border-top:1px solid var(--hair2);display:flex;gap:22px;align-items:baseline;flex-wrap:wrap;}
+#imd .st{margin-top:var(--s5);padding-top:18px;border-top:1px solid var(--hair2);display:flex;gap:22px;align-items:baseline;flex-wrap:wrap;}
 #imd .st .big{font-family:%%HEADFONT%%;font-weight:700;font-size:clamp(32px,4vw,48px);line-height:1;}
 #imd .st .sx{font-size:14px;line-height:1.62;color:var(--fg-mid);max-width:48ch;}
 #imd .st .ss{font-family:%%MONOFONT%%;font-size:11px;color:var(--fg-soft);margin-top:7px;}
+/* Строка о данных под кнопкой отправки: ступень примечания, не подписи поля. */
+#fmd .fpriv{margin-top:16px;font-size:12px;line-height:1.65;max-width:56ch;
+  color:var(--fg-soft);}
+#fmd .fpriv button{font:inherit;padding:0;color:var(--brand-ink);
+  text-decoration:underline;text-underline-offset:3px;}
+/* privacy modal — тот же лист, что у формы, но без полей.
+   Заголовки разделов набраны маркой раздела, как .ghd в форме: своей ступени
+   у документа нет, и заводить её ради одного окна незачем. */
+#povl{z-index:130;}   /* стоит поверх формы, из которой её открывают */
+#pmd{max-width:720px;}
+#pmd .in{padding:clamp(26px,4vw,46px);}
+#pmd h3{font-size:clamp(23px,2.8vw,30px);margin:0 0 12px;}
+#pmd .lede{font-size:14px;line-height:1.7;margin:0 0 var(--s4);max-width:56ch;
+  color:color-mix(in srgb,var(--fg) 78%,transparent);}
+#pmd .pps{border-top:1px solid var(--hair2);padding:18px 0 4px;}
+#pmd .pps h4{font-family:%%MONOFONT%%;font-size:11px;font-weight:500;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--brand-ink);margin:0 0 10px;}
+#pmd .pps p{font-size:14px;line-height:1.72;color:var(--fg-mid);max-width:62ch;margin:0 0 10px;}
+#pmd .ppu{margin-top:var(--s4);padding-top:16px;border-top:1px solid var(--hair2);
+  font-family:%%MONOFONT%%;font-size:11px;font-weight:500;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--fg-soft);}
+#pmd a{color:var(--brand-ink);text-decoration:underline;text-underline-offset:3px;}
 /* form modal */
 #fmd .in{padding:clamp(26px,4vw,46px);}
 #fmd h3{font-size:clamp(23px,2.8vw,30px);margin-bottom:10px;}
-#fmd h3 i{font-style:normal;color:var(--brand-ink);}
+#fmd h3 .ac{font-style:normal;color:var(--brand-ink);}
 /* Ступени мелкого набора в окне. Порядок силы сверху вниз: заголовок (13,2),
    вводный абзац и заголовки групп (6,7), ярлыки категорий (8,4 — их выбирают,
    значит читают первыми среди мелкого), подписи полей (4,9), пример в поле
@@ -1358,7 +1428,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   text-transform:uppercase;color:color-mix(in srgb,var(--fg) 62%,transparent);
   margin:0 0 18px;display:flex;align-items:center;gap:14px;}
 #fmd .ghd::after{content:"";flex:1;height:1px;background:var(--hair2);max-width:190px;}
-#fmd .gl,#fmd label{display:flex;align-items:baseline;gap:12px;
+#fmd .gl,#fmd label{display:flex;align-items:baseline;gap:var(--s3);
   font-family:%%BODYFONT%%;font-size:13px;font-weight:500;letter-spacing:0;
   text-transform:none;color:var(--fg);margin:0 0 10px;}
 #fmd .gl::before,#fmd label::before{counter-increment:fld;
@@ -1413,7 +1483,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   box-shadow:inset 0 -2px 0 #A8341F;}
 #fmd textarea.err{box-shadow:inset 0 0 0 1px #A8341F;}
 #fmd textarea{min-height:118px;line-height:1.6;resize:vertical;}
-#fmd .tps{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px;}
+#fmd .tps{display:flex;gap:7px;flex-wrap:wrap;margin-top:var(--s1);}
 /* Категория — это ярлык, и на сайте ярлык выглядит так: мелкая подпись в
    разрядку на волосяной кромке. Прежде это был текст в полкегля крупнее
    самой формы. */
@@ -1434,7 +1504,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 /* Сброс кнопочных умолчаний: вид зоны задан ниже и меняться не должен */
 #fmd .drop{appearance:none;background:none;color:inherit;font:inherit;
   display:block;width:100%;text-align:left;
-  border:0;border-radius:0;padding:12px 2px 14px;cursor:pointer;
+  border:0;border-radius:0;padding:var(--s3) 2px 14px;cursor:pointer;
   text-align:left;background:none;box-shadow:inset 0 -1px 0 var(--hair);
   transition:box-shadow .25s var(--e),background .25s var(--e);}
 #fmd .drop:hover{box-shadow:inset 0 -1px 0 rgba(13,14,19,.3);}
@@ -1447,14 +1517,14 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 #fmd .drop span{display:block;margin-top:5px;font-size:13px;line-height:1.6;
   color:color-mix(in srgb,var(--fg) 60%,transparent);}
 #fmd .att{display:flex;align-items:center;gap:10px;background:#F7F5F4;border:0;
-  box-shadow:inset 0 0 0 1px var(--hair2);border-radius:2px;padding:9px 12px;
-  margin-top:8px;font-size:14px;}
+  box-shadow:inset 0 0 0 1px var(--hair2);border-radius:2px;padding:9px var(--s3);
+  margin-top:var(--s2);font-size:14px;}
 #fmd .att b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:400;}
 #fmd .att .sz{font-family:%%MONOFONT%%;font-size:12px;color:var(--fg-soft);}
 #fmd .att button{width:22px;height:22px;border-radius:2px;background:var(--hair2);
   font-size:14px;line-height:1;}
 #fmd .att button:hover{background:#A8341F;color:#fff;}
-#fmd .hint{font-size:12px;color:var(--fg-soft);margin:10px 0 24px;}
+#fmd .hint{font-size:12px;color:var(--fg-soft);margin:10px 0 var(--s5);}
 #fmd .errline{font-size:14px;color:#A8341F;margin-bottom:14px;display:none;}
 #fmd .done{display:none;text-align:center;padding:36px 0;}
 #fmd .done .ok{width:46px;height:46px;border-radius:2px;background:var(--brand);
@@ -1479,7 +1549,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
      в колонку. */
   header nav{display:none;}
   .stats,.steps{grid-template-columns:1fr;gap:22px;}
-  .navr{gap:8px;}
+  .navr{gap:var(--s2);}
   .btn{padding:11px 14px;font-size:12px;}
       #fmd .fr{grid-template-columns:1fr;}
 }
@@ -1490,6 +1560,66 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   .list div>*{opacity:1;transform:none;}
   .list div::after{transform:scaleX(1);}
   .note::before{transform:scaleY(1);}}
+
+/* ============ ЯЗЫКОВАЯ КОМПЕНСАЦИЯ КРАСКИ ============
+   Тон на двух языках задан ОДНИМИ токенами, и замер это подтверждает: и там и
+   там основной текст даёт 13,2:1, вводный 6,7:1, примечание 6,3:1 — разницы в
+   цвете нет ни на сотую. А глаз видит армянскую страницу бледнее, и он прав:
+   у Arian AMU штрих тоньше, чем у Overused Grotesk, и при одном и том же цвете
+   на экране оказывается меньше краски. Контраст этого не измеряет — он считает
+   цвет пикселя, а не то, сколько пикселей закрашено.
+
+   Лечим там, где причина: краски на армянской странице должно быть больше.
+   Двигаем ТОЛЬКО тон и только вверх; кегль и начертание не трогаем, поэтому
+   иерархия остаётся той же, а норму мы и так перекрывали вдвое.
+
+   Почему не весом: у Arian AMU начертание 500 объявлено ФАЙЛОМ 400 (см. FF_HY
+   в build.py), то есть font-weight:500 на армянской странице не даёт ничего —
+   ровно тот приём, которым на латинской подпирают мелкие подписи, здесь мёртв.
+   Ставить 600 нельзя: он берётся уже из файла 700 и для текста слишком жирен.
+
+   Селектор с :lang(hy), а не просто :root, и это не для красоты: палитровый
+   проход дописывает свой :root в самый конец таблицы и перекрыл бы блок,
+   объявленный здесь. Лишняя специфичность решает это независимо от порядка,
+   а заодно правило само говорит, к какому языку относится. На английской
+   странице оно просто не совпадает.
+
+   Цвет НЕ задаётся литералом, а замешивается от --fg. Литерал я сначала и
+   написал — и получил синий вместо тёплого графита: палитровый проход переводит
+   rgba(13,14,19) в чернила #0D2440, тогда как готовый тон набора приходит
+   из дописанного в конец :root и равен rgba(43,39,34). Замес от токена берёт
+   тот цвет, который на странице действительно стоит, и остаётся верным в любой
+   палитре — терракотовой, синей или мятной.
+
+   Доли подобраны так, чтобы прибавить краски и НЕ тронуть иерархию: 84 и 82
+   дают 7,9:1 и 7,5:1 против 13,2:1 у основного текста. Первый заход на 90 и 86
+   выводил вводный абзац на 10,6:1 — он сравнивался с основным, и различать
+   главное от второстепенного становилось нечем. */
+:root:lang(hy){
+  --fg-mid:color-mix(in srgb,var(--fg) 84%,transparent);
+  --fg-soft:color-mix(in srgb,var(--fg) 82%,transparent);
+  --hair:color-mix(in srgb,var(--fg) 18%,transparent);
+  --hair2:color-mix(in srgb,var(--fg) 10%,transparent);}
+
+/* Мелкие подписи по-армянски. Цвет им подняли не здесь, а в палитре: --brand-ink
+   снова тёмный близнец акцента, и это касается обоих языков. Здесь остаётся то,
+   что от языка и зависит.
+
+   Вес. У Arian AMU начертание 500 объявлено файлом 400, поэтому вся группа
+   мелких подписей на армянской странице шла обычным весом, тогда как на
+   латинской она действительно получала полтона. Ставим 600 — он берётся из
+   файла 700. Для текста это было бы слишком жирно, но здесь одиннадцать
+   пикселей прописными: подписи такого кегля жир как раз и держит.
+
+   Разрядка. Значения ставились по латинским прописным. Армянские знаки шире и
+   сложнее рисунком, и на .13em заглавная строка рассыпается на отдельные буквы
+   вместо слова. Убираем до .07em у тегов и до .12em у надзаголовка — они
+   остаются разряженными, но читаются словом. */
+:lang(hy) .tag,:lang(hy) .asg .tag,:lang(hy) .chart .cap,
+:lang(hy) .story .lb span,:lang(hy) .eyebrow,
+:lang(hy) footer h3,:lang(hy) #imd .lb,:lang(hy) #fmd .ghd{font-weight:600;}
+:lang(hy) .tag,:lang(hy) .asg .tag{letter-spacing:.07em;}
+:lang(hy) .eyebrow{letter-spacing:.12em;}
 
 %%READOUT%%
 </style>
@@ -1585,7 +1715,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 
 <section class="sec plate2" id="services"><div class="wrap">
   <div class="rv"><div class="cnt">03</div>
-  <h2 style="margin-top:16px">%%SVC_H2%%</h2>
+  <h2 class="h2gap">%%SVC_H2%%</h2>
   <p class="lede">%%SVC_P1%%</p>
   <p class="lede">%%SVC_P2%%</p></div>
   <div class="stats rv">%%SVC_STATS%%</div>
@@ -1600,7 +1730,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   <div class="rv"><div class="cnt">04</div><h2>%%REP_H2%%</h2>
     <p class="lede">%%REP_P%%</p>
     <p class="note">%%REP_NOTE%%</p></div>
-  <div class="list rv">%%REP_LIST%%</div>
+  <div><div class="list rv">%%REP_LIST%%</div>%%REP_NOTE2%%</div>
 </div></section>
 
 
@@ -1615,13 +1745,14 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 <section class="sec plate2" id="measure"><div class="wrap rv">
   <div class="cnt">06</div><h2>%%MEA_H2%%</h2>
   <div class="meas">%%MEA_CHIPS%%</div>
+  %%MEA_NOTE%%
 </div></section>
 
 <div class="dith" data-dith="#14161C,#EFEDEA,#C8603D"></div>
 
 <section class="sec" id="company"><div class="wrap">
   <div class="rv"><div class="cnt">07</div>
-  <h2 style="margin-top:16px">%%CO_H2%%</h2>
+  <h2 class="h2gap">%%CO_H2%%</h2>
   <p class="lede">%%CO_P%%</p></div>
   <div class="story">%%CO_STORY%%</div>
 </div></section>
@@ -1655,7 +1786,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
     <div class="fcol rv" style="--i:1">
       <h3>%%FOOT_CONTACT%%</h3>
       <ul class="fcon">
-        <li><a href="mailto:sales@powertech.am">sales@powertech.am</a></li>
+        <li><a href="mailto:sales@gridec.am">sales@gridec.am</a></li>
         <li><a href="tel:+37441000014">+374 41 00 00 14</a></li>
         <li>%%FOOT_ADDR%%</li>
         <li>%%FOOT_HOURS%%</li>
@@ -1667,7 +1798,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
     </nav>
   </div>
   <div class="wrap fbot rv" style="--i:3">
-    <span>&copy; 2026 Gridec</span>
+    <span class="fbl"><span>&copy; 2026 Gridec</span><button class="fpp" data-open-privacy>%%PP_LINK%%</button></span>
     <a class="flang" href="%%LANG_HREF%%">%%LANG_LABEL%%</a>
   </div>
 </footer>
@@ -1695,7 +1826,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   <button class="x" data-close aria-label="%%A_CLOSE%%">✕</button>
   <div id="f_main">
     <h3 id="f_h3">%%F_H3%%</h3>
-    <p class="intro">%%F_INTRO%%</p>
+    %%F_INTRO%%
     <!-- Настоящая форма: Enter отправляет, поля объявлены обязательными.
          novalidate — потому что сообщения об ошибках у нас свои и переведённые. -->
     <form id="ptfForm" novalidate>
@@ -1722,12 +1853,28 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
     <div class="hint" id="ptfHint">%%F_HINT0%%</div>
     <div class="errline" id="ptfFormErr">%%F_FORM_ERR%%</div>
     <button class="btn" id="ptfSubmit" type="submit"><span>%%F_SEND%% ↗</span></button>
+    <!-- Строка о данных стоит у кнопки, а не в подвале: прочитать её нужно до
+         отправки, а не после того, как файлы уже ушли. -->
+    <p class="fpriv">%%F_PRIV%%</p>
     </form>
   </div>
   <div class="done" id="f_done" tabindex="-1">
     <div class="ok">✓</div><b>%%F_OK_T%%</b><p>%%F_OK_P%%</p>
     <button class="btn" data-close><span>%%F_CLOSE%%</span></button>
   </div>
+</div></div></div>
+
+<!-- Политика конфиденциальности. Отдельной страницы у сайта нет, и заводить её
+     ради одного документа незачем: окно открывается и из подвала, и из формы,
+     а закрытие возвращает человека туда, откуда он пришёл, — в том числе в
+     наполовину заполненную форму, которая под ним остаётся живой. -->
+<div class="ovl" id="povl"><div class="md" id="pmd"
+  role="dialog" aria-modal="true" aria-labelledby="pp_t" tabindex="-1"><div class="in">
+  <button class="x" data-close aria-label="%%A_CLOSE%%">✕</button>
+  <h3 id="pp_t">%%PP_H3%%</h3>
+  <p class="lede">%%PP_LEDE%%</p>
+  %%PP_BODY%%
+  <p class="ppu">%%PP_UPD%%</p>
 </div></div></div>
 
 <script>
@@ -2693,14 +2840,14 @@ document.getElementById('ptfForm').addEventListener('submit',function(e){e.preve
     Object.keys(fields).forEach(function(k){fd.append(k,fields[k]);});
     fd.append('_subject','Gridec website request');fd.append('_captcha','false');fd.append('_template','table');
     files.forEach(function(f){fd.append('attachment',f,f.name);});
-    fetch('https://formsubmit.co/sales@powertech.am',{method:'POST',body:fd,mode:'no-cors'}).then(done).catch(done);
+    fetch('https://formsubmit.co/sales@gridec.am',{method:'POST',body:fd,mode:'no-cors'}).then(done).catch(done);
   }else{
     var payload=Object.assign({},fields,{_subject:'Gridec website request'});
-    fetch('https://formsubmit.co/ajax/sales@powertech.am',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)})
+    fetch('https://formsubmit.co/ajax/sales@gridec.am',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)})
       .then(function(r){if(!r.ok)throw new Error('send failed');done();})
       .catch(function(){
         var body=encodeURIComponent('Name: '+fields.name+'\nCompany: '+fields.company+'\nEmail: '+fields.email+'\nPhone: '+fields.phone+'\nApplication: '+fields.application+'\n\n'+fields.message);
-        location.href='mailto:sales@powertech.am?subject='+encodeURIComponent('Gridec website request')+'&body='+body;
+        location.href='mailto:sales@gridec.am?subject='+encodeURIComponent('Gridec website request')+'&body='+body;
         done();
       });
   }
@@ -2728,15 +2875,35 @@ function openDialog(ovl,dlg){
      заголовок прежде, чем человек окажется в полях. Дальше Tab ведёт внутрь. */
   dlg.focus();
 }
+/* Политика лежит поверх остальных накладок и уходит первой: под ней может
+   стоять наполовину заполненная форма, и закрывать её вместе с документом
+   значило бы стереть введённое. Свой возврат фокуса — по той же причине. */
+var povl=document.getElementById('povl'),ppFocus=null;
+function openPrivacy(){
+  ppFocus=document.activeElement;
+  povl.classList.add('open');document.body.style.overflow='hidden';
+  document.getElementById('pmd').focus();
+}
+function closePrivacy(){
+  povl.classList.remove('open');
+  /* Прокрутку страницы возвращаем только если под политикой ничего не осталось. */
+  if(!fovl.classList.contains('open')&&!iovl.classList.contains('open'))document.body.style.overflow='';
+  if(ppFocus&&document.contains(ppFocus))ppFocus.focus();
+  ppFocus=null;
+}
 function closeAll(){
+  if(povl.classList.contains('open')){closePrivacy();return;}
   var was=fovl.classList.contains('open')||iovl.classList.contains('open');
   fovl.classList.remove('open');iovl.classList.remove('open');document.body.style.overflow='';
   if(was&&lastFocus&&document.contains(lastFocus))lastFocus.focus();
   lastFocus=null;
 }
 document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',closeAll);});
+document.querySelectorAll('[data-open-privacy]').forEach(function(b){
+  b.addEventListener('click',function(e){e.preventDefault();openPrivacy();});});
 fovl.addEventListener('click',function(e){if(e.target===fovl)closeAll();});
 iovl.addEventListener('click',function(e){if(e.target===iovl)closeAll();});
+povl.addEventListener('click',function(e){if(e.target===povl)closeAll();});
 addEventListener('keydown',function(e){if(e.key==='Escape')closeAll();});
 /* Tab по кругу внутри открытой накладки.
    aria-modal этого НЕ делает: он управляет только виртуальным курсором
@@ -2745,7 +2912,9 @@ addEventListener('keydown',function(e){if(e.key==='Escape')closeAll();});
    и до кнопки закрытия приходится идти вслепую через весь документ. */
 addEventListener('keydown',function(e){
   if(e.key!=='Tab')return;
-  var ovl=iovl.classList.contains('open')?iovl:(fovl.classList.contains('open')?fovl:null);
+  var ovl=povl.classList.contains('open')?povl
+         :(iovl.classList.contains('open')?iovl
+         :(fovl.classList.contains('open')?fovl:null));
   if(!ovl)return;
   var f=focusables(ovl);
   if(!f.length){e.preventDefault();return;}
@@ -2810,6 +2979,18 @@ ixItems.forEach(function(it){
   li.querySelector('a').setAttribute('aria-label',it.no+' '+it.title);
   li.style.setProperty('--i',ixlist.children.length);
   ixlist.appendChild(li);
+});
+ixItems.forEach(function(it,i){
+  var cnt=it.sec.querySelector(".cnt");
+  if(!cnt||cnt.querySelector(".cbs"))return;
+  var run=document.createElement("span");
+  run.className="cbs";run.setAttribute("aria-hidden","true");
+  for(var k=0;k<ixItems.length;k++){
+    var b=document.createElement("i");
+    if(k===i)b.className="on";
+    run.appendChild(b);
+  }
+  cnt.appendChild(run);
 });
 /* variant 1 shows the sheet you are on, right in the bar */
 var sheet=document.createElement('span');sheet.className='sheet';ixb.appendChild(sheet);

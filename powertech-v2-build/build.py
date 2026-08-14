@@ -137,10 +137,13 @@ FOOT_IDS = [('why', 'WHY_H2'), ('applications', 'APP_H2'), ('services', 'SVC_H2'
 
 def foot_links(d):
     out = []
-    for i, (sid, tok) in enumerate(FOOT_IDS, 1):
+    for sid, tok in FOOT_IDS:
         t = re.sub(r'<[^>]+>', ' ', d[tok])
         t = re.sub(r'\s+', ' ', t).strip()
-        out.append('<li><a href="#%s"><i>%02d</i><span>%s</span></a></li>' % (sid, i, t))
+        # Номер из списка снят: рядом стоит название раздела, а ссылкой цифра
+        # здесь не была — те же 01…08 печатались на странице трижды (счётчик,
+        # панель, подвал), и от трёх копий ни одна не читается адресом.
+        out.append('<li><a href="#%s"><span>%s</span></a></li>' % (sid, t))
     return ''.join(out)
 
 # ---------------------------------------------------------------- висячие слова
@@ -151,7 +154,11 @@ NB = ' '   # шаблон замены в re.sub не понимает \uXXXX
 # Только служебные слова. Вопросительные и знаменательные («how», «what», «with»)
 # не приклеиваем: в крупном заголовке это создаёт длинные неразрывные куски,
 # а кончать ими строку не грех.
-GLUE_EN = 'a an the in of to on at is as by for and or per up vs no if it we'
+# Английский список пуст намеренно. Склейка после предлога — правило русской и
+# армянской типографики; в английском его нет, и «the·system·is·operating» ломало
+# переносы там, где браузер справляется сам. Число с единицей склеивает UNIT ниже —
+# это правило языконезависимо и остаётся в силе.
+GLUE_EN = ''
 GLUE_HY = 'և ու թե որ կամ ըստ ի մեր ձեր այս այն'
 UNIT = re.compile(r'(\d)\s+(?=[A-Za-z\u0530-\u058F%])')
 
@@ -173,7 +180,11 @@ def nbsp(value, lang):
 NO_GLUE = {'LANG', 'LANG_HREF', 'LANG_LABEL', 'FONTFACES', 'READOUT', 'BODYFONT',
            'HEADFONT', 'MONOFONT', 'NAVFONT', 'HEADTT', 'HEADLH', 'HEADLS',
            'H1SIZE', 'H2SIZE', 'DISPSIZE', 'SVC_STATS', 'SVC_STEPS', 'REP_LIST',
-           'CO_STORY', 'ASG_CARDS', 'MEA_CELLS', 'FOOT_LINKS'}
+           'CO_STORY', 'ASG_CARDS', 'MEA_CELLS', 'FOOT_LINKS', 'META_DESC',
+           'REP_NOTE2', 'MEA_NOTE'}
+# PP_BODY намеренно НЕ здесь: nbsp разбирает строку по тегам и правит только
+# текст между ними, а числу с единицей («24 месяца», «30 дней») склейка нужна
+# ровно так же, как в остальном наборе.
 
 def steps_html(items):
     """Шаг — это фраза, без названия и без номера.
@@ -189,6 +200,32 @@ def steps_html(items):
 
 def list_html(items):
     return ''.join('<div><span>%s</span></div>' % x for x in items)
+
+def intro_html(text):
+    """Вводная строка формы. Пустое значение не оставляет пустого абзаца с полями."""
+    return '<p class="intro">%s</p>' % text if text else ''
+
+def lnote_html(text):
+    """Строка под блоком. Пустое значение не печатает и самой обёртки.
+
+    Нужна там, где утверждение вынесено из перечня: пункт списка читается
+    услугой, а то же самое отдельной строкой — позицией. Армянская версия
+    пока без неё, поэтому пустая строка обязана давать пустой вывод, а не
+    висящий абзац с полями.
+    """
+    return '<p class="lnote">%s</p>' % text if text else ''
+
+def pp_html(items):
+    """Разделы политики: марка раздела и один-два абзаца под ней.
+
+    Номеров нет намеренно. На странице одна система нумерации — счётчик
+    разделов, — и заводить вторую внутри служебного окна значило бы её
+    сломать: документ не является девятым разделом сайта.
+    """
+    return ''.join(
+        '<section class="pps"><h4>%s</h4>%s</section>'
+        % (head, ''.join('<p>%s</p>' % p for p in paras))
+        for head, paras in items)
 
 def asg_html(items):
     """Пустой заголовок карточки не печатается вовсе.
@@ -277,7 +314,7 @@ def meas_html(items, alt=0):
         # два разных «05» одним и тем же моно.
         out.append('<div class="%s">'
                    '<svg viewBox="0 0 44 30" aria-hidden="true">%s</svg>'
-                   '<span class="lb2">%s</span></div>'
+                   '<span class="mlb">%s</span></div>'
                    % (cls, MEAS_ICONS[i % len(MEAS_ICONS)], label))
     return ''.join(out)
 
@@ -297,6 +334,7 @@ def story_html(items):
 # ---------------------------------------------------------------- EN
 EN = {
  'LANG': 'en', 'TITLE': 'Gridec | Power Quality Monitoring',
+ 'META_DESC': 'Seven-day power quality monitoring in Armenia. We measure under representative load and report the findings.',
  'FONTFACES': FF_EN + '\n' + FF_DEP,
  'READOUT': READOUT_EN % dict(mono=MONO_EN),
  'BODYFONT': "'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif",
@@ -315,34 +353,49 @@ EN = {
  'NAV_SERVICES': 'Services', 'NAV_INDUSTRIES': 'Industries', 'NAV_COMPANY': 'Company',
  'CTA': 'Describe the issue', 'NAV_CTA': 'Get in touch',
  'HERO_EYEBROW': 'POWER QUALITY MONITORING',
- 'HERO_H1': 'See how your<br>electrical system<br><em>performs</em>',
- 'HERO_P': 'Gridec measures electrical parameters while your system is operating and assesses the system on site. We combine the measured data with our observations to provide a clear engineering assessment.',
+ 'HERO_H1': 'See how your<br>electrical system<br><span class="ac">performs</span>',
+ 'HERO_P': 'Gridec records power quality parameters while your electrical system is running, and inspects the installation on site. The report gives you the findings and our recommendation.',
  'HERO_CTA2': 'How monitoring works',
- 'RD_CAP': 'RMS VOLTAGE · 10-MIN TREND',
+ # «TYPICAL» — то, чем в технической документации помечают показанное для примера.
+ # Показание в герое рисует скрипт: числа синтетические и записью не являются.
+ 'RD_CAP': 'RMS VOLTAGE · TYPICAL TRACE',
  'WHY_H2': 'The event may be over before anyone can inspect it',
- 'WHY_P': 'Some voltage events last only milliseconds or a few cycles. By the time the system is inspected, measured values may have returned to normal. Monitoring provides a time-stamped record of the event and the conditions around it.',
+ 'WHY_P': 'A voltage event can last a few cycles. An hour later a spot check reads normal and there is nothing left on site to find. A continuous recording captures it, with a time stamp and the load conditions before and after.',
  'APP_H2': 'Where monitoring helps',
- 'APP_P': 'Power quality problems are not limited to one sector. Monitoring is useful when electrical conditions affect equipment or operations, or when an engineering decision requires measured evidence.',
+ 'APP_P': 'The sector matters less than the question. Monitoring is worth doing when supply conditions are affecting equipment or output, or when a decision has to rest on measurements.',
  'OTHER_T': 'Other Critical Electrical Systems',
  'OTHER_P': 'Do not see your sector here? Describe the issue and the equipment affected. Monitoring is defined by the technical question, not by the sector alone.',
  'SVC_H2': 'Seven-day monitoring',
  'SVC_P1': 'Power quality data is recorded during actual operation and interpreted in the context of the issue being investigated.',
- 'SVC_P2': 'The monitoring period is selected to obtain a representative record of operating conditions. A longer period may be recommended when the issue is intermittent or the operating cycle requires more time.',
+ 'SVC_P2': 'The monitoring period is selected to obtain a representative record of operating conditions. We recommend a longer period when the issue is intermittent or the operating cycle needs more time.',
+ # Ряд отвечает на три вопроса заказчика по порядку: сколько это длится, насколько
+ # непрерывно и что он получит в конце. Третья ячейка — деливерабл, и «1» здесь не
+ # затычка под ряд: она обещает один документ с выводами, а не выгрузку данных.
+ #
+ # Однажды на её месте стояло «200 ms» (базовое окно по IEC 61000-4-30). Число
+ # честное, но оно с другой оси — разрешение прибора, — и ряд от него терял смысл:
+ # владелец такого вопроса не задаёт. Место технического метода — примечание к
+ # разделу 04, рядом с Class S, а не ряд, адресованный владельцу.
  'SVC_STATS': stats_html([('7', 'Days of monitoring'),
                           ('24/7', 'Continuous data recording'),
                           ('1', 'Engineering report')]),
- 'SVC_DISPLAY': 'Measured<br>under actual<br><i>load</i>',
+ 'SVC_DISPLAY': 'Measured<br>under actual<br><span class="ac">load</span>',
  'SVC_STEPS': steps_html([
-    ('01', 'We clarify what needs to be verified, the equipment involved and the decision the findings should support.'),
+    ('01', 'Before anything is connected, we agree what needs verifying, on which equipment, and what the answer is for.'),
     ('02', 'Measurements are carried out while the electrical system operates under representative operating conditions.'),
-    ('03', 'The findings are assessed in context and presented in a clear technical report, with conclusions supported by the recorded data and recommended next steps.')]),
+    ('03', 'We read the record against the question we started with, and write up the conclusions and the recommended next steps.')]),
  'SVC_LINK': 'See what monitoring can reveal',
  'REP_H2': 'Report',
  'REP_P': 'Measurement results, engineering analysis and conclusions provide the basis for further technical decisions.',
  'REP_NOTE': 'Power quality parameters are measured using IEC 61000-4-30 Class S methods. Harmonic and interharmonic measurements are evaluated using IEC 61000-4-7 where applicable.',
+ # «Limitations of the available evidence» из перечня снят: оговорка, стоящая
+ # пунктом среди состава отчёта, читается страховкой. Тот же смысл строкой под
+ # списком читается позицией — и заодно ломает ряд из шести одинаковых по длине
+ # именных групп.
  'REP_LIST': list_html(['Measurement scope and points', 'Monitoring period and operating context',
                         'Recorded events and trends', 'Engineering interpretation',
-                        'Limitations of the available evidence', 'Recommended next steps']),
+                        'Recommended next steps']),
+ 'REP_NOTE2': lnote_html('Where the record does not support a conclusion, the report says so.'),
  # Раздел адресован владельцу, а не инженеру, и должен отвечать на «чем это полезно
  # мне», а не «что мы делаем». Отрасли уже названы в 02, запись и отчёт — в 01 и 04,
  # поэтому здесь ни то, ни другое не может быть сообщением: каждая карточка ставится
@@ -351,30 +404,45 @@ EN = {
  # Границы ролей соблюдены: цифры отдаются проектировщику, ответственность —
  # подрядчику, стоимость работ мы не считаем.
  'ASG_H2': 'Measure before you decide',
- 'ASG_P': 'Measured data can change what is repaired, accepted, ordered or purchased. Monitoring matters most before cost, scope or responsibility is fixed.',
+ 'ASG_P': 'Measurement changes a decision only while that decision is still open. Once the scope is signed and the price agreed, the same data just explains what went wrong.',
  'ASG_CARDS': asg_html([
     # названия карточек сняты и здесь: обе версии обходятся тегом и абзацем
-    ('01', 'RECURRENT FAILURES', '', 'When failures keep recurring, monitoring can show whether they are linked to abnormal supply conditions or changes in load. The results help identify what corrective action is actually needed.'),
-    ('02', 'ACCEPTANCE &amp; WARRANTY', '', 'Before final acceptance, measurements under representative load show how the electrical system actually performs in normal operation. Any issues identified can still be addressed under the contract or warranty.'),
-    ('03', 'EXPANSION', '', 'Before adding solar PV, new equipment or additional load, monitoring can reveal conditions that may cause capacity constraints or voltage deviations. The results help assess available capacity and support design decisions.'),
-    ('04', 'ACQUISITION', '', 'Before acquiring a facility, measurements and monitoring help assess the actual condition and performance of its electrical system. The findings can also be taken into account when agreeing the price and other terms of the transaction.')]),
+    # «may be» в первой карточке стоит намеренно: причина повторных отказов может
+    # оказаться и третьей — дефектом самого узла, — и утверждать «либо сеть, либо
+    # нагрузка» значит обещать то, чего запись не показывает.
+    ('01', 'RECURRENT FAILURES', '', 'Equipment that keeps failing may be damaged by the supply, or by the way it is loaded. The two need different fixes. Recording under load tells you which.'),
+    ('02', 'ACCEPTANCE &amp; WARRANTY', '', 'Before you sign off, measurements under representative load show how the installation behaves in normal operation. Anything found then is still the contractor&rsquo;s to fix, under the contract or the warranty.'),
+    ('03', 'EXPANSION', '', 'Solar PV, new machines or a second shift all land on whatever the existing installation is already doing. Monitoring gives the design a measured starting point instead of nameplate ratings.'),
+    ('04', 'ACQUISITION', '', 'You cannot see a building&rsquo;s electrical condition on a site visit. A week of measurement shows what the installation is carrying, and gives you something concrete when you negotiate the price.')]),
  'MEA_H2': 'What we measure',
+ # «Voltage Dips» → «Dips & Swells»: кольцо в герое обещало и перенапряжения, а
+ # сетка их не называла, и объём измерений не сходился сам с собой.
  'MEA_CHIPS': meas_html(['Voltage & Current', 'Harmonics & Interharmonics', 'Flicker',
-                          'Voltage Dips', 'Unbalance', 'Power & Energy', 'Events',
+                          'Dips & Swells', 'Unbalance', 'Power & Energy', 'Events',
                           'Risk Indicators'], alt=1),
+ # Восьмая ячейка уже отделена начертанием (.mi-alt: штриховые линейки, засечка
+ # в углу) — но подпись всё равно стоит в том же типографском гнезде, что и семь
+ # величин, и читается восьмой измеряемой. Строка под сеткой договаривает то, что
+ # оформление показывает.
+ 'MEA_NOTE': lnote_html('The last cell is not a measurement: risk is what we read from the other seven.'),
  'CO_H2': 'About us',
  'CO_P': 'Gridec is an independent electrical engineering company based in Yerevan. We are a small team focused on specialised engineering work and long-term cooperation with our partners.',
  # \u041f\u0435\u0440\u0435\u043d\u043e\u0441\u044b \u0432 \u0443\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u0438\u044f\u0445 \u0437\u0430\u0434\u0430\u043d\u044b \u0437\u0430\u043a\u0430\u0437\u0447\u0438\u043a\u043e\u043c \u043f\u043e\u0441\u0442\u0440\u043e\u0447\u043d\u043e \u0438 \u0441\u0442\u043e\u044f\u0442 \u0440\u0430\u0437\u043c\u0435\u0442\u043a\u043e\u0439, \u0430 \u043d\u0435
  # \u043e\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u044b \u043d\u0430 \u0432\u043e\u043b\u044e \u0438\u0437\u043c\u0435\u0440\u0435\u043d\u0438\u044f.
+ # Номера «01 ·», «02 ·», «03 ·» с подписей сняты: на странице уже есть одна
+ # система нумерации — счётчики разделов 01–08, — и вложенная вторая внутри
+ # седьмого раздела читалась шаблоном, а не структурой.
  'CO_STORY': story_html([
-    ('01 \u00b7 WHY WE STARTED',
+    ('WHY WE STARTED',
      'Specialist measurements and analysis should not require a permanent in-house team or equipment that spends most of its time unused. Gridec gives companies access to both when the need arises.'),
-    ('02 \u00b7 HOW WE WORK',
+    ('HOW WE WORK',
      'A useful investigation starts with the question that needs answering. We measure the system under real operating conditions and base the conclusion on what the data shows, whether that points to a problem or confirms normal operation.'),
-    ('03 \u00b7 WHAT WE ARE BUILDING',
-     'Gridec is being built in Armenia as a focused engineering company: careful work, clear communication and technical conclusions we are prepared to stand behind. Growth matters, but not at the expense of the work itself.')]),
+    ('WHAT WE ARE BUILDING',
+     'We are building Gridec in Armenia as a small engineering firm whose conclusions hold up when someone checks them. We would rather grow slowly than lose that.')]),
  'CT_H2': 'Start with what happened',
- 'CT_CAP': 'RMS VOLTAGE · 10-MIN TREND', 'CT_NOM': 'NOMINAL', 'CT_DIP': 'VOLTAGE DIP · 180 MS',
+ # Кривая провала нарисована руками, а не снята прибором. Под подписью «TYPICAL
+ # TRACE» «180 MS» читается примером и вопроса «где запись» не вызывает.
+ 'CT_CAP': 'RMS VOLTAGE · TYPICAL TRACE', 'CT_NOM': 'NOMINAL', 'CT_DIP': 'VOLTAGE DIP · 180 MS',
  'CO_LEGAL': 'Gridec LLC',
  # ՀՎՀՀ — армянский учётный номер налогоплательщика. По-английски он
  # передаётся как TIN (Taxpayer Identification Number): именно так его
@@ -383,10 +451,12 @@ EN = {
  'CO_TIN_LB': 'TIN', 'CO_TIN': '08331059',
  'FOOT_ADDR': 'Davtashen 1, 13-25, Yerevan 0058, Armenia',
  'FOOT_SECTIONS': 'Sections', 'FOOT_CONTACT': 'Contact',
- 'FOOT_HOURS': 'Mon–Fri 09:00–18:00 (UTC+4)',
+ 'FOOT_HOURS': 'Mon-Fri 09:00-18:00 (UTC+4)',
  'IM_FINDLB': 'What the report can address',
- 'F_H3': 'Describe the <i>electrical issue</i>',
- 'F_INTRO': 'Tell us what happened, when you noticed it, and which equipment is involved.',
+ 'F_H3': 'Describe the <span class="ac">electrical issue</span>',
+ # Вводная строка снята: она слово в слово повторяла подсказку в поле «What
+ # happened?» двумя сантиметрами ниже. Пустое значение не печатает и абзаца.
+ 'F_INTRO': intro_html(''),
  'F_CONTACT': 'Contact details',
  'F_NAME': 'Name', 'F_NAME_PH': 'Your name',
  'F_COMPANY': 'Company', 'F_COMPANY_PH': 'Company name',
@@ -400,12 +470,101 @@ EN = {
  'F_SIZE_ERR': 'Attachments exceed the 10 MB limit. Please remove some files.',
  'F_HINT0': 'Up to 10 MB',
  'F_FORM_ERR': 'Please fill in all fields: name, company, a valid email, phone and a short description.',
- 'F_SEND': 'Send the details',
+ 'F_SEND': 'Send',
  # Имя кнопки закрытия: символ «×» экранный диктор читает как знак умножения
  'A_CLOSE': 'Close',
  'F_OK_T': 'Thank you.',
  'F_OK_P': 'We will review the information and contact you to clarify the measurement scope.',
  'F_CLOSE': 'Close',
+ # ---- политика конфиденциальности ----
+ # Разделы взяты по образцу, который прислал владелец (earlyone.com/privacy-policy):
+ # тот же порядок тем, принятый для армянской компании. Текст свой: у образца
+ # платформа с приложением, аналитикой и интеграциями, у нас — статическая
+ # страница с одной формой, и половина его разделов описывала бы то, чего нет.
+ #
+ # Два места, где мы сознательно строже образца. Срок хранения назван числом,
+ # а не оборотом «сколько потребуется»: неопределённый срок проверить нельзя.
+ # Закон назван по имени, и назван надзорный орган: именно это ищет читатель,
+ # ради которого документ и заводился.
+ 'PP_LINK': 'Privacy',
+ 'PP_H3': 'Privacy Policy',
+ 'PP_LEDE': 'This policy explains what happens to information you send us through this '
+            'website. It covers this site only, and it describes what the site actually '
+            'does — nothing beyond that.',
+ 'PP_BODY': pp_html([
+  ('Who we are', [
+   'Gridec LLC, Davtashen 1, 13-25, Yerevan 0058, Armenia. Taxpayer identification '
+   'number 08331059.',
+   'Gridec decides why and how the information described here is used, and is the '
+   'controller of that information.']),
+  ('Information we collect', [
+   'The site has one form. It collects your name, company, email address, phone number, '
+   'the sector you select, your description of the issue, and any files you attach to it.',
+   'Nothing is collected unless you send that form. We run no analytics, no advertising '
+   'and no third-party trackers, and we do not collect device identifiers, location or '
+   'usage statistics. Our hosting provider keeps ordinary server request logs, as any web '
+   'server does; we neither read them nor use them.']),
+  ('How we use it', [
+   'To answer your enquiry, to clarify what needs measuring, to prepare a quotation, and '
+   'to keep a record of what was agreed. We do not use your details for marketing, and we '
+   "do not sell them or share them for anyone else's purposes."]),
+  ('Legal basis', [
+   'We use your details to take steps at your request before entering into a contract, '
+   'and on our legitimate interest in answering business enquiries addressed to us. Where '
+   'the General Data Protection Regulation applies to you, those are Article 6(1)(b) and '
+   'Article 6(1)(f).']),
+  ('Data sharing', [
+   'The form is delivered to our mailbox by FormSubmit (formsubmit.co), a form-to-email '
+   'service operated outside Armenia and the European Union. The contents of the form, '
+   'including any attachments, pass through that service on the way to us. The resulting '
+   'message is then held with our email provider.',
+   'We also disclose information where Armenian law requires it, for example on a lawful '
+   'request from a state authority. No one else receives your enquiry.']),
+  ('Data security', [
+   'The site is served over an encrypted connection, so what you type into the form is '
+   'encrypted in transit. Enquiries are held in a mailbox whose access is limited to the '
+   'people who answer them.',
+   'We do not claim protection beyond that. Email is not a confidential channel by '
+   'design: if what you need to send is sensitive, say so first and we will agree a '
+   'different way to receive it.']),
+  ('Cookies and similar technologies', [
+   'This site sets no cookies. One technical flag is stored in your browser to carry the '
+   'visual transition between the two language versions; it holds no personal data, is '
+   'readable by no one else, and is discarded when you close the tab.']),
+  ('Data retention', [
+   'Enquiries are kept for 24 months from our last contact with you, then deleted. Where '
+   'an enquiry becomes a contract, the related records are kept for as long as Armenian '
+   'accounting and tax law requires. You can ask us to delete your enquiry sooner.']),
+  ('International data transfers', [
+   'We are based in Armenia and your enquiry is held there. The form service named above '
+   'operates from outside Armenia and the European Union, so the contents of the form '
+   'cross a border when you send it. If you would rather they did not, email us directly '
+   'at <a href="mailto:sales@gridec.am">sales@gridec.am</a> instead of using the '
+   'form.']),
+  ('Your rights', [
+   'You can ask for a copy of what we hold about you, ask us to correct it, ask us to '
+   'delete it, ask us to restrict how we use it, or object to our using it. You can also '
+   'ask for your details in a portable form.',
+   'Write to <a href="mailto:sales@gridec.am">sales@gridec.am</a> and we will '
+   'answer within 30 days. These rights follow the Republic of Armenia Law on the '
+   'Protection of Personal Data and, where it applies to you, the General Data Protection '
+   'Regulation.']),
+  ('Complaints', [
+   'If our answer does not satisfy you, you can complain to the Personal Data Protection '
+   'Agency of the Ministry of Justice of the Republic of Armenia. If you are in the '
+   'European Union, you may also complain to the supervisory authority of your country.']),
+  ('Changes to this policy', [
+   'If we change how enquiries are handled, we will update this page and the revision '
+   'date below. A material change will be described here rather than made quietly.']),
+  ('Contact', [
+   'Questions about this policy, or about the data we hold on you: '
+   '<a href="mailto:sales@gridec.am">sales@gridec.am</a>, or by post to Gridec LLC, '
+   'Davtashen 1, 13-25, Yerevan 0058, Armenia.']),
+ ]),
+ 'PP_UPD': 'Last updated 14 August 2026',
+ 'F_PRIV': 'We use these details only to answer your enquiry. The form is delivered through '
+           'FormSubmit, a third-party service. '
+           '<button type="button" data-open-privacy>Privacy Policy</button>',
 }
 EN_DATA = {
     # Кольцо величин в герое: номер, две строки названия, признак акцента.
@@ -424,7 +583,7 @@ EN_DATA = {
  'viewDetails': 'View details',
  'hint1': ' file · ', 'hintN': ' files · ', 'hintSuf': ' of 10 MB', 'hint0': 'Up to 10 MB total.',
  'appTypes': ['Manufacturing', 'Solar PV', 'Healthcare / Laboratory',
-              'Data Center / IT', 'Commercial Building',
+              'Data Centre / IT', 'Commercial Building',
               'Investment / Technical Review', 'Other'],
  'cards': [
   {'title': 'Manufacturing', 'img': 'IMG0',
@@ -445,17 +604,17 @@ EN_DATA = {
    'p1': 'Warranty or service review may require evidence of the supply conditions present while the equipment was operating. A spot measurement may miss intermittent events.',
    'findings': ['Recorded supply conditions compared with manufacturer requirements.',
                 'Evidence relevant to distinguishing supply-related events from equipment faults.',
-                'Recommended next checks prioritized by technical criticality and operational impact.'],
+                'Recommended next checks prioritised by technical criticality and operational impact.'],
    'statLabel': 'Technical note',
    'statText': 'IEC 60601-1-2 includes immunity testing for voltage dips and short interruptions in medical electrical equipment.',
    'statSource': 'Source: IEC'},
-  {'title': 'Data Centers and IT Infrastructure', 'img': 'IMG3',
+  {'title': 'Data Centres and IT Infrastructure', 'img': 'IMG3',
    'p1': 'Generators start and transfer on a different time scale from millisecond-level disturbances. Time-stamped monitoring records can be compared with UPS and IT logs.',
    'findings': ['UPS input loading relative to rated capacity.',
                 'Correlation between restarts, battery operation and recorded supply disturbances.',
                 'Load profiles relevant to planned expansion.'],
    'stat': '57%', 'statLabel': 'Statistic',
-   'statText': "of respondents to Uptime's 2025 annual survey said their most recent major outage cost more than USD 100,000.",
+   'statText': 'of respondents to Uptime&rsquo;s 2025 annual survey said their most recent major outage cost more than USD 100,000.',
    'statSource': 'Source: Uptime Institute, Annual Outage Analysis 2026'},
   {'title': 'Commercial Buildings', 'img': 'IMG4',
    'p1': 'Measurements can help distinguish upstream supply conditions from disturbances generated within the building or by tenant equipment.',
@@ -498,7 +657,7 @@ HY = {
  'NAV_SERVICES': 'Ծառայություններ', 'NAV_INDUSTRIES': 'Ոլորտներ', 'NAV_COMPANY': 'Ընկերություն',
  'CTA': 'Նկարագրել խնդիրը', 'NAV_CTA': 'Կապ մեզ հետ',
  'HERO_EYEBROW': 'ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ',
- 'HERO_H1': 'Ստուգեք, թե ինչպես է աշխատում ձեր <em>էլեկտրացանցը</em>',
+ 'HERO_H1': 'Ստուգեք, թե ինչպես է աշխատում ձեր <span class="ac">էլեկտրացանցը</span>',
  'HERO_P': 'Gridec-ը համակարգի աշխատանքի ընթացքում չափում և գրանցում է էլեկտրական պարամետրերը, ուսումնասիրում այն տեղում և վերլուծում ստացված տվյալները։ Չափումներն ու դիտարկումները համադրում ենք՝ հստակ ինժեներական գնահատական ներկայացնելու համար։',
  'HERO_CTA2': 'Ինչպես է իրականացվում մոնիթորինգը',
  'RD_CAP': 'RMS ԼԱՐՈՒՄ · 10-ՐՈՊԵԱՆՈՑ ՄԻՏՈՒՄ',
@@ -514,7 +673,7 @@ HY = {
  'SVC_STATS': stats_html([('7', 'մոնիթորինգի տևողություն'),
                           ('24/7', 'անընդհատ տվյալների գրանցում'),
                           ('1', 'ինժեներական հաշվետվություն')]),
- 'SVC_DISPLAY': 'Չափումներ՝<br>փաստացի<br><i>բեռնվածությամբ</i>',
+ 'SVC_DISPLAY': 'Չափումներ՝<br>փաստացի<br><span class="ac">բեռնվածությամբ</span>',
  'SVC_STEPS': steps_html([
     ('01', 'Հստակեցնում ենք՝ ինչ պետք է ստուգվի, որ սարքավորումն է ներգրավված և ինչ որոշման պետք է աջակցեն արդյունքները։'),
     ('02', 'Չափումները կատարվում են էլեկտրական համակարգի աշխատանքի ընթացքում՝ բնորոշ աշխատանքային պայմաններում։'),
@@ -525,7 +684,22 @@ HY = {
  'REP_NOTE': 'Էլեկտրաէներգիայի որակի պարամետրերը չափվում են ԳՕՍՏ ԻԷԿ 61000-4-30-2017 ստանդարտով սահմանված S դասի մեթոդներով։ Հարմոնիկ և միջհարմոնիկ բաղադրիչները գնահատվում են ԻԷԿ 61000-4-7-ի համաձայն, երբ կիրառելի է։ Մատակարարման կետում արդյունքները կարող են համեմատվել Հայաստանում գործող ԳՕՍՏ 32144-2013-ի նորմերի հետ՝ չափման նպատակից և չափման կետից կախված։',
  'REP_LIST': list_html(['Չափումների շրջանակն ու կետերը', 'Մոնիթորինգի ժամանակահատվածն ու աշխատանքային պայմանները',
                         'Գրանցված իրադարձություններն ու միտումները', 'Ինժեներական մեկնաբանություն',
-                        'Առկա տվյալների սահմանափակումները', 'Առաջարկվող հաջորդ քայլերը']),
+                        'Առաջարկվող հաջորդ քայլերը']),
+ # Оговорка вынесена из перечня строкой под ним — как в английской версии, чтобы
+ # состав отчёта на двух языках не расходился числом пунктов.
+ #
+ # Именная группа «Առկա տվյալների սահմանափակումները», перенесённая из списка,
+ # отдельной строкой не говорила ничего: пунктом перечня она называла раздел
+ # отчёта, а под списком повисала обрывком. Заменена на то же утверждение, что
+ # стоит в английской версии: «если записанных данных для вывода недостаточно,
+ # отчёт это указывает».
+ #
+ # ⚠ ЧЕРНОВИК, ЖДЁТ ПРОВЕРКИ НОСИТЕЛЕМ. Собрано из слов, которые на странице
+ # уже стоят: գրանցված, տվյալները, եզրակացություն, հաշվետվությունը, — но
+ # армянскую формулировку должен утвердить владелец, а не я.
+ 'REP_NOTE2': lnote_html(
+     'Եթե գրանցված տվյալները եզրակացության համար բավարար չեն, '
+     'հաշվետվությունը դա նշում է։'),
  # Заголовок и названия карточек — обычным регистром, как во всех остальных разделах
  # армянской страницы: HEADTT здесь пуст, h1—h3 не переводятся в капс стилями (в
  # отличие от английской страницы), и капс в тексте выделял бы раздел 05 из ряда.
@@ -550,6 +724,7 @@ HY = {
  'MEA_CHIPS': meas_html(['Լարում և հոսանք', 'Հարմոնիկներ և միջհարմոնիկներ', 'Ֆլիկեր',
                           'Լարման անկումներ', 'Լարման անհամաչափություն', 'Հզորություն և էներգիա',
                           'Իրադարձություններ', 'Ռիսկի ցուցանիշներ'], alt=1),
+ 'MEA_NOTE': lnote_html(''),
  # Заголовки обычным регистром: на армянской странице стили не поднимают h1—h3 в
  # капс. Принудительных переносов нет — в этой редакции их не задавали, строки
  # раскладывает колонка.
@@ -570,10 +745,10 @@ HY = {
  'CO_TIN_LB': 'ՀՎՀՀ', 'CO_TIN': '08331059',
  'FOOT_ADDR': 'Դավթաշեն 1, 13-25, Երևան 0058, Հայաստան',
  'FOOT_SECTIONS': 'Բաժիններ', 'FOOT_CONTACT': 'Կապ',
- 'FOOT_HOURS': 'Երկ-Ուրբ 09:00–18:00 (UTC+4)',
+ 'FOOT_HOURS': 'Երկ-Ուրբ 09:00-18:00 (UTC+4)',
  'IM_FINDLB': 'ԻՆՉ ՀԱՐՑԵՐԻ ԿԱՐՈՂ Է ՊԱՏԱՍԽԱՆԵԼ ՀԱՇՎԵՏՎՈՒԹՅՈՒՆԸ',
- 'F_H3': 'Նկարագրեք <i>խնդիրը</i>',
- 'F_INTRO': 'Նշեք՝ ինչ է տեղի ունեցել, երբ է դա նկատվել և ինչ սարքավորման վրա։',
+ 'F_H3': 'Նկարագրեք <span class="ac">խնդիրը</span>',
+ 'F_INTRO': intro_html('Նշեք՝ ինչ է տեղի ունեցել, երբ է դա նկատվել և ինչ սարքավորման վրա։'),
  'F_CONTACT': 'ԿՈՆՏԱԿՏԱՅԻՆ ՏՎՅԱԼՆԵՐ',
  'F_NAME': 'Անուն', 'F_NAME_PH': 'Ձեր անունը',
  'F_COMPANY': 'Ընկերություն', 'F_COMPANY_PH': 'Ընկերության անվանումը',
@@ -592,6 +767,92 @@ HY = {
  'F_OK_T': 'Շնորհակալություն։',
  'F_OK_P': 'Մենք կուսումնասիրենք տրամադրված տեղեկատվությունը և կկապվենք ձեզ հետ՝ չափումների շրջանակը հստակեցնելու համար։',
  'F_CLOSE': 'Փակել',
+ # ---- политика конфиденциальности ----
+ # Перевод английского документа по смыслу, раздел в раздел. Юридические формулы
+ # не изобретались: сказано ровно то же, что и в английской версии.
+ 'PP_LINK': 'Գաղտնիություն',
+ 'PP_H3': 'Գաղտնիության քաղաքականություն',
+ 'PP_LEDE': 'Այս քաղաքականությունը բացատրում է, թե ինչ է կատարվում կայքի միջոցով ձեր '
+            'ուղարկած տեղեկատվության հետ։ Այն վերաբերում է միայն այս կայքին և '
+            'նկարագրում է կայքի իրական աշխատանքը՝ ոչ ավելին։',
+ 'PP_BODY': pp_html([
+  ('Ովքեր ենք մենք', [
+   '«Գրիդեկ» ՍՊԸ, Դավթաշեն 1, 13-25, Երևան 0058, Հայաստան։ ՀՎՀՀ 08331059։',
+   'Այստեղ նկարագրված տեղեկատվության օգտագործման նպատակն ու եղանակը որոշում է '
+   '«Գրիդեկ»-ը, և հենց նա է այդ տվյալները մշակողը։']),
+  ('Ինչ ենք հավաքում', [
+   'Կայքում կա մեկ ձև։ Այն հավաքում է ձեր անունը, ընկերությունը, էլ. փոստի հասցեն, '
+   'հեռախոսահամարը, ընտրված ոլորտը, խնդրի ձեր նկարագրությունը և կցված ֆայլերը։',
+   'Մինչև այդ ձևն ուղարկելը ոչինչ չի հավաքվում։ Մենք վերլուծական և գովազդային '
+   'համակարգեր չենք օգտագործում, երրորդ կողմի հետագծիչներ չունենք, չենք հավաքում '
+   'սարքի նույնացուցիչներ, տեղորոշում կամ օգտագործման վիճակագրություն։ Մեր '
+   'հոսթինգ-ծառայությունը պահում է սերվերի սովորական գրանցամատյաններ, ինչպես '
+   'ցանկացած վեբ-սերվեր. մենք դրանք ո՛չ կարդում ենք, ո՛չ օգտագործում։']),
+  ('Ինչու ենք օգտագործում', [
+   'Ձեր հարցմանը պատասխանելու, չափումների շրջանակը հստակեցնելու, առաջարկ '
+   'պատրաստելու և պայմանավորվածությունը գրանցելու համար։ Տվյալները գովազդային '
+   'նպատակով չենք օգտագործում, չենք վաճառում և երրորդ անձանց նպատակների համար '
+   'չենք փոխանցում։']),
+  ('Իրավական հիմքը', [
+   'Ձեր տվյալներն օգտագործում ենք ձեր իսկ խնդրանքով՝ մինչև պայմանագիր կնքելը '
+   'քայլեր ձեռնարկելու համար, ինչպես նաև մեզ հասցեագրված գործարար հարցումներին '
+   'պատասխանելու մեր օրինական շահի հիման վրա։ Եթե ձեր նկատմամբ կիրառելի է '
+   'Տվյալների պաշտպանության ընդհանուր կանոնակարգը (GDPR), դրանք են հոդված '
+   '6(1)(b)-ը և հոդված 6(1)(f)-ը։']),
+  ('Ում ենք փոխանցում', [
+   'Ձևը մեր փոստարկղ է առաքվում FormSubmit ծառայության միջոցով (formsubmit.co), '
+   'որը գործում է Հայաստանից և Եվրոպական միությունից դուրս։ Ձևի պարունակությունը, '
+   'ներառյալ կցված ֆայլերը, անցնում է այդ ծառայության միջով։ Ստացված նամակն '
+   'այնուհետև պահվում է մեր փոստային ծառայության մոտ։',
+   'Տեղեկատվությունը բացահայտում ենք նաև այն դեպքում, երբ դա պահանջում է '
+   'Հայաստանի օրենսդրությունը, օրինակ՝ պետական մարմնի իրավաչափ հարցման դեպքում։ '
+   'Ուրիշ ոչ ոք ձեր հարցումը չի ստանում։']),
+  ('Տվյալների անվտանգությունը', [
+   'Կայքը սպասարկվում է գաղտնագրված կապով, ուստի ձևում մուտքագրվածը փոխանցման '
+   'ընթացքում գաղտնագրված է։ Հարցումները պահվում են փոստարկղում, որին հասանելիություն '
+   'ունեն միայն դրանց պատասխանող աշխատակիցները։',
+   'Դրանից ավելին չենք հավաստիացնում։ Էլեկտրոնային փոստն ի սկզբանե գաղտնի '
+   'կապուղի չէ. եթե ուղարկելիքը զգայուն է, նախապես տեղեկացրեք, և կպայմանավորվենք '
+   'ստանալու այլ եղանակի շուրջ։']),
+  ('Cookie և նմանատիպ տեխնոլոգիաներ', [
+   'Այս կայքը cookie չի տեղադրում։ Դիտարկիչում պահվում է մեկ տեխնիկական նշիչ՝ '
+   'լեզվական տարբերակների միջև տեսողական անցումը ցուցադրելու համար. այն անձնական '
+   'տվյալ չի պարունակում, ուրիշի համար ընթեռնելի չէ և վերանում է ներդիրը փակելիս։']),
+  ('Որքան ենք պահում', [
+   'Հարցումները պահվում են ձեզ հետ վերջին կապից 24 ամիս, ապա ջնջվում են։ Եթե '
+   'հարցումը վերածվում է պայմանագրի, առնչվող փաստաթղթերը պահվում են այնքան, '
+   'որքան պահանջում է Հայաստանի հաշվապահական և հարկային օրենսդրությունը։ Կարող եք '
+   'խնդրել ջնջել ձեր հարցումն ավելի շուտ։']),
+  ('Տվյալների միջսահմանային փոխանցում', [
+   'Մենք գործում ենք Հայաստանում, և ձեր հարցումը պահվում է այստեղ։ Վերը նշված ձևի '
+   'ծառայությունը գործում է Հայաստանից և Եվրոպական միությունից դուրս, ուստի '
+   'ուղարկելիս ձևի պարունակությունը հատում է սահմանը։ Եթե նախընտրում եք դրանից '
+   'խուսափել, ձևի փոխարեն գրեք ուղիղ '
+   '<a href="mailto:sales@gridec.am">sales@gridec.am</a> հասցեին։']),
+  ('Ձեր իրավունքները', [
+   'Դուք կարող եք պահանջել ձեր մասին պահվող տվյալների պատճենը, խնդրել ուղղել, '
+   'ջնջել, սահմանափակել դրանց օգտագործումը կամ առարկել դրա դեմ։ Կարող եք նաև '
+   'պահանջել ձեր տվյալները փոխանցելի ձևաչափով։',
+   'Գրեք <a href="mailto:sales@gridec.am">sales@gridec.am</a> հասցեին. '
+   'կպատասխանենք 30 օրվա ընթացքում։ Այս իրավունքները բխում են «Անձնական տվյալների '
+   'պաշտպանության մասին» ՀՀ օրենքից և, ձեր նկատմամբ կիրառելի լինելու դեպքում, '
+   'Տվյալների պաշտպանության ընդհանուր կանոնակարգից (GDPR)։']),
+  ('Բողոքները', [
+   'Եթե մեր պատասխանը ձեզ չբավարարի, կարող եք բողոքել ՀՀ արդարադատության '
+   'նախարարության Անձնական տվյալների պաշտպանության գործակալությանը։ Եվրոպական '
+   'միությունում գտնվելու դեպքում կարող եք դիմել նաև ձեր երկրի վերահսկող մարմնին։']),
+  ('Այս էջի փոփոխությունները', [
+   'Եթե հարցումների մշակման կարգը փոխվի, կթարմացնենք այս էջը և ներքևի ամսաթիվը։ '
+   'Էական փոփոխությունն այստեղ կնկարագրվի, այլ ոչ թե կկատարվի լուռ։']),
+  ('Կապ', [
+   'Այս քաղաքականության կամ ձեր տվյալների վերաբերյալ հարցերով՝ '
+   '<a href="mailto:sales@gridec.am">sales@gridec.am</a>, կամ փոստով՝ '
+   '«Գրիդեկ» ՍՊԸ, Դավթաշեն 1, 13-25, Երևան 0058, Հայաստան։']),
+ ]),
+ 'PP_UPD': 'Թարմացվել է՝ 2026 թ. օգոստոսի 14',
+ 'F_PRIV': 'Այս տվյալներն օգտագործում ենք միայն ձեր հարցմանը պատասխանելու համար։ '
+           'Ձևն առաքվում է FormSubmit երրորդ կողմի ծառայության միջոցով։ '
+           '<button type="button" data-open-privacy>Գաղտնիության քաղաքականություն</button>',
 }
 import copy
 HY_DATA = copy.deepcopy(EN_DATA)
@@ -676,8 +937,11 @@ for _d in (EN, HY):
 
 # ---------------------------------------------------------------- deploy variants (files by URL, not base64)
 def font_face_url(fam, weight, fn):
+    # Путь от страницы, а не от папки: деплойная пара лежит в КОРНЕ сайта, рядом
+    # с fonts/ и uploads/. Прежний «../» достался от времени, когда пара жила в
+    # подпапке v2/, и в корне уводил на уровень выше сайта — в никуда.
     return ("@font-face{font-family:'%s';font-weight:%s;font-display:swap;"
-            "src:url(../fonts/%s) format('woff2');}" % (fam, weight, fn))
+            "src:url(./fonts/%s) format('woff2');}" % (fam, weight, fn))
 
 # Здесь объявляются РОВНО те начертания, на которые ссылаются правила. Блок
 # отстал от замены гарнитур: объявлял Archivo, Big Shoulders Display и Martian
@@ -698,7 +962,7 @@ FF_HY_D = '\n'.join([
     # пиксельные — без этой строки они падали в системный моноширинный.
     font_face_url('Departure Mono', '100 900', 'departure-mono.woff2'),
 ])
-IMGD_D = {'IMG%d' % i: '../uploads/img/' + f for i, f in enumerate(IMG_FILES)}
+IMGD_D = {'IMG%d' % i: './uploads/img/' + f for i, f in enumerate(IMG_FILES)}
 
 # ---------------------------------------------------------------- assemble
 shell = io.open(os.path.join(HERE, 'shell.html'), encoding='utf-8').read()
@@ -734,9 +998,89 @@ def fill(tokens, data, ff, imgs):
         raise SystemExit('UNFILLED TOKENS: %s' % sorted(set(left)))
     return s
 
-def wrap(tokens, body, extra_head=''):
-    """The description reuses the page's own opening paragraph, so nothing is invented."""
-    desc = re.sub(r'<[^>]+>', '', tokens['HERO_P'])
+def _strip_block_comments(code):
+    """Убирает /* */ и // из кода, не трогая то, что стоит внутри строк.
+
+    Сканер посимвольный, потому что регуляркой это делать нельзя: в скрипте
+    есть 'https://formsubmit.co/…', и наивная замена «// до конца строки»
+    съела бы половину вызова. Кавычки и экранирование отслеживаются; литералы
+    регулярных выражений на странице (/\\s+/g и подобные) внутри себя ни //,
+    ни /* не содержат, поэтому отдельного разбора не требуют.
+
+    url(...) пропускается целиком, и это не перестраховка. Шрифты вшиваются как
+    src:url(data:font/woff2;base64,…) БЕЗ кавычек, а в алфавите base64 есть косая
+    черта: рано или поздно в теле шрифта встречаются подряд две — и без этой
+    ветки сканер считал их началом комментария и срезал хвост объявления вместе
+    со следующим за ним правилом. Первым таким правилом был :root со всей
+    палитрой и шкалой отступов.
+    """
+    out, i, n, q = [], 0, len(code), ''
+    while i < n:
+        c = code[i]
+        if q:
+            out.append(c)
+            if c == '\\' and i + 1 < n:
+                out.append(code[i + 1]); i += 2; continue
+            if c == q:
+                q = ''
+            i += 1; continue
+        if (c in 'uU') and code[i:i + 4].lower() == 'url(':
+            k = i + 4
+            while k < n and code[k] in ' \t\n':
+                k += 1
+            if k < n and code[k] in '"\'':
+                # Адрес в кавычках: дальше работает обычный разбор строки. Своей
+                # ветке его отдавать нельзя — внутри data:image/svg+xml есть
+                # filter='url(%23n2)', и поиск первой ')' обрывал бы адрес на
+                # середине, после чего закрывающая кавычка читалась открывающей
+                # и разъезжалась вся остальная таблица.
+                out.append(code[i:k]); i = k; continue
+            # Адрес без кавычек: по грамматике CSS неэкранированной ')' внутри
+            # быть не может, поэтому первая же закрывает. Именно так вшиты шрифты.
+            j = code.find(')', k)
+            j = n if j < 0 else j + 1
+            out.append(code[i:j]); i = j; continue
+        if c in '"\'`':
+            q = c; out.append(c); i += 1; continue
+        if c == '/' and i + 1 < n and code[i + 1] == '*':
+            j = code.find('*/', i + 2)
+            i = n if j < 0 else j + 2
+            continue
+        if c == '/' and i + 1 < n and code[i + 1] == '/':
+            j = code.find('\n', i)
+            i = n if j < 0 else j
+            continue
+        out.append(c); i += 1
+    # пустые строки, оставшиеся от снятых комментариев, схлопываются в одну
+    return re.sub(r'\n[ \t]*(?=\n)', '', ''.join(out))
+
+def strip_comments(html):
+    """Комментарии живут в shell.html и build.py, а не в отгружаемой странице.
+
+    Они написаны по-русски и объясняют историю решений — то есть адресованы тем,
+    кто правит исходник, а не тем, кто открывает сайт. В собранном файле они
+    только рассказывали читателю, как страница делалась.
+    """
+    # PT_NOSTRIP=1 собирает страницу с комментариями. Нужен, чтобы сверить две
+    # сборки между собой: снятие комментариев обязано менять только их. Один раз
+    # оно уже съело правило целиком, и проверять это на глаз нельзя.
+    if os.environ.get('PT_NOSTRIP'):
+        return html
+    html = re.sub(r'<!--(?!\[if).*?-->', '', html, flags=re.S)
+    def blk(m):
+        return m.group(1) + _strip_block_comments(m.group(2)) + m.group(3)
+    return re.sub(r'(<(?:style|script)[^>]*>)(.*?)(</(?:style|script)>)',
+                  blk, html, flags=re.S)
+
+def wrap(tokens, body, extra_head='', icons='../'):
+    """\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b.
+
+    \u0420\u0430\u043d\u044c\u0448\u0435 \u0431\u0440\u0430\u043b\u043e\u0441\u044c \u043d\u0430\u0447\u0430\u043b\u043e \u043f\u0435\u0440\u0432\u043e\u0433\u043e \u0430\u0431\u0437\u0430\u0446\u0430 \u0438 \u0440\u0435\u0437\u0430\u043b\u043e\u0441\u044c \u043f\u043e 175 \u0441\u0438\u043c\u0432\u043e\u043b\u0430\u043c \u2014 \u0432 \u0432\u044b\u0434\u0430\u0447\u0435
+    \u043e\u043d\u043e \u043e\u0431\u0440\u044b\u0432\u0430\u043b\u043e\u0441\u044c \u043d\u0430 \u043f\u043e\u043b\u0443\u0441\u043b\u043e\u0432\u0435 (\u00ab\u2026to provide a clear\u2026\u00bb), \u0447\u0442\u043e \u0438 \u0432\u044b\u0434\u0430\u0432\u0430\u043b\u043e
+    \u043c\u0430\u0448\u0438\u043d\u043d\u0443\u044e \u0441\u0431\u043e\u0440\u043a\u0443. \u042f\u0437\u044b\u043a, \u0443 \u043a\u043e\u0442\u043e\u0440\u043e\u0433\u043e \u0435\u0441\u0442\u044c \u0441\u0432\u043e\u0439 META_DESC, \u043e\u0442\u0434\u0430\u0451\u0442 \u0437\u0430\u043a\u043e\u043d\u0447\u0435\u043d\u043d\u043e\u0435
+    \u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u0435; \u043e\u0431\u0440\u0435\u0437\u043a\u0430 \u043e\u0441\u0442\u0430\u043b\u0430\u0441\u044c \u043f\u0440\u0435\u0434\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u0435\u043b\u0435\u043c \u043d\u0430 \u0441\u043b\u0443\u0447\u0430\u0439 \u0434\u043b\u0438\u043d\u043d\u043e\u0439 \u0441\u0442\u0440\u043e\u043a\u0438.
+    """
+    desc = re.sub(r'<[^>]+>', '', tokens.get('META_DESC') or tokens['HERO_P'])
     if len(desc) > 175:
         desc = desc[:175].rsplit(' ', 1)[0] + '\u2026'
     head = ''.join([
@@ -759,8 +1103,8 @@ def wrap(tokens, body, extra_head=''):
         '<title>', tokens['TITLE'], '</title>\n',
         '<meta name="description" content="', desc, '">\n',
         '<meta name="theme-color" content="#C8603D">\n',
-        '<link rel="icon" href="../favicon.svg" type="image/svg+xml">\n',
-        '<link rel="apple-touch-icon" href="../apple-touch-icon.png">\n',
+        '<link rel="icon" href="', icons, 'favicon.svg" type="image/svg+xml">\n',
+        '<link rel="apple-touch-icon" href="', icons, 'apple-touch-icon.png">\n',
         '<meta property="og:type" content="website">\n',
         '<meta property="og:title" content="', tokens['TITLE'], '">\n',
         '<meta property="og:description" content="', desc, '">\n',
@@ -823,6 +1167,26 @@ PALETTES = {
     ),
 }
 
+def _mix(a, b, t):
+    """Смешивает два цвета палитры. Нужен для тёмного близнеца акцента.
+
+    Пара --brand / --brand-ink задумана как «акцент для заливок» и «акцент для
+    ТЕКСТА и волосяных линий»: в терракотовой палитре это были #C8603D и #AC4A29,
+    то есть один тон, но на десять единиц светлоты темнее. PAL_CSS присваивал
+    обоим одно и то же значение light, и роль тёмного близнеца исчезла — все
+    мелкие подписи сели на контрастный пол страницы: 5,88:1 в синей палитре,
+    4,79:1 в тёплой. На армянской странице, где штрих тоньше, это и стало
+    нечитаемым в первую очередь.
+
+    Близнец берётся как 60 % акцента и 40 % самого тёмного цвета его же семьи
+    (deep), поэтому ни одного нового тона не вводится: замер даёт тот же угол
+    с точностью до градуса и ту же насыщенность, меняется только светлота.
+    blue 5,88→8,94 | mint 6,68→9,08 | warm 4,79→7,92.
+    """
+    g = lambda h, i: int(h[i:i + 2], 16)
+    v = [round(g(a, i) * t + g(b, i) * (1 - t)) for i in (1, 3, 5)]
+    return '#%02X%02X%02X' % tuple(v)
+
 def _rgb(h):
     h = h.lstrip('#')
     return '%d,%d,%d' % tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
@@ -878,7 +1242,7 @@ PAL_CSS = """
    --brand-ink  accent for text and hairlines
    --brand-on   what sits on top of a --brand fill
    The light grounds and the graphite plates each get the depth that works on them. */
-:root{--brand:%(light)s;--brand-ink:%(light)s;--brand-on:%(paper)s;
+:root{--brand:%(light)s;--brand-ink:%(inkacc)s;--brand-on:%(paper)s;
   /* .78 и .76, а не .68 у обоих. Сайт читают в том числе люди с ослабленным
      зрением, и для вторичной прозы контраст значит не меньше кегля: .68
      давало 4,92:1 — норму AA, но впритык. Держим тот же приглушённый тон,
@@ -905,7 +1269,8 @@ PAL_CSS = """
 """
 
 def palette_pass(name):
-    p = PALETTES[name]
+    p = dict(PALETTES[name])
+    p['inkacc'] = _mix(p['light'], p['deep'], .6)
     inkw = p.get('inkwarm', p['ink'])
     css = PAL_CSS % dict(p, name=name, inkrgb=_rgb(p['ink']),
                          inkw=inkw, inkwrgb=_rgb(inkw),
@@ -940,25 +1305,35 @@ def render(tokens, data, out_body, out_full, post=None):
     full = wrap(tokens, s)
     if post:
         full = post(full)
+    # Снятие комментариев — последним шагом: палитровый проход отрабатывает ровно
+    # так же, как раньше, и от прежней сборки страница отличается только тем,
+    # чего в ней больше нет.
+    full = strip_comments(full)
     io.open(os.path.join(HERE, out_full), 'w', encoding='utf-8').write(full)
     print(out_full, round(len(full) / 1024), 'KB')
+
+SITE_URL = 'https://gridec.am'
 
 def render_deploy(tokens, data, ff, out_path, post=None):
     s = fill(tokens, data, ff, IMGD_D)
     # Две языковые версии одной страницы должны знать друг о друге, иначе поиск
-    # считает их конкурентами и показывает не ту. Ссылки относительные: домен
-    # ещё не куплен, а hreflang и canonical относительный путь принимают.
-    # og:url и og:image ждут домена — без него они бессмысленны.
-    me = './index.html' if tokens['LANG'] == 'en' else './hy.html'
-    head = ('<meta name="robots" content="noindex,nofollow">\n'
-            '<link rel="canonical" href="%s">\n'
-            '<link rel="alternate" hreflang="en" href="./index.html">\n'
-            '<link rel="alternate" hreflang="hy" href="./hy.html">\n'
-            '<link rel="alternate" hreflang="x-default" href="./index.html">\n'
-            % me)
-    full = wrap(tokens, s, head)
+    # считает их конкурентами и показывает не ту. Адреса абсолютные: домен назван,
+    # а canonical и og:url относительный путь принимают, но склейку дубликатов
+    # по нему поиск делает хуже — он не знает, какой хост считать главным.
+    #
+    # noindex снят. Он стоял, пока страница жила без домена и её незачем было
+    # показывать; теперь запрет означал бы, что сайта нет ни в одном поиске.
+    en, hy = SITE_URL + '/', SITE_URL + '/hy.html'
+    head = ('<link rel="canonical" href="%s">\n'
+            '<meta property="og:url" content="%s">\n'
+            '<link rel="alternate" hreflang="en" href="%s">\n'
+            '<link rel="alternate" hreflang="hy" href="%s">\n'
+            '<link rel="alternate" hreflang="x-default" href="%s">\n'
+            % ((en if tokens['LANG'] == 'en' else hy,) * 2 + (en, hy, en)))
+    full = wrap(tokens, s, head, icons='./')
     if post:
         full = post(full)
+    full = strip_comments(full)
     io.open(out_path, 'w', encoding='utf-8').write(full)
     print(out_path, round(len(full) / 1024), 'KB')
 
@@ -972,12 +1347,73 @@ render(HY, HY_DATA, 'art-hy.html', 'pt-hy.html', blueify)
 render(EN, EN_DATA, 'art-en-mint.html', 'pt-en-mint.html', mintify)
 render(EN, EN_DATA, 'art-en-warm.html', 'pt-en-warm.html', warmify)
 
-# The deploy pair goes into the site repo's v2/. By default that is a worktree named
-# `assets` sitting next to this folder; PT_V2 points the build at it wherever it lives.
-V2 = os.path.join(SITE, 'v2')
-os.makedirs(V2, exist_ok=True)
-render_deploy(EN, EN_DATA, FF_EN_D, os.path.join(V2, 'index.html'), blueify)
-render_deploy(HY, HY_DATA, FF_HY_D, os.path.join(V2, 'hy.html'), blueify)
-render_deploy(EN, EN_DATA, FF_EN_D, os.path.join(V2, 'mint.html'), mintify)
-render_deploy(EN, EN_DATA, FF_EN_D, os.path.join(V2, 'warm.html'), warmify)
+# ------------------------------------------------------------------- deploy
+# `site/` в корне репозитория — это ровно то, что уходит в ветку main, файл в файл.
+#
+# Отдельный каталог, а не корень репозитория, по одной причине: ветка публикации
+# отдаётся целиком, и всё, что в ней лежит, доступно по адресу. В корне сейчас
+# рабочие файлы — брифы, планы, эта самая сборка; на сайте им делать нечего.
+# Собирая ровно то, что должно быть видно, мы не полагаемся на память о том,
+# какие файлы нельзя выкладывать.
+#
+# Прежняя цель — подпапка v2/ у соседнего репозитория. Она означала, что сайт
+# открывается по адресу /v2/, а корень отдаёт что-то другое; и пути «../fonts»
+# работали только оттуда. Разбор палитр остался в pt-en-mint.html и
+# pt-en-warm.html: они самодостаточны, шрифты в них вшиты, и деплойные копии
+# тех же вариантов были лишними.
+import shutil
+ROOT = os.path.abspath(os.path.join(HERE, '..'))
+DEPLOY = os.environ.get('PT_DEPLOY') or os.path.join(ROOT, 'site')
+
+# Ровно те начертания, которые объявлены в FF_EN_D и FF_HY_D. Лишние не кладём:
+# каждый файл в каталоге сайта — это то, что кто-то может скачать.
+DEPLOY_FONTS = ['overused-grotesk-latin.woff2', 'departure-mono.woff2',
+                'arian-amu-400.woff2', 'arian-amu-700.woff2',
+                'arian-amu-serif-400.woff2', 'arian-amu-serif-700.woff2']
+DEPLOY_ICONS = ['favicon.svg', 'favicon.ico', 'apple-touch-icon.png']
+
+def deploy_asset(src, dst):
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    shutil.copyfile(src, dst)
+
+def write_text(rel, text):
+    path = os.path.join(DEPLOY, rel)
+    io.open(path, 'w', encoding='utf-8', newline='\n').write(text)
+    return path
+
+os.makedirs(DEPLOY, exist_ok=True)
+render_deploy(EN, EN_DATA, FF_EN_D, os.path.join(DEPLOY, 'index.html'), blueify)
+render_deploy(HY, HY_DATA, FF_HY_D, os.path.join(DEPLOY, 'hy.html'), blueify)
+
+for fn in DEPLOY_FONTS:
+    deploy_asset(os.path.join(FONTS, fn), os.path.join(DEPLOY, 'fonts', fn))
+for fn in IMG_FILES:
+    deploy_asset(os.path.join(IMGS, fn), os.path.join(DEPLOY, 'uploads', 'img', fn))
+for fn in DEPLOY_ICONS:
+    src = os.path.join(ROOT, fn)
+    if os.path.exists(src):
+        deploy_asset(src, os.path.join(DEPLOY, fn))
+
+# CNAME — это и есть подключение домена к GitHub Pages. Отдельной настройки нет:
+# что написано в файле, то Pages и обслуживает.
+write_text('CNAME', 'gridec.am\n')
+write_text('robots.txt',
+           'User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n' % SITE_URL)
+# Дата правки нужна карте сайта, но Date.now в сборке нет по той же причине,
+# по которой его нет в скриптах: одинаковый вход обязан давать одинаковый выход.
+# Значение берётся из окружения, иначе не печатается вовсе — тег необязательный.
+_lastmod = os.environ.get('PT_LASTMOD', '')
+_lm = '<lastmod>%s</lastmod>' % _lastmod if _lastmod else ''
+write_text('sitemap.xml',
+           '<?xml version="1.0" encoding="UTF-8"?>\n'
+           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n'
+           '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+           + ''.join(
+               '  <url><loc>%s</loc>%s\n'
+               '    <xhtml:link rel="alternate" hreflang="en" href="%s/"/>\n'
+               '    <xhtml:link rel="alternate" hreflang="hy" href="%s/hy.html"/>\n'
+               '  </url>\n' % (loc, _lm, SITE_URL, SITE_URL)
+               for loc in (SITE_URL + '/', SITE_URL + '/hy.html'))
+           + '</urlset>\n')
+print(DEPLOY, '<- deploy tree')
 print('done')
