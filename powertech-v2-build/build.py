@@ -1364,6 +1364,13 @@ def render_deploy(tokens, data, ff, out_path, post=None):
             '<link rel="alternate" hreflang="hy" href="%s">\n'
             '<link rel="alternate" hreflang="x-default" href="%s">\n'
             % ((en if tokens['LANG'] == 'en' else hy,) * 2 + (en, hy, en)))
+    # Логотип теперь НАБОР, а не кривые. Пока гарнитура не пришла, слово рисуется
+    # запасным моноширинным: другая ширина, другой рисунок — и шапка дёргается на
+    # каждой первой загрузке, причём дёргается именно логотип. Предзагрузка ставит
+    # файл в ту же очередь, что и разметку, и подмены на глазах не происходит.
+    # Остальные начертания грузятся как раньше: они появляются ниже сгиба.
+    head += ('<link rel="preload" href="/fonts/departure-mono.woff2" as="font" '
+             'type="font/woff2" crossorigin>\n')
     full = wrap(tokens, s, head, icons='./')
     if post:
         full = post(full)
