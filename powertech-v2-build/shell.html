@@ -1608,12 +1608,19 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 
 @media (max-width:960px){
   .hgrid{grid-template-columns:1fr;padding:92px clamp(18px,4vw,26px) 40px;gap:22px;}
-  .stage{position:relative;left:auto;top:auto;transform:none;height:auto;
-    width:100%;aspect-ratio:3/2;margin:0;justify-self:stretch;}
   .hero h1{width:auto;max-width:none;}
-  /* Показание теперь последнее и в разметке, поэтому в потоке встаёт после
-     сетки само — раскладкой порядок задавать больше не нужно. */
-  .rd{position:static;margin:0 clamp(18px,4vw,26px) 34px;}
+  /* ЛЕНТА И ПОКАЗАНИЕ НА ТЕЛЕФОНЕ НЕ ПОКАЗЫВАЮТСЯ — решение владельца, 16.08.
+     На широком экране лента лежит ЗА текстом: одна картина, где показание стоит
+     на её правом краю и объясняет само себя. В колонке эта связь распадается.
+     Лента уезжает под кнопки, показание — ещё ниже, и оба выпадают из героя:
+     человек видит их через пол-экрана после заголовка и не понимает, к чему они
+     относятся. Оставлять приём, который держится на раскладке, там, где раскладки
+     нет, — значит показывать его обломки.
+     Герой на телефоне кончается кнопками, и это законченная мысль.
+
+     Скрыты вместе, а не по отдельности: показание — подпись к ленте, без неё
+     это просто два числа. */
+  .stage,.rd{display:none;}
 
   .two,.asg,.plate .wrap{grid-template-columns:1fr;}
   /* Раньше здесь пряталось и то и другое. Из-за этого на телефоне раздел 03
@@ -1993,7 +2000,8 @@ function size(){
   if(evX<ez0[0]||evX>ez0[1])evX=(ez0[0]+ez0[1])/2;   /* и старт, и после ресайза */
   sigX=-4+(W+8)*evX;       /* точка фиксации в координатах холста */
   placeReadout();buildSigRun();
-  if(rm)requestAnimationFrame(frame);   /* после ресайза кадр надо перерисовать */
+  if(rm&&heroFxOn())requestAnimationFrame(frame);   /* после ресайза кадр надо перерисовать */
+  heroStart();                          /* поворот мог вернуть ленту на экран */
 }
 function frame(ts){
   var dt=(ts-(frame.p||ts))/1000;if(!(dt>0)||dt>.05)dt=.016;frame.p=ts;
@@ -2111,10 +2119,21 @@ function frame(ts){
     if(hz&&hz.textContent!==fTxt)hz.textContent=fTxt;
     if(stt&&stt.textContent!==sTxt)stt.textContent=sTxt;
     if(stt&&stt.parentElement)stt.parentElement.classList.toggle('is-ev',evP>.15);}
-  if(!rm)requestAnimationFrame(frame);
+  if(!rm&&heroFxOn())heroRaf=requestAnimationFrame(frame);else heroRaf=0;
+}
+/* Лента считается только там, где она видна. На телефоне она скрыта стилями,
+   и рисовать её кадры — работа впустую: сорок четыре линии по сто четыре шага
+   каждый кадр, всё в никуда, за счёт батареи. Порог тот же, что в стилях, 960.
+   Проверяется не однажды при загрузке, а при каждом пересчёте размеров: поворот
+   телефона переводит страницу через порог в обе стороны. */
+function heroFxOn(){return innerWidth>960;}
+var heroRaf=0;
+function heroStart(){
+  if(heroRaf||rm||!heroFxOn())return;
+  heroRaf=requestAnimationFrame(frame);
 }
 size();
-requestAnimationFrame(frame);
+heroStart();
 
 /* ============ JOINT TRACES ============ */
 function route(pts,r){

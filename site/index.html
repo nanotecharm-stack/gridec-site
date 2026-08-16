@@ -834,10 +834,8 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 #fmd .done p{font-size:14px;line-height:1.7;color:var(--fg-mid);max-width:40ch;margin:0 auto 26px;}
 @media (max-width:960px){
   .hgrid{grid-template-columns:1fr;padding:92px clamp(18px,4vw,26px) 40px;gap:22px;}
-  .stage{position:relative;left:auto;top:auto;transform:none;height:auto;
-    width:100%;aspect-ratio:3/2;margin:0;justify-self:stretch;}
   .hero h1{width:auto;max-width:none;}
-  .rd{position:static;margin:0 clamp(18px,4vw,26px) 34px;}
+  .stage,.rd{display:none;}
   .two,.asg,.plate .wrap{grid-template-columns:1fr;}
   header nav{display:none;}
   .stats,.steps{grid-template-columns:1fr;gap:22px;}
@@ -1150,7 +1148,8 @@ function size(){
   if(evX<ez0[0]||evX>ez0[1])evX=(ez0[0]+ez0[1])/2;   
   sigX=-4+(W+8)*evX;       
   placeReadout();buildSigRun();
-  if(rm)requestAnimationFrame(frame);   
+  if(rm&&heroFxOn())requestAnimationFrame(frame);   
+  heroStart();                          
 }
 function frame(ts){
   var dt=(ts-(frame.p||ts))/1000;if(!(dt>0)||dt>.05)dt=.016;frame.p=ts;
@@ -1247,10 +1246,16 @@ function frame(ts){
     if(hz&&hz.textContent!==fTxt)hz.textContent=fTxt;
     if(stt&&stt.textContent!==sTxt)stt.textContent=sTxt;
     if(stt&&stt.parentElement)stt.parentElement.classList.toggle('is-ev',evP>.15);}
-  if(!rm)requestAnimationFrame(frame);
+  if(!rm&&heroFxOn())heroRaf=requestAnimationFrame(frame);else heroRaf=0;
+}
+function heroFxOn(){return innerWidth>960;}
+var heroRaf=0;
+function heroStart(){
+  if(heroRaf||rm||!heroFxOn())return;
+  heroRaf=requestAnimationFrame(frame);
 }
 size();
-requestAnimationFrame(frame);
+heroStart();
 function route(pts,r){
   var d='M'+pts[0][0]+','+pts[0][1];
   for(var i=1;i<pts.length-1;i++){
