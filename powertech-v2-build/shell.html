@@ -2592,6 +2592,24 @@ function railBar(tp){
   if(tp===undefined)tp=0;
   bar.style.transform='scaleX('+Math.max(0.02,Math.min(1,tp)).toFixed(4)+')';
 }
+/* ПОЛОСКА ПОД ЛЕНТОЙ НА ТЕЛЕФОНЕ.
+   На широком экране лента закрепляется, и полоску ведёт продвижение по
+   закреплённому кадру. На телефоне закрепления нет вовсе — там обычный
+   горизонтальный список, — и suiteUpd() выходит первой же строкой. Полоска
+   оставалась в начальном положении: карточки листаются, а указатель стоит.
+   Здесь она считается прямо от прокрутки списка: то же число, другой источник. */
+(function(){
+  var hr=document.querySelector('.hrail');
+  if(!hr)return;
+  function fromRail(){
+    if(suitePinned)return;                 /* широкий экран ведёт закреплённый кадр */
+    var m=hr.scrollWidth-hr.clientWidth;
+    railBar(m>0?hr.scrollLeft/m:0);
+  }
+  hr.addEventListener('scroll',fromRail,{passive:true});
+  addEventListener('resize',fromRail);
+  fromRail();
+})();
 var navLinks=[].slice.call(document.querySelectorAll('nav a.lk')).map(function(a){
   return {a:a,sec:document.querySelector(a.getAttribute('href'))};
 }).filter(function(x){return x.sec;});
@@ -3334,6 +3352,19 @@ addEventListener('resize',function(){clearTimeout(size.t);size.t=setTimeout(func
 /* rails depend on final layout (fonts) */
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){buildRails();placeReadout();buildSigRun();});
 addEventListener('load',function(){buildRails();layoutSuite();placeReadout();buildSigRun();});
+/* ============ ПОВОРОТ ТЕЛЕФОНА ============ */
+/* После поворота Safari на iPhone оставляет закреплённой шапке ПРЕЖНЕЕ место
+   для нажатий: кнопка нарисована там, где нужно, а палец попадает мимо — по
+   старым координатам. Ни разметка, ни стили тут ни при чём, и в обычном
+   браузере это не воспроизводится: пересчёт не делает сам Safari.
+   Сдвиг страницы на пиксель и обратно заставляет его пересчитать закреплённый
+   слой. Для глаза это ничто, задержка — чтобы поворот успел закончиться. */
+addEventListener('orientationchange',function(){
+  setTimeout(function(){
+    var y=window.pageYOffset;
+    window.scrollTo(0,y+1);window.scrollTo(0,y);
+  },320);
+});
 /* ============ ЗНАЧОК ВКЛАДКИ РАЗВОРАЧИВАЕТСЯ — ОДИН РАЗ ============ */
 /* Буква набирается по столбцам слева направо и останавливается. Именно
    ОДИН РАЗ, а не по кругу: вечно живой значок читается как «страница ещё
