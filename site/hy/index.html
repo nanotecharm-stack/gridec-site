@@ -1678,10 +1678,11 @@ function paintDither(){
 }
 function setCell(c,v){if(c.now!==v){c.now=v;c.el.style.background=v;}}
 buildDither();
-var wipeEl=document.getElementById('wipe'),wCells=[];
+var wipeEl=document.getElementById('wipe'),wCells=[],wipeW=0,wipeH=0;
 function buildWipe(){
+  wipeW=innerWidth;wipeH=innerHeight;
   var cs=Math.max(46,Math.round(innerWidth/30)),
-      cols=Math.ceil(innerWidth/cs),rows=Math.ceil(innerHeight/cs);
+      cols=Math.max(1,Math.ceil(innerWidth/cs)),rows=Math.max(1,Math.ceil(innerHeight/cs));
   wipeEl.style.gridTemplateColumns='repeat('+cols+',1fr)';
   wipeEl.style.gridTemplateRows='repeat('+rows+',1fr)';
   wipeEl.innerHTML='';wCells=[];
@@ -1703,11 +1704,15 @@ function wipeSet(covered,dur,cb){
   if(cb)setTimeout(cb,dur+330);
 }
 buildWipe();
+function ensureWipe(){
+  if(!wCells.length||wipeW!==innerWidth||wipeH!==innerHeight)buildWipe();
+}
 var WIPE_MS=420;
 function wipeHide(){wipeEl.classList.remove('on','go','instant');
   document.documentElement.classList.remove('wiping');}
 function wipeReveal(){
   if(rm||document.visibilityState!=='visible'){wipeHide();return;}
+  ensureWipe();
   wipeEl.classList.add('on','go','instant');
   wCells.forEach(function(i){i.style.transitionDelay='0ms';});
   document.documentElement.classList.remove('wiping');
@@ -1720,6 +1725,7 @@ function wipeReveal(){
 function wipeCoverThen(go){
   if(rm||document.visibilityState!=='visible'){go();return;}
   var done=false,fire=function(){if(done)return;done=true;go();};
+  ensureWipe();
   wipeEl.classList.add('on');
   requestAnimationFrame(function(){wipeSet(true,380,fire);});
   setTimeout(fire,1400);                      
@@ -1793,7 +1799,7 @@ if(brandA)brandA.addEventListener('click',function(e){
   if(rm||document.visibilityState!=='visible'||window.pageYOffset<4){wipeToTop();return;}
   wipeCoverThen(function(){wipeToTop();wipeReveal();});
 },true);                        
-document.querySelectorAll('a[href$=".html"]').forEach(function(a){
+document.querySelectorAll('a.lang,a.flang').forEach(function(a){
   a.addEventListener('click',function(e){
     if(rm||e.metaKey||e.ctrlKey||e.shiftKey||a.target==='_blank')return;
     e.preventDefault();
