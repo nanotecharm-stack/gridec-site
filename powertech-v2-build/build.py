@@ -1100,6 +1100,14 @@ def wrap(tokens, body, extra_head='', icons='../'):
         '<script>try{if(sessionStorage.getItem("ptwipe")==="1"){'
         'var _h=document.documentElement;_h.className+=" wiping";'
         'setTimeout(function(){_h.classList.remove("wiping")},2000);}}catch(e){}</script>\n',
+        # Имя файла из адресной строки. Сервер отдаёт страницу и по «/», и по
+        # «/index.html» — одна и та же, но вторая показывает устройство сайта, и
+        # именно она остаётся в истории браузера и в закладках. Перенаправления у
+        # статического хостинга нет, поэтому убирает хвост сама страница, в голове
+        # документа: к моменту первой отрисовки адрес уже чистый.
+        '<script>try{var _p=location.pathname;if(_p.slice(-10)==="index.html")'
+        'history.replaceState(null,"",_p.slice(0,-10)+location.search+location.hash);}'
+        'catch(e){}</script>\n',
         '<title>', tokens['TITLE'], '</title>\n',
         '<meta name="description" content="', desc, '">\n',
         '<meta name="theme-color" content="#C8603D">\n',

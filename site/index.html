@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>html{background:#F6F1E9}html.wiping{background:#2E5E99}html.wiping body{visibility:hidden}</style>
 <script>try{if(sessionStorage.getItem("ptwipe")==="1"){var _h=document.documentElement;_h.className+=" wiping";setTimeout(function(){_h.classList.remove("wiping")},2000);}}catch(e){}</script>
+<script>try{var _p=location.pathname;if(_p.slice(-10)==="index.html")history.replaceState(null,"",_p.slice(0,-10)+location.search+location.hash);}catch(e){}</script>
 <title>Gridec | Power Quality Monitoring</title>
 <meta name="description" content="Seven-day power quality monitoring in Armenia. We measure under representative load and report the findings.">
 <meta name="theme-color" content="#0D2440">
