@@ -3,10 +3,10 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url><loc>https://gridec.am/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://gridec.am/"/>
-    <xhtml:link rel="alternate" hreflang="hy" href="https://gridec.am/hy.html"/>
+    <xhtml:link rel="alternate" hreflang="hy" href="https://gridec.am/hy/"/>
   </url>
-  <url><loc>https://gridec.am/hy.html</loc>
+  <url><loc>https://gridec.am/hy/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://gridec.am/"/>
-    <xhtml:link rel="alternate" hreflang="hy" href="https://gridec.am/hy.html"/>
+    <xhtml:link rel="alternate" hreflang="hy" href="https://gridec.am/hy/"/>
   </url>
 </urlset>

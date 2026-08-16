@@ -97,7 +97,7 @@ header a,header button,header nav,header .navr{pointer-events:auto;}
      терракотовым литералом, который палитровый пост-проход переводит в цвет
      выбранной палитры. */
   --acc:#AC4A29;flex:0 0 auto;transition:color .5s var(--e);}
-.brand .lock{display:block;height:26px;width:auto;flex:0 0 auto;fill:currentColor;}
+.brand .lock{display:block;height:38px;width:auto;flex:0 0 auto;fill:currentColor;}
 /* Знак одноцветный и следует за грунтом: цвет марки на светлом, цвет набора —
    на тёмном. Прежде одна грань из трёх была залита акцентом жёстко: на бумаге
    это читалось, а на тёмной плашке шапки синяя грань проваливалась в дыру. */
@@ -313,8 +313,7 @@ html[data-nav="1"] header[data-tone="ink"] .btn::before{background:#0D0E13;}
 html[data-nav="1"] header[data-tone="ink"] .btn:hover span{color:#EFEDEA;}
 html[data-nav="1"] header[data-tone="ink"] .btn i{background:rgba(13,14,19,.14);}
 /* над тёмным разделом плашка логотипа становится тёмной, знак — светлым */
-html[data-nav="3"] header[data-tone="ink"] .brand{background:#14161C;
-  box-shadow:inset 0 0 0 1px rgba(239,237,234,.2);--acc:currentColor;}
+html[data-nav="3"] header[data-tone="ink"] .brand{--acc:currentColor;}
 html[data-nav="3"] header[data-tone="ink"] .brand,
 html[data-nav="3"] header[data-tone="ink"] .ixb,
 html[data-nav="3"] header[data-tone="ink"] .lang,
@@ -352,6 +351,29 @@ html[data-nav="0"] header[data-scrim] .brand::after,
 html[data-nav="0"] header[data-scrim] .navr::after,
 html[data-nav="2"] header[data-scrim] .brand::after,
 html[data-nav="2"] header[data-scrim] .navr::after{opacity:1;}
+/* Полоса — шахматка: одна общая «тёмная/светлая» оценка её не описывает, потому
+   что под знаком клетка может быть тёмной, а под правой группой светлой. Слово
+   GRID было набрано цветом текста и на совпавшей по тону клетке исчезало — на
+   снимке владельца от 15.08 оставалось одно EC, которое держит свой цвет.
+   Плашка теперь стоит ВСЕГДА, а не только над полосой: у правой группы она тоже
+   постоянная, и пара читается как два чипа одной шапки. Заодно снимается вся
+   причина сбоя — переключать нечего, значит и расходиться на границе клеток
+   нечему. Материал тот же: тёмное стекло, одно состояние на любой фон. */
+html[data-nav="3"] .brand::after{
+  opacity:1;border-radius:2px;
+  /* Правая плашка разжижается над тёмным разделом: грунт под ней и так тёмный.
+     Эта стоит и над бумагой, и над светлыми клетками полосы, а на них
+     разжиженное стекло даёт грунт около 145 из 255 — светлый набор падает к 2,7
+     при норме 3 для крупного кегля. Стекло то же, просто плотность не гуляет:
+     0,72 держит грунт около 78 и контраст около 5,9. */
+  background:rgba(13,14,19,.72);
+  -webkit-backdrop-filter:blur(18px) saturate(1.4);
+  backdrop-filter:blur(18px) saturate(1.4);
+  box-shadow:inset 0 1px 0 rgba(253,250,244,.12),inset 0 0 0 1px rgba(253,250,244,.09);}
+/* Стекло тёмное всегда — значит и набор на нём всегда светлый. Синий на EC
+   владелец снял 15.08: на тёмном грунте он тонул, а разрезать слово надвое там,
+   где обе половины и так лежат на общей плашке, нечем. Слово идёт одним белым. */
+html[data-nav="3"] .brand{color:#EFEDEA;--acc:currentColor;}
 /* ---- 3 instrument chips: two opaque plates, nothing between ------------ */
 html[data-nav="3"] .hin{height:76px;grid-template-columns:auto 1fr auto;align-items:start;
   padding-top:var(--s3);}
@@ -360,8 +382,11 @@ html[data-nav="3"] header nav{display:none;}
    который переворачивается вместе с разделом под ним. Тёмное стекло осталось
    только под правой группой — счётчиком, языком и кнопкой. На бумаге знак
    синий, надпись графитовая; над тёмным разделом обе части светлеют. */
-html[data-nav="3"] .brand{padding:var(--s2) 13px var(--s2) 10px;background:var(--bg);
-  box-shadow:inset 0 0 0 1px rgba(13,14,19,.14);border-radius:2px;--acc:#AC4A29;}
+/* Чипа вокруг логотипа нет: локап несёт собственную плашку, и светлая рамка
+   вокруг неё читалась как коробка в коробке — знак в ней терялся. */
+/* --acc здесь больше не задаётся: правило выше ведёт всё слово одним цветом, а
+   этот сброс стоял ниже по файлу и с той же силой — он бы его и отменил. */
+html[data-nav="3"] .brand{padding:0;}
 /* Обе плашки шапки — одной высоты, и высота одна на двоих.
    Порознь они её набирали из своего содержимого: логотип 8+26+8=42, правая
    группа 5+39+5=49. Сверху обе стояли на 12, поэтому расхождение уходило
@@ -373,6 +398,12 @@ html[data-nav="3"] .brand{padding:var(--s2) 13px var(--s2) 10px;background:var(-
   html[data-nav="3"] .hin{--hplate:49px;}
   html[data-nav="3"] .brand{height:var(--hplate);padding-block:0;}
   html[data-nav="3"] .navr{height:var(--hplate);}
+  /* Правая группа — сама себе плашка, её высота и есть --hplate. Слева плашка
+     рисуется отдельным слоем и по умолчанию выходит за поле на 7px сверху и
+     снизу: те же 49 превращались в 63, и кромки снова не сходились. По вертикали
+     слой садится ровно на поле, по горизонтали запас остаётся — иначе знак
+     упрётся в кромку. */
+  html[data-nav="3"] .brand::after{inset:0 -11px;}
 }
 html[data-nav="3"] .navr{gap:0;border-radius:2px;padding:5px;
   /* Тёмное стекло — ОДНО состояние на любой фон. Прежде плашка переключала
@@ -412,8 +443,16 @@ html[data-nav="3"] .ixp{margin-top:var(--s3);}
   html[data-nav] .hin{grid-template-columns:auto 1fr auto;height:62px;
     align-items:center;padding-top:0;}
   html[data-nav] .ixb .sheet{display:none;}
-  /* на узком экране плашки под логотипом нет — локап ложится прямо на грунт */
-  html[data-nav="3"] .brand{box-shadow:none;background:none;padding:0;height:auto;}
+  /* Плашка под логотипом здесь была не нужна: локап ложился прямо на грунт и
+     перекрашивался вместе с разделом. С 15.08 плашка постоянная, а слово всегда
+     белое — на бумажном разделе оно бы просто исчезло. Поэтому плашка остаётся и
+     на узком экране, и высота у неё, как на широком, одна на обе группы: правая
+     набирает свои 46 из содержимого, и это число закрепляется за обеими. */
+  html[data-nav="3"] .hin{--hplate:46px;}
+  html[data-nav="3"] .brand{box-shadow:none;background:none;padding:0;
+    height:var(--hplate);}
+  html[data-nav="3"] .navr{height:var(--hplate);}
+  html[data-nav="3"] .brand::after{inset:0 -11px;}
 }
 
 /* Узкий экран: армянская надпись на кнопке длиннее английской, и правая группа
@@ -1627,21 +1666,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 <div id="wipe"></div>
 <div class="rake" aria-hidden="true"></div>
 <header id="hdr" data-tone="paper"><div class="hin">
-  <a class="brand" href="#top" aria-label="Gridec"><svg class="lock" viewBox="0 -100.0 820.42 200.0" aria-hidden="true">
-  <g class="mk" transform="translate(86.6025 0)">
-    <path d="M-86.603 -50 L-6 -96.536 L-6 -3.464 L-86.603 43.072 Z"/>
-    <path d="M86.603 -50 L6 -96.536 L6 -3.464 L86.603 43.072 Z"/>
-    <path d="M-86.603 56.928 L0 6.928 L86.603 56.928 L0 100 Z"/>
-  </g>
-<g>
-    <path transform="translate(249.42 65.36) scale(0.18945 -0.18945)" d="M75 163V527Q75 690 238 690H531L590 644V579H241Q197 579 197 536V154Q197 111 241 111H488V302H342V413H610V0H238Q75 0 75 163Z"/>
-    <path transform="translate(377.30 65.36) scale(0.18945 -0.18945)" d="M71 0V460Q107 525 209 525H314L367 486V423H236Q202 423 188 406V0Z"/>
-    <path transform="translate(451.75 65.36) scale(0.18945 -0.18945)" d="M72 616V735H195V616ZM75 0V525H192V0Z"/>
-    <path transform="translate(502.33 65.36) scale(0.18945 -0.18945)" d="M67 158V367Q67 525 225 525H395V740H512V0H225Q67 0 67 158ZM184 148Q184 102 230 102H395V423H230Q184 423 184 377Z"/>
-    <path transform="translate(613.54 65.36) scale(0.18945 -0.18945)" d="M67 158V367Q67 525 225 525H355Q512 525 512 367V219H184V148Q184 102 230 102H492V39L439 0H225Q67 0 67 158ZM184 310H395V377Q395 423 349 423H230Q184 423 184 377Z"/>
-    <path transform="translate(723.23 65.36) scale(0.18945 -0.18945)" d="M67 158V367Q67 525 225 525H414L467 486V423H230Q184 423 184 377V148Q184 102 230 102H467V39L414 0H225Q67 0 67 158Z"/>
-</g>
-</svg></a>
+  <a class="brand" href="#top" aria-label="Gridec"><svg class="lock" viewBox="0 0 460.54 112.0" aria-hidden="true"><defs><linearGradient id="h1_f0" x1="0" y1="0" x2="1" y2="0.4"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient><linearGradient id="h1_f1" x1="1" y1="0" x2="0" y2="0.4"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient><linearGradient id="h1_f2" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient><linearGradient id="h1_bg" x1="0" y1="0" x2="0.55" y2="1"><stop offset="0" stop-color="#14161C"/><stop offset="1" stop-color="#0D0E13"/></linearGradient><linearGradient id="h1_sn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.16"/><stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#000000" stop-opacity="0.20"/></linearGradient><radialGradient id="h1_vg" cx="0.28" cy="0.22" r="0.95"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.07"/><stop offset="0.55" stop-color="#000000" stop-opacity="0"/><stop offset="1" stop-color="#000000" stop-opacity="0.22"/></radialGradient><filter id="h1_s0" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="8.24"/></filter><filter id="h1_s1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.22"/></filter></defs><rect x="8.0" y="8.0" width="96.0" height="96.0" rx="23.0" fill="url(#h1_bg)"/><rect x="8.0" y="8.0" width="96.0" height="96.0" rx="23.0" fill="url(#h1_sn)"/><rect x="8.0" y="8.0" width="96.0" height="96.0" rx="23.0" fill="url(#h1_vg)"/><g transform="translate(56.0 61.7) scale(0.3168)" fill-opacity="0.38" filter="url(#h1_s0)"><path d="M-86.603 -50 L-12.0 -93.072 L-12.0 -6.928 L-86.603 36.144 Z"/><path d="M86.603 -50 L12.0 -93.072 L12.0 -6.928 L86.603 36.144 Z"/><path d="M-86.603 63.856 L0 13.856 L86.603 63.856 L0 100 Z"/></g><g transform="translate(56.0 57.9) scale(0.3168)" fill-opacity="0.45" filter="url(#h1_s1)"><path d="M-86.603 -50 L-12.0 -93.072 L-12.0 -6.928 L-86.603 36.144 Z"/><path d="M86.603 -50 L12.0 -93.072 L12.0 -6.928 L86.603 36.144 Z"/><path d="M-86.603 63.856 L0 13.856 L86.603 63.856 L0 100 Z"/></g><g transform="translate(56.0 56.0) scale(0.3168)"><path fill="url(#h1_f0)" d="M-86.603 -50 L-12.0 -93.072 L-12.0 -6.928 L-86.603 36.144 Z"/><path fill="url(#h1_f1)" d="M86.603 -50 L12.0 -93.072 L12.0 -6.928 L86.603 36.144 Z"/><path fill="url(#h1_f2)" d="M-86.603 63.856 L0 13.856 L86.603 63.856 L0 100 Z"/><path d="M-86.603 -50 L-12.0 -93.072" fill="none" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.0 -93.072 L86.603 -50" fill="none" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M-86.603 63.856 L0 13.856 L86.603 63.856" fill="none" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g><path fill="currentColor" transform="translate(130.88 82.0) scale(0.07429 -0.07429)" d="M392 -10Q320 -10 256.0 18.0Q192 46 144.0 95.5Q96 145 68.5 210.5Q41 276 41 351Q41 426 68.5 491.0Q96 556 144.5 605.5Q193 655 258.5 682.5Q324 710 400 710Q483 710 554.0 678.0Q625 646 673 587L595 509Q564 553 512.0 576.5Q460 600 400 600Q328 600 273.5 568.5Q219 537 189.0 481.0Q159 425 159 351Q159 277 189.5 220.5Q220 164 272.0 132.0Q324 100 390 100Q460 100 510.5 125.5Q561 151 588.0 201.5Q615 252 615 326L687 274H388V379H734V363Q734 238 689.5 155.0Q645 72 568.0 31.0Q491 -10 392 -10Z"/><path fill="currentColor" transform="translate(197.89 82.0) scale(0.07429 -0.07429)" d="M155 297V392H332Q385 392 414.5 419.5Q444 447 444 496Q444 540 415.0 570.0Q386 600 333 600H155V700H338Q404 700 454.0 673.5Q504 647 531.5 601.5Q559 556 559 498Q559 437 531.5 392.0Q504 347 454.0 322.0Q404 297 338 297ZM76 0V700H191V0ZM460 0 215 304 322 343 605 0Z"/><path fill="currentColor" transform="translate(254.19 82.0) scale(0.07429 -0.07429)" d="M76 0V700H191V0Z"/><path fill="currentColor" transform="translate(283.69 82.0) scale(0.07429 -0.07429)" d="M155 0V105H339Q411 105 465.5 136.0Q520 167 550.5 222.5Q581 278 581 351Q581 423 550.0 478.0Q519 533 464.5 564.0Q410 595 339 595H155V700H342Q418 700 483.0 673.5Q548 647 596.5 599.5Q645 552 672.0 488.5Q699 425 699 350Q699 276 672.0 212.0Q645 148 597.0 100.5Q549 53 484.0 26.5Q419 0 344 0ZM76 0V700H191V0Z"/><path fill="currentColor" transform="translate(348.31 82.0) scale(0.07429 -0.07429)" d="M76 0V700H191V0ZM155 0V105H547V0ZM155 307V408H513V307ZM155 595V700H542V595Z"/><path fill="currentColor" transform="translate(401.8 82.0) scale(0.07429 -0.07429)" d="M394 -10Q318 -10 253.5 17.5Q189 45 141.0 94.5Q93 144 67.0 209.5Q41 275 41 350Q41 425 67.0 490.5Q93 556 141.0 605.0Q189 654 253.5 682.0Q318 710 394 710Q479 710 541.0 682.0Q603 654 651 606L573 528Q542 562 497.5 581.0Q453 600 394 600Q342 600 299.0 582.0Q256 564 224.5 530.5Q193 497 176.0 451.0Q159 405 159 350Q159 295 176.0 249.0Q193 203 224.5 169.5Q256 136 299.0 118.0Q342 100 394 100Q458 100 502.5 119.5Q547 139 578 173L656 95Q608 46 543.0 18.0Q478 -10 394 -10Z"/></svg></a>
   <nav><a class="lk" href="#applications">%%NAV_INDUSTRIES%%</a><a class="lk" href="#services">%%NAV_SERVICES%%</a><a class="lk" href="#company">%%NAV_COMPANY%%</a></nav>
   <div class="navr">
     <button class="ixb" id="ixb" aria-expanded="false" aria-controls="ixp"><b id="ixn">01</b><s>/</s><em id="ixt">08</em><i class="cv">&#8595;</i></button>
@@ -2691,13 +2716,21 @@ try{
    собираются, страница встаёт на герое, плашки расходятся. Прокрутка через весь
    документ для этого — долгая дорога, и она проматывает мимо всё, что посетитель
    уже посмотрел. Если мы и так наверху, переход не играется: показывать нечего. */
+/* Адрес показывает раздел, но НАЧАЛО страницы — это сам адрес сайта.
+   «#top» в строке браузера — служебная метка, посетителю она ничего не говорит
+   и портит вид ссылки, которой делятся. Поэтому на герое хвост убираем. */
+function setUrlHash(id){
+  try{
+    history.replaceState(null,'',id==='top'?location.pathname+location.search:'#'+id);
+  }catch(e){}
+}
 function wipeToTop(){
   var h=document.documentElement,prev=h.style.scrollBehavior;
   h.style.scrollBehavior='auto';                 /* без плавности: прыжок под плашками */
   window.scrollTo(0,0);
   if(typeof PS!=='undefined'){PS.t=PS.c=0;}      /* свой плавный скролл тоже на нуле */
   h.style.scrollBehavior=prev;
-  history.replaceState(null,'','#top');
+  setUrlHash('top');
 }
 /* ЯКОРЬ ЧЕРЕЗ ЗАКРЕПЛЁННУЮ ЛЕНТУ.
    Между героем и разделом услуг лежит лента отраслей: раздел высокий, его кадр
@@ -2725,7 +2758,7 @@ function hashJump(y,id){
   land();
   requestAnimationFrame(land);
   setTimeout(land,150);
-  history.replaceState(null,'','#'+id);
+  setUrlHash(id);
 }
 function crossesRail(from,to){
   var sec=document.querySelector('.suite');if(!sec)return false;
@@ -3222,7 +3255,7 @@ function psStart(){
     var el=document.getElementById(id);if(!el)return;
     e.preventDefault();
     psTo(el.getBoundingClientRect().top+window.pageYOffset-(id==='top'?0:26));
-    history.replaceState(null,'','#'+id);
+    setUrlHash(id);
   });
   addEventListener('resize',function(){PS.t=PS.c=window.pageYOffset;});
 }

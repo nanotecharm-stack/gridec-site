@@ -1111,7 +1111,11 @@ def wrap(tokens, body, extra_head='', icons='../'):
         '<meta property="og:locale" content="',
         'hy_AM' if tokens['LANG'] == 'hy' else 'en_US', '">\n',
     ])
-    return ('<!doctype html>\n<html lang="%s">\n<head>\n%s%s</head>\n<body>\n%s\n</body>\n</html>\n'
+    # data-nav повторяется скриптом в конце страницы, но там оно ставится уже
+    # после первой отрисовки: полкадра шапка живёт без правил варианта 3 —
+    # логотип выходит тёмным и без плашки, а потом перекрашивается на глазах.
+    # В разметке атрибут есть с самого начала, и мигания не остаётся.
+    return ('<!doctype html>\n<html lang="%s" data-nav="3">\n<head>\n%s%s</head>\n<body>\n%s\n</body>\n</html>\n'
             % (tokens['LANG'], head, extra_head, body))
 
 # ------------------------------------------------------------------- palettes
@@ -1314,6 +1318,28 @@ def render(tokens, data, out_body, out_full, post=None):
 
 SITE_URL = 'https://gridec.am'
 
+# Адрес страницы — часть того, что видит посетитель. «/hy.html» показывает
+# устройство сайта: расширение файла, папку, инструмент. Армянская страница
+# лежит в hy/index.html и открывается как /hy/ — чистый адрес, которым не стыдно
+# делиться.
+#
+# Плата за это одна: пути «./fonts» и «./uploads» отсчитываются от страницы, и из
+# подпапки они увели бы в /hy/fonts — в пустоту. Поэтому в деплойной сборке все
+# ссылки на файлы становятся корневыми. Считать их от корня — не прихоть: обе
+# языковые страницы тогда описывают файлы ОДИНАКОВО, и глубина папки перестаёт
+# что-либо значить.
+#
+# <base href="/"> сделал бы то же одной строкой, но заодно переписал бы якоря:
+# «#services» стал бы «/#services», и переход по разделу уводил бы с армянской
+# страницы на английскую. Замена адресов такого побочного действия не имеет.
+def deploy_urls(html):
+    for a, b in (('"./hy.html"', '"/hy/"'), ('"./index.html"', '"/"'),
+                 ('./fonts/', '/fonts/'), ('./uploads/', '/uploads/'),
+                 ('"./favicon', '"/favicon'), ('"./apple-touch-icon',
+                                               '"/apple-touch-icon')):
+        html = html.replace(a, b)
+    return html
+
 def render_deploy(tokens, data, ff, out_path, post=None):
     s = fill(tokens, data, ff, IMGD_D)
     # Две языковые версии одной страницы должны знать друг о друге, иначе поиск
@@ -1323,7 +1349,7 @@ def render_deploy(tokens, data, ff, out_path, post=None):
     #
     # noindex снят. Он стоял, пока страница жила без домена и её незачем было
     # показывать; теперь запрет означал бы, что сайта нет ни в одном поиске.
-    en, hy = SITE_URL + '/', SITE_URL + '/hy.html'
+    en, hy = SITE_URL + '/', SITE_URL + '/hy/'
     head = ('<link rel="canonical" href="%s">\n'
             '<meta property="og:url" content="%s">\n'
             '<link rel="alternate" hreflang="en" href="%s">\n'
@@ -1334,6 +1360,7 @@ def render_deploy(tokens, data, ff, out_path, post=None):
     if post:
         full = post(full)
     full = strip_comments(full)
+    full = deploy_urls(full)
     io.open(out_path, 'w', encoding='utf-8').write(full)
     print(out_path, round(len(full) / 1024), 'KB')
 
@@ -1383,7 +1410,12 @@ def write_text(rel, text):
 
 os.makedirs(DEPLOY, exist_ok=True)
 render_deploy(EN, EN_DATA, FF_EN_D, os.path.join(DEPLOY, 'index.html'), blueify)
-render_deploy(HY, HY_DATA, FF_HY_D, os.path.join(DEPLOY, 'hy.html'), blueify)
+os.makedirs(os.path.join(DEPLOY, 'hy'), exist_ok=True)
+render_deploy(HY, HY_DATA, FF_HY_D, os.path.join(DEPLOY, 'hy', 'index.html'), blueify)
+# Прежнее имя убираем: оставленный файл — это второй адрес той же страницы.
+_stale = os.path.join(DEPLOY, 'hy.html')
+if os.path.exists(_stale):
+    os.remove(_stale)
 
 for fn in DEPLOY_FONTS:
     deploy_asset(os.path.join(FONTS, fn), os.path.join(DEPLOY, 'fonts', fn))
@@ -1411,9 +1443,9 @@ write_text('sitemap.xml',
            + ''.join(
                '  <url><loc>%s</loc>%s\n'
                '    <xhtml:link rel="alternate" hreflang="en" href="%s/"/>\n'
-               '    <xhtml:link rel="alternate" hreflang="hy" href="%s/hy.html"/>\n'
+               '    <xhtml:link rel="alternate" hreflang="hy" href="%s/hy/"/>\n'
                '  </url>\n' % (loc, _lm, SITE_URL, SITE_URL)
-               for loc in (SITE_URL + '/', SITE_URL + '/hy.html'))
+               for loc in (SITE_URL + '/', SITE_URL + '/hy/'))
            + '</urlset>\n')
 print(DEPLOY, '<- deploy tree')
 print('done')
