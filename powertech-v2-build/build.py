@@ -1436,6 +1436,22 @@ for fn in DEPLOY_FONTS:
     deploy_asset(os.path.join(FONTS, fn), os.path.join(DEPLOY, 'fonts', fn))
 for fn in IMG_FILES:
     deploy_asset(os.path.join(IMGS, fn), os.path.join(DEPLOY, 'uploads', 'img', fn))
+# Логотип картинкой — для почтовой подписи и для всех, кто попросит знак файлом.
+# Почтовые программы не знают ни наших шрифтов, ни нашей вёрстки: слово в подписи
+# может жить ТОЛЬКО картинкой. Кладём её на сайт, потому что подпись подставляет
+# адрес, а не файл: Gmail тянет её с gridec.am у каждого получателя.
+# Тройной размер — под экраны с высокой плотностью; в подписи он показывается
+# на треть, 121×46.
+#
+# Выкладываются ТОЛЬКО картинки. Каталог отдаётся по адресу целиком, и правило
+# «копируем всё, что лежит» рано или поздно вынесло бы наружу черновик или
+# заготовку подписи с личными данными. Список расширений — это замок.
+BRAND = os.path.join(HERE, 'brand')
+if os.path.isdir(BRAND):
+    for fn in sorted(os.listdir(BRAND)):
+        if os.path.splitext(fn)[1].lower() in ('.png', '.svg', '.jpg', '.webp'):
+            deploy_asset(os.path.join(BRAND, fn), os.path.join(DEPLOY, 'brand', fn))
+
 for fn in DEPLOY_ICONS:
     src = os.path.join(ROOT, fn)
     if os.path.exists(src):
