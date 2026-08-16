@@ -37,7 +37,16 @@ select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--brand);
 .hero a:focus-visible,.hero button:focus-visible,.plate a:focus-visible,
 .plate button:focus-visible,.plate2 a:focus-visible,.plate2 button:focus-visible,
 .ic:focus-visible{outline-color:#FFFBF9;}
-html{scroll-behavior:smooth;}
+/* Safari на iPhone САМ увеличивает кегль в блоках, которые считает основным
+   текстом: длинный абзац раздувает, короткий пункт списка оставляет как есть.
+   Приём остался от времён, когда сайты верстали под настольный экран и читали
+   с телефона; на свёрстанной под телефон странице он ломает соразмерность.
+   Именно это и было видно в разделе 04: вводный абзац и пять пунктов набраны
+   ОДНИМ кеглем, 16 пикселей, — замерено в обеих языковых версиях, — а на
+   телефоне абзац выглядел крупнее.
+   Ровно 100%, а не none: none отнял бы у читателя и его собственную настройку
+   размера текста в Safari, а она нужна. */
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 /* overflow-x:clip, NOT hidden — hidden turns body into a scroll container and kills position:sticky */
 body{margin:0;background:var(--bg);color:var(--fg);font-family:%%BODYFONT%%;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip;}
 /* paper grain — one fixed layer, no blend mode, 3% */
