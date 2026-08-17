@@ -520,11 +520,13 @@ EN = {
   ('Who we are', [
    'Gridec LLC, Davtashen 1, 13-25, Yerevan 0058, Armenia. Taxpayer identification '
    'number 08331059.',
-   'Gridec decides why and how the information described here is used, and is the '
-   'controller of that information.']),
+   'Gridec LLC determines the purposes and the means of processing the personal data '
+   'described here, and is the controller of that data.']),
   ('Information we collect', [
    'The site has one form. It collects your name, company, email address, phone number, '
    'the sector you select, your description of the issue, and any files you attach to it.',
+   'Please do not attach identity documents, health records or other sensitive personal '
+   'data unless your enquiry genuinely requires them.',
    'We count visits with Cloudflare Web Analytics. It sets no cookies, does not '
    'fingerprint visitors and does not follow you across other sites. What we see is '
    'aggregate — page views, referring sites, country, browser and device type — not '
@@ -536,51 +538,59 @@ EN = {
    'advertising.']),
   ('How we use it', [
    'To answer your enquiry, to clarify what needs measuring, to prepare a quotation, and '
-   'to keep a record of what was agreed. We do not use your details for marketing, and we '
+   'to arrange the follow-up. We do not use your details for marketing, and we '
    "do not sell them or share them for anyone else's purposes."]),
   ('Legal basis', [
-   'We use your details to take steps at your request before entering into a contract, '
-   'and on our legitimate interest in answering business enquiries addressed to us. Where '
-   'the General Data Protection Regulation applies to you, those are Article 6(1)(b) and '
-   'Article 6(1)(f).']),
+   'By completing and sending the form, you give us these details so that we can handle '
+   'your enquiry and reply to you. That is what we use them for.',
+   'Where the General Data Protection Regulation (GDPR) applies to you, the relevant '
+   'legal bases may be Article 6(1)(b) and Article 6(1)(f).']),
   ('Data sharing', [
-   'The form is delivered to our mailbox by FormSubmit (formsubmit.co), a form-to-email '
-   'service operated outside Armenia and the European Union. The contents of the form, '
-   'including any attachments, pass through that service on the way to us. The resulting '
-   'message is then held with our email provider.',
+   'The form reaches us through FormSubmit (formsubmit.co). The contents of the form, '
+   'including any attachments, are processed by that service to the extent needed to '
+   'deliver your enquiry to our mailbox. FormSubmit is a third-party service, and that '
+   'processing may take place outside Armenia. The resulting message is then held with '
+   'our email provider.',
    'The technical data behind the visit count is processed by Cloudflare as our service '
    'provider.',
+   'We do not pass your data to other people or organisations for their own purposes. '
+   'Technical service providers have access to it only to the extent needed to provide '
+   'their service.',
    'We also disclose information where Armenian law requires it, for example on a lawful '
-   'request from a state authority. No one else receives your enquiry.']),
+   'request from a state authority.']),
   ('Data security', [
    'The site is served over an encrypted connection, so what you type into the form is '
    'encrypted in transit. Enquiries are held in a mailbox whose access is limited to the '
    'people who answer them.',
-   'We do not claim protection beyond that. Email is not a confidential channel by '
-   'design: if what you need to send is sensitive, say so first and we will agree a '
-   'different way to receive it.']),
+   'We do not claim protection beyond that. Ordinary email should not be treated as a '
+   'confidential or end-to-end encrypted channel: if what you need to send is sensitive, '
+   'say so first and we will agree a different way to receive it.']),
   ('Cookies and similar technologies', [
-   'This site sets no cookies. One technical flag is stored in your browser to carry the '
-   'visual transition between the two language versions; it holds no personal data, is '
-   'readable by no one else, and is discarded when you close the tab.']),
+   'This site sets no cookies. One technical value is stored in your browser for a short '
+   'time, to carry the visual transition between the two language versions. It holds no '
+   'personal data and is discarded when you close the tab.']),
   ('Data retention', [
-   'Enquiries are kept for 24 months from our last contact with you, then deleted. Where '
-   'an enquiry becomes a contract, the related records are kept for as long as Armenian '
-   'accounting and tax law requires. You can ask us to delete your enquiry sooner.']),
+   'Where an enquiry does not lead to a contractual relationship, we keep it for up to '
+   '24 months from our last contact with you, then delete it.',
+   'Where an enquiry becomes a contract, we keep the related records for as long as the '
+   'applicable accounting, tax or other legislation requires. You can ask us to delete '
+   'your enquiry sooner.']),
   ('International data transfers', [
-   'We are based in Armenia and your enquiry is held there. The form service named above '
-   'operates from outside Armenia and the European Union, so the contents of the form '
-   'cross a border when you send it. If you would rather they did not, email us directly '
+   'We are located and operate in Armenia. We receive and handle enquiries from Armenia, '
+   'but the technical services used to transmit or store them may operate in other '
+   'countries.',
+   'The form service is a third-party service, so the contents of the form may cross a '
+   'border when you send it. If you would rather they did not, email us directly '
    'at <a href="mailto:sales@gridec.am">sales@gridec.am</a> instead of using the '
    'form.']),
   ('Your rights', [
-   'You can ask for a copy of what we hold about you, ask us to correct it, ask us to '
-   'delete it, ask us to restrict how we use it, or object to our using it. You can also '
-   'ask for your details in a portable form.',
-   'Write to <a href="mailto:sales@gridec.am">sales@gridec.am</a> and we will '
-   'answer within 30 days. These rights follow the Republic of Armenia Law on the '
-   'Protection of Personal Data and, where it applies to you, the General Data Protection '
-   'Regulation.']),
+   'Where the law of the Republic of Armenia provides for it, you can obtain information '
+   'about the processing of your data, access that data, and ask us to correct, block or '
+   'destroy it.',
+   'Where the GDPR applies to you, you may also have the right to restrict processing, '
+   'to object to it, and to data portability.',
+   'Write to <a href="mailto:sales@gridec.am">sales@gridec.am</a>. We will answer as '
+   'quickly as we can and within the time limits the law sets.']),
   ('Complaints', [
    'If our answer does not satisfy you, you can complain to the Personal Data Protection '
    'Agency of the Ministry of Justice of the Republic of Armenia. If you are in the '
@@ -593,7 +603,7 @@ EN = {
    '<a href="mailto:sales@gridec.am">sales@gridec.am</a>, or by post to Gridec LLC, '
    'Davtashen 1, 13-25, Yerevan 0058, Armenia.']),
  ]),
- 'PP_UPD': 'Last updated 14 August 2026',
+ 'PP_UPD': 'Last updated 17 August 2026',
  'F_PRIV': 'We use these details only to answer your enquiry. The form is delivered through '
            'FormSubmit, a third-party service. '
            '<button type="button" data-open-privacy>Privacy Policy</button>',
