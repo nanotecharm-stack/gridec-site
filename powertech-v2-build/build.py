@@ -14,6 +14,25 @@ SITE = os.environ.get('PT_SITE') or _LOCAL or os.path.join(HERE, '..', 'assets')
 FONTS = os.path.join(SITE, 'fonts')
 IMGS = os.path.join(HERE, 'img')
 
+# Счётчик посещений — Cloudflare Web Analytics. Сюда вставляется токен площадки
+# из кабинета Cloudflare (Analytics & Logs → Web Analytics → gridec.am), строка
+# из 32 шестнадцатеричных знаков.
+#
+# Пока строка пуста, скрипт в страницы НЕ попадает. Это сделано намеренно: текст
+# политики конфиденциальности обещает посетителю, что аналитики нет, и обещание
+# должно ломаться вместе с токеном, а не раньше. Меняя одно, проверьте другое —
+# в обеих языковых версиях, раздел «Ինչ ենք հավաքում» / «Information we collect».
+#
+# Счётчик не ставит cookie и не собирает «отпечаток» браузера, поэтому баннера
+# согласия не требует. Внешний скрипт единственный на сайте.
+CF_BEACON = ''
+
+def cf_beacon_tag():
+    if not CF_BEACON:
+        return ''
+    return ('\n<script defer src="https://static.cloudflareinsights.com/beacon.min.js" '
+            'data-cf-beacon=\'{"token": "%s"}\'></script>' % CF_BEACON)
+
 def b64(path, mime):
     with open(path, 'rb') as f:
         return 'data:' + mime + ';base64,' + base64.b64encode(f.read()).decode()
@@ -500,10 +519,15 @@ EN = {
   ('Information we collect', [
    'The site has one form. It collects your name, company, email address, phone number, '
    'the sector you select, your description of the issue, and any files you attach to it.',
-   'Nothing is collected unless you send that form. We run no analytics, no advertising '
-   'and no third-party trackers, and we do not collect device identifiers, location or '
-   'usage statistics. Our hosting provider keeps ordinary server request logs, as any web '
-   'server does; we neither read them nor use them.']),
+   'We count visits with Cloudflare Web Analytics. It sets no cookies, does not '
+   'fingerprint visitors and does not follow you across other sites. What we see is '
+   'aggregate — page views, referring sites, country, browser and device type — not '
+   'individual people.',
+   'We run no advertising systems and no other third-party trackers.',
+   'While the site is served, our hosting provider may automatically record ordinary '
+   'technical data such as the IP address, the time of a request or technical details '
+   'about the browser. We do not use that to analyse visitor behaviour or for '
+   'advertising.']),
   ('How we use it', [
    'To answer your enquiry, to clarify what needs measuring, to prepare a quotation, and '
    'to keep a record of what was agreed. We do not use your details for marketing, and we '
@@ -518,6 +542,8 @@ EN = {
    'service operated outside Armenia and the European Union. The contents of the form, '
    'including any attachments, pass through that service on the way to us. The resulting '
    'message is then held with our email provider.',
+   'The technical data behind the visit count is processed by Cloudflare as our service '
+   'provider.',
    'We also disclose information where Armenian law requires it, for example on a lawful '
    'request from a state authority. No one else receives your enquiry.']),
   ('Data security', [
@@ -785,9 +811,11 @@ HY = {
    'հեռախոսահամարը, ընտրված ոլորտը, խնդրի ձեր նկարագրությունը և կցված ֆայլերը։',
    'Խնդրում ենք չկցել անձը հաստատող փաստաթղթեր, առողջական կամ այլ զգայուն անձնական '
    'տվյալներ, եթե դրանք անհրաժեշտ չեն ձեր հարցման համար։',
-   'Կայքը չի օգտագործում վերլուծական կամ գովազդային համակարգեր և չունի երրորդ կողմի '
-   'հետագծիչներ։ Չենք հավաքում սարքի նույնացուցիչներ, տեղորոշում կամ օգտագործման '
-   'վիճակագրություն։',
+   'Այցելությունները հաշվում ենք Cloudflare Web Analytics-ով։ Այն cookie չի տեղադրում, '
+   'չի կազմում այցելուի «մատնահետք» և չի հետևում ձեզ այլ կայքերում։ Մենք տեսնում ենք '
+   'միայն ամփոփ թվեր՝ էջերի դիտումներ, ուղղորդող կայքեր, երկիր, դիտարկիչի և սարքի '
+   'տեսակ, ոչ թե առանձին այցելուներ։',
+   'Գովազդային համակարգեր և այլ երրորդ կողմի հետագծիչներ չունենք։',
    'Կայքի աշխատանքի ընթացքում հոսթինգի ծառայությունը կարող է ավտոմատ կերպով գրանցել '
    'սովորական տեխնիկական տվյալներ՝ օրինակ IP հասցեն, հարցման ժամը կամ դիտարկիչի '
    'մասին տեխնիկական տեղեկությունը։ Մենք դրանք չենք օգտագործում այցելուների '
@@ -810,6 +838,8 @@ HY = {
    'FormSubmit-ը երրորդ կողմի ծառայություն է, և տվյալների մշակումը կարող է '
    'իրականացվել նաև Հայաստանից դուրս։ Ստացված նամակն այնուհետև պահվում է մեր '
    'փոստային ծառայության մոտ։',
+   'Այցելությունների հաշվառման տեխնիկական տվյալները մշակում է Cloudflare-ը՝ որպես '
+   'մեզ ծառայություն մատուցող։',
    'Այլ անձանց կամ կազմակերպությունների ձեր տվյալները չենք փոխանցում նրանց սեփական '
    'նպատակներով։ Տեխնիկական ծառայություններ մատուցողները դրանց հասանելիություն '
    'ունեն միայն այնքանով, որքանով դա անհրաժեշտ է ծառայությունը մատուցելու համար։',
@@ -1134,8 +1164,10 @@ def wrap(tokens, body, extra_head='', icons='../'):
     # после первой отрисовки: полкадра шапка живёт без правил варианта 3 —
     # логотип выходит тёмным и без плашки, а потом перекрашивается на глазах.
     # В разметке атрибут есть с самого начала, и мигания не остаётся.
-    return ('<!doctype html>\n<html lang="%s" data-nav="3">\n<head>\n%s%s</head>\n<body>\n%s\n</body>\n</html>\n'
-            % (tokens['LANG'], head, extra_head, body))
+    # Счётчик идёт последним и с defer: он не должен задерживать ни отрисовку,
+    # ни разбор страницы. Пустой токен не даёт ничего — см. CF_BEACON.
+    return ('<!doctype html>\n<html lang="%s" data-nav="3">\n<head>\n%s%s</head>\n<body>\n%s%s\n</body>\n</html>\n'
+            % (tokens['LANG'], head, extra_head, body, cf_beacon_tag()))
 
 # ------------------------------------------------------------------- palettes
 # REVIEW-ONLY palette passes. Each rewrites the FINISHED page, so index.html/hy.html
