@@ -2930,10 +2930,29 @@ if(brandA)brandA.addEventListener('click',function(e){
    страница не разворачивалась — метка ptwipe попросту не ставилась.
    Класс переживёт и следующий переезд: он описывает НАЗНАЧЕНИЕ ссылки, а не
    то, как в этом месяце устроены адреса. Их две — в шапке и в подвале. */
+/* Пока плашки закрывают экран, страница другого языка уже качается.
+   Замер живого сайта: холодная загрузка встречного документа — 167 мс, а
+   покрытие идёт 700. Раньше переход к ней и не приступал, пока плашки не
+   сойдутся: экран стоял закрытым ровно на время сети. Теперь загрузка
+   начинается по наведению (палец на телефоне даёт то же событие) и в самом
+   худшем случае — по нажатию, и всё равно успевает закончиться внутри
+   анимации. Ссылок две, документ один, метка ставится один раз. */
+var langWarmed=false;
+function warmLang(href){
+  if(langWarmed||rm)return;
+  langWarmed=true;
+  var l=document.createElement('link');
+  l.rel='prefetch';l.as='document';l.href=href;
+  document.head.appendChild(l);
+}
 document.querySelectorAll('a.lang,a.flang').forEach(function(a){
+  a.addEventListener('pointerenter',function(){warmLang(a.href);});
+  a.addEventListener('touchstart',function(){warmLang(a.href);},{passive:true});
+  a.addEventListener('focus',function(){warmLang(a.href);});
   a.addEventListener('click',function(e){
     if(rm||e.metaKey||e.ctrlKey||e.shiftKey||a.target==='_blank')return;
     e.preventDefault();
+    warmLang(a.href);
     try{sessionStorage.setItem('ptwipe','1');}catch(err){}
     wipeCoverThen(function(){location.href=a.href;});
   });
