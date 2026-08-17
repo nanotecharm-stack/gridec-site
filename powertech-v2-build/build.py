@@ -358,7 +358,11 @@ def story_html(items):
 
 # ---------------------------------------------------------------- EN
 EN = {
- 'LANG': 'en', 'TITLE': 'Gridec | Power Quality Monitoring',
+ # Страна в заголовке не для красоты: услугу ищут вместе с ней — «power quality
+ # monitoring armenia», — а до сих пор в title стояли только два слова из трёх.
+ # Армянский заголовок оставлен как был: тот, кто ищет по-армянски, страну не
+ # набирает, а Google и без того обрезал его по ширине.
+ 'LANG': 'en', 'TITLE': 'Gridec | Power Quality Monitoring in Armenia',
  'META_DESC': 'Seven-day power quality monitoring in Armenia. We measure under representative load and report the findings.',
  'FONTFACES': FF_EN + '\n' + FF_DEP,
  'READOUT': READOUT_EN % dict(mono=MONO_EN),
