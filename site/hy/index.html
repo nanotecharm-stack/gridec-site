@@ -1548,6 +1548,12 @@ var SX={centres:[],startX:0,endX:0,travel:0,dist:0,railLeft:0,focus:0,
         radius:0,lift:34,tail:0.22,window:0.88};
 function sxShells(){return [].slice.call(sxTrack.children);}
 function sxSnap(v){var d=window.devicePixelRatio||1;return Math.round(v*d)/d;}
+var sxPrevX=null;
+function sxPlace(v){
+  var moving=sxPrevX!==null&&Math.abs(v-sxPrevX)>0.25;
+  sxPrevX=v;
+  return moving?v:sxSnap(v);
+}
 function sxCanPin(){
   return innerWidth>=981 && matchMedia('(hover:hover)').matches
       && matchMedia('(pointer:fine)').matches && !rm;
@@ -1609,7 +1615,7 @@ function suiteUpd(){
   var p=suiteProgress();
   var tp=p/SX.window; tp=tp<0?0:tp>1?1:tp;      
   var x=SX.startX+(SX.endX-SX.startX)*tp;
-  sxTrack.style.transform='translate3d('+sxSnap(x)+'px,0,0)';
+  sxTrack.style.transform='translate3d('+sxPlace(x)+'px,0,0)';
   sxRender(x);
   railBar(tp);
 }
