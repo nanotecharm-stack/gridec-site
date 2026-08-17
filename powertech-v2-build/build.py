@@ -1168,6 +1168,12 @@ def wrap(tokens, body, extra_head='', icons='../'):
         '<title>', tokens['TITLE'], '</title>\n',
         '<meta name="description" content="', desc, '">\n',
         '<meta name="theme-color" content="#C8603D">\n',
+        # .ico объявлен ПЕРВЫМ и явно, хотя браузеры прекрасно берут svg. Причина
+        # не в браузерах: поиск Google векторные значки не поддерживает вовсе, а
+        # найдя в голове единственную иконку в svg, он не идёт искать /favicon.ico
+        # по соглашению — и рисует в выдаче безликий глобус. В .ico есть кадр
+        # 48×48, ровно тот размер, до которого Google всё приводит.
+        '<link rel="icon" href="', icons, 'favicon.ico" sizes="48x48">\n',
         '<link rel="icon" href="', icons, 'favicon.svg" type="image/svg+xml">\n',
         '<link rel="apple-touch-icon" href="', icons, 'apple-touch-icon.png">\n',
         '<meta property="og:type" content="website">\n',
@@ -1423,6 +1429,22 @@ def render_deploy(tokens, data, ff, out_path, post=None):
             '<link rel="alternate" hreflang="hy" href="%s">\n'
             '<link rel="alternate" hreflang="x-default" href="%s">\n'
             % ((en if tokens['LANG'] == 'en' else hy,) * 2 + (en, hy, en)))
+    # Кто такие — машиночитаемо. Без этого поиск знает про сайт только домен и
+    # подписывает выдачу «gridec.am», а не именем компании. Ни одного нового
+    # утверждения здесь нет: имя, адрес, ՀՎՀՀ, почта и телефон уже стоят в подвале
+    # обеих страниц, блок лишь называет их своими именами. Логотип дан пиксельным
+    # PNG, а не svg: поиск векторные значки не читает.
+    head += (
+        '<script type="application/ld+json">'
+        '{"@context":"https://schema.org","@graph":['
+        '{"@type":"Organization","@id":"%(u)s#org","name":"Gridec",'
+        '"legalName":"Gridec LLC","url":"%(u)s","logo":"%(u)sapple-touch-icon.png",'
+        '"email":"sales@gridec.am","telephone":"+374 41 00 00 14","taxID":"08331059",'
+        '"address":{"@type":"PostalAddress","streetAddress":"Davtashen 1, 13-25",'
+        '"addressLocality":"Yerevan","postalCode":"0058","addressCountry":"AM"}},'
+        '{"@type":"WebSite","@id":"%(u)s#site","name":"Gridec","url":"%(u)s",'
+        '"publisher":{"@id":"%(u)s#org"},"inLanguage":["en","hy"]}'
+        ']}</script>\n' % {'u': SITE_URL + '/'})
     # Логотип теперь НАБОР, а не кривые. Пока гарнитура не пришла, слово рисуется
     # запасным моноширинным: другая ширина, другой рисунок — и шапка дёргается на
     # каждой первой загрузке, причём дёргается именно логотип. Предзагрузка ставит
