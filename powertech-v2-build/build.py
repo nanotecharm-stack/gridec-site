@@ -25,12 +25,18 @@ IMGS = os.path.join(HERE, 'img')
 #
 # Счётчик не ставит cookie и не собирает «отпечаток» браузера, поэтому баннера
 # согласия не требует. Внешний скрипт единственный на сайте.
-CF_BEACON = ''
+CF_BEACON = '7641c3a1338942c79099a92358824950'
 
 def cf_beacon_tag():
+    """Тег ровно в той форме, в какой его выдал кабинет Cloudflare.
+
+    `type="module"` вместо `defer` — не описка: модуль и так откладывается до
+    разбора документа, а форма взята у самого Cloudflare, чтобы наша сборка не
+    расходилась с тем, что у них считается рабочим.
+    """
     if not CF_BEACON:
         return ''
-    return ('\n<script defer src="https://static.cloudflareinsights.com/beacon.min.js" '
+    return ('\n<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" '
             'data-cf-beacon=\'{"token": "%s"}\'></script>' % CF_BEACON)
 
 def b64(path, mime):
