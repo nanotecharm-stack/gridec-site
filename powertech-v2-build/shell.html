@@ -641,6 +641,17 @@ h1{font-size:%%H1SIZE%%;margin-top:20px;text-wrap:balance;}
 /* the headline keeps its full measure: it may reach past its column into the
    quiet left part of the wave field rather than break into extra lines */
 .hcol{position:relative;z-index:3;}
+/* Оптический центр выше геометрического: ровно по середине блок читается
+   провисшим. Замер до правки — середина блока 390 при середине героя 360, то
+   есть на 30px НИЖЕ: сетка центрирует содержимое, верхнее поле героя больше
+   нижнего, и разница уходит вниз. Пустое поле снизу поднимает блок на половину
+   своей высоты — 150px дают 75px подъёма, середина встаёт на 315, это 6,25%
+   выше центра, внутри рабочей полосы 5-8%.
+   Границы: ниже 961px колонка одна и у неё своё поле, а на низком экране
+   подъём подвёл бы надглавие под шапку — там правило снимается. */
+@media (min-width:961px) and (min-height:680px){
+  .hgrid .hcol{margin-bottom:150px;}
+}
 /* Потолок — своя колонка, а не окно. Заголовок тянется по содержимому, и текст
    без ручных переносов иначе разливается на всю ширину героя, заезжая на фигуру. */
 .hero h1{color:var(--fg);width:max-content;max-width:100%;}
@@ -693,7 +704,12 @@ h1 .ac{font-style:normal;color:var(--brand-ink);}
    размерах ложится точно в пиксель, а между ними мылится. 34 была не кратной и
    вдобавок кричала; 22 и чётче, и тише. */
 .rd .vl b,.rd .vl i{font-family:'Departure Mono',monospace;}
-.rd .vl b{color:var(--fg);font-variant-numeric:tabular-nums;font-weight:400;}
+/* Цифры больше не поднимаются до полной плотности набора. На 22px полным
+   чернилом они давали тот же контраст, что и заголовок в 61px, и при прищуре
+   на экране оставалось ДВА тёмных пятна вместо одного: слово слева и показание
+   справа. Цвет теперь достаётся от .rd — это --fg-soft, около 4,9:1 на бумаге,
+   выше порога 4,5. Цифры читаются, но за первый взгляд больше не спорят. */
+.rd .vl b{font-variant-numeric:tabular-nums;font-weight:400;}
 .rd .vl .hv{font-size:22px;line-height:1;letter-spacing:.02em;}
 .rd .vl .hz{font-size:11px;line-height:1;margin-left:10px;}
 .rd .vl i{font-style:normal;font-size:11px;letter-spacing:.08em;}
@@ -850,7 +866,7 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   /* Нижний конец дуотона. Не самая глубокая ступень плиты, а на две выше:
      тени кадра приходят светлее, чем тёмный раздел под лентой, и он остаётся
      первым по-настоящему тёмным местом страницы. */
-  background:#15171E;isolation:isolate;
+  background:#15171E;
   /* No layer here either. That mattered only while .icard was promoted: the
      photograph then landed in the parent texture and was stretched. With the
      card unpromoted the whole thing repaints at the true scale every frame,
@@ -872,13 +888,18 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
      в темноту. Контраст 0,84 и яркость 1,08 сжимают шкалу перед наложением,
      подложка взята не самой глубокой ступенью, и десятая доля цвета оставлена
      живой — снимок читается тонированным, а не перекрашенным. */
-  filter:grayscale(.9) contrast(.84) brightness(1.08);mix-blend-mode:lighten;}
+  /* Дуотон ЗАПЕЧЁН В ФАЙЛ, см. duotone.py. Прежде он собирался здесь: фильтр
+     на снимке, lighten над подложкой #15171E, darken слоем #EFEDEA сверху —
+     три действия на каждый снимок. Браузер повторял их НА КАЖДОМ КАДРЕ
+     прокрутки, шесть снимков по 90 тысяч пикселей, и страница лагала
+     (владелец, 20.08; выключатель ?scroll=native показал, что сглаживание
+     тут невиновно). Арифметика перенесена в сборку и сверена с браузером на
+     холсте тем же конвейером: расхождение 0,99 из 255, худшее 2. */}
 /* Верхний конец дуотона. Со своим слоем, потому что ::after занят шторкой
    под подписью, а порядок важен: краска, потом бумага, потом шторка. */
-.ic-art::before{content:"";position:absolute;inset:-1px;z-index:1;
-  pointer-events:none;background:#EFEDEA;mix-blend-mode:darken;}
+/* Слой darken снят: белая точка теперь в самом файле. */
 /* На карточке-приглашении фотографии нет — там чертёж, и сводить его не к чему */
-.ic.is-open-card .ic-art::before{display:none;}
+/* Правило про ::before на карточке-приглашении ушло вместе с самим слоем. */
 .ic-art::after{content:"";position:absolute;pointer-events:none;z-index:2;
   /* One pixel past every edge, not flush with them. The art box is a fractional
      height (271.469px here), so an overlay at inset:0 has a half-covered bottom
@@ -1004,7 +1025,15 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
    а не отдельная тема, равная ей; то же у перечня величин после 05. Пауза
    перед приложением втрое короче обычной, поэтому оно читается как
    продолжение, а не как новое заявление. */
-#why h2{font-size:clamp(30px,4.9vw,68px);letter-spacing:-.022em;line-height:1.05;}
+/* Ступень «главного раздела». Прежняя формула росла на 4.9vw против 4.75vw у h1,
+   то есть заголовок первого раздела был крупнее заголовка страницы НА ЛЮБОЙ
+   ширине выше ~630px — читатель получал два «самых главных». Рост взят от
+   .display: ступень уже была в наборе, и вместо нового размера переиспользуется
+   существующий. На 1280 это 51 против 61 у h1.
+   #company получил ту же ступень: большое верхнее поле у него было и раньше
+   (правило ниже), а размер заголовка оставался обычным — роль объявлялась
+   наполовину. */
+#why h2,#company h2{font-size:clamp(26px,3.96vw,55px);letter-spacing:-.022em;line-height:1.05;}
 #why,#company{padding-top:clamp(76px,10.5vw,158px);}
 #report h2,#measure h2{font-size:clamp(19px,2vw,28px);letter-spacing:0;}
 #report,#measure{padding-top:clamp(26px,3vw,46px);}
@@ -1289,7 +1318,8 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
 .story .lb span{background:var(--bg);padding:0 var(--s4) 0 var(--s3);}
 /* Ограничения измерения нет: переносы в утверждениях заданы разметкой, и лимит в
    22 знака ломал бы авторскую строку ещё раз, на третью. Ширину держит колонка. */
-.story p{font-size:17px;line-height:1.7;color:var(--fg-mid);
+.story p{/* было 17px при 16px у остальной прозы: та же роль, тот же шрифт,
+     разница в пиксель. */font-size:16px;line-height:1.7;color:var(--fg-mid);
   max-width:46ch;margin:var(--s4) 0 0;}
 @media (max-width:860px){.story{grid-template-columns:1fr;row-gap:clamp(var(--s6),8vw,var(--s8));}
   .story .sb,.story .sb:nth-child(2),.story .sb:nth-child(3){grid-column:1 / -1;}
@@ -1305,7 +1335,10 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
 /* heading and call to action are one element, so the phrase is said once */
 /* the CTA reads as a button, so it takes a step below the section titles —
    otherwise a long label (Armenian runs ~2.4x this one's length) stacks five deep */
-.ct-act{margin:0;font-size:clamp(24px,3.1vw,44px);line-height:1.06;max-width:22ch;}
+/* Своя формула давала на 1280 сорок пикселей против сорока одного у остальных
+   заголовков разделов — разницу в один пиксель не видит никто, а в шкале это
+   лишняя ступень. Берём ту же ступень, что и все h2. */
+.ct-act{margin:0;font-size:%%H2SIZE%%;line-height:1.06;max-width:22ch;}
 .ct-act button{display:inline-flex;align-items:flex-start;gap:clamp(14px,1.6vw,26px);
   font:inherit;color:inherit;text-align:left;padding:0;background:none;cursor:pointer;}
 .ct-act button span{position:relative;display:inline-block;}
@@ -1437,11 +1470,16 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 #imd{max-width:880px;}
 #imd .ph{position:relative;aspect-ratio:16/7;overflow:hidden;
   /* тот же сжатый дуотон, что на карточках */
-  background:#15171E;isolation:isolate;}
+  background:#15171E;}
 #imd .ph img{width:100%;height:100%;object-fit:cover;display:block;
-  filter:grayscale(.9) contrast(.84) brightness(1.08);mix-blend-mode:lighten;}
-#imd .ph::before{content:"";position:absolute;inset:0;z-index:1;
-  pointer-events:none;background:#EFEDEA;mix-blend-mode:darken;}
+  /* Дуотон ЗАПЕЧЁН В ФАЙЛ, см. duotone.py. Прежде он собирался здесь: фильтр
+     на снимке, lighten над подложкой #15171E, darken слоем #EFEDEA сверху —
+     три действия на каждый снимок. Браузер повторял их НА КАЖДОМ КАДРЕ
+     прокрутки, шесть снимков по 90 тысяч пикселей, и страница лагала
+     (владелец, 20.08; выключатель ?scroll=native показал, что сглаживание
+     тут невиновно). Арифметика перенесена в сборку и сверена с браузером на
+     холсте тем же конвейером: расхождение 0,99 из 255, худшее 2. */}
+/* Слой darken снят и здесь — тот же запечённый файл. */
 /* the index sat in difference blend mode, which inverts against the photograph —
    on mid-tone frames it landed within a hair of the backdrop. It now reads on its
    own corner scrim, which is a photographic device rather than a box. */
@@ -1449,7 +1487,10 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   pointer-events:none;z-index:1;
   background:linear-gradient(to top right,rgba(13,14,19,.72),rgba(13,14,19,.28) 42%,rgba(13,14,19,0) 78%);}
 #imd .bd{padding:clamp(22px,3vw,38px);}
-#imd h3{font-size:clamp(24px,3vw,38px);margin:0 0 14px;}
+/* Все три окна получают одну ступень, и это ступень «малого раздела»
+   (#report, #measure). Было 38 у окна снимка и по 30 у двух остальных, при 26 у
+   заголовка раздела: окно меньше раздела по смыслу, но объявляло себя крупнее. */
+#imd h3{font-size:clamp(19px,2vw,28px);margin:0 0 14px;}
 #imd .p1{font-size:16px;line-height:1.75;color:var(--fg-mid);max-width:62ch;}
 #imd .lb{font-family:%%MONOFONT%%;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--brand-ink);margin:26px 0 var(--s1);}
 /* Перечень выводов — настоящий список: он и выглядит перечнем, и читается
@@ -1473,7 +1514,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 #povl{z-index:130;}   /* стоит поверх формы, из которой её открывают */
 #pmd{max-width:720px;}
 #pmd .in{padding:clamp(26px,4vw,46px);}
-#pmd h3{font-size:clamp(23px,2.8vw,30px);margin:0 0 12px;}
+#pmd h3{font-size:clamp(19px,2vw,28px);margin:0 0 12px;}
 #pmd .lede{font-size:14px;line-height:1.7;margin:0 0 var(--s4);max-width:56ch;
   color:color-mix(in srgb,var(--fg) 78%,transparent);}
 #pmd .pps{border-top:1px solid var(--hair2);padding:18px 0 4px;}
@@ -1486,7 +1527,7 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 #pmd a{color:var(--brand-ink);text-decoration:underline;text-underline-offset:3px;}
 /* form modal */
 #fmd .in{padding:clamp(26px,4vw,46px);}
-#fmd h3{font-size:clamp(23px,2.8vw,30px);margin-bottom:10px;}
+#fmd h3{font-size:clamp(19px,2vw,28px);margin-bottom:10px;}
 #fmd h3 .ac{font-style:normal;color:var(--brand-ink);}
 /* Ступени мелкого набора в окне. Порядок силы сверху вниз: заголовок (13,2),
    вводный абзац и заголовки групп (6,7), ярлыки категорий (8,4 — их выбирают,
@@ -2462,7 +2503,22 @@ function openInd(o){
   var ph=document.getElementById('im_ph'),img=ph.firstElementChild;
   if(o.img!==undefined&&PT.imgs[o.img]){
     if(!img){img=document.createElement('img');ph.appendChild(img);}
-    img.src=PT.imgs[o.img];img.alt=o.title;ph.style.display='';}
+    /* Окно открывалось с ЧУЖИМ снимком: адрес полного файла ставился сразу, но
+       до его загрузки в окне оставался снимок предыдущей карточки. Заметно это
+       именно здесь, потому что карточка ленты показывает МАЛЫЙ файл, а окно —
+       полный: адреса разные, кеш не помогает, качать надо всегда.
+       Малый файл уже в кеше — он только что был на карточке. Ставим его первым,
+       и окно открывается с верным снимком мгновенно; полный подменяет его, когда
+       догрузится. Метка want нужна на случай, когда карточки листают быстро:
+       без неё догрузившийся полный снимок предыдущей карточки лёг бы в уже
+       открытое окно следующей — та же ошибка, только наоборот. */
+    var _full=PT.imgs[o.img],_small=_full.replace(/\.jpg$/,'-756.jpg');
+    img.dataset.want=_full;img.alt=o.title;img.src=_small;
+    img.onerror=function(){if(img.dataset.want===_full&&img.src!==_full)img.src=_full;};
+    var _up=new Image();
+    _up.onload=function(){if(img.dataset.want===_full)img.src=_full;};
+    _up.src=_full;
+    ph.style.display='';}
   else ph.style.display='none';
   document.getElementById('im_t').textContent=o.title;
   document.getElementById('im_p1').textContent=o.p1;
@@ -2491,7 +2547,8 @@ irail.appendChild(sxTrack);
 CARDS.forEach(function(o,i){
   var slide=document.createElement('div');slide.className='icard';
   var visual=(o.img!==undefined&&PT.imgs[o.img])
-    ? '<img alt="'+o.title+'" src="'+PT.imgs[o.img]+'">'
+    ? '<img alt="'+o.title+'" src="'+PT.imgs[o.img]+'" srcset="'+
+        PT.imgs[o.img].replace(/\.jpg$/,'-756.jpg')+' 756w, '+PT.imgs[o.img]+' 1536w" sizes="378px">'
     : cardArt(i*97+13);
   slide.innerHTML='<article class="ic'+(o.invite?' is-open-card':'')+'" tabindex="0">'+
     '<div class="ic-top"><span class="ic-go"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.7 12.3 12.3 3.7"/><path d="M12.3 8.7V3.7H7.3"/></svg></span></div>'+
@@ -3325,7 +3382,7 @@ function psFrame(ts){
   PS.c+=(PS.t-PS.c)*k;
   if(Math.abs(PS.t-PS.c)<0.35){PS.c=PS.t;PS.raf=0;PS.last=0;}
   else PS.raf=requestAnimationFrame(psFrame);
-  PS.self=true;/* Whole device pixels, not the raw lerp: a fractional scroll offset lands the edge of every dark section on a part-pixel and antialiases it against the light page, and because the fraction changes each frame that seam shimmers. The eased value stays fractional so the motion keeps its smoothness. */var _dp=window.devicePixelRatio||1;window.scrollTo(0,Math.round(PS.c*_dp)/_dp);PS.self=false;
+  PS.self=true;/* Whole device pixels, not the raw lerp: a fractional scroll offset lands the edge of every dark section on a part-pixel and antialiases it against the light page, and because the fraction changes each frame that seam shimmers. The eased value stays fractional so the motion keeps its smoothness. */var _dp=window.devicePixelRatio||1;/* Округление ТОЛЬКО на последнем кадре. Раньше оно стояло на каждом: у хода с коэффициентом 0.085 в конце шаг становится меньше пикселя, округление держит страницу на месте несколько кадров и потом швыряет её на пиксель — на хвосте каждой прокрутки выходил заметный дребезг. Пока движение идёт, берём дробную величину: она и даёт плавность. Останавливаемся — садимся на целый пиксель устройства, и кромки тёмных разделов остаются резкими, ради чего округление и вводилось. */window.scrollTo(0,PS.raf?PS.c:Math.round(PS.c*_dp)/_dp);PS.self=false;
   /* Лента пересчитывается ЗДЕСЬ ЖЕ, а не по событию scroll. Событие браузер
      шлёт асинхронно, то есть уже следующим кадром: страница уезжала, а
      карточки догоняли её кадром позже — это и читалось как плавание.

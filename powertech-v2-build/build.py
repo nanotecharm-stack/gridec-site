@@ -129,6 +129,47 @@ FF_HY = '\n'.join([
 IMG_FILES = ['02_manufacturing_industrial_robot.jpg', '03_solar_power_plant.jpg',
              '06_healthcare_laboratory.jpg', '05_data_center.jpg',
              '04_commercial_building.jpg', '08_finance_investment.jpg']
+# Карточка ленты показывает снимок в 378px, а файл лежит в 1536 — запас вчетверо,
+# то есть вчетверо больше данных, чем нужно. Рядом кладём вариант в 756: ровно ×2
+# под плотные экраны, и карточка выбирает его сама через srcset.
+# Оригинал НЕ уменьшаем: модалка показывает его на 880, и там 1536 — это ×1.75,
+# уже меньше нормы. Исправить это можно только более крупными исходниками.
+IMG_SMALL_W = 756
+IMG_SMALL = [os.path.splitext(f)[0] + '-756.jpg' for f in IMG_FILES]
+# Готовые снимки лежат отдельно от исходников: в них ЗАПЕЧЁН дуотон, и путать их
+# с оригиналами нельзя — повторное запекание сожмёт шкалу второй раз.
+IMGS_OUT = os.path.join(IMGS, '_duo')
+
+def make_small_images():
+    """Готовит оба размера и ЗАПЕКАЕТ в них дуотон.
+
+    Раньше дуотон собирался в браузере: фильтр на снимке, lighten над тёмной
+    подложкой, darken светлым слоем сверху. Три действия на снимок, шесть снимков,
+    и всё это заново НА КАЖДОМ КАДРЕ прокрутки — отсюда лаги. Теперь та же
+    арифметика делается один раз здесь; вёрстка просто показывает картинку.
+    """
+    from PIL import Image
+    import duotone
+    if not os.path.isdir(IMGS_OUT):
+        os.makedirs(IMGS_OUT)
+    for src_name, small_name in zip(IMG_FILES, IMG_SMALL):
+        src = os.path.join(IMGS, src_name)
+        if not os.path.exists(src):
+            continue
+        big_out = os.path.join(IMGS_OUT, src_name)
+        small_out = os.path.join(IMGS_OUT, small_name)
+        fresh = (os.path.exists(big_out) and os.path.exists(small_out)
+                 and min(os.path.getmtime(big_out), os.path.getmtime(small_out))
+                 >= os.path.getmtime(src))
+        if fresh:
+            continue
+        im = duotone.apply(Image.open(src))
+        im.save(big_out, 'JPEG', quality=84, optimize=True, progressive=True)
+        h = round(im.height * IMG_SMALL_W / im.width)
+        im.resize((IMG_SMALL_W, h), Image.LANCZOS).save(
+            small_out, 'JPEG', quality=82, optimize=True, progressive=True)
+        print('  %s %dx%d + %dx%d, дуотон запечён'
+              % (src_name, im.width, im.height, IMG_SMALL_W, h))
 def b64_small(path, maxw=1800, quality=82):
     """Вшитая копия снимка, уменьшенная до maxw.
 
@@ -1433,6 +1474,31 @@ def render_deploy(tokens, data, ff, out_path, post=None):
             '<link rel="alternate" hreflang="hy" href="%s">\n'
             '<link rel="alternate" hreflang="x-default" href="%s">\n'
             % ((en if tokens['LANG'] == 'en' else hy,) * 2 + (en, hy, en)))
+    # Ссылка без картинки разворачивается серой пустой строкой. Для конторы, к
+    # которой приходят по рекомендации, это дороже позиций в поиске: рекомендация
+    # и есть ссылка, отправленная в мессенджере.
+    #
+    # Карточка собрана КОДОМ — og/make_og.py, готовые файлы лежат в brand/.
+    # Генератор картинок пробовали и забраковали: у этой картинки вся работа —
+    # показать знак и одну строку, а генераторы вместо букв рисуют закорючки;
+    # поле из наложенных дуг владелец отверг словами «как рыбный магазин».
+    #
+    # Знак вставлен готовым PNG, а не набран шрифтом: Departure Mono пиксельный,
+    # и дробный пересчёт точек его размывает. Толщина линии и глубина просадки
+    # посчитаны на МЕЛКИЙ размер: в чате карточка около 300px, и линия в два
+    # пикселя там пропадала совсем.
+    og_img = SITE_URL + ('/brand/og-hy.png' if tokens['LANG'] == 'hy'
+                         else '/brand/og-en.png')
+    og_alt = ('Gridec — Էլեկտրաէներգիայի որակի մոնիթորինգ'
+              if tokens['LANG'] == 'hy'
+              else 'Gridec — power quality monitoring in Armenia')
+    head += ('<meta property="og:image" content="%s">\n'
+             '<meta property="og:image:width" content="1200">\n'
+             '<meta property="og:image:height" content="630">\n'
+             '<meta property="og:image:type" content="image/png">\n'
+             '<meta property="og:image:alt" content="%s">\n'
+             '<meta name="twitter:card" content="summary_large_image">\n'
+             % (og_img, og_alt))
     # Кто такие — машиночитаемо. Без этого поиск знает про сайт только домен и
     # подписывает выдачу «gridec.am», а не именем компании. Ни одного нового
     # утверждения здесь нет: имя, адрес, ՀՎՀՀ, почта и телефон уже стоят в подвале
@@ -1534,8 +1600,9 @@ if os.path.exists(_stale):
 
 for fn in DEPLOY_FONTS:
     deploy_asset(os.path.join(FONTS, fn), os.path.join(DEPLOY, 'fonts', fn))
-for fn in IMG_FILES:
-    deploy_asset(os.path.join(IMGS, fn), os.path.join(DEPLOY, 'uploads', 'img', fn))
+make_small_images()
+for fn in IMG_FILES + IMG_SMALL:
+    deploy_asset(os.path.join(IMGS_OUT, fn), os.path.join(DEPLOY, 'uploads', 'img', fn))
 # Логотип картинкой — для почтовой подписи и для всех, кто попросит знак файлом.
 # Почтовые программы не знают ни наших шрифтов, ни нашей вёрстки: слово в подписи
 # может жить ТОЛЬКО картинкой. Кладём её на сайт, потому что подпись подставляет

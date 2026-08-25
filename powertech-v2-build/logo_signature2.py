@@ -27,7 +27,14 @@ INK, MUTE, FAINT, LINK, RULE = '#0D0E13', '#5A5F66', '#8A8F96', '#2E5E99', '#D9D
 PLATE = '#0D2440'
 
 PHONE_HREF, PHONE = 'tel:+37441000014', '+374 41 00 00 14'
-MAIL = 'Hrant.Melkumyan@gridec.am'
+# Адрес показывается СТРОЧНЫМИ. Точка между «Hrant» и «Melkumyan» терялась:
+# она стоит на базовой линии, а справа от неё сразу заглавная M, и основание её
+# штриха сливается с точкой в одно пятно. Среди строчных букв точка выступает
+# ниже их роста и потому заметна.
+# На доставку это не влияет: Google не различает регистр в имени ящика, письмо
+# на Hrant.Melkumyan@ и на hrant.melkumyan@ приходит в один и тот же ящик.
+MAIL = 'hrant.melkumyan@gridec.am'
+MAIL_CAPS = 'Hrant.Melkumyan@gridec.am'
 
 FF_EN = "Arial,Helvetica,sans-serif"
 FF_HY = "Arial,'Noto Sans Armenian','Sylfaen',Helvetica,sans-serif"
@@ -46,16 +53,21 @@ DATA = {
 DOT = '<span style="color:%s">&nbsp;&middot;&nbsp;</span>' % FAINT
 
 
-def a(href, text):
-    return ('<a href="%s" style="color:%s;text-decoration:none">%s</a>'
-            % (href, LINK, text))
+def a(href, text, extra=''):
+    return ('<a href="%s" style="color:%s;text-decoration:none%s">%s</a>'
+            % (href, LINK, extra, text))
+
+
+# Разрядка в сотую доли кегля. Она раздвигает соседей точки, не трогая сам
+# текст: скопированный адрес остаётся посимвольно тем же.
+MAIL_STYLE = ';letter-spacing:.02em'
 
 
 SITE_TXT = 'www.gridec.am'      # по просьбе владельца — с www
 
 
 def links():
-    return (a(PHONE_HREF, PHONE), a('mailto:' + MAIL, MAIL),
+    return (a(PHONE_HREF, PHONE), a('mailto:' + MAIL, MAIL, MAIL_STYLE),
             a('https://gridec.am', SITE_TXT))
 
 
@@ -103,15 +115,48 @@ def v_table(d):
                 'width:14px;color:%s">%s</td>'
                 '<td style="padding:0 0 %dpx;vertical-align:top;font-size:13px;'
                 'line-height:20px">%s</td></tr>' % (pad, FAINT, label, pad, value))
+    # Знак ВНИЗУ, под контактами. Наверху он первым перехватывал взгляд, а в
+    # письме первым должен читаться человек: имя, должность, как связаться.
+    # Знак закрывает подпись — так же, как печатный бланк закрывает страницу
+    # маркой внизу, а не над текстом.
     return (
         '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:'
         'collapse;font-family:%(ff)s;color:%(ink)s">'
-        '<tr><td colspan="2" style="padding:0 0 14px">%(img)s</td></tr>'
         '<tr><td colspan="2" style="padding:0 0 2px;font-size:15px;'
         'font-weight:bold">%(name)s</td></tr>'
         '<tr><td colspan="2" style="padding:0 0 14px;font-size:13px;'
         'line-height:20px;color:%(mute)s">%(role)s%(dot)s%(org)s</td></tr>'
-        '%(rows)s</table>'
+        '%(rows)s'
+        '<tr><td colspan="2" style="padding:16px 0 0">'
+        '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:'
+        'collapse"><tr><td style="border-top:1px solid %(rule)s;padding:14px 0 0">'
+        '%(img)s</td></tr></table></td></tr></table>'
+        % dict(d, ink=INK, mute=MUTE, rule=RULE, dot=DOT, img=img(),
+               rows=(row(icon('tel', d['l_tel']), tel)
+                     + row(icon('mail', d['l_mail']), mail)
+                     + row(icon('web', d['l_web']), site, pad=0))))
+
+
+def v_table_side(d):
+    """То же, но знак стоит СБОКУ от имени, а не над ним."""
+    tel, mail, site = links()
+    def row(label, value, pad=4):
+        return ('<tr><td style="padding:3px 12px %dpx 0;vertical-align:top;'
+                'width:14px;color:%s">%s</td>'
+                '<td style="padding:0 0 %dpx;vertical-align:top;font-size:13px;'
+                'line-height:20px">%s</td></tr>' % (pad, FAINT, label, pad, value))
+    return (
+        '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:'
+        'collapse;font-family:%(ff)s;color:%(ink)s">'
+        '<tr><td style="padding:0 20px 16px 0;vertical-align:middle">'
+        '<div style="font-size:15px;font-weight:bold">%(name)s</div>'
+        '<div style="font-size:13px;line-height:20px;color:%(mute)s">'
+        '%(role)s%(dot)s%(org)s</div></td>'
+        '<td style="padding:0 0 16px;vertical-align:middle" align="right">'
+        '%(img)s</td></tr>'
+        '<tr><td colspan="2" style="padding:0">'
+        '<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:'
+        'collapse;font-family:%(ff)s">%(rows)s</table></td></tr></table>'
         % dict(d, ink=INK, mute=MUTE, dot=DOT, img=img(),
                rows=(row(icon('tel', d['l_tel']), tel)
                      + row(icon('mail', d['l_mail']), mail)
@@ -143,9 +188,12 @@ VARIANTS = [
      'Ни знака, ни адреса — имя, должность и как связаться. Две строки под '
      'тонкой чертой. Подпись не перекрикивает письмо; в переписке из двадцати '
      'ответов это чувствуется.'),
-    ('table', 'Таблица', v_table,
-     'Значки слева, значения справа. Адреса нет. Если у получателя внешние '
-     'картинки режут, на месте значков встанут слова — строка не осиротеет.'),
+    ('table', 'Таблица · знак внизу', v_table,
+     'Знак закрывает подпись, а не открывает её: первым читается человек, '
+     'последним — марка. Так устроен печатный бланк.'),
+    ('tside', 'Таблица · знак сбоку', v_table_side,
+     'Знак стоит в одну строку с именем, у правого края. Подпись на строку '
+     'ниже и держится плотнее.'),
     ('card', 'Карточка', v_card,
      'Знак и имя в ряд, тонкая черта, контакты одной строкой под ней. Ближе '
      'всего к визитке; занимает три строки вместо шести.'),
@@ -193,6 +241,11 @@ ol{max-width:70ch;padding-left:20px}li{margin-bottom:6px}
 .warn{background:#FFF8E8;border:1px solid #E8D9B0;padding:14px 16px;
   border-radius:2px;max-width:1040px;margin-bottom:18px}
 code{font:13px ui-monospace,Menlo,monospace;background:#F1EFEC;padding:1px 5px}
+.cmp{border-collapse:collapse}
+.cmp td{padding:10px 22px 10px 0;vertical-align:middle;border-top:1px solid #EFEDEA}
+.cmp tr:first-child td{border-top:0}
+.cmp td:first-child{font:12px/1.5 ui-monospace,Menlo,monospace;color:#8A8F96;
+  white-space:nowrap}
 </style></head><body>
 <h1>Ещё три подписи</h1>
 <p class="sub">Прежние три отличались раскладкой. Эти — замыслом: сколько подпись
@@ -202,6 +255,17 @@ code{font:13px ui-monospace,Menlo,monospace;background:#F1EFEC;padding:1px 5px}
 Написание имени по-армянски — <b>Հրանտ Մելքումյան</b> — моя транслитерация.
 В «Таблице» подписи полей заменены значками; словами они появятся только у тех
 получателей, у кого картинки не грузятся — <b>Հեռ. / Էլ. փոստ / Կայք</b>.</div>
+
+<section><h2>Точка в адресе — три написания</h2>
+<p class="note">Точка стоит на базовой линии, и справа от неё сразу заглавная M:
+основание её штриха сливается с точкой в одно пятно. Среди строчных букв точка
+выступает ниже их роста и потому видна. На доставку регистр не влияет — Google
+не различает его в имени ящика.</p>
+<table class="cmp">
+<tr><td>как было</td><td style="font:13px/20px Arial,Helvetica,sans-serif;color:#2E5E99">Hrant.Melkumyan@gridec.am</td></tr>
+<tr><td>строчными</td><td style="font:13px/20px Arial,Helvetica,sans-serif;color:#2E5E99">hrant.melkumyan@gridec.am</td></tr>
+<tr><td>строчными + разрядка<br><b>сейчас в подписях</b></td><td style="font:13px/20px Arial,Helvetica,sans-serif;color:#2E5E99;letter-spacing:.02em">hrant.melkumyan@gridec.am</td></tr>
+</table></section>
 
 %s
 
