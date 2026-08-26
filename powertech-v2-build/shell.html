@@ -209,6 +209,11 @@ header nav a.here{color:var(--inv-fg);background:var(--inv);}
 /* зазор между колонками теперь внутри строк, по половине с каждой стороны */
 .ixp li:nth-child(odd) a{padding-right:clamp(12px,2vw,32px);}
 .ixp li:nth-child(even) a{padding-left:clamp(12px,2vw,32px);}
+/* Одна колонка — разбег по краям не нужен: парные отступы двух колонок
+   ставили строки лесенкой. Блок стоит ПОСЛЕ двух правил выше: у правил в
+   media-запросе тот же вес, и решает порядок. */
+@media (max-width:760px){.ixp li:nth-child(odd) a{padding-right:0;}
+  .ixp li:nth-child(even) a{padding-left:0;}}
 /* Номер и название. Линейки до края колонки больше нет: их было по одной на
    строку сверх разделителей, и на шестнадцати строках рваное поле штрихов
    спорило с самими названиями. Текущий раздел отмечен цветом и весом. */
@@ -305,6 +310,14 @@ body::before{opacity:1;z-index:-1;mix-blend-mode:soft-light;
    помещаются в 70 % высоты. */
 .ixp.on>.ixin{max-height:70svh;}
 .ixp.on.rdy>.ixin{overflow-y:auto;}
+/* А если на низком окне прокрутка всё-таки нужна, полоса должна быть своя:
+   системная в Windows приходит светло-серой, со стрелками сверху и снизу, и
+   на тёмном листе выглядит чужой деталью. Здесь она тонкая и в тон листу. */
+.ixp>.ixin{scrollbar-width:thin;scrollbar-color:rgba(239,237,234,.26) transparent;}
+.ixp>.ixin::-webkit-scrollbar{width:6px;}
+.ixp>.ixin::-webkit-scrollbar-track{background:transparent;}
+.ixp>.ixin::-webkit-scrollbar-thumb{background:rgba(239,237,234,.24);border-radius:3px;}
+.ixp>.ixin::-webkit-scrollbar-button{display:none;}
 .ixp::before{content:"";position:absolute;left:0;top:0;height:1px;width:100%;
   background:var(--brand);transform:scaleX(0);transform-origin:left;
   transition:transform .62s var(--e);}

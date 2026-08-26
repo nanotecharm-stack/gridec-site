@@ -121,6 +121,8 @@ header nav a.here{color:var(--inv-fg);background:var(--inv);}
 .ixp li{border-bottom:1px solid rgba(246,241,233,.13);}
 .ixp li:nth-child(odd) a{padding-right:clamp(12px,2vw,32px);}
 .ixp li:nth-child(even) a{padding-left:clamp(12px,2vw,32px);}
+@media (max-width:760px){.ixp li:nth-child(odd) a{padding-right:0;}
+  .ixp li:nth-child(even) a{padding-left:0;}}
 .ixp a{display:grid;grid-template-columns:34px minmax(0,1fr);
   gap:14px;align-items:baseline;padding:13px 0;color:var(--inv-fg);}
 .ixp a .no{font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:.14em;color:var(--brand-ink);}
@@ -150,6 +152,11 @@ body::before{opacity:1;z-index:-1;mix-blend-mode:soft-light;
 .ixp>.ixin{min-height:0;overflow:hidden;}
 .ixp.on>.ixin{max-height:70svh;}
 .ixp.on.rdy>.ixin{overflow-y:auto;}
+.ixp>.ixin{scrollbar-width:thin;scrollbar-color:rgba(246,241,233,.26) transparent;}
+.ixp>.ixin::-webkit-scrollbar{width:6px;}
+.ixp>.ixin::-webkit-scrollbar-track{background:transparent;}
+.ixp>.ixin::-webkit-scrollbar-thumb{background:rgba(246,241,233,.24);border-radius:3px;}
+.ixp>.ixin::-webkit-scrollbar-button{display:none;}
 .ixp::before{content:"";position:absolute;left:0;top:0;height:1px;width:100%;
   background:var(--brand);transform:scaleX(0);transform-origin:left;
   transition:transform .62s var(--e);}
