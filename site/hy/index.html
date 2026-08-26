@@ -119,11 +119,13 @@ header nav a.here{color:var(--inv-fg);background:var(--inv);}
   z-index:-1;transition:opacity .32s var(--e);}
 .ixsc.on{opacity:.44;pointer-events:auto;}
 .ixp[hidden]{display:none;}
-.ixin{padding:clamp(14px,2vh,26px) clamp(14px,2.1vw,30px) clamp(20px,3vh,34px);}
+.ixin{padding:clamp(18px,2.4vh,30px) clamp(14px,2.1vw,30px);}
 .ixp ol{list-style:none;margin:0 auto;padding:0;max-width:1400px;
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(var(--s5),4vw,var(--s8));}
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;}
 @media (max-width:760px){.ixp ol{grid-template-columns:1fr;}}
-.ixp li{border-top:1px solid rgba(246,241,233,.13);}
+.ixp li{border-bottom:1px solid rgba(246,241,233,.13);}
+.ixp li:nth-child(odd) a{padding-right:clamp(12px,2vw,32px);}
+.ixp li:nth-child(even) a{padding-left:clamp(12px,2vw,32px);}
 .ixp a{display:grid;grid-template-columns:34px minmax(0,1fr);
   gap:14px;align-items:baseline;padding:13px 0;color:var(--inv-fg);}
 .ixp a .no{font-family:'Arian AMU Serif',Georgia,serif;font-size:11px;letter-spacing:.14em;color:var(--brand-ink);}
