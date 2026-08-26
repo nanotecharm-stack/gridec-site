@@ -1867,11 +1867,12 @@ function buildDither(){
       order.push(cells.length-1);
       band.appendChild(i);
     }
-    order.sort(function(x,y){
-      var rx=Math.floor(x/cols),ry=Math.floor(y/cols);
-      var kx=(rows-1-rx)+Math.random()*2.2,ky=(rows-1-ry)+Math.random()*2.2;
-      return kx-ky;
-    });
+    var keys=new Array(cells.length);
+    for(var k=0;k<order.length;k++){
+      var rk=Math.floor(order[k]/cols);
+      keys[order[k]]=(rows-1-rk)+Math.random()*2.2;
+    }
+    order.sort(function(x,y){return keys[x]-keys[y];});
     var accPos=[];
     for(var k=0;k<order.length;k++)if(cells[order[k]].acc)accPos.push({k:k,c:cells[order[k]]});
     dBands.push({el:band,cells:cells,top:top,order:order,count:0,

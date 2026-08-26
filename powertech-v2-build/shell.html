@@ -3302,13 +3302,22 @@ function buildDither(){
       order.push(cells.length-1);
       band.appendChild(i);
     }
-    /* rows nearest the incoming section go earlier, but the order inside the
-       band is shuffled, so the edge breaks up unevenly rather than in stripes */
-    order.sort(function(x,y){
-      var rx=Math.floor(x/cols),ry=Math.floor(y/cols);
-      var kx=(rows-1-rx)+Math.random()*2.2,ky=(rows-1-ry)+Math.random()*2.2;
-      return kx-ky;
-    });
+    /* Ряды ближе к приходящей секции идут раньше, но внутри полосы порядок
+       перемешан — тогда кромка рассыпается неровно, а не полосами.
+
+       ⚠ Ключ считается ОДИН РАЗ НА КЛЕТКУ и только потом идёт сортировка.
+       Прежде Math.random() стоял внутри самого сравнения, и сравнение
+       противоречило само себе: один и тот же вопрос «кто раньше» давал разные
+       ответы. Что выйдет из такой сортировки — дело устройства сортировки в
+       браузере. Chrome давал россыпь, Firefox — длинные сплошные куски, и
+       владелец увидел вместо растворения тёмные бруски во всю ширину. Ключ,
+       посчитанный заранее, даёт один и тот же порядок везде. */
+    var keys=new Array(cells.length);
+    for(var k=0;k<order.length;k++){
+      var rk=Math.floor(order[k]/cols);
+      keys[order[k]]=(rows-1-rk)+Math.random()*2.2;
+    }
+    order.sort(function(x,y){return keys[x]-keys[y];});
     /* Позиции акцентных ячеек В ПОРЯДКЕ ПРОХОДА: их единицы, поэтому хвост
        пересчитывается перебором только по ним, а не по всей полосе. */
     var accPos=[];
