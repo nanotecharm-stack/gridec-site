@@ -1119,17 +1119,8 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
 .chain{width:var(--vwpx,100vw);margin-left:calc(50% - var(--vwpx,100vw) / 2);
   margin-top:clamp(var(--s7),6vw,88px);}
 .chaxis{position:relative;height:2px;background:var(--hair);}
-/* ============ ОСЬ СОБЫТИЯ: ЗАПИСЬ РАСХОДИТСЯ ОТ СОБЫТИЯ ============
-   Прежде линия заполнялась слева направо, от края к краю. Теперь у неё две
-   ветви, и обе растут ОТ ОТМЕТКИ СОБЫТИЯ: левая назад, правая вперёд. Скорость
-   у них одна, поэтому короткая левая ветвь доходит до края раньше — это и
-   читается как расхождение от точки, а не как заливка полосы.
-   --incx ставит скрипт: это положение ромба на оси. */
-.chaxis i{position:absolute;background:var(--brand);will-change:transform;}
-.chaxis .arL{left:0;top:0;bottom:0;width:var(--incx,0px);
-  transform:scaleX(var(--pl,0));transform-origin:right center;}
-.chaxis .arR{left:var(--incx,0px);right:0;top:0;bottom:0;
-  transform:scaleX(var(--pr,0));transform-origin:left center;}
+.chaxis i{position:absolute;inset:0;background:var(--brand);
+  transform:scaleX(var(--p,0));transform-origin:left;will-change:transform;}
 /* Шкала вышла за поля, подписи — нет: --inset возвращает их ровно в колонку,
    к левому краю заголовка. Простого поля обёртки тут мало: на экране шире
    1280 обёртка ещё и отходит от края, и подписи вставали бы на семьдесят
@@ -1164,10 +1155,7 @@ h2{font-size:%%H2SIZE%%;text-wrap:balance;}
   .chain{width:auto;margin-left:0;margin-top:clamp(var(--s5),3vw,40px);
     display:grid;grid-template-columns:2px 1fr;column-gap:18px;align-items:stretch;}
   .chaxis{height:auto;width:2px;}
-  .chaxis .arL{top:0;left:0;right:0;width:auto;height:var(--incx,0px);
-    transform:scaleY(var(--pl,0));transform-origin:center bottom;}
-  .chaxis .arR{top:var(--incx,0px);bottom:0;left:0;right:0;width:auto;height:auto;
-    transform:scaleY(var(--pr,0));transform-origin:center top;}
+  .chaxis i{transform:scaleY(var(--p,0));transform-origin:top;}
   .chsteps{padding:0;grid-template-columns:1fr;row-gap:20px;}
   .chsteps li{padding:0;}
   .chsteps li::before{top:5px;left:-23px;}
@@ -1999,11 +1987,7 @@ html[data-nav="5"] #hdr .btn{white-space:nowrap;}
     <p class="lede">%%WHY_P%%</p>
   </div>
   <div class="chain rv" id="chain">
-    <!-- Две ветви, а не одна заливка: запись расходится ОТ МОМЕНТА СОБЫТИЯ в
-         обе стороны — назад к тому, что было до, и вперёд к тому, что стало
-         после. Ровно то, о чём абзац раздела: «captures it, with a time stamp
-         and the load conditions before and after». -->
-    <div class="chaxis"><i class="arL" id="chainL"></i><i class="arR" id="chainR"></i></div>
+    <div class="chaxis"><i id="chainfill"></i></div>
     <ol class="chsteps" id="chsteps"></ol>
   </div>
 </div></section>
@@ -2779,35 +2763,18 @@ function buildRails(){
     svg.style.cssText='position:absolute;top:0;left:clamp(4px,1.4vw,18px);width:'+W2+'px;height:'+H+'px;pointer-events:none;overflow:visible;';
     /* тот же выключатель, что у жилы; на пересборке ссылка обновляется */
     if(si===0)SEAM.rail=svg;
-    /* ============ СЛЕД ПРИХОДИТ НА ОСЬ, А НЕ К ЗАГОЛОВКУ ============
-       В разделе 01 след — продолжение сигнальной жилы из героя. Прежде он
-       сворачивал вправо и упирался квадратиком в заголовок: заголовок это
-       подпись, а не место во времени, и связь ничего не значила. Теперь след
-       идёт прямо вниз и заканчивается ровно на оси события — там, где запись и
-       начинается. Дальше эстафету принимает сама ось: её левая ветвь растёт
-       назад от ромба и встречает пришедший след. Цепочка замкнута:
-       герой записал → след принёс вниз → ось развернула, что было до и после. */
-    var chY=null;
-    if(si===0){var cxx=sec.querySelector('.chaxis');
-      if(cxx)chY=cxx.getBoundingClientRect().top-sec.getBoundingClientRect().top;}
-    var toAxis=(chY!==null&&chY>40);
     var top=si===0?0:Math.max(0,yh-46);
-    var dEl=toAxis?route([[8,0],[8,chY]],16)
-                  :route([[8,top],[8,yh],[W2-14,yh]],16);
+    var dEl=route([[8,top],[8,yh],[W2-14,yh]],16);
     var elbow=document.createElementNS(ns,'path');
     elbow.setAttribute('d',dEl);
     elbow.setAttribute('fill','none');elbow.setAttribute('stroke','currentColor');
     elbow.setAttribute('stroke-opacity','.22');elbow.setAttribute('stroke-width','1');
     svg.appendChild(elbow);
-    /* Квадратик на конце нужен там, где след упирается в заголовок. У раздела
-       01 конец теперь на оси, и точку ставит сама ось — ромб события. */
-    if(!toAxis){
-      var tick=document.createElementNS(ns,'rect');
-      tick.setAttribute('x',W2-14);tick.setAttribute('y',yh-2.5);
-      tick.setAttribute('width','5');tick.setAttribute('height','5');
-      tick.setAttribute('fill','#C8603D');
-      svg.appendChild(tick);
-    }
+    var tick=document.createElementNS(ns,'rect');
+    tick.setAttribute('x',W2-14);tick.setAttribute('y',yh-2.5);
+    tick.setAttribute('width','5');tick.setAttribute('height','5');
+    tick.setAttribute('fill','#C8603D');
+    svg.appendChild(tick);
     /* pulse rides the spine with scroll */
     var pl=document.createElementNS(ns,'path');
     pl.setAttribute('d',dEl);
@@ -2821,9 +2788,7 @@ function buildRails(){
     var PL=pl.getTotalLength();
     pl.setAttribute('stroke-dasharray',(PL*0.34).toFixed(1)+' '+(PL*1.4).toFixed(1));
     pl.dataset.len=PL;
-    /* Ход импульса привязан к тому, куда он идёт: у раздела 01 это ось, у
-       остальных — заголовок. */
-    svg.dataset.yh=toAxis?chY:yh;
+    svg.dataset.yh=yh;
   });
   paintRails();
 }
@@ -2859,7 +2824,7 @@ function paintRails(){aRails(mRails());}
 /* ============ EVENT CHAIN — one line, lit by scroll ============ */
 var STEPS=PT.seq;
 var chsteps=document.getElementById('chsteps'),chainEl=document.getElementById('chain'),
-    chainL=document.getElementById('chainL'),chainR=document.getElementById('chainR');
+    chainFill=document.getElementById('chainfill');
 STEPS.forEach(function(st,si){
   var li=document.createElement('li');
   /* Номера у станций больше нет: шкала читается слева направо, отметки стоят
@@ -2878,26 +2843,6 @@ STEPS.forEach(function(st,si){
   }
   chsteps.appendChild(li);
 });
-/* Мерка оси: длина, положение ромба и всех станций вдоль неё. Считается один
-   раз и живёт до пересборки. На узком экране ось вертикальна, поэтому меряем
-   вдоль той стороны, которая длиннее. */
-var seqG=null,seqGV=-1;
-function seqGeom(){
-  if(seqG&&seqGV===DOMV.v)return seqG;
-  var ax=chainEl&&chainEl.querySelector('.chaxis');
-  if(!ax||!chsteps||!chsteps.children.length)return null;
-  var ab=ax.getBoundingClientRect(),horiz=ab.width>=ab.height;
-  var total=horiz?ab.width:ab.height,pos=[],inc=0;
-  for(var i=0;i<chsteps.children.length;i++){
-    var li=chsteps.children[i],b=li.getBoundingClientRect();
-    pos.push(horiz?(b.left-ab.left):(b.top-ab.top));
-    if(li.classList.contains('inc'))inc=pos[i];
-  }
-  seqG={total:total,pos:pos,inc:inc,rest:Math.max(1,total-inc),
-        max:Math.max(inc,total-inc)};
-  seqGV=DOMV.v;
-  return seqG;
-}
 /* Расстояние от верха заголовка раздела до оси. Меряется один раз и живёт до
    пересборки — на каждом кадре его считать незачем. */
 var seqDist=null,seqDistV=-1;
@@ -2947,30 +2892,19 @@ function mSeq(){
   var p=(start-r.top)/span;
   return p<0?0:(p>1?1:p);
 }
-var seqWas=null,seqPWas=null,seqIncWas=null;
+var seqWas=null,seqPWas=null;
 function aSeq(p){
   if(p===null)return;
-  var g=seqGeom();if(!g)return;
-  /* Радиус — сколько точек запись уже развернула в каждую сторону от события.
-     Скорость одна на обе стороны, поэтому доли у ветвей разные. */
-  var r=p*g.max;
-  var pl=Math.min(1,g.inc>0?r/g.inc:1),pr=Math.min(1,r/g.rest);
-  /* Свои свойства пишутся только при настоящей перемене: правка своего свойства
-     заставляет браузер пересчитать стиль всей ветки под узлом. */
-  var incs=Math.round(g.inc)+'px';
-  if(seqIncWas!==incs){seqIncWas=incs;chainEl.style.setProperty('--incx',incs);}
-  var ps=pl.toFixed(4)+'|'+pr.toFixed(4);
-  if(seqPWas!==ps){seqPWas=ps;
-    chainEl.style.setProperty('--pl',pl.toFixed(4));
-    chainEl.style.setProperty('--pr',pr.toFixed(4));}
-  /* Станции зажигаются по удалённости от события, а не по счёту слева. Сперва
-     сам момент, потом то, что рядом с ним по времени, и дальше к краям. */
-  var key='';
-  for(var i=0;i<g.pos.length;i++)key+=(Math.abs(g.pos[i]-g.inc)<=r+0.5)?'1':'0';
-  if(seqWas===key)return;
-  seqWas=key;
-  for(var j=0;j<chsteps.children.length;j++)
-    chsteps.children[j].classList.toggle('on',key.charAt(j)==='1');
+  /* Своё свойство --p писалось на КАЖДОМ кадре, даже когда ось стояла за краем
+     экрана и величина не менялась. Правка своего свойства заставляет браузер
+     пересчитать стиль всей ветки под этим узлом. Пишем только при перемене. */
+  var ps=p.toFixed(4);
+  if(seqPWas!==ps){seqPWas=ps;chainFill.style.setProperty('--p',ps);}
+  var lit=Math.ceil(p*STEPS.length-0.001);
+  if(seqWas===lit)return;
+  seqWas=lit;
+  for(var i=0;i<chsteps.children.length;i++)
+    chsteps.children[i].classList.toggle('on',i<lit);
 }
 function seqUpd(){aSeq(mSeq());}
 seqUpd();
