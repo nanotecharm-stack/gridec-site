@@ -1870,6 +1870,28 @@ html[data-nav="5"]:has(#ixp.on) #hdr .btn{background:transparent;color:#EFEDEA;
 html[data-nav="5"]:has(#ixp.on) #hdr .btn:hover{background:#EFEDEA;color:#0D0E13;}
 /* Без :has() (старые браузеры) шапка просто остаётся на своей пелене — шов
    вернётся, но ничего не сломается и всё читается. */
+
+/* ============ УЗКИЕ ЭКРАНЫ ============
+   Проверка на движке WebKit (iPhone 13, 390 точек) показала: подпись кнопки
+   ломалась на две строки, и шапка выходила тесной. У прежней шапки для этого
+   был свой набор правил — под data-nav="3", поэтому к новой они не применяются
+   вовсе. Повторяем ту же логику: подпись в одну строку, поля меньше, стрелка
+   на самых узких убирается (её роль берёт на себя сама кнопка), а ниже 337
+   точек перенос всё же разрешён — там иначе не помещается. */
+html[data-nav="5"] #hdr .btn{white-space:nowrap;}
+@media(max-width:960px){
+  html[data-nav="5"] .navr{gap:12px;}
+}
+@media(max-width:470px){
+  html[data-nav="5"] .navr{gap:10px;}
+  html[data-nav="5"] #hdr .btn{padding:9px 11px;gap:6px;}
+  html[data-nav="5"] #hdr .btn i{display:none;}
+  html[data-nav="5"] .lang{padding:7px 7px;margin-right:-7px;}
+  html[data-nav="5"] .lang::after{left:-3px;}
+}
+@media(max-width:337px){
+  html[data-nav="5"] #hdr .btn{white-space:normal;}
+}
 </style>
 
 <div id="wipe"></div>
