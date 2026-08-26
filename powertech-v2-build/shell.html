@@ -1867,6 +1867,14 @@ html[data-nav="5"] .ixb b,html[data-nav="5"] .ixb s,
 html[data-nav="5"] .ixb em{display:none;}
 html[data-nav="5"] .ixw{display:inline;align-self:center;font-size:11px;
   letter-spacing:.15em;text-transform:uppercase;font-weight:500;}
+/* Армянская подпись набирается иначе. Владелец: «плохо читается» — и это не
+   вкус, а свойство письма: армянские прописные строятся из одинаковых стоек,
+   и в 11 точек с разрядкой .15em слово превращается в частокол. Здесь идут
+   строчные, крупнее и без разрядки, тем же гротеском, что и кнопка рядом.
+   Латинское «INDEX» остаётся прописным: у латиницы прописные различимы и в
+   этом кегле, и метка держит строй с «HY» и прочими подписями сайта. */
+html[data-nav="5"][lang="hy"] .ixw{font-family:%%BODYFONT%%;text-transform:none;
+  font-size:13px;letter-spacing:.01em;}
 html[data-nav="5"] .wm{color:var(--hc);transition:color .4s var(--e);}
 
 /* приборы без плашек. Размер поднят с 11 до 12: на 11 они читались, но не
@@ -1964,10 +1972,10 @@ html[data-nav="5"] #hdr .btn{white-space:nowrap;}
 }
 /* Слово уходит там, где перестаёт помещаться, и остаётся одна галочка. Пороги
    взяты замером выхода за край шапки, а не на глаз: армянское «Բաժիններ» шире
-   английского «Index» вдвое — 81 точка против 43, — и ломает строку уже на 390,
-   тогда как английское живёт до 360. Отсюда два разных порога. Кнопка при этом
-   не немеет: её название дано в aria-label. */
-@media(max-width:429px){ html[data-nav="5"][lang="hy"] .ixw{display:none;} }
+   английского «Index» — 63 точки против 43, — и ломает строку на 360, тогда как
+   английское там ещё держится. Отсюда два разных порога, 389 и 359. Кнопка при
+   этом не немеет: её название дано в aria-label. */
+@media(max-width:389px){ html[data-nav="5"][lang="hy"] .ixw{display:none;} }
 @media(max-width:359px){ html[data-nav="5"] .ixw{display:none;} }
 </style>
 
