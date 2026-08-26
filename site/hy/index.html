@@ -1612,10 +1612,23 @@ STEPS.forEach(function(st,si){
   }
   chsteps.appendChild(li);
 });
+var seqDist=null,seqDistV=-1;
+function seqHeadDist(){
+  if(seqDist!==null&&seqDistV===DOMV.v)return seqDist;
+  var sec=chainEl&&chainEl.closest?chainEl.closest('section'):null;
+  var h=sec?sec.querySelector('h2'):null;
+  seqDist=h?(chainEl.getBoundingClientRect().top-h.getBoundingClientRect().top):0;
+  seqDistV=DOMV.v;
+  return seqDist;
+}
 function mSeq(){
   if(!chainEl)return null;
-  var r=chainEl.getBoundingClientRect();
-  var p=(innerHeight*0.95-r.top)/(innerHeight*0.29);
+  var r=chainEl.getBoundingClientRect(),vh=innerHeight;
+  var need=seqHeadDist()+96;          
+  var end=Math.min(vh*0.92,Math.max(vh*0.78,need));
+  var start=vh*1.02,span=start-end;
+  if(span<60)span=60;
+  var p=(start-r.top)/span;
   return p<0?0:(p>1?1:p);
 }
 var seqWas=null,seqPWas=null;
