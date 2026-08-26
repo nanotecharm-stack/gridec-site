@@ -1824,10 +1824,13 @@ html[data-nav="5"] .ixb:focus-visible,html[data-nav="5"] .lang:focus-visible{
 
 /* кнопка: геометрия задана раз и навсегда, меняется только заливка. Наверху
    заливки нет намеренно — у героя есть своя большая кнопка, и две спорили бы. */
-html[data-nav="5"] .btn{padding:9px 15px;font-size:12px;background:transparent;
+/* ⚠ ТОЛЬКО кнопка в шапке. Класс .btn носят ВСЕ кнопки сайта — их пять, в шапке
+   одна. Без #hdr эти правила снимали заливку и с главной кнопки героя, и с кнопок
+   в окнах: владелец сразу увидел «кнопки слишком незаметные». */
+html[data-nav="5"] #hdr .btn{padding:9px 15px;font-size:12px;background:transparent;
   color:var(--hc);box-shadow:inset 0 0 0 1px var(--hh);
   transition:background .5s var(--e),color .5s var(--e),box-shadow .5s var(--e);}
-html[data-nav="5"].hscr .btn{background:var(--inv);color:var(--inv-fg);box-shadow:none;}
+html[data-nav="5"].hscr #hdr .btn{background:var(--inv);color:var(--inv-fg);box-shadow:none;}
 html[data-nav="5"] header[data-tone="ink"] .btn{--inv:#EFEDEA;--inv-fg:#0D0E13;}
 
 /* линия чертит себя, лист догоняет её на 60 мс позже */
@@ -1862,9 +1865,9 @@ html[data-nav="5"]:has(#ixp.on) #hdr::before{background:#0D0E13;
   -webkit-backdrop-filter:none;backdrop-filter:none;transform:scaleX(1);}
 html[data-nav="5"]:has(#ixp.on) #hdr::after{opacity:0;}
 html[data-nav="5"]:has(#ixp.on) .hprog{opacity:0;}
-html[data-nav="5"]:has(#ixp.on) .btn{background:transparent;color:#EFEDEA;
+html[data-nav="5"]:has(#ixp.on) #hdr .btn{background:transparent;color:#EFEDEA;
   box-shadow:inset 0 0 0 1px rgba(239,237,234,.32);}
-html[data-nav="5"]:has(#ixp.on) .btn:hover{background:#EFEDEA;color:#0D0E13;}
+html[data-nav="5"]:has(#ixp.on) #hdr .btn:hover{background:#EFEDEA;color:#0D0E13;}
 /* Без :has() (старые браузеры) шапка просто остаётся на своей пелене — шов
    вернётся, но ничего не сломается и всё читается. */
 </style>
