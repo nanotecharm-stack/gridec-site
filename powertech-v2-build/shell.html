@@ -48,7 +48,13 @@ select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--brand);
    размера текста в Safari, а она нужна. */
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 /* overflow-x:clip, NOT hidden — hidden turns body into a scroll container and kills position:sticky */
-body{margin:0;background:var(--bg);color:var(--fg);font-family:%%BODYFONT%%;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip;}
+/* Сглаживание не трогаем: пусть каждая система рисует своим способом.
+   Стояло -webkit-font-smoothing:antialiased — приём с Маков. В Chrome и
+   Edge НА WINDOWS он выключает ClearType, родное резкое сглаживание
+   системы, и весь мелкий текст выходит тоньше и мягче, чем должен. На
+   Маках современных версий разницы почти нет, Firefox это свойство не
+   читает вовсе. */
+body{margin:0;background:var(--bg);color:var(--fg);font-family:%%BODYFONT%%;overflow-x:hidden;overflow-x:clip;}
 /* paper grain — one fixed layer, no blend mode, 3% */
 body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
 /* the grain motif — one tiny square, rhymed across the page */
