@@ -289,7 +289,22 @@ body::before{opacity:1;z-index:-1;mix-blend-mode:soft-light;
 .ixp.on{grid-template-rows:1fr;opacity:1;
   transition:grid-template-rows .5s var(--e),opacity .2s var(--e);}
 .ixp>.ixin{min-height:0;overflow:hidden;}
-.ixp.on>.ixin{overflow-y:auto;max-height:70svh;}
+/* ============ ПОЛОСА ПРОКРУТКИ ПАНЕЛИ ============
+   Владелец: «когда выпадает меню, в процессе справа появляется линия прокрутки,
+   которая затем исчезает».
+
+   Причина: .ixin — это и есть растущая коробка (ряд сетки едет 0fr → 1fr), и на
+   ней же стояло overflow-y:auto. Пока коробка ниже своего содержимого — то есть
+   всю половину секунды раскрытия — браузер честно показывал полосу, а на
+   последнем кадре убирал. Мелькание на пустом месте.
+
+   Теперь прокрутка включается ТОЛЬКО когда панель уже встала: класс rdy
+   добавляется после перехода и снимается сразу при закрытии. До этого работает
+   overflow:hidden из правила выше, и мелькать нечему. Сама возможность
+   прокрутки не потеряна — она нужна на низких окнах, где восемь строк не
+   помещаются в 70 % высоты. */
+.ixp.on>.ixin{max-height:70svh;}
+.ixp.on.rdy>.ixin{overflow-y:auto;}
 .ixp::before{content:"";position:absolute;left:0;top:0;height:1px;width:100%;
   background:var(--brand);transform:scaleX(0);transform-origin:left;
   transition:transform .62s var(--e);}
@@ -3739,8 +3754,16 @@ var sheet=document.createElement('span');sheet.className='sheet';ixb.appendChild
 var ixsc=document.getElementById('ixsc');
 if(ixsc)ixsc.addEventListener('click',function(){ixOpen(false);});
 function ixOpen(on){
-  if(on){ixp.hidden=false;setTimeout(function(){ixp.classList.add('on');},16);}
-  else{ixp.classList.remove('on');setTimeout(function(){
+  if(on){ixp.hidden=false;setTimeout(function(){ixp.classList.add('on');},16);
+    /* Прокрутку разрешаем только когда раскрытие закончилось: переход ряда
+       сетки идёт 0.5 с, берём с запасом. Сторож на случай, если за это время
+       панель успели закрыть. */
+    clearTimeout(ixOpen.rdy);
+    ixOpen.rdy=setTimeout(function(){
+      if(ixp.classList.contains('on'))ixp.classList.add('rdy');
+    },560);}
+  else{clearTimeout(ixOpen.rdy);ixp.classList.remove('rdy');
+    ixp.classList.remove('on');setTimeout(function(){
     if(!ixp.classList.contains('on')){ixp.hidden=true;
       /* Панель прячется по окончании перехода, и только тогда тон снова
          считается по разделу под шапкой. Вызов ниже, при закрытии, приходит
