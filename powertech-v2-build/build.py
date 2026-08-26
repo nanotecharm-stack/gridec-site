@@ -419,7 +419,7 @@ EN = {
  # Латинский код, а не «ՀԱՅ»: в EN-сборку вшита только латинская подрезка Martian
  # Mono, армянские буквы падали в системную подмену и выглядели чужеродно. Пара
  # переключателя заодно стала симметричной — на HY-странице стоит «EN».
- 'LANG_HREF': './hy.html', 'LANG_LABEL': 'HY',
+ 'LANG_HREF': './hy.html', 'LANG_LABEL': 'HY', 'LANG_ARIA': 'Հայերեն · Armenian',
  'NAV_SERVICES': 'Services', 'NAV_INDUSTRIES': 'Industries', 'NAV_COMPANY': 'Company',
  'CTA': 'Describe the issue', 'NAV_CTA': 'Get in touch',
  'HERO_EYEBROW': 'POWER QUALITY MONITORING',
@@ -740,7 +740,7 @@ HY = {
  'H1SIZE': 'clamp(32px,4.75vw,77px)', 'H2SIZE': 'clamp(20px,3.17vw,48px)',
  'DISPSIZE': 'clamp(23px,3.96vw,55px)',   # та же шкала, что и в английской: прежние
  # 84 px давали блок выше английского в полтора раза
- 'LANG_HREF': './index.html', 'LANG_LABEL': 'EN',
+ 'LANG_HREF': './index.html', 'LANG_LABEL': 'EN', 'LANG_ARIA': 'English · Անգլերեն',
  'NAV_SERVICES': 'Ծառայություններ', 'NAV_INDUSTRIES': 'Ոլորտներ', 'NAV_COMPANY': 'Ընկերություն',
  'CTA': 'Նկարագրել խնդիրը', 'NAV_CTA': 'Կապ մեզ հետ',
  'HERO_EYEBROW': 'ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ',

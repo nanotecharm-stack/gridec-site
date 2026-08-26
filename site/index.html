@@ -878,6 +878,57 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   letter-spacing:.12em;}
 .ixb .sheet{font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.1em;}
 .rd>span:not(.st){font-family:'Overused Grotesk','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;}
+html[data-nav="5"] header{--hc:var(--fg);--hh:rgba(13,36,64,.16);--hw:rgba(246,241,233,.82);
+  isolation:isolate;}
+html[data-nav="5"] header[data-tone="ink"]{--hc:#F6F1E9;--hh:rgba(246,241,233,.24);
+  --hw:rgba(13,36,64,.66);}
+html[data-nav="5"] .hin{grid-template-columns:auto 1fr auto;height:62px;position:relative;}
+html[data-nav="5"] .brand{justify-self:start;width:max-content;flex:0 0 auto;padding-block:6px;}
+html[data-nav="5"] .navr{justify-self:end;gap:20px;background:none;box-shadow:none;
+  backdrop-filter:none;-webkit-backdrop-filter:none;height:auto;padding:0;border-radius:0;}
+html[data-nav="5"] .brand::after{display:none;}
+html[data-nav="5"] header nav{display:none;}
+html[data-nav="5"] .ixb .sheet{display:none;}
+html[data-nav="5"] .wm{color:var(--hc);transition:color .4s var(--e);}
+html[data-nav="5"] .ixb,html[data-nav="5"] .lang{background:none;box-shadow:none;
+  backdrop-filter:none;-webkit-backdrop-filter:none;color:var(--hc);
+  font-size:12px;transition:box-shadow .28s var(--e),color .4s var(--e);}
+html[data-nav="5"] .ixb{padding:7px 4px;margin-right:-4px;}
+html[data-nav="5"] .lang{padding:7px 9px;margin-right:-9px;position:relative;}
+html[data-nav="5"] .lang::after{content:"";position:absolute;left:-1px;top:50%;
+  width:1px;height:12px;margin-top:-6px;background:var(--hh);}
+html[data-nav="5"] .ixb .cv::before{border-right-color:currentColor;
+  border-bottom-color:currentColor;}
+html[data-nav="5"] .ixb:hover,html[data-nav="5"] .lang:hover,
+html[data-nav="5"] .ixb:focus-visible,html[data-nav="5"] .lang:focus-visible{
+  box-shadow:inset 0 -1px 0 currentColor;}
+html[data-nav="5"] .btn{padding:9px 15px;font-size:12px;background:transparent;
+  color:var(--hc);box-shadow:inset 0 0 0 1px var(--hh);
+  transition:background .5s var(--e),color .5s var(--e),box-shadow .5s var(--e);}
+html[data-nav="5"].hscr .btn{background:var(--inv);color:var(--inv-fg);box-shadow:none;}
+html[data-nav="5"] header[data-tone="ink"] .btn{--inv:#F6F1E9;--inv-fg:#0D2440;}
+html[data-nav="5"] #hdr::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:var(--hh);transform:scaleX(0);transform-origin:left center;
+  transition:transform .62s var(--e);}
+html[data-nav="5"].hscr #hdr::after{transform:scaleX(1);}
+html[data-nav="5"] #hdr::before{content:"";position:absolute;inset:0;z-index:-1;
+  background:var(--hw);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  transform:scaleX(0);transform-origin:left center;transition:transform .62s var(--e) .06s;}
+html[data-nav="5"].hscr #hdr::before{transform:scaleX(1);}
+.hprog{position:absolute;left:0;bottom:0;height:1px;width:0;z-index:2;display:none;
+  background:var(--brand-ink);overflow:visible;}
+html[data-nav="5"] .hprog{display:block;opacity:0;transition:opacity .35s var(--e) .5s;}
+html[data-nav="5"].hscr .hprog{opacity:1;}
+html[data-nav="5"] .hprog::after{content:"";position:absolute;right:0;bottom:0;
+  width:1px;height:4px;background:inherit;}
+html[data-nav="5"] header[data-tone="ink"] .hprog{background:#7BA4D0;}
+html[data-nav="5"]:has(#ixp.on) #hdr::before{background:#0D2440;
+  -webkit-backdrop-filter:none;backdrop-filter:none;transform:scaleX(1);}
+html[data-nav="5"]:has(#ixp.on) #hdr::after{opacity:0;}
+html[data-nav="5"]:has(#ixp.on) .hprog{opacity:0;}
+html[data-nav="5"]:has(#ixp.on) .btn{background:transparent;color:#F6F1E9;
+  box-shadow:inset 0 0 0 1px rgba(246,241,233,.32);}
+html[data-nav="5"]:has(#ixp.on) .btn:hover{background:#F6F1E9;color:#0D2440;}
 :root{--brand:#2E5E99;--brand-ink:#20436E;--brand-on:#F6F1E9;
   --fg:#2B2722;--fg-mid:rgba(43,39,34,.78);--fg-soft:rgba(43,39,34,.76);
   --hair:rgba(43,39,34,.13);--hair2:rgba(43,39,34,.07);}
@@ -897,11 +948,13 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   <nav><a class="lk" href="#applications">Industries</a><a class="lk" href="#services">Services</a><a class="lk" href="#company">Company</a></nav>
   <div class="navr">
     <button class="ixb" id="ixb" aria-expanded="false" aria-controls="ixp"><b id="ixn">01</b><s>/</s><em id="ixt">08</em><i class="cv">&#8595;</i></button>
-    <a class="lang" href="/hy/">HY</a>
+    
+    <a class="lang" href="/hy/" aria-label="Հայերեն · Armenian" title="Հայերեն · Armenian">HY</a>
     
     <a class="btn" href="#end"><span>Get in touch</span><i>&#8599;</i></a>
   </div>
 </div>
+<i class="hprog" id="hprog" aria-hidden="true"></i>
 <div class="ixsc" id="ixsc"></div>
 <div class="ixp" id="ixp" hidden><div class="ixin"><ol id="ixlist"></ol></div></div>
 </header>
@@ -1281,6 +1334,15 @@ function heroStart(){
 size();
 heroStart();
 var HERO_KEEP=600,DRAW_KEEP=200;
+var hprog=document.getElementById('hprog'),barWas=null,progWas=null;
+function mBar(){var m=document.documentElement.scrollHeight-innerHeight;
+  return {on:window.pageYOffset>60,p:m>0?Math.min(1,window.pageYOffset/m):0};}
+function aBar(st){
+  if(barWas!==st.on){barWas=st.on;document.documentElement.classList.toggle('hscr',st.on);}
+  if(!hprog)return;
+  var w=(st.p*100).toFixed(2)+'%';
+  if(progWas!==w){progWas=w;hprog.style.width=w;}
+}
 function mHero(){
   if(!cv)return null;
   var a=cv.getBoundingClientRect(),top=a.top,bot=a.bottom;
@@ -2280,7 +2342,7 @@ function aTone(st){
   }
 }
 function toneUnderBar(){aTone(mTone());}
-document.documentElement.setAttribute('data-nav','3');
+document.documentElement.setAttribute('data-nav','5');
 layoutSuite&&layoutSuite();
 var PS={t:0,c:0,raf:0,last:0,self:false,lerp:0.085,mult:0.9,vmax:9,vmin:0.5};
 function psActive(){
@@ -2377,9 +2439,9 @@ function scrollPaint(){
   FR.y=y;FR.force=false;
   PSMOVE=performance.now();   
   var d1=mSeq(),d2=mSuite(),d3=mJoints(),d4=mRails(),d5=mDither(),
-      d6=mNav(),d7=mReveal(),d8=mHeaderTheme(),d9=mTone(),d10=mIx(),d11=mHero();
+      d6=mNav(),d7=mReveal(),d8=mHeaderTheme(),d9=mTone(),d10=mIx(),d11=mHero(),d12=mBar();
   aSeq(d1);aSuite(d2);aJoints(d3);aRails(d4);aDither(d5);
-  aNav(d6);aReveal(d7);aHeaderTheme(d8);aTone(d9);aIx(d10);aHero(d11);
+  aNav(d6);aReveal(d7);aHeaderTheme(d8);aTone(d9);aIx(d10);aHero(d11);aBar(d12);
 }
 var FR={q:0,y:-1,force:true};
 function scrollRepaint(){FR.force=true;scrollPaint();}

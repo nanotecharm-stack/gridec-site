@@ -1766,6 +1766,107 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
 :lang(hy) .eyebrow{letter-spacing:.12em;}
 
 %%READOUT%%
+
+/* ============ ШАПКА: «ПРОЯВКА ЛИСТА» (data-nav=5) ============
+   Заменила «приборную рейку» из двух тёмных плашек по углам. Владелец: «мне не
+   нравится как выглядит шапка сайта», и раньше, 16.08, спрашивал про знак без
+   тёмной плашки — вопрос оставался без ответа. Плашек больше нет.
+
+   Правило варианта одно: НИЧЕГО НЕ ПОЯВЛЯЕТСЯ. Все приборы стоят на месте с
+   первого кадра и никогда не меняют ни размера, ни положения — значит нечему
+   проклёвываться и нечему прыгать. Владелец забраковал ровно это в первой
+   попытке: «не нравится как в процессе появляются кнопки».
+
+   Меняется только грунт, и меняется одним движением: волосяная линия чертит
+   себя слева направо, а на 60 мс позже за ней наплывает лист. Дальше та же
+   линия работает шкалой прочтения с иглой на конце — жест входа и полезный
+   прибор оказываются одним предметом. Приём в этом наборе родной: указатель
+   разделов (.ixp::before) точно так же прочерчивает свою линию scaleX слева
+   направо, и при открытии линия просто переходит из шапки в панель.
+
+   Наверху страницы грунта нет вовсе: там герой, и перекрывать его нечем. */
+html[data-nav="5"] header{--hc:var(--fg);--hh:rgba(13,14,19,.16);--hw:rgba(239,237,234,.82);
+  isolation:isolate;}
+html[data-nav="5"] header[data-tone="ink"]{--hc:#EFEDEA;--hh:rgba(239,237,234,.24);
+  --hw:rgba(13,14,19,.66);}
+/* сетка: крайние клетки по содержимому, середина — пустота */
+html[data-nav="5"] .hin{grid-template-columns:auto 1fr auto;height:62px;position:relative;}
+html[data-nav="5"] .brand{justify-self:start;width:max-content;flex:0 0 auto;padding-block:6px;}
+html[data-nav="5"] .navr{justify-self:end;gap:20px;background:none;box-shadow:none;
+  backdrop-filter:none;-webkit-backdrop-filter:none;height:auto;padding:0;border-radius:0;}
+html[data-nav="5"] .brand::after{display:none;}
+html[data-nav="5"] header nav{display:none;}
+html[data-nav="5"] .ixb .sheet{display:none;}
+html[data-nav="5"] .wm{color:var(--hc);transition:color .4s var(--e);}
+
+/* приборы без плашек. Размер поднят с 11 до 12: на 11 они читались, но не
+   выглядели нажимаемыми. Поле добавлено так, чтобы ни одна буква не сдвинулась —
+   отрицательный внешний отступ гасит внутренний. Замерено: цели были 17x28 у
+   языка и 99x22 у знака, оба меньше нормы 24x24 (WCAG 2.2, 2.5.8); стало
+   36x29 и 99x34. */
+html[data-nav="5"] .ixb,html[data-nav="5"] .lang{background:none;box-shadow:none;
+  backdrop-filter:none;-webkit-backdrop-filter:none;color:var(--hc);
+  font-size:12px;transition:box-shadow .28s var(--e),color .4s var(--e);}
+html[data-nav="5"] .ixb{padding:7px 4px;margin-right:-4px;}
+html[data-nav="5"] .lang{padding:7px 9px;margin-right:-9px;position:relative;}
+html[data-nav="5"] .lang::after{content:"";position:absolute;left:-1px;top:50%;
+  width:1px;height:12px;margin-top:-6px;background:var(--hh);}
+/* подсказка «сюда можно нажать» — только на наведении и на фокусе, покой не
+   нарушается */
+/* Галочка у номера была жёстко белой — так надо было на тёмной плашке. Без
+   плашки она пропадала на бумаге, а это единственная подсказка, что номер
+   ОТКРЫВАЕТСЯ. Берём цвет текста, и она переворачивается вместе с тоном. */
+html[data-nav="5"] .ixb .cv::before{border-right-color:currentColor;
+  border-bottom-color:currentColor;}
+html[data-nav="5"] .ixb:hover,html[data-nav="5"] .lang:hover,
+html[data-nav="5"] .ixb:focus-visible,html[data-nav="5"] .lang:focus-visible{
+  box-shadow:inset 0 -1px 0 currentColor;}
+
+/* кнопка: геометрия задана раз и навсегда, меняется только заливка. Наверху
+   заливки нет намеренно — у героя есть своя большая кнопка, и две спорили бы. */
+html[data-nav="5"] .btn{padding:9px 15px;font-size:12px;background:transparent;
+  color:var(--hc);box-shadow:inset 0 0 0 1px var(--hh);
+  transition:background .5s var(--e),color .5s var(--e),box-shadow .5s var(--e);}
+html[data-nav="5"].hscr .btn{background:var(--inv);color:var(--inv-fg);box-shadow:none;}
+html[data-nav="5"] header[data-tone="ink"] .btn{--inv:#EFEDEA;--inv-fg:#0D0E13;}
+
+/* линия чертит себя, лист догоняет её на 60 мс позже */
+html[data-nav="5"] #hdr::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:var(--hh);transform:scaleX(0);transform-origin:left center;
+  transition:transform .62s var(--e);}
+html[data-nav="5"].hscr #hdr::after{transform:scaleX(1);}
+html[data-nav="5"] #hdr::before{content:"";position:absolute;inset:0;z-index:-1;
+  background:var(--hw);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  transform:scaleX(0);transform-origin:left center;transition:transform .62s var(--e) .06s;}
+html[data-nav="5"].hscr #hdr::before{transform:scaleX(1);}
+
+/* та же линия — шкала прочтения, с иглой на конце */
+.hprog{position:absolute;left:0;bottom:0;height:1px;width:0;z-index:2;display:none;
+  background:var(--brand-ink);overflow:visible;}
+html[data-nav="5"] .hprog{display:block;opacity:0;transition:opacity .35s var(--e) .5s;}
+html[data-nav="5"].hscr .hprog{opacity:1;}
+html[data-nav="5"] .hprog::after{content:"";position:absolute;right:0;bottom:0;
+  width:1px;height:4px;background:inherit;}
+html[data-nav="5"] header[data-tone="ink"] .hprog{background:#D4714E;}
+
+/* ---- когда открыт указатель разделов ----
+   Шапка берёт ВЕРХНИЙ цвет панели, плотно и без размытия, и они становятся одним
+   листом. Прежде шапка стояла на своей полупрозрачной пелене, а панель на
+   плотном градиенте — между ними шёл видимый шов, и читались два тёмных
+   предмета друг на друге. Линию шапка отдаёт панели: у .ixp своя черта сверху,
+   в том же месте и тем же движением. Шкала прочтения гаснет — пока открыт
+   указатель, важно не «сколько пройдено», а «куда идти».
+   Кнопка приглушается ЦВЕТОМ, не геометрией: залитая светлым, она была самым
+   ярким предметом на экране и тянула взгляд с восьми строк на себя. */
+html[data-nav="5"]:has(#ixp.on) #hdr::before{background:#0D0E13;
+  -webkit-backdrop-filter:none;backdrop-filter:none;transform:scaleX(1);}
+html[data-nav="5"]:has(#ixp.on) #hdr::after{opacity:0;}
+html[data-nav="5"]:has(#ixp.on) .hprog{opacity:0;}
+html[data-nav="5"]:has(#ixp.on) .btn{background:transparent;color:#EFEDEA;
+  box-shadow:inset 0 0 0 1px rgba(239,237,234,.32);}
+html[data-nav="5"]:has(#ixp.on) .btn:hover{background:#EFEDEA;color:#0D0E13;}
+/* Без :has() (старые браузеры) шапка просто остаётся на своей пелене — шов
+   вернётся, но ничего не сломается и всё читается. */
 </style>
 
 <div id="wipe"></div>
@@ -1775,13 +1876,17 @@ footer .rv{transition-delay:calc(var(--i,0) * .09s);}
   <nav><a class="lk" href="#applications">%%NAV_INDUSTRIES%%</a><a class="lk" href="#services">%%NAV_SERVICES%%</a><a class="lk" href="#company">%%NAV_COMPANY%%</a></nav>
   <div class="navr">
     <button class="ixb" id="ixb" aria-expanded="false" aria-controls="ixp"><b id="ixn">01</b><s>/</s><em id="ixt">08</em><i class="cv">&#8595;</i></button>
-    <a class="lang" href="%%LANG_HREF%%">%%LANG_LABEL%%</a>
+    <!-- Подпись «EN»/«HY» понятна на глаз, но экранному читателю она ничего не
+         говорит: две буквы без контекста. Полное название языка идёт в
+         aria-label и в title. -->
+    <a class="lang" href="%%LANG_HREF%%" aria-label="%%LANG_ARIA%%" title="%%LANG_ARIA%%">%%LANG_LABEL%%</a>
     <!-- Ведёт к разделу контактов, а не открывает окно: форма остаётся на кнопке
          героя и на заголовке восьмого раздела. Стрелка та же, что у ссылок
          внутри страницы. -->
     <a class="btn" href="#end"><span>%%NAV_CTA%%</span><i>&#8599;</i></a>
   </div>
 </div>
+<i class="hprog" id="hprog" aria-hidden="true"></i>
 <div class="ixsc" id="ixsc"></div>
 <div class="ixp" id="ixp" hidden><div class="ixin"><ol id="ixlist"></ol></div></div>
 </header>
@@ -2334,6 +2439,18 @@ var HERO_KEEP=600,DRAW_KEEP=200;
    застывал, ещё оставаясь на виду, — владелец назвал это фризом на второй
    странице. Поэтому берём объединение: холст И отвод. Так граница сама
    съезжает вниз ровно настолько, насколько простирается движение. */
+/* Грунт шапки и шкала прочтения. Замеров страницы не требуют вовсе — только
+   положение прокрутки, поэтому считаются даром. Порог 60 точек: линия должна
+   чертиться осознанно, а не от дрожи колеса. */
+var hprog=document.getElementById('hprog'),barWas=null,progWas=null;
+function mBar(){var m=document.documentElement.scrollHeight-innerHeight;
+  return {on:window.pageYOffset>60,p:m>0?Math.min(1,window.pageYOffset/m):0};}
+function aBar(st){
+  if(barWas!==st.on){barWas=st.on;document.documentElement.classList.toggle('hscr',st.on);}
+  if(!hprog)return;
+  var w=(st.p*100).toFixed(2)+'%';
+  if(progWas!==w){progWas=w;hprog.style.width=w;}
+}
 function mHero(){
   if(!cv)return null;
   var a=cv.getBoundingClientRect(),top=a.top,bot=a.bottom;
@@ -3689,9 +3806,10 @@ function aTone(st){
   }
 }
 function toneUnderBar(){aTone(mTone());}
-/* The instrument-chip bar is the chosen one: two opaque plates with nothing
-   between them. Set once — the other three lived only for the comparison. */
-document.documentElement.setAttribute('data-nav','3');
+/* Шапка — «проявка листа», см. блок стилей data-nav=5. Прежний выбор был '3',
+   две непрозрачные плашки по углам; владелец их забраковал. Правила вариантов
+   0..3 оставлены в наборе и не применяются ни к чему — вычистить отдельно. */
+document.documentElement.setAttribute('data-nav','5');
 layoutSuite&&layoutSuite();
 /* ============ PREMIUM SCROLL — eased wheel, native everywhere else ============ */
 /* Lenis-style: accumulate wheel delta into a target, ease the real scroll toward it
@@ -3836,11 +3954,11 @@ function scrollPaint(){
   PSMOVE=performance.now();   /* лента героя ждёт остановки, см. frame() */
   /* --- ЗАМЕР: ни одной записи в документ --- */
   var d1=mSeq(),d2=mSuite(),d3=mJoints(),d4=mRails(),d5=mDither(),
-      d6=mNav(),d7=mReveal(),d8=mHeaderTheme(),d9=mTone(),d10=mIx(),d11=mHero();
+      d6=mNav(),d7=mReveal(),d8=mHeaderTheme(),d9=mTone(),d10=mIx(),d11=mHero(),d12=mBar();
   /* --- ЗАПИСЬ: ни одного замера. Порядок тот же, что был у прежнего списка:
          toneUnderBar идёт после headerTheme и перекрывает его решение. --- */
   aSeq(d1);aSuite(d2);aJoints(d3);aRails(d4);aDither(d5);
-  aNav(d6);aReveal(d7);aHeaderTheme(d8);aTone(d9);aIx(d10);aHero(d11);
+  aNav(d6);aReveal(d7);aHeaderTheme(d8);aTone(d9);aIx(d10);aHero(d11);aBar(d12);
 }
 var FR={q:0,y:-1,force:true};
 function scrollRepaint(){FR.force=true;scrollPaint();}
