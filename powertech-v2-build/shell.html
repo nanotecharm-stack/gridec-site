@@ -999,12 +999,10 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   align-items:end;gap:26px;margin-bottom:clamp(20px,2.6vw,34px);}
 .rail-head .lede{margin-top:0;max-width:none;}
 @media(max-width:900px){.rail-head{grid-template-columns:1fr;gap:14px;}}
-.railbar{height:2px;background:var(--hair2);position:relative;}
 .icard .bd{will-change:auto;}
 @media (max-width:980px),(hover:none),(pointer:coarse){
   .suite{height:auto!important;}
   .suite .spin{position:static;min-height:0;padding:0;}}
-.railbar i{position:absolute;left:0;top:0;bottom:0;background:var(--brand);width:100%;transition:transform .18s linear;transform-origin:left;}
 
 /* what we measure — signatures in a table of cells.
    Separators are drawn BY the cells, never by a gap showing the parent through:
@@ -2052,7 +2050,6 @@ html[data-nav="5"] #hdr .btn{white-space:nowrap;}
   <div class="railwrap">
     <div class="hrail" id="irail"></div>
   </div>
-  <div class="wrap"><div class="railbar"><i id="rbar"></i></div></div>
 </div></section>
 
 
@@ -2957,7 +2954,7 @@ function seqUpd(){aSeq(mSeq());}
 seqUpd();
 
 /* ============ INDUSTRIES — a stepped rail of card plates ============ */
-var irail=document.getElementById('irail'),rbar=document.getElementById('rbar');
+var irail=document.getElementById('irail');
 
 /* Each card carries its own technical drawing: orthogonal runs leaving a core,
    with pads along the way. Deterministic per card, so it never reshuffles. */
@@ -3129,14 +3126,14 @@ function layoutSuite(){
        сторожей, и у дорожки, и у каждой карточки. */
     suiteSec.style.height='';sxTrack.style.transform='';sxTrackWas=null;
     sxShells().forEach(function(el){el.style.transform='';el.__tr=null;});
-    railBar();return;
+    return;
   }
   /* the card has to fit the pinned frame — measure once, then correct against it */
   var head=suiteSec.querySelector('.rail-head'),spin=suiteSec.querySelector('.spin');
   var hs=getComputedStyle(head),spins=getComputedStyle(spin);
   var chrome=head.offsetHeight+parseFloat(hs.marginBottom||0)
             +parseFloat(spins.paddingTop||0)+parseFloat(spins.paddingBottom||0)
-            +(document.querySelector('.railbar')?document.querySelector('.railbar').offsetHeight+18:0)+32;
+            +32;   /* полоски под лентой больше нет — запас под неё снят */
   /* Потолок 470, а не 520. Владелец заметил, что карточки отраслей на английской
      странице крупнее, чем на армянской, и попросил сравнять по армянской.
      Причина была в том, что высота карточки считалась от ОСТАТКА места, а
@@ -3210,37 +3207,9 @@ function aSuite(p){
   var tr='translate3d('+sxPlace(x)+'px,0,0)';
   if(sxTrackWas!==tr){sxTrackWas=tr;sxTrack.style.transform=tr;}
   sxRender(x);
-  railBar(tp);
 }
 var sxTrackWas=null;
 function suiteUpd(){aSuite(mSuite());}
-var railBarWas=null;
-function railBar(tp){
-  var bar=document.getElementById('rbar');if(!bar)return;
-  if(tp===undefined)tp=0;
-  var v='scaleX('+Math.max(0.02,Math.min(1,tp)).toFixed(4)+')';
-  if(railBarWas===v)return;
-  railBarWas=v;
-  bar.style.transform=v;
-}
-/* ПОЛОСКА ПОД ЛЕНТОЙ НА ТЕЛЕФОНЕ.
-   На широком экране лента закрепляется, и полоску ведёт продвижение по
-   закреплённому кадру. На телефоне закрепления нет вовсе — там обычный
-   горизонтальный список, — и suiteUpd() выходит первой же строкой. Полоска
-   оставалась в начальном положении: карточки листаются, а указатель стоит.
-   Здесь она считается прямо от прокрутки списка: то же число, другой источник. */
-(function(){
-  var hr=document.querySelector('.hrail');
-  if(!hr)return;
-  function fromRail(){
-    if(suitePinned)return;                 /* широкий экран ведёт закреплённый кадр */
-    var m=hr.scrollWidth-hr.clientWidth;
-    railBar(m>0?hr.scrollLeft/m:0);
-  }
-  hr.addEventListener('scroll',fromRail,{passive:true});
-  addEventListener('resize',fromRail);
-  fromRail();
-})();
 var navLinks=[].slice.call(document.querySelectorAll('nav a.lk')).map(function(a){
   return {a:a,sec:document.querySelector(a.getAttribute('href'))};
 }).filter(function(x){return x.sec;});

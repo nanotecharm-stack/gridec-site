@@ -471,12 +471,10 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
   align-items:end;gap:26px;margin-bottom:clamp(20px,2.6vw,34px);}
 .rail-head .lede{margin-top:0;max-width:none;}
 @media(max-width:900px){.rail-head{grid-template-columns:1fr;gap:14px;}}
-.railbar{height:2px;background:var(--hair2);position:relative;}
 .icard .bd{will-change:auto;}
 @media (max-width:980px),(hover:none),(pointer:coarse){
   .suite{height:auto!important;}
   .suite .spin{position:static;min-height:0;padding:0;}}
-.railbar i{position:absolute;left:0;top:0;bottom:0;background:var(--brand);width:100%;transition:transform .18s linear;transform-origin:left;}
 .meas{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:transparent;
   margin-top:clamp(28px,3.4vw,46px);border-top:1px solid var(--hair2);}
 .mi{position:relative;padding:clamp(20px,2.2vw,30px) clamp(var(--s4),1.8vw,26px);
@@ -1040,7 +1038,6 @@ html[data-nav="5"] #hdr .btn{white-space:nowrap;}
   <div class="railwrap">
     <div class="hrail" id="irail"></div>
   </div>
-  <div class="wrap"><div class="railbar"><i id="rbar"></i></div></div>
 </div></section>
 
 
@@ -1661,7 +1658,7 @@ function aSeq(p){
 }
 function seqUpd(){aSeq(mSeq());}
 seqUpd();
-var irail=document.getElementById('irail'),rbar=document.getElementById('rbar');
+var irail=document.getElementById('irail');
 function cardArt(seed){
   function rnd(n){seed=(seed*1103515245+12345)&0x7fffffff;return seed%n;}
   var W=100,H=100,parts=[];
@@ -1780,13 +1777,13 @@ function layoutSuite(){
   if(!suitePinned){
     suiteSec.style.height='';sxTrack.style.transform='';sxTrackWas=null;
     sxShells().forEach(function(el){el.style.transform='';el.__tr=null;});
-    railBar();return;
+    return;
   }
   var head=suiteSec.querySelector('.rail-head'),spin=suiteSec.querySelector('.spin');
   var hs=getComputedStyle(head),spins=getComputedStyle(spin);
   var chrome=head.offsetHeight+parseFloat(hs.marginBottom||0)
             +parseFloat(spins.paddingTop||0)+parseFloat(spins.paddingBottom||0)
-            +(document.querySelector('.railbar')?document.querySelector('.railbar').offsetHeight+18:0)+32;
+            +32;   
   var est=Math.max(260,Math.min(470,Math.round(innerHeight-chrome)));
   irail.style.setProperty('--cardh',est+'px');
   var over=spin.offsetHeight-innerHeight;
@@ -1825,31 +1822,9 @@ function aSuite(p){
   var tr='translate3d('+sxPlace(x)+'px,0,0)';
   if(sxTrackWas!==tr){sxTrackWas=tr;sxTrack.style.transform=tr;}
   sxRender(x);
-  railBar(tp);
 }
 var sxTrackWas=null;
 function suiteUpd(){aSuite(mSuite());}
-var railBarWas=null;
-function railBar(tp){
-  var bar=document.getElementById('rbar');if(!bar)return;
-  if(tp===undefined)tp=0;
-  var v='scaleX('+Math.max(0.02,Math.min(1,tp)).toFixed(4)+')';
-  if(railBarWas===v)return;
-  railBarWas=v;
-  bar.style.transform=v;
-}
-(function(){
-  var hr=document.querySelector('.hrail');
-  if(!hr)return;
-  function fromRail(){
-    if(suitePinned)return;                 
-    var m=hr.scrollWidth-hr.clientWidth;
-    railBar(m>0?hr.scrollLeft/m:0);
-  }
-  hr.addEventListener('scroll',fromRail,{passive:true});
-  addEventListener('resize',fromRail);
-  fromRail();
-})();
 var navLinks=[].slice.call(document.querySelectorAll('nav a.lk')).map(function(a){
   return {a:a,sec:document.querySelector(a.getAttribute('href'))};
 }).filter(function(x){return x.sec;});
