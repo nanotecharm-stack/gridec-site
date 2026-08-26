@@ -1209,7 +1209,7 @@ var W=0,H=0,dpr=1,tt=0,CYp=0;
 var EV_FIRST=2.6,EV_EVERY=7.5,EV_DUR=1.5,evNext=EV_FIRST,evT=0,evX=0.76,EV_W=0.085;   
 var sigX=0,BHv=0,bracketY=0,sigTop=0;   
 var PSMOVE=0;
-var BAND_HOLD=110,BAND_MS=20;
+var BAND_MS=20,BAND_SLOW=100,BAND_MOVE=90;
 var MASK=0.52;   
 function evZone(){
   var lo=MASK+EV_W+0.04,hi=0.96-EV_W;
@@ -1249,8 +1249,8 @@ function size(){
 function frame(ts){
   var dt=(ts-(frame.p||ts))/1000;if(!(dt>0)||dt>.05)dt=.016;frame.p=ts;
   if(rm)dt=0;            
-  var still=!PSMOVE||(ts-PSMOVE)>BAND_HOLD;
-  var drawNow=canvasOn&&still&&(rm||!frame.d||ts-frame.d>=BAND_MS);
+  var moving=PSMOVE&&(ts-PSMOVE)<=BAND_MOVE;
+  var drawNow=canvasOn&&(rm||!frame.d||ts-frame.d>=(moving?BAND_SLOW:BAND_MS));
   var wdt=0;
   if(drawNow){wdt=frame.d?(ts-frame.d)/1000:.016;if(!(wdt>0)||wdt>.05)wdt=.016;if(rm)wdt=0;}
   tt+=wdt;
