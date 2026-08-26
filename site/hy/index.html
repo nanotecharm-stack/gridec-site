@@ -1275,11 +1275,14 @@ function heroStart(){
 }
 size();
 heroStart();
-if(window.IntersectionObserver&&cv){
-  new IntersectionObserver(function(es){
-    heroSeen=es[0].isIntersecting;
-    if(heroSeen)heroStart();
-  },{rootMargin:'120px'}).observe(cv);
+var HERO_KEEP=600;
+function mHero(){return cv?cv.getBoundingClientRect():null;}
+function aHero(r){
+  if(!r)return;
+  var near=r.bottom>-HERO_KEEP&&r.top<innerHeight+HERO_KEEP;
+  if(near===heroSeen)return;
+  heroSeen=near;
+  if(near)heroStart();          
 }
 function route(pts,r){
   var d='M'+pts[0][0]+','+pts[0][1];
@@ -2352,9 +2355,9 @@ function scrollPaint(){
   if(!FR.force&&y===FR.y)return;
   FR.y=y;FR.force=false;
   var d1=mSeq(),d2=mSuite(),d3=mJoints(),d4=mRails(),d5=mDither(),
-      d6=mNav(),d7=mReveal(),d8=mHeaderTheme(),d9=mTone(),d10=mIx();
+      d6=mNav(),d7=mReveal(),d8=mHeaderTheme(),d9=mTone(),d10=mIx(),d11=mHero();
   aSeq(d1);aSuite(d2);aJoints(d3);aRails(d4);aDither(d5);
-  aNav(d6);aReveal(d7);aHeaderTheme(d8);aTone(d9);aIx(d10);
+  aNav(d6);aReveal(d7);aHeaderTheme(d8);aTone(d9);aIx(d10);aHero(d11);
 }
 var FR={q:0,y:-1,force:true};
 function scrollRepaint(){FR.force=true;scrollPaint();}
