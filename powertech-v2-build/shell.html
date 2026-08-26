@@ -607,7 +607,10 @@ html[data-nav="3"] .ixp{margin-top:var(--s3);}
 .btn i{position:relative;z-index:1;display:grid;place-items:center;width:22px;height:22px;border-radius:2px;
   background:color-mix(in srgb,var(--inv-fg) 16%,transparent);font-style:normal;font-size:12px;
   transition:transform .45s var(--e),background .4s var(--e);}
-.btn:hover i{transform:translate(2px,-2px);background:rgba(255,255,255,.22);}
+/* Стрелка при наведении светлеет вместе с надписью. Прежде цвет ей задавала
+   только кнопка в покое, и на залитой кнопке она оставалась тёмной: подпись
+   белая, плитка светлая, а знак внутри — чернильный. */
+.btn:hover i{transform:translate(2px,-2px);background:rgba(255,255,255,.22);color:#fff;}
 .btn{display:inline-flex;align-items:center;gap:9px;background:var(--inv);color:var(--inv-fg);font-size:14px;font-weight:600;padding:13px 20px;position:relative;overflow:hidden;isolation:isolate;border-radius:2px;}
 .btn span{position:relative;z-index:1;transition:color .4s var(--e);}
 .btn::before{content:"";position:absolute;inset:0;background:var(--brand);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--e);}
