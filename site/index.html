@@ -2276,7 +2276,7 @@ function aTone(st){
 function toneUnderBar(){aTone(mTone());}
 document.documentElement.setAttribute('data-nav','3');
 layoutSuite&&layoutSuite();
-var PS={t:0,c:0,raf:0,last:0,self:false,lerp:0.085,mult:0.9};
+var PS={t:0,c:0,raf:0,last:0,self:false,lerp:0.085,mult:0.9,vmax:9,vmin:0.5};
 function psActive(){
   return !rm && matchMedia('(pointer:fine)').matches && innerWidth>=900
       && !matchMedia('(hover:none)').matches;
@@ -2294,7 +2294,15 @@ function psFrame(ts){
   var dt=PS.last?Math.min(.05,(ts-PS.last)/1000):.016;PS.last=ts;
   var k=1-Math.pow(1-PS.lerp,dt*60);                 
   PS.t=Math.max(0,Math.min(psMax(),PS.t));
-  PS.c+=(PS.t-PS.c)*k;
+  var gap=PS.t-PS.c,step=gap*k;
+  var lim=innerHeight*PS.vmax*dt;
+  if(step>lim)step=lim;else if(step<-lim)step=-lim;
+  if(gap>0.35||gap<-0.35){
+    var fl=innerHeight*PS.vmin*dt;
+    if(fl>Math.abs(gap))fl=Math.abs(gap);
+    if(step<fl&&step>-fl)step=gap<0?-fl:fl;
+  }
+  PS.c+=step;
   if(Math.abs(PS.t-PS.c)<0.35){PS.c=PS.t;PS.raf=0;PS.last=0;}
   else PS.raf=requestAnimationFrame(psFrame);
   PS.self=true;var _dp=window.devicePixelRatio||1;window.scrollTo(0,PS.raf?PS.c:Math.round(PS.c*_dp)/_dp);PS.self=false;
@@ -2302,8 +2310,6 @@ function psFrame(ts){
 }
 function psPush(dy){
   PS.t=Math.max(0,Math.min(psMax(),PS.t+dy));
-  var cap=innerHeight*1.5;
-  PS.t=Math.max(PS.c-cap,Math.min(PS.c+cap,PS.t));
   if(!PS.raf){PS.last=0;PS.raf=requestAnimationFrame(psFrame);}
 }
 function psTo(y){

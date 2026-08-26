@@ -3610,7 +3610,9 @@ layoutSuite&&layoutSuite();
 /* Lenis-style: accumulate wheel delta into a target, ease the real scroll toward it
    with scrollTo (NOT a transformed wrapper — that would kill position:sticky, and
    the pinned chain and card zone both rely on it). */
-var PS={t:0,c:0,raf:0,last:0,self:false,lerp:0.085,mult:0.9};
+/* vmax — потолок скорости, экранов в секунду. vmin — пол, им закрывается хвост.
+   Оба в экранах, а не в точках: на большом мониторе ход должен быть шире. */
+var PS={t:0,c:0,raf:0,last:0,self:false,lerp:0.085,mult:0.9,vmax:9,vmin:0.5};
 function psActive(){
   return !rm && matchMedia('(pointer:fine)').matches && innerWidth>=900
       && !matchMedia('(hover:none)').matches;
@@ -3629,7 +3631,27 @@ function psFrame(ts){
   var dt=PS.last?Math.min(.05,(ts-PS.last)/1000):.016;PS.last=ts;
   var k=1-Math.pow(1-PS.lerp,dt*60);                 /* frame-rate independent */
   PS.t=Math.max(0,Math.min(psMax(),PS.t));
-  PS.c+=(PS.t-PS.c)*k;
+  var gap=PS.t-PS.c,step=gap*k;
+  /* ПОТОЛОК СКОРОСТИ. Прежде ограничивалось РАССТОЯНИЕ, на которое цель могла
+     убежать от страницы (полтора экрана), и у этого была цена: сильный бросок
+     вверх не доезжал. Замерено в Firefox — бросок с 3000 останавливался около
+     y=800 и потом ползал: 216 точек за 2,15 с меньше чем по половине точки за
+     кадр. Владелец назвал это фризом при быстрой прокрутке к герою, и он прав:
+     страница действительно почти стоит, хотя ей ещё ехать. Ограничивать надо
+     скорость, а не путь: тогда бросок доезжает весь, но остаётся ходом, а не
+     прыжком — ровно то, ради чего потолок и ставили. */
+  var lim=innerHeight*PS.vmax*dt;
+  if(step>lim)step=lim;else if(step<-lim)step=-lim;
+  /* ПОЛ СКОРОСТИ. Чистая доводка по доле остатка приближается к цели вечно:
+     шаг тает вместе с остатком, и последние двести точек идут больше секунды.
+     Пол закрывает хвост за понятное время, а порог остановки ниже него, так что
+     садится ровно в цель. */
+  if(gap>0.35||gap<-0.35){
+    var fl=innerHeight*PS.vmin*dt;
+    if(fl>Math.abs(gap))fl=Math.abs(gap);
+    if(step<fl&&step>-fl)step=gap<0?-fl:fl;
+  }
+  PS.c+=step;
   if(Math.abs(PS.t-PS.c)<0.35){PS.c=PS.t;PS.raf=0;PS.last=0;}
   else PS.raf=requestAnimationFrame(psFrame);
   PS.self=true;/* Whole device pixels, not the raw lerp: a fractional scroll offset lands the edge of every dark section on a part-pixel and antialiases it against the light page, and because the fraction changes each frame that seam shimmers. The eased value stays fractional so the motion keeps its smoothness. */var _dp=window.devicePixelRatio||1;/* Округление ТОЛЬКО на последнем кадре. Раньше оно стояло на каждом: у хода с коэффициентом 0.085 в конце шаг становится меньше пикселя, округление держит страницу на месте несколько кадров и потом швыряет её на пиксель — на хвосте каждой прокрутки выходил заметный дребезг. Пока движение идёт, берём дробную величину: она и даёт плавность. Останавливаемся — садимся на целый пиксель устройства, и кромки тёмных разделов остаются резкими, ради чего округление и вводилось. */window.scrollTo(0,PS.raf?PS.c:Math.round(PS.c*_dp)/_dp);PS.self=false;
@@ -3640,13 +3662,11 @@ function psFrame(ts){
   if(typeof scrollPaint==='function')scrollPaint();
 }
 function psPush(dy){
+  /* Цель больше не подрезается по расстоянию — бросок доезжает целиком. От
+     телепортации мимо всего теперь держит потолок СКОРОСТИ в psFrame: сколько
+     бы ни накопилось в цели, страница не поедет быстрее заданного числа экранов
+     в секунду. Подробности — там же. */
   PS.t=Math.max(0,Math.min(psMax(),PS.t+dy));
-  /* Цель не убегает от страницы дальше, чем на полтора экрана. Резкий бросок по
-     тачпаду накапливал в цели несколько тысяч пикселей, и дальше страница просто
-     телепортировалась мимо всего — движение переставало быть управляемым. С
-     потолком быстрый жест остаётся быстрым, но остаётся ходом, а не прыжком. */
-  var cap=innerHeight*1.5;
-  PS.t=Math.max(PS.c-cap,Math.min(PS.c+cap,PS.t));
   if(!PS.raf){PS.last=0;PS.raf=requestAnimationFrame(psFrame);}
 }
 function psTo(y){
