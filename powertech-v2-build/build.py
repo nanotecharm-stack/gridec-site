@@ -247,7 +247,7 @@ NO_GLUE = {'LANG', 'LANG_HREF', 'LANG_LABEL', 'FONTFACES', 'READOUT', 'BODYFONT'
            'HEADFONT', 'MONOFONT', 'NAVFONT', 'HEADTT', 'HEADLH', 'HEADLS',
            'H1SIZE', 'H2SIZE', 'DISPSIZE', 'SVC_STATS', 'SVC_STEPS', 'REP_LIST',
            'CO_STORY', 'ASG_CARDS', 'MEA_CELLS', 'FOOT_LINKS', 'META_DESC',
-           'REP_NOTE2', 'MEA_NOTE'}
+           'REP_NOTE2', 'MEA_NOTE', 'IX_LABEL', 'IX_ARIA'}
 # PP_BODY намеренно НЕ здесь: nbsp разбирает строку по тегам и правит только
 # текст между ними, а числу с единицей («24 месяца», «30 дней») склейка нужна
 # ровно так же, как в остальном наборе.
@@ -421,6 +421,7 @@ EN = {
  # переключателя заодно стала симметричной — на HY-странице стоит «EN».
  'LANG_HREF': './hy.html', 'LANG_LABEL': 'HY', 'LANG_ARIA': 'Հայերեն · Armenian',
  'NAV_SERVICES': 'Services', 'NAV_INDUSTRIES': 'Industries', 'NAV_COMPANY': 'Company',
+ 'IX_LABEL': 'Index', 'IX_ARIA': 'Section index',
  'CTA': 'Describe the issue', 'NAV_CTA': 'Get in touch',
  'HERO_EYEBROW': 'POWER QUALITY MONITORING',
  'HERO_H1': 'See how your<br>electrical system<br><span class="ac">performs</span>',
@@ -742,6 +743,7 @@ HY = {
  # 84 px давали блок выше английского в полтора раза
  'LANG_HREF': './index.html', 'LANG_LABEL': 'EN', 'LANG_ARIA': 'English · Անգլերեն',
  'NAV_SERVICES': 'Ծառայություններ', 'NAV_INDUSTRIES': 'Ոլորտներ', 'NAV_COMPANY': 'Ընկերություն',
+ 'IX_LABEL': 'Բաժիններ', 'IX_ARIA': 'Բաժինների ցանկ',
  'CTA': 'Նկարագրել խնդիրը', 'NAV_CTA': 'Կապ մեզ հետ',
  'HERO_EYEBROW': 'ԷԼԵԿՏՐԱԷՆԵՐԳԻԱՅԻ ՈՐԱԿԻ ՄՈՆԻԹՈՐԻՆԳ',
  'HERO_H1': 'Ստուգեք, թե ինչպես է աշխատում ձեր <span class="ac">էլեկտրացանցը</span>',

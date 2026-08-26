@@ -97,6 +97,7 @@ header nav a.here{color:var(--inv-fg);background:var(--inv);}
 .ixb s{text-decoration:none;opacity:.86;}   
 .ixb em{font-style:normal;opacity:1;}
 .ixb b{font-weight:600;}
+.ixw{display:none;}
 .ixb .cv{flex:none;align-self:center;position:relative;width:11px;height:11px;
   margin-left:9px;font-size:0;transition:transform .3s var(--e);}
 .ixb .cv::before{content:"";position:absolute;left:1px;top:0;width:9px;height:9px;
@@ -899,6 +900,10 @@ html[data-nav="5"] .navr{justify-self:end;gap:20px;background:none;box-shadow:no
 html[data-nav="5"] .brand::after{display:none;}
 html[data-nav="5"] header nav{display:none;}
 html[data-nav="5"] .ixb .sheet{display:none;}
+html[data-nav="5"] .ixb b,html[data-nav="5"] .ixb s,
+html[data-nav="5"] .ixb em{display:none;}
+html[data-nav="5"] .ixw{display:inline;align-self:center;font-size:11px;
+  letter-spacing:.15em;text-transform:uppercase;font-weight:500;}
 html[data-nav="5"] .wm{color:var(--hc);transition:color .4s var(--e);}
 html[data-nav="5"] .ixb,html[data-nav="5"] .lang{background:none;box-shadow:none;
   backdrop-filter:none;-webkit-backdrop-filter:none;color:var(--hc);
@@ -953,6 +958,8 @@ html[data-nav="5"] #hdr .btn{white-space:nowrap;}
 @media(max-width:337px){
   html[data-nav="5"] #hdr .btn{white-space:normal;}
 }
+@media(max-width:429px){ html[data-nav="5"][lang="hy"] .ixw{display:none;} }
+@media(max-width:359px){ html[data-nav="5"] .ixw{display:none;} }
 :root{--brand:#2E5E99;--brand-ink:#20436E;--brand-on:#F6F1E9;
   --fg:#2B2722;--fg-mid:rgba(43,39,34,.78);--fg-soft:rgba(43,39,34,.76);
   --hair:rgba(43,39,34,.13);--hair2:rgba(43,39,34,.07);}
@@ -971,7 +978,7 @@ html[data-nav="5"] #hdr .btn{white-space:nowrap;}
   <a class="brand" href="#top" aria-label="Gridec"><span class="wm">GRIDEC</span></a>
   <nav><a class="lk" href="#applications">Industries</a><a class="lk" href="#services">Services</a><a class="lk" href="#company">Company</a></nav>
   <div class="navr">
-    <button class="ixb" id="ixb" aria-expanded="false" aria-controls="ixp"><b id="ixn">01</b><s>/</s><em id="ixt">08</em><i class="cv">&#8595;</i></button>
+    <button class="ixb" id="ixb" aria-expanded="false" aria-controls="ixp" aria-label="Section index"><span class="ixw">Index</span><b id="ixn">01</b><s>/</s><em id="ixt">08</em><i class="cv">&#8595;</i></button>
     
     <a class="lang" href="/hy/" aria-label="Հայերեն · Armenian" title="Հայերեն · Armenian">HY</a>
     
