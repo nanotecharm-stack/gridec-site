@@ -1679,7 +1679,7 @@ function layoutSuite(){
   var chrome=head.offsetHeight+parseFloat(hs.marginBottom||0)
             +parseFloat(spins.paddingTop||0)+parseFloat(spins.paddingBottom||0)
             +(document.querySelector('.railbar')?document.querySelector('.railbar').offsetHeight+18:0)+32;
-  var est=Math.max(260,Math.min(520,Math.round(innerHeight-chrome)));
+  var est=Math.max(260,Math.min(470,Math.round(innerHeight-chrome)));
   irail.style.setProperty('--cardh',est+'px');
   var over=spin.offsetHeight-innerHeight;
   if(over>0)irail.style.setProperty('--cardh',Math.max(260,est-over)+'px');

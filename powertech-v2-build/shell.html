@@ -2870,7 +2870,18 @@ function layoutSuite(){
   var chrome=head.offsetHeight+parseFloat(hs.marginBottom||0)
             +parseFloat(spins.paddingTop||0)+parseFloat(spins.paddingBottom||0)
             +(document.querySelector('.railbar')?document.querySelector('.railbar').offsetHeight+18:0)+32;
-  var est=Math.max(260,Math.min(520,Math.round(innerHeight-chrome)));
+  /* Потолок 470, а не 520. Владелец заметил, что карточки отраслей на английской
+     странице крупнее, чем на армянской, и попросил сравнять по армянской.
+     Причина была в том, что высота карточки считалась от ОСТАТКА места, а
+     остаток зависит от длины заголовка раздела: на 1896x948 английский заголовок
+     занимал 112 точек, армянский — 196, потому что переносится на больше строк.
+     Английской странице оставалось 608 точек и она упиралась в прежний потолок
+     520; армянской оставалось 524, и поправка на переполнение сажала её на 470.
+     Выходило, что размер карточки зависит от длины перевода — чего быть не
+     должно. Потолок 470 обе страницы берут одинаково.
+     Поправка на переполнение ниже остаётся: это страховка, если содержимое всё
+     же не влезает в закреплённый кадр (низкое окно, крупный шрифт). */
+  var est=Math.max(260,Math.min(470,Math.round(innerHeight-chrome)));
   irail.style.setProperty('--cardh',est+'px');
   var over=spin.offsetHeight-innerHeight;
   if(over>0)irail.style.setProperty('--cardh',Math.max(260,est-over)+'px');
