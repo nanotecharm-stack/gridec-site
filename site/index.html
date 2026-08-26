@@ -1160,10 +1160,6 @@ function size(){
   heroStart();                          
 }
 function frame(ts){
-  if(!rm&&frame.d&&ts-frame.d<13){
-    heroRaf=requestAnimationFrame(frame);return;
-  }
-  frame.d=ts;
   var dt=(ts-(frame.p||ts))/1000;if(!(dt>0)||dt>.05)dt=.016;frame.p=ts;
   if(rm)dt=0;            
   tt+=dt;
@@ -1181,6 +1177,9 @@ function frame(ts){
     if(SEAM.rail)SEAM.rail.classList.toggle('lit',seamOn);}
   if(evT>0)evT=Math.max(0,evT-dt);
   var evP=evT>0?Math.sin((1-evT/EV_DUR)*Math.PI):0;
+  var drawNow=canvasOn&&(rm||!frame.d||ts-frame.d>=13);
+  if(drawNow){
+  frame.d=ts;
   cx.clearRect(0,0,W,H);
   cx.lineCap='round';cx.lineJoin='round';
   var BX0=-4,BX1=W+4,BH=BHv;
@@ -1257,6 +1256,7 @@ function frame(ts){
     cx.save();cx.globalCompositeOperation='destination-out';
     cx.fillStyle=mg;cx.fillRect(0,0,W*MASK,H);cx.restore();
   }
+  }   
   if(!frame.hm||ts-frame.hm>500){frame.hm=ts;
     var vTxt=(230.0-evP*78).toFixed(1),fTxt=(50.00-evP*.05).toFixed(2),
         sTxt=evP>.15?PT.rdDip:'';
@@ -1268,14 +1268,14 @@ function frame(ts){
   if(!rm&&heroFxOn()&&heroSeen)heroRaf=requestAnimationFrame(frame);else heroRaf=0;
 }
 function heroFxOn(){return innerWidth>960;}
-var heroRaf=0,heroSeen=true;
+var heroRaf=0,heroSeen=true,canvasOn=true;
 function heroStart(){
   if(heroRaf||rm||!heroFxOn()||!heroSeen)return;
   heroRaf=requestAnimationFrame(frame);
 }
 size();
 heroStart();
-var HERO_KEEP=600;
+var HERO_KEEP=600,DRAW_KEEP=200;
 function mHero(){
   if(!cv)return null;
   var a=cv.getBoundingClientRect(),top=a.top,bot=a.bottom;
@@ -1284,10 +1284,11 @@ function mHero(){
     if(b.top<top)top=b.top;
     if(b.bottom>bot)bot=b.bottom;
   }
-  return {top:top,bottom:bot};
+  return {top:top,bottom:bot,cvTop:a.top,cvBottom:a.bottom};
 }
 function aHero(r){
   if(!r)return;
+  canvasOn=r.cvBottom>-DRAW_KEEP&&r.cvTop<innerHeight+DRAW_KEEP;
   var near=r.bottom>-HERO_KEEP&&r.top<innerHeight+HERO_KEEP;
   if(near===heroSeen)return;
   heroSeen=near;

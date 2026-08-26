@@ -2070,10 +2070,6 @@ function frame(ts){
      ничего, там каждый кадр и так укладывается. Ход остаётся ровным: dt мы не
      трогаем на пропущенном кадре, поэтому волна плывёт с прежней скоростью.
      Прокрутка при этом идёт своим чередом — она не ждёт холста. */
-  if(!rm&&frame.d&&ts-frame.d<13){
-    heroRaf=requestAnimationFrame(frame);return;
-  }
-  frame.d=ts;
   var dt=(ts-(frame.p||ts))/1000;if(!(dt>0)||dt>.05)dt=.016;frame.p=ts;
   if(rm)dt=0;            /* при reduce рисуем один неподвижный кадр, а не пустоту */
   tt+=dt;
@@ -2091,6 +2087,24 @@ function frame(ts){
     if(SEAM.rail)SEAM.rail.classList.toggle('lit',seamOn);}
   if(evT>0)evT=Math.max(0,evT-dt);
   var evP=evT>0?Math.sin((1-evT/EV_DUR)*Math.PI):0;
+  /* ============ РИСУЕМ ТОЛЬКО КОГДА ХОЛСТ НА ЭКРАНЕ ============
+     Всё выше — счёт времени, события, шаг сигнальной жилы, зажигание отвода
+     первого раздела, показание. Это копейки, и это должно идти всегда, пока
+     хоть что-то из ведомого движения на виду: отвод тянется от кромки героя
+     вниз почти на восемьсот точек, то есть на ВТОРОЙ экран.
+
+     Всё ниже — перерисовка холста в 1,8 миллиона точек. Раньше она шла вместе
+     с жилой, то есть и на втором экране, где холста уже НЕ ВИДНО. Кадр main
+     потока при этом оставался в норме (замеры показывали 0-3 % провалов), но
+     каждый кадр в GPU уезжала текстура на семь мегабайт — впустую. Владелец
+     видел дёрганье там, где приборы молчали.
+
+     Теперь два выключателя вместо одного: heroSeen держит ХОД (объединение
+     холста и отвода), canvasOn разрешает РИСОВАНИЕ (только сам холст, запас
+     небольшой). Потолок частоты стоит здесь же: не чаще раза в 13 мс. */
+  var drawNow=canvasOn&&(rm||!frame.d||ts-frame.d>=13);
+  if(drawNow){
+  frame.d=ts;
   cx.clearRect(0,0,W,H);
   cx.lineCap='round';cx.lineJoin='round';
 
@@ -2205,6 +2219,7 @@ function frame(ts){
     cx.save();cx.globalCompositeOperation='destination-out';
     cx.fillStyle=mg;cx.fillRect(0,0,W*MASK,H);cx.restore();
   }
+  }   /* конец рисования; ниже снова копейки, они идут всегда */
 
 
   /* readout follows the same event, steadily */
@@ -2226,7 +2241,7 @@ function frame(ts){
    Проверяется не однажды при загрузке, а при каждом пересчёте размеров: поворот
    телефона переводит страницу через порог в обе стороны. */
 function heroFxOn(){return innerWidth>960;}
-var heroRaf=0,heroSeen=true;
+var heroRaf=0,heroSeen=true,canvasOn=true;
 function heroStart(){
   if(heroRaf||rm||!heroFxOn()||!heroSeen)return;
   heroRaf=requestAnimationFrame(frame);
@@ -2262,7 +2277,10 @@ heroStart();
    HERO_KEEP даёт лишние кадры на разогон. При 110 точках за кадр 600 точек —
    это пять кадров форы. Экономия почти не страдает: страница высотой около
    13 000 точек, лента живёт на первых двух экранах. */
-var HERO_KEEP=600;
+/* HERO_KEEP — запас для ХОДА: сколько точек за краем экрана движение ещё
+   ведётся. DRAW_KEEP — запас для РИСОВАНИЯ, он маленький: холст надо успеть
+   обновить к появлению, но не рисовать его на втором экране впустую. */
+var HERO_KEEP=600,DRAW_KEEP=200;
 /* Ход героя ведёт НЕ ТОЛЬКО ленту. В том же кадре шагает сигнальная жила
    (seamStep) и зажигается отвод первого раздела: SEAM.rail — это тот самый
    отвод, он тянется от кромки героя вниз почти на восемьсот точек, то есть
@@ -2278,10 +2296,11 @@ function mHero(){
     if(b.top<top)top=b.top;
     if(b.bottom>bot)bot=b.bottom;
   }
-  return {top:top,bottom:bot};
+  return {top:top,bottom:bot,cvTop:a.top,cvBottom:a.bottom};
 }
 function aHero(r){
   if(!r)return;
+  canvasOn=r.cvBottom>-DRAW_KEEP&&r.cvTop<innerHeight+DRAW_KEEP;
   var near=r.bottom>-HERO_KEEP&&r.top<innerHeight+HERO_KEEP;
   if(near===heroSeen)return;
   heroSeen=near;
