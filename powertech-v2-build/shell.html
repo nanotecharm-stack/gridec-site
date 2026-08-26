@@ -2263,7 +2263,23 @@ heroStart();
    это пять кадров форы. Экономия почти не страдает: страница высотой около
    13 000 точек, лента живёт на первых двух экранах. */
 var HERO_KEEP=600;
-function mHero(){return cv?cv.getBoundingClientRect():null;}
+/* Ход героя ведёт НЕ ТОЛЬКО ленту. В том же кадре шагает сигнальная жила
+   (seamStep) и зажигается отвод первого раздела: SEAM.rail — это тот самый
+   отвод, он тянется от кромки героя вниз почти на восемьсот точек, то есть
+   живёт на ВТОРОМ экране. Пока выключатель смотрел на один холст, отвод
+   застывал, ещё оставаясь на виду, — владелец назвал это фризом на второй
+   странице. Поэтому берём объединение: холст И отвод. Так граница сама
+   съезжает вниз ровно настолько, насколько простирается движение. */
+function mHero(){
+  if(!cv)return null;
+  var a=cv.getBoundingClientRect(),top=a.top,bot=a.bottom;
+  if(SEAM.rail){
+    var b=SEAM.rail.getBoundingClientRect();
+    if(b.top<top)top=b.top;
+    if(b.bottom>bot)bot=b.bottom;
+  }
+  return {top:top,bottom:bot};
+}
 function aHero(r){
   if(!r)return;
   var near=r.bottom>-HERO_KEEP&&r.top<innerHeight+HERO_KEEP;

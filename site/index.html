@@ -1276,7 +1276,16 @@ function heroStart(){
 size();
 heroStart();
 var HERO_KEEP=600;
-function mHero(){return cv?cv.getBoundingClientRect():null;}
+function mHero(){
+  if(!cv)return null;
+  var a=cv.getBoundingClientRect(),top=a.top,bot=a.bottom;
+  if(SEAM.rail){
+    var b=SEAM.rail.getBoundingClientRect();
+    if(b.top<top)top=b.top;
+    if(b.bottom>bot)bot=b.bottom;
+  }
+  return {top:top,bottom:bot};
+}
 function aHero(r){
   if(!r)return;
   var near=r.bottom>-HERO_KEEP&&r.top<innerHeight+HERO_KEEP;
