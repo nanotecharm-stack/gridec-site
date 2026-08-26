@@ -325,9 +325,8 @@ html[data-nav="3"] .ixp{margin-top:var(--s3);}
 .sigrun svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;
   color:var(--fg);}
 @media (max-width:1099px){.sigrun{display:none;}}
-.srail{opacity:1;}
-.srail .pw{opacity:0;transition:opacity 1.15s var(--e);}
-.srail.lit .pw{opacity:1;transition:opacity .3s var(--e);}
+.srail{opacity:0;transition:opacity 1.15s var(--e);}
+.srail.lit{opacity:1;transition:opacity .3s var(--e);}
 .hgrid{position:relative;z-index:2;display:grid;
   grid-template-columns:minmax(0,1fr) minmax(0,1fr);
   align-items:center;gap:clamp(18px,3vw,52px);
@@ -1555,7 +1554,7 @@ function buildRails(){
     if(si===0)SEAM.rail=svg;
     var chY=null;
     if(si===0){var cxx=sec.querySelector('.chaxis');
-      if(cxx){chY=0;for(var nn=cxx;nn&&nn!==sec;nn=nn.offsetParent)chY+=nn.offsetTop;}}
+      if(cxx)chY=cxx.getBoundingClientRect().top-sec.getBoundingClientRect().top;}
     var toAxis=(chY!==null&&chY>40);
     var top=si===0?0:Math.max(0,yh-46);
     var dEl=toAxis?route([[8,0],[8,chY]],16)
@@ -1563,7 +1562,7 @@ function buildRails(){
     var elbow=document.createElementNS(ns,'path');
     elbow.setAttribute('d',dEl);
     elbow.setAttribute('fill','none');elbow.setAttribute('stroke','currentColor');
-    elbow.setAttribute('stroke-opacity','.26');elbow.setAttribute('stroke-width','1');
+    elbow.setAttribute('stroke-opacity','.22');elbow.setAttribute('stroke-width','1');
     svg.appendChild(elbow);
     if(!toAxis){
       var tick=document.createElementNS(ns,'rect');
@@ -1572,14 +1571,12 @@ function buildRails(){
       tick.style.fill='var(--brand-ink)';
       svg.appendChild(tick);
     }
-    var pw=document.createElementNS(ns,'g');
-    pw.setAttribute('class','pw');
     var pl=document.createElementNS(ns,'path');
     pl.setAttribute('d',dEl);
     pl.setAttribute('class','pulse');pl.setAttribute('fill','none');
     pl.style.stroke='var(--brand-ink)';pl.setAttribute('stroke-width','1.6');
     pl.setAttribute('stroke-linecap','round');
-    pw.appendChild(pl);svg.appendChild(pw);
+    svg.appendChild(pl);
     sec.style.position='relative';
     sec.appendChild(svg);
     var PL=pl.getTotalLength();
