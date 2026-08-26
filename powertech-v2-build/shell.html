@@ -2028,6 +2028,8 @@ function evZone(){
 }
 var MILK='255,251,249',GLOW='255,255,255';
 var TAU=Math.PI*2,NL=44,NS=104;   /* линий в ленте и шагов вдоль оси */
+/* Сколько мазков кладут эти сорок четыре линии. Подробности — у самой отрисовки. */
+var NB=8;
 function readWaveTheme(){
   var cs=getComputedStyle(cv.parentElement);
   var a=(cs.getPropertyValue('--wv-line')||'').trim(),b=(cs.getPropertyValue('--wv-glow')||'').trim();
@@ -2054,6 +2056,24 @@ function size(){
   heroStart();                          /* поворот мог вернуть ленту на экран */
 }
 function frame(ts){
+  /* ============ ПОТОЛОК ЧАСТОТЫ ЛЕНТЫ ============
+     Один кадр ленты — это 44 линии по 105 точек: 4620 точек, около 18 тысяч
+     синусов и 44 длинных мазка по холсту во всю ширину героя. На экране со
+     144 кадрами в секунду браузер просит эту работу 144 раза в секунду, и не
+     успевает: замерено в Firefox 154 — когда лента на экране и страница просто
+     СТОИТ, 94-98 % кадров выходят длиннее 10 мс, а сам кадр идёт 14-21 мс
+     вместо 6,9. Внизу страницы, где ленты нет, тот же замер даёт 1,6 %.
+
+     Глазу столько и не нужно: волна плывёт медленно. Порог 13 мс отсекает
+     лишнее и сам подстраивается под экран — при 144 Гц лента обновляется 72
+     раза в секунду, при 120 и 240 Гц — 60, а при обычных 60 Гц не меняется
+     ничего, там каждый кадр и так укладывается. Ход остаётся ровным: dt мы не
+     трогаем на пропущенном кадре, поэтому волна плывёт с прежней скоростью.
+     Прокрутка при этом идёт своим чередом — она не ждёт холста. */
+  if(!rm&&frame.d&&ts-frame.d<13){
+    heroRaf=requestAnimationFrame(frame);return;
+  }
+  frame.d=ts;
   var dt=(ts-(frame.p||ts))/1000;if(!(dt>0)||dt>.05)dt=.016;frame.p=ts;
   if(rm)dt=0;            /* при reduce рисуем один неподвижный кадр, а не пустоту */
   tt+=dt;
@@ -2093,30 +2113,59 @@ function frame(ts){
     return y;
   }
   cx.save();
-  var li,sj,uu,tu;
-  for(li=0;li<NL;li++){
-    uu=li/(NL-1)-0.5;
+  var li,sj,uu,tu,bt;
+  /* ============ ЛЕНТА КЛАДЁТСЯ ГРУППАМИ, А НЕ ПО ОДНОЙ ЛИНИИ ============
+     Линий по-прежнему сорок четыре и рисуются они все. Изменилось одно: они
+     складываются в NB путей и красятся NB мазками вместо сорока четырёх.
+
+     Почему это важно. Замер в Firefox 154 (1920×1040, лента на экране,
+     страница СТОИТ): 44 мазка — 93 % кадров длиннее 10 мс; 22 мазка — 27 %;
+     11 мазков — 0 %. Стоимость держится за ЧИСЛО вызовов, а не за пиксели:
+     ни скруглённые стыки, ни толщина линии, ни уменьшение холста до половины
+     разрешения не дали ничего (последнее сделало только хуже). Считает холст
+     быстро — отключение одной лишь stroke() при сохранённой математике сразу
+     даёт 0,2 %.
+
+     Почему группы идут ЧЕРЕЗ одну, а не подряд. Тёмные места ленты — это не
+     заливка, а наложение полупрозрачных линий друг на друга: две линии по 0,30
+     дают 0,51, три — 0,66. Внутри ОДНОГО пути наложение не копится: один мазок
+     кладёт объединение линий ровно один раз. Шаг NB разводит соседние линии по
+     разным путям, поэтому любая группа до NB налегающих линий темнеет как
+     прежде. Гуще NB слоёв бывает только в самом узле, где цвет и так почти
+     плотный: 8 слоёв дают 0,94 против 0,9999 у сорока четырёх — разница ниже
+     порога различения. */
+  cx.strokeStyle='rgba('+MILK+',.30)';cx.lineWidth=0.9;
+  for(bt=0;bt<NB;bt++){
     cx.beginPath();
-    for(sj=0;sj<=NS;sj++){
-      tu=sj/NS;
-      var xx=BX0+(BX1-BX0)*tu,yy=bandY(tu,uu);
-      sj?cx.lineTo(xx,yy):cx.moveTo(xx,yy);
+    for(li=bt;li<NL;li+=NB){
+      uu=li/(NL-1)-0.5;
+      for(sj=0;sj<=NS;sj++){
+        tu=sj/NS;
+        var xx=BX0+(BX1-BX0)*tu,yy=bandY(tu,uu);
+        sj?cx.lineTo(xx,yy):cx.moveTo(xx,yy);
+      }
     }
-    cx.strokeStyle='rgba('+MILK+',.30)';cx.lineWidth=0.9;cx.stroke();
+    cx.stroke();
   }
   /* тот же участок ещё раз, цветом марки: событие зафиксировано */
   if(evP>0){
-    for(li=0;li<NL;li++){
-      uu=li/(NL-1)-0.5;
-      cx.beginPath();var run=false;
-      for(sj=0;sj<=NS;sj++){
-        tu=sj/NS;
-        if(Math.abs(tu-evX)>EV_W){run=false;continue;}
-        var x2=BX0+(BX1-BX0)*tu,y2=bandY(tu,uu);
-        run?cx.lineTo(x2,y2):cx.moveTo(x2,y2);run=true;
+    /* Тот же приём, что и у ленты: во время события рисовался ВТОРОЙ набор из
+       сорока четырёх мазков поверх первого, то есть вдвое дороже. */
+    cx.strokeStyle='rgba('+GLOW+','+(0.62*evP).toFixed(3)+')';
+    cx.lineWidth=1;
+    for(bt=0;bt<NB;bt++){
+      cx.beginPath();
+      for(li=bt;li<NL;li+=NB){
+        uu=li/(NL-1)-0.5;
+        var run=false;
+        for(sj=0;sj<=NS;sj++){
+          tu=sj/NS;
+          if(Math.abs(tu-evX)>EV_W){run=false;continue;}
+          var x2=BX0+(BX1-BX0)*tu,y2=bandY(tu,uu);
+          run?cx.lineTo(x2,y2):cx.moveTo(x2,y2);run=true;
+        }
       }
-      cx.strokeStyle='rgba('+GLOW+','+(0.62*evP).toFixed(3)+')';
-      cx.lineWidth=1;cx.stroke();
+      cx.stroke();
     }
     /* скоба с длительностью — внутри обода, чтобы не спорить с показанием */
     var ba=BX0+(BX1-BX0)*(evX-EV_W),bb=BX0+(BX1-BX0)*(evX+EV_W),by=CYp+BH*1.32;
@@ -2169,7 +2218,7 @@ function frame(ts){
     if(hz&&hz.textContent!==fTxt)hz.textContent=fTxt;
     if(stt&&stt.textContent!==sTxt)stt.textContent=sTxt;
     if(stt&&stt.parentElement)stt.parentElement.classList.toggle('is-ev',evP>.15);}
-  if(!rm&&heroFxOn())heroRaf=requestAnimationFrame(frame);else heroRaf=0;
+  if(!rm&&heroFxOn()&&heroSeen)heroRaf=requestAnimationFrame(frame);else heroRaf=0;
 }
 /* Лента считается только там, где она видна. На телефоне она скрыта стилями,
    и рисовать её кадры — работа впустую: сорок четыре линии по сто четыре шага
@@ -2177,13 +2226,36 @@ function frame(ts){
    Проверяется не однажды при загрузке, а при каждом пересчёте размеров: поворот
    телефона переводит страницу через порог в обе стороны. */
 function heroFxOn(){return innerWidth>960;}
-var heroRaf=0;
+var heroRaf=0,heroSeen=true;
 function heroStart(){
-  if(heroRaf||rm||!heroFxOn())return;
+  if(heroRaf||rm||!heroFxOn()||!heroSeen)return;
   heroRaf=requestAnimationFrame(frame);
 }
 size();
 heroStart();
+/* ============ ХОЛСТ РИСУЕТ, ТОЛЬКО КОГДА ЕГО ВИДНО ============
+   Кадр героя перерисовывался ВСЕГДА: сорок четыре линии по сто четыре шага,
+   каждый кадр, всё время пока открыта вкладка — даже когда читатель ушёл на
+   тысячи точек вниз и холст давно за краем экрана.
+
+   Chrome это проглатывал, Firefox — нет. Замер в Firefox 154 на 1920×1040,
+   шестьдесят щелчков колеса: кадров длиннее 10 мс было 43-56 %, а стоило
+   отключить рисование холста — 0,7-4 %. Для сравнения простая страница без
+   единого эффекта даёт 0 %, а эта же страница со снятыми скриптами — 0,2 %.
+   Ни зерно, ни косой свет, ни размытие шапки, ни снимки, ни кубики, ни
+   закреплённая лента на это не влияли: проверено выключением каждого.
+
+   Прежнее условие heroFxOn() смотрело только на ширину окна и никогда — на то,
+   виден ли холст. Стили тут были бессильны: display:none НЕ останавливает
+   requestAnimationFrame, поэтому спрятать холст было мало — надо остановить
+   сам ход. Запас в 120 точек добавлен, чтобы рисунок успел ожить до того, как
+   войдёт в кадр. */
+if(window.IntersectionObserver&&cv){
+  new IntersectionObserver(function(es){
+    heroSeen=es[0].isIntersecting;
+    if(heroSeen)heroStart();
+  },{rootMargin:'120px'}).observe(cv);
+}
 
 /* ============ JOINT TRACES ============ */
 function route(pts,r){
@@ -2207,6 +2279,9 @@ var JOINTS=[
   [[.62,0],[.62,.46],[.18,.46],[.18,1]]
 ];
 function buildJoints(){
+  /* Узлы пересоздаются — собранный список устарел. Без этого импульсы стыков
+     писались бы в выброшенные элементы. */
+  cacheBump();
   document.querySelectorAll('.joint').forEach(function(svg,k){
     var w=svg.clientWidth||900,h=svg.clientHeight||160;
     var spec=JOINTS[k%JOINTS.length];
@@ -2242,21 +2317,47 @@ function buildJoints(){
   });
   paintJoints();
 }
-function paintJoints(){
-  var vh=innerHeight;
-  document.querySelectorAll('.joint').forEach(function(svg){
-    var r=svg.getBoundingClientRect();
-    /* steeper: pulse completes while the joint crosses the middle band of the screen */
-    var p=(vh*0.9-r.top)/(vh*0.62);
-    p=Math.max(0,Math.min(1,p));
-    svg.querySelectorAll('.pulse').forEach(function(pl){
-      var L=+pl.dataset.len,t=+pl.dataset.tr;
-      var q=Math.max(0,Math.min(1,(p-t*0.05)/(1-t*0.05)));
-      pl.setAttribute('stroke-dashoffset',(L*0.12-q*L*1.12).toFixed(1));
-      pl.setAttribute('opacity',(q>0.005&&q<0.999?1:0));
-    });
+/* ============ СЧЁТЧИК СБОРКИ ДОКУМЕНТА ============
+   Списки узлов теперь собираются один раз и живут между кадрами. Но при смене
+   размера окна часть узлов пересоздаётся (см. buildRails), и старый список
+   указывал бы на выброшенные элементы. Счётчик растёт — все списки собираются
+   заново при первом же обращении. */
+var DOMV={v:0};
+function cacheBump(){DOMV.v++;}
+/* Разбито на ЗАМЕР и ЗАПИСЬ, см. «один проход на кадр» ниже. Список стыков и
+   их импульсов собирается один раз, а не ищется заново на каждом кадре. */
+var JC=null,JCv=-1;
+function jointCache(){
+  if(JC&&JCv===DOMV.v)return JC;
+  JC=[].slice.call(document.querySelectorAll('.joint')).map(function(svg){
+    return {svg:svg,pulses:[].slice.call(svg.querySelectorAll('.pulse')).map(function(pl){
+      return {el:pl,L:+pl.dataset.len,t:+pl.dataset.tr,o:null,p:null};})};
   });
+  JCv=DOMV.v;return JC;
 }
+function mJoints(){
+  var c=jointCache(),vh=innerHeight,out=[];
+  for(var i=0;i<c.length;i++){
+    /* steeper: pulse completes while the joint crosses the middle band of the screen */
+    var p=(vh*0.9-c[i].svg.getBoundingClientRect().top)/(vh*0.62);
+    out.push(p<0?0:(p>1?1:p));
+  }
+  return out;
+}
+function aJoints(ps){
+  var c=JC;if(!c)return;
+  for(var i=0;i<c.length;i++){
+    var p=ps[i],pu=c[i].pulses;
+    for(var j=0;j<pu.length;j++){
+      var q=(p-pu[j].t*0.05)/(1-pu[j].t*0.05);q=q<0?0:(q>1?1:q);
+      var off=(pu[j].L*0.12-q*pu[j].L*1.12).toFixed(1),op=(q>0.005&&q<0.999?1:0);
+      /* Записываем только настоящую перемену: лишняя запись — лишняя перерисовка. */
+      if(pu[j].o!==off){pu[j].o=off;pu[j].el.setAttribute('stroke-dashoffset',off);}
+      if(pu[j].p!==op){pu[j].p=op;pu[j].el.setAttribute('opacity',op);}
+    }
+  }
+}
+function paintJoints(){aJoints(mJoints());}
 
 
 /* ============ СИГНАЛЬНАЯ ЖИЛА ============
@@ -2361,6 +2462,11 @@ function seamStep(dt){
 
 /* ============ TEXT RAILS — traces running alongside section copy ============ */
 function buildRails(){
+  /* То же и здесь, и это не теория: отводы к заголовкам пересобираются ещё раз
+     после загрузки шрифтов и ещё раз на load. Список, собранный до этого, вёл
+     на удалённые узлы, и импульс отвода не получал ни смещения, ни видимости —
+     поймано сверкой поведения со старой сборкой. */
+  cacheBump();
   if(innerWidth<1100){SEAM.rail=null;
     return document.querySelectorAll('.srail').forEach(function(s){s.remove();});}
   /* Длинной вертикали через весь раздел больше нет. Остаётся короткий отвод к
@@ -2410,19 +2516,34 @@ function buildRails(){
   });
   paintRails();
 }
-function paintRails(){
-  var vh=innerHeight;
-  document.querySelectorAll('.srail').forEach(function(svg){
+var RC=null,RCv=-1;
+function railCache(){
+  if(RC&&RCv===DOMV.v)return RC;
+  RC=[].slice.call(document.querySelectorAll('.srail')).map(function(svg){
+    var pl=svg.querySelector('.pulse');
+    return pl?{svg:svg,el:pl,L:+pl.dataset.len,yh:+svg.dataset.yh||0,o:null,p:null}:null;
+  }).filter(function(x){return x;});
+  RCv=DOMV.v;return RC;
+}
+function mRails(){
+  var c=railCache(),vh=innerHeight,out=[];
+  for(var i=0;i<c.length;i++){
     /* Ход считаем по заголовку, а не по всей высоте раздела: путь стал коротким,
        и на прежней шкале импульс полз бы через весь экран. */
-    var r=svg.getBoundingClientRect(),yh=+svg.dataset.yh||0;
-    var p=(vh*0.80-(r.top+yh))/(vh*0.30);
-    p=Math.max(0,Math.min(1,p));
-    var pl=svg.querySelector('.pulse'),L=+pl.dataset.len;
-    pl.setAttribute('stroke-dashoffset',(L*0.34-p*L*1.34).toFixed(1));
-    pl.setAttribute('opacity',(p>0.005&&p<0.999?1:0));
-  });
+    var p=(vh*0.80-(c[i].svg.getBoundingClientRect().top+c[i].yh))/(vh*0.30);
+    out.push(p<0?0:(p>1?1:p));
+  }
+  return out;
 }
+function aRails(ps){
+  var c=RC;if(!c)return;
+  for(var i=0;i<c.length;i++){
+    var p=ps[i],off=(c[i].L*0.34-p*c[i].L*1.34).toFixed(1),op=(p>0.005&&p<0.999?1:0);
+    if(c[i].o!==off){c[i].o=off;c[i].el.setAttribute('stroke-dashoffset',off);}
+    if(c[i].p!==op){c[i].p=op;c[i].el.setAttribute('opacity',op);}
+  }
+}
+function paintRails(){aRails(mRails());}
 
 /* ============ EVENT CHAIN — one line, lit by scroll ============ */
 var STEPS=PT.seq;
@@ -2446,19 +2567,30 @@ STEPS.forEach(function(st,si){
   }
   chsteps.appendChild(li);
 });
-function seqUpd(){
-  if(!chainEl)return;
+function mSeq(){
+  if(!chainEl)return null;
   var r=chainEl.getBoundingClientRect();
   /* The chain is the last thing in its block, so it must finish while it is
      still low on the screen — otherwise the axis only completes once the next
      section fills most of the viewport. */
   var p=(innerHeight*0.95-r.top)/(innerHeight*0.29);
-  p=p<0?0:(p>1?1:p);
-  chainFill.style.setProperty('--p',p.toFixed(4));
+  return p<0?0:(p>1?1:p);
+}
+var seqWas=null,seqPWas=null;
+function aSeq(p){
+  if(p===null)return;
+  /* Своё свойство --p писалось на КАЖДОМ кадре, даже когда ось стояла за краем
+     экрана и величина не менялась. Правка своего свойства заставляет браузер
+     пересчитать стиль всей ветки под этим узлом. Пишем только при перемене. */
+  var ps=p.toFixed(4);
+  if(seqPWas!==ps){seqPWas=ps;chainFill.style.setProperty('--p',ps);}
   var lit=Math.ceil(p*STEPS.length-0.001);
+  if(seqWas===lit)return;
+  seqWas=lit;
   for(var i=0;i<chsteps.children.length;i++)
     chsteps.children[i].classList.toggle('on',i<lit);
 }
+function seqUpd(){aSeq(mSeq());}
 seqUpd();
 
 /* ============ INDUSTRIES — a stepped rail of card plates ============ */
@@ -2675,25 +2807,36 @@ function sxRender(x){
        вместе с наложением и заголовком. На армянской странице это било сильнее —
        засечный набор дороже в растеризации, и карточки дёргались. Двенадцать
        пикселей сноса не стоят кадра. */
-    shells[i].style.transform='translate3d(0,'+sxSnap(y)+'px,0)';
+    var st='translate3d(0,'+sxSnap(y)+'px,0)';
+    if(shells[i].__tr!==st){shells[i].__tr=st;shells[i].style.transform=st;}
   }
 }
-function suiteUpd(){
-  if(!suiteSec||!suitePinned)return;
-  var p=suiteProgress();
+function mSuite(){
+  if(!suiteSec||!suitePinned)return null;
+  return suiteProgress();
+}
+function aSuite(p){
+  if(p===null)return;
   var tp=p/SX.window; tp=tp<0?0:tp>1?1:tp;      /* the last stretch is the hold */
   var x=SX.startX+(SX.endX-SX.startX)*tp;
   /* Без округления до целого пикселя. Оно ставилось против дрожания кромки, но
      при медленной прокрутке лента шла ступеньками: кадр стоит, кадр прыгает на
      пиксель. Композитор сам сглаживает дробный сдвиг. */
-  sxTrack.style.transform='translate3d('+sxPlace(x)+'px,0,0)';
+  var tr='translate3d('+sxPlace(x)+'px,0,0)';
+  if(sxTrackWas!==tr){sxTrackWas=tr;sxTrack.style.transform=tr;}
   sxRender(x);
   railBar(tp);
 }
+var sxTrackWas=null;
+function suiteUpd(){aSuite(mSuite());}
+var railBarWas=null;
 function railBar(tp){
   var bar=document.getElementById('rbar');if(!bar)return;
   if(tp===undefined)tp=0;
-  bar.style.transform='scaleX('+Math.max(0.02,Math.min(1,tp)).toFixed(4)+')';
+  var v='scaleX('+Math.max(0.02,Math.min(1,tp)).toFixed(4)+')';
+  if(railBarWas===v)return;
+  railBarWas=v;
+  bar.style.transform=v;
 }
 /* ПОЛОСКА ПОД ЛЕНТОЙ НА ТЕЛЕФОНЕ.
    На широком экране лента закрепляется, и полоску ведёт продвижение по
@@ -2716,14 +2859,21 @@ function railBar(tp){
 var navLinks=[].slice.call(document.querySelectorAll('nav a.lk')).map(function(a){
   return {a:a,sec:document.querySelector(a.getAttribute('href'))};
 }).filter(function(x){return x.sec;});
-function navSpy(){
-  var probe=innerHeight*0.34,best=null;
-  navLinks.forEach(function(x){
-    var r=x.sec.getBoundingClientRect();
-    if(r.top<=probe&&r.bottom>probe)best=x;
-  });
-  navLinks.forEach(function(x){x.a.classList.toggle('here',x===best);});
+function mNav(){
+  var probe=innerHeight*0.34,best=-1;
+  for(var i=0;i<navLinks.length;i++){
+    var r=navLinks[i].sec.getBoundingClientRect();
+    if(r.top<=probe&&r.bottom>probe)best=i;
+  }
+  return best;
 }
+var navWas=-2;
+function aNav(best){
+  if(navWas===best)return;
+  navWas=best;
+  for(var i=0;i<navLinks.length;i++)navLinks[i].a.classList.toggle('here',i===best);
+}
+function navSpy(){aNav(mNav());}
 navSpy();
 
 /* ============ DITHER BANDS — cubes that fill with scroll and erase the seam ============ */
@@ -2777,15 +2927,21 @@ function buildDither(){
   });
   paintDither();
 }
-function paintDither(){
-  var vh=innerHeight;
+function mDither(){
+  var vh=innerHeight,out=[];
   for(var b=0;b<dBands.length;b++){
-    var band=dBands[b],r=band.el.getBoundingClientRect();
+    var r=dBands[b].el.getBoundingClientRect();
     /* 0 when the band's top reaches the bottom of the screen, 1 only once the
        band has fully passed above it — so pixels persist while it is in view */
     var p=(vh-r.top)/(r.height+vh);
-    p=p<0?0:(p>1?1:p);
-    var want=Math.round(p*band.cells.length);
+    out.push(p<0?0:(p>1?1:p));
+  }
+  return out;
+}
+function aDither(ps){
+  for(var b=0;b<dBands.length;b++){
+    var band=dBands[b];
+    var want=Math.round(ps[b]*band.cells.length);
     if(want===band.count)continue;
     while(band.count<want){setCell(band.cells[band.order[band.count]],band.cells[band.order[band.count]].to);band.count++;}
     while(band.count>want){band.count--;setCell(band.cells[band.order[band.count]],band.top);}
@@ -2803,6 +2959,7 @@ function paintDither(){
     }
   }
 }
+function paintDither(){aDither(mDither());}
 /* Пишем в стиль только при настоящей смене цвета: хвост пересчитывается
    на каждом кадре прокрутки, а лишняя запись — лишняя перерисовка. */
 function setCell(c,v){if(c.now!==v){c.now=v;c.el.style.background=v;}}
@@ -3164,26 +3321,54 @@ document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
 /* Backstop: content must never be able to stay invisible. If the observer does
    not fire (some embedded/background contexts starve it), scroll position alone
    is enough to reveal anything that has reached the viewport. */
-function revealPass(){
-  var vh=innerHeight,list=document.querySelectorAll('.rv:not(.in)');
-  for(var i=0;i<list.length;i++){
-    var r=list[i].getBoundingClientRect();
-    if(r.top<vh*0.94&&r.bottom>-40)list[i].classList.add('in');
+/* Список ждущих узлов ведётся сам. Прежде на каждом кадре по всему документу
+   искалось '.rv:not(.in)' — сложный отбор, и чем меньше оставалось узлов, тем
+   дороже он обходился впустую. Показанный узел просто уходит из списка. */
+var rvLeft=[].slice.call(document.querySelectorAll('.rv'));
+function mReveal(){
+  var vh=innerHeight,out=null;
+  for(var i=0;i<rvLeft.length;i++){
+    var el=rvLeft[i];
+    /* Наблюдатель мог показать узел сам — тогда просто убираем его из списка. */
+    if(el.classList.contains('in')){(out||(out=[])).push(i);continue;}
+    var r=el.getBoundingClientRect();
+    if(r.top<vh*0.94&&r.bottom>-40)(out||(out=[])).push(i);
+  }
+  return out;
+}
+function aReveal(idx){
+  if(!idx)return;
+  for(var i=idx.length-1;i>=0;i--){
+    var el=rvLeft[idx[i]];
+    if(!el.classList.contains('in'))el.classList.add('in');
+    rvLeft.splice(idx[i],1);
   }
 }
+function revealPass(){aReveal(mReveal());}
 revealPass();
 addEventListener('load',revealPass);
 var hdr=document.getElementById('hdr');
 /* which section sits under the header decides the groups' theme */
 var darkSecs=[].slice.call(document.querySelectorAll('.plate2,.plate'));
-function headerTheme(){
-  var y=38,onDark=false;
+function mHeaderTheme(){
+  var y=38;
   for(var i=0;i<darkSecs.length;i++){
     var r=darkSecs[i].getBoundingClientRect();
-    if(r.top<=y&&r.bottom>=y){onDark=true;break;}
+    if(r.top<=y&&r.bottom>=y)return true;
   }
-  hdr.classList.toggle('on-dark',onDark);
+  return false;
 }
+/* Признак «шапка на тёмном» пишут ДВЕ стороны: разделы-плиты (здесь) и тон
+   под шапкой (ниже, aTone). Последнее слово всегда было за тоном — в прежнем
+   списке toneUnderBar шёл сразу за headerTheme и переписывал его решение.
+   Общая память о последней записи хранит это правило и заодно не даёт писать
+   в шапку впустую. Без неё сторона тона молчала, когда тон не менялся, и на
+   тёмном разделе шапка оставалась светлой — поймано сверкой со старой сборкой
+   на отметке 7859. */
+var darkWas=null;
+function setHdrDark(v){if(darkWas!==v){darkWas=v;hdr.classList.toggle('on-dark',v);}}
+function aHeaderTheme(onDark){setHdrDark(onDark);}
+function headerTheme(){aHeaderTheme(mHeaderTheme());}
 headerTheme();
 /* ============ HEADER VARIANTS + SECTION INDEX ============ */
 var ixb=document.getElementById('ixb'),ixp=document.getElementById('ixp'),
@@ -3291,26 +3476,39 @@ function letterize(el,text){
 }
 
 /* which sheet are we on, and what tone is under the bar */
-function ixSpy(){
-  var probe=innerHeight*0.34,cur=null;
+function mIx(){
+  /* Один замер на раздел вместо двух. Запасной ход раньше мерил те же разделы
+     ЗАНОВО вторым проходом — теперь обе величины берутся из одной мерки. */
+  var probe=innerHeight*0.34,cur=null,last=null;
   for(var i=0;i<ixItems.length;i++){
     var r=ixItems[i].sec.getBoundingClientRect();
-    if(r.top<=probe&&r.bottom>probe)cur=ixItems[i];
+    if(r.top<=probe){
+      /* The probe falls between two sheets: the gaps run 176-192px, so this window is
+         wide enough to see. Holding the sheet we just left is right; the old fallback
+         jumped to the LAST sheet whenever we were past the first, which flashed 08 in
+         every gap. Above the first sheet we still show the first. */
+      last=ixItems[i];
+      if(r.bottom>probe)cur=ixItems[i];
+    }
   }
-  if(!cur&&ixItems.length){
-    /* The probe falls between two sheets: the gaps run 176-192px, so this window is
-       wide enough to see. Holding the sheet we just left is right; the old fallback
-       jumped to the LAST sheet whenever we were past the first, which flashed 08 in
-       every gap. Above the first sheet we still show the first. */
-    for(var j=0;j<ixItems.length;j++)
-      if(ixItems[j].sec.getBoundingClientRect().top<=probe)cur=ixItems[j];
-    if(!cur)cur=ixItems[0];
-  }
+  return cur||last||ixItems[0]||null;
+}
+var ixLinks=null,ixLinksV=-1;
+function ixLinkList(){
+  if(ixLinks&&ixLinksV===DOMV.v)return ixLinks;
+  ixLinks=[].slice.call(ixlist.querySelectorAll('a'));ixLinksV=DOMV.v;return ixLinks;
+}
+var ixWasId=null;
+function aIx(cur){
+  var id=cur?cur.id:null;
+  if(ixWasId===id)return;
+  ixWasId=id;
   if(cur){ixn.textContent=cur.no;sheet.textContent=cur.title.slice(0,26);}
-  var links=ixlist.querySelectorAll('a');
+  var links=ixLinkList();
   for(var k=0;k<links.length;k++)
     links[k].classList.toggle('here',!!cur&&links[k].getAttribute('href')==='#'+cur.id);
 }
+function ixSpy(){aIx(mIx());}
 /* tone is tagged on the sections themselves rather than guessed from a list */
 [].slice.call(document.querySelectorAll('.plate,.plate2')).forEach(function(sec){
   sec.dataset.tone='ink';
@@ -3326,9 +3524,15 @@ var bands=[].slice.call(document.querySelectorAll('.dith')).map(function(el){
   var c=(el.getAttribute('data-dith')||'').split(',');
   return {el:el,top:hexTone(c[0]),bottom:hexTone(c[1])};
 });
-function toneUnderBar(){
+var toneSecs=null,toneSecsV=-1;
+function toneList(){
+  if(toneSecs&&toneSecsV===DOMV.v)return toneSecs;
+  toneSecs=[].slice.call(document.querySelectorAll('section[data-tone]'));
+  toneSecsV=DOMV.v;return toneSecs;
+}
+function mTone(){
   var y=38,tone='paper',overBand=false;
-  var secs=document.querySelectorAll('section[data-tone]');
+  var secs=toneList();
   for(var i=0;i<secs.length;i++){
     var r=secs[i].getBoundingClientRect();
     if(r.top<=y&&r.bottom>=y){tone=secs[i].dataset.tone;break;}
@@ -3346,12 +3550,27 @@ function toneUnderBar(){
      и плашка логотипа выходила белой коробкой на тёмной панели. Тон теперь
      чернильный, плашка переворачивается вместе с ним. */
   if(!ixp.hidden){tone='ink';overBand=false;}
-  hdr.setAttribute('data-tone',tone);
+  return {tone:tone,band:overBand};
+}
+/* Шапка переписывается ТОЛЬКО при настоящей смене тона. Прежде data-tone писался
+   на КАЖДОМ событии прокрутки, а внутри шапки лежат плашки с backdrop-filter:
+   правка атрибута на родителе заставляет браузер пересчитать стиль всей ветки и
+   пересобрать слой размытия. Это была самая дорогая запись прохода. */
+var toneWas=null,scrimWas=null;
+function aTone(st){
+  if(toneWas!==st.tone){
+    toneWas=st.tone;
+    hdr.setAttribute('data-tone',st.tone);
+  }
+  setHdrDark(st.tone==='ink');   /* тон решает последним, как и раньше */
   /* a band always keeps some cells of the opposite colour, so a bar with no plate
      of its own needs one exactly there */
-  if(overBand)hdr.setAttribute('data-scrim','1');else hdr.removeAttribute('data-scrim');
-  hdr.classList.toggle('on-dark',tone==='ink');
+  if(scrimWas!==st.band){
+    scrimWas=st.band;
+    if(st.band)hdr.setAttribute('data-scrim','1');else hdr.removeAttribute('data-scrim');
+  }
 }
+function toneUnderBar(){aTone(mTone());}
 /* The instrument-chip bar is the chosen one: two opaque plates with nothing
    between them. Set once — the other three lived only for the comparison. */
 document.documentElement.setAttribute('data-nav','3');
@@ -3383,11 +3602,11 @@ function psFrame(ts){
   if(Math.abs(PS.t-PS.c)<0.35){PS.c=PS.t;PS.raf=0;PS.last=0;}
   else PS.raf=requestAnimationFrame(psFrame);
   PS.self=true;/* Whole device pixels, not the raw lerp: a fractional scroll offset lands the edge of every dark section on a part-pixel and antialiases it against the light page, and because the fraction changes each frame that seam shimmers. The eased value stays fractional so the motion keeps its smoothness. */var _dp=window.devicePixelRatio||1;/* Округление ТОЛЬКО на последнем кадре. Раньше оно стояло на каждом: у хода с коэффициентом 0.085 в конце шаг становится меньше пикселя, округление держит страницу на месте несколько кадров и потом швыряет её на пиксель — на хвосте каждой прокрутки выходил заметный дребезг. Пока движение идёт, берём дробную величину: она и даёт плавность. Останавливаемся — садимся на целый пиксель устройства, и кромки тёмных разделов остаются резкими, ради чего округление и вводилось. */window.scrollTo(0,PS.raf?PS.c:Math.round(PS.c*_dp)/_dp);PS.self=false;
-  /* Лента пересчитывается ЗДЕСЬ ЖЕ, а не по событию scroll. Событие браузер
-     шлёт асинхронно, то есть уже следующим кадром: страница уезжала, а
-     карточки догоняли её кадром позже — это и читалось как плавание.
-     Теперь страница и лента фиксируются в одном кадре. */
-  if(typeof suiteUpd==='function')suiteUpd();
+  /* Всё, что ведёт прокрутка, пересчитывается ЗДЕСЬ ЖЕ, а не по событию scroll.
+     Событие браузер шлёт асинхронно, то есть уже следующим кадром: страница
+     уезжала, а карточки догоняли её кадром позже — это и читалось как плавание.
+     Теперь страница и вся её обстановка фиксируются в одном кадре. */
+  if(typeof scrollPaint==='function')scrollPaint();
 }
 function psPush(dy){
   PS.t=Math.max(0,Math.min(psMax(),PS.t+dy));
@@ -3457,12 +3676,48 @@ function psStart(){
   addEventListener('resize',function(){PS.t=PS.c=window.pageYOffset;});
 }
 psStart();
-/* capture-phase on document catches wrapper scrolling too; paint synchronously — no frame lag */
-document.addEventListener('scroll',function(){
-  seqUpd();suiteUpd();paintJoints();paintRails();paintDither();navSpy();revealPass();
-  headerTheme();toneUnderBar();ixSpy();
-},{passive:true,capture:true});
+/* ============ ОДИН ПРОХОД НА КАДР ============
+   Прежде на КАЖДОЕ событие прокрутки подряд выполнялись эти десять функций, и
+   каждая сперва мерила страницу (getBoundingClientRect), а потом сразу в неё
+   писала. Следующая функция мерила снова — и браузер был ОБЯЗАН пересчитать
+   раскладку заново, чтобы ответить честно. Выходило до десяти принудительных
+   пересчётов на событие, а событий приходит больше одного на кадр. Замерено в
+   Edge: около одного расчёта раскладки и трёх пересчётов стилей на кадр.
+   Chrome такое проглатывает, Firefox — нет: там прокрутка идёт на отдельном
+   потоке, страница уезжает, а вся обстановка догоняет рывками. Это и есть
+   «скачет».
+
+   Теперь порядок обратный: сперва ВСЕ замеры, потом ВСЕ записи. Между ними
+   документ не трогают, поэтому пересчёт раскладки нужен ровно один на кадр. */
+function scrollPaint(){
+  var y=window.pageYOffset;
+  /* Прокрутка не сдвинулась — рисовать нечего. Отсекает лишние проходы, когда
+     событие приходит вдогонку уже нарисованному кадру. */
+  if(!FR.force&&y===FR.y)return;
+  FR.y=y;FR.force=false;
+  /* --- ЗАМЕР: ни одной записи в документ --- */
+  var d1=mSeq(),d2=mSuite(),d3=mJoints(),d4=mRails(),d5=mDither(),
+      d6=mNav(),d7=mReveal(),d8=mHeaderTheme(),d9=mTone(),d10=mIx();
+  /* --- ЗАПИСЬ: ни одного замера. Порядок тот же, что был у прежнего списка:
+         toneUnderBar идёт после headerTheme и перекрывает его решение. --- */
+  aSeq(d1);aSuite(d2);aJoints(d3);aRails(d4);aDither(d5);
+  aNav(d6);aReveal(d7);aHeaderTheme(d8);aTone(d9);aIx(d10);
+}
+var FR={q:0,y:-1,force:true};
+function scrollRepaint(){FR.force=true;scrollPaint();}
+/* capture-phase on document catches wrapper scrolling too. Проход откладывается
+   до ближайшего кадра: сколько бы событий ни пришло, работа будет сделана один
+   раз и в то самое мгновение, когда браузер собирается рисовать. */
+function scrollSchedule(){
+  if(FR.q)return;
+  FR.q=requestAnimationFrame(function(){FR.q=0;scrollPaint();});
+}
+document.addEventListener('scroll',scrollSchedule,{passive:true,capture:true});
+/* Размер окна поменялся — списки узлов устарели, и перерисовать надо даже если
+   прокрутка осталась на месте. */
+addEventListener('resize',function(){cacheBump();FR.force=true;scrollSchedule();},{passive:true});
 buildJoints();buildRails();
+cacheBump();scrollRepaint();
 /* Ширина страницы без полосы прокрутки — по ней шкала события выходит за поля.
    100vw считается ВМЕСТЕ с полосой, поэтому шкала промахивалась мимо края на её
    толщину с каждой стороны. Отдельным слушателем, без задержки в 220ms: полоса
@@ -3472,8 +3727,11 @@ buildJoints();buildRails();
   vwpx();addEventListener('resize',vwpx);})();
 addEventListener('resize',function(){clearTimeout(size.t);size.t=setTimeout(function(){size();buildJoints();buildWipe();buildRails();buildDither();layoutSuite();buildSigRun();},220);});
 /* rails depend on final layout (fonts) */
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){buildRails();placeReadout();buildSigRun();});
-addEventListener('load',function(){buildRails();layoutSuite();placeReadout();buildSigRun();});
+/* После пересборки состояние надо нанести заново: списки только что сменились,
+   а прокрутка осталась на месте, и обычная проверка «не сдвинулись — не рисуем»
+   пропустила бы кадр. */
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){buildRails();placeReadout();buildSigRun();scrollRepaint();});
+addEventListener('load',function(){buildRails();layoutSuite();placeReadout();buildSigRun();scrollRepaint();});
 /* ============ ПОВОРОТ ТЕЛЕФОНА ============ */
 /* После поворота Safari на iPhone оставляет закреплённой шапке ПРЕЖНЕЕ место
    для нажатий: кнопка нарисована там, где нужно, а палец попадает мимо — по
