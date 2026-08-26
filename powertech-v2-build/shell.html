@@ -50,11 +50,21 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;
 /* overflow-x:clip, NOT hidden — hidden turns body into a scroll container and kills position:sticky */
 /* ⛔ НЕ СНИМАТЬ -webkit-font-smoothing:antialiased. Пробовали 2026-08-26:
    без него Windows включает ClearType, и владелец сразу увидел «при
-   скроллинге весь текст мыло, смазывается». Причина в том, что цветное
-   субпиксельное сглаживание держится только на непрозрачном слое; страница
-   же едет своим плавным ходом и на каждом кадре стоит на дробной позиции,
-   так что подпиксельные бахромки пересчитываются заново и текст плывёт.
-   Ровное серое сглаживание к дробной позиции равнодушно. */
+   скроллинге весь текст мыло, смазывается».
+
+   Первая догадка была про дробную высоту прокрутки — и она НЕ подтвердилась:
+   замер при масштабах экрана 1, 1.25 и 1.5 дал ноль кадров на дробной
+   позиции, шаг за кадр 6-9 точек, мельче пикселя ни одного.
+
+   Настоящая причина — вот эта же строка ниже: body::before лежит закреплённым
+   слоем на весь экран с mix-blend-mode:soft-light. Слой со смешиванием
+   заставляет браузер собирать всю страницу как одну группу, а в такой группе
+   цветное субпиксельное сглаживание применить нельзя — и при каждом кадре
+   прокрутки группа пересобирается. Ровному серому сглаживанию это безразлично:
+   буква выглядит одинаково и в слое, и вне его.
+
+   То есть выбор такой: либо ровное сглаживание, либо зерно поверх страницы.
+   Зерно важнее — оно даёт бумаге фактуру. */
 body{margin:0;background:var(--bg);color:var(--fg);font-family:%%BODYFONT%%;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip;}
 /* paper grain — one fixed layer, no blend mode, 3% */
 body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
