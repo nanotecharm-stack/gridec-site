@@ -1123,6 +1123,8 @@ var cv=document.getElementById('star'),cx=cv.getContext('2d');
 var W=0,H=0,dpr=1,tt=0,CYp=0;
 var EV_FIRST=2.6,EV_EVERY=7.5,EV_DUR=1.5,evNext=EV_FIRST,evT=0,evX=0.76,EV_W=0.085;   
 var sigX=0,BHv=0,bracketY=0,sigTop=0;   
+var PSMOVE=0;
+var BAND_HOLD=110,BAND_MS=20;
 var MASK=0.52;   
 function evZone(){
   var lo=MASK+EV_W+0.04,hi=0.96-EV_W;
@@ -1162,7 +1164,11 @@ function size(){
 function frame(ts){
   var dt=(ts-(frame.p||ts))/1000;if(!(dt>0)||dt>.05)dt=.016;frame.p=ts;
   if(rm)dt=0;            
-  tt+=dt;
+  var still=!PSMOVE||(ts-PSMOVE)>BAND_HOLD;
+  var drawNow=canvasOn&&still&&(rm||!frame.d||ts-frame.d>=BAND_MS);
+  var wdt=0;
+  if(drawNow){wdt=frame.d?(ts-frame.d)/1000:.016;if(!(wdt>0)||wdt>.05)wdt=.016;if(rm)wdt=0;}
+  tt+=wdt;
   if(tt>=evNext){
     evT=EV_DUR;
     var ez=evZone();
@@ -1177,7 +1183,6 @@ function frame(ts){
     if(SEAM.rail)SEAM.rail.classList.toggle('lit',seamOn);}
   if(evT>0)evT=Math.max(0,evT-dt);
   var evP=evT>0?Math.sin((1-evT/EV_DUR)*Math.PI):0;
-  var drawNow=canvasOn&&(rm||!frame.d||ts-frame.d>=13);
   if(drawNow){
   frame.d=ts;
   cx.clearRect(0,0,W,H);
@@ -2370,6 +2375,7 @@ function scrollPaint(){
   var y=window.pageYOffset;
   if(!FR.force&&y===FR.y)return;
   FR.y=y;FR.force=false;
+  PSMOVE=performance.now();   
   var d1=mSeq(),d2=mSuite(),d3=mJoints(),d4=mRails(),d5=mDither(),
       d6=mNav(),d7=mReveal(),d8=mHeaderTheme(),d9=mTone(),d10=mIx(),d11=mHero();
   aSeq(d1);aSuite(d2);aJoints(d3);aRails(d4);aDither(d5);
