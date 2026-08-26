@@ -1655,7 +1655,7 @@ function sxCanPin(){
 }
 function sxMeasure(){
   var shells=sxShells();if(!shells.length)return;
-  sxTrack.style.transform='translate3d(0,0,0)';          
+  sxTrack.style.transform='translate3d(0,0,0)';sxTrackWas=null;   
   SX.centres=shells.map(function(el){return el.offsetLeft+el.offsetWidth/2;});
   SX.railLeft=irail.getBoundingClientRect().left;
   SX.focus=innerWidth*0.5;
@@ -1670,8 +1670,8 @@ function layoutSuite(){
   if(!suiteSec)return;
   suitePinned=sxCanPin();
   if(!suitePinned){
-    suiteSec.style.height='';sxTrack.style.transform='';
-    sxShells().forEach(function(el){el.style.transform='';});
+    suiteSec.style.height='';sxTrack.style.transform='';sxTrackWas=null;
+    sxShells().forEach(function(el){el.style.transform='';el.__tr=null;});
     railBar();return;
   }
   var head=suiteSec.querySelector('.rail-head'),spin=suiteSec.querySelector('.spin');
