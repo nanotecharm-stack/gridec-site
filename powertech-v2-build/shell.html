@@ -3128,8 +3128,12 @@ function buildDither(){
     var pair=(band.dataset.dith||'').split(',');
     if(pair.length<2)return;
     var top=pair[0].trim(),bot=pair[1].trim(),acc=(pair[2]||'').trim();
-    var cell=Math.max(44,Math.min(78,Math.round(innerWidth/19)));
-    var cols=Math.ceil(innerWidth/cell),rows=4;
+    /* ПРОБА: клетка мельче. Прежде 44..78 точек при четырёх рядах — на широком
+       экране это 78 точек, и полоса читалась не растворением, а россыпью
+       случайных прямоугольников. Число рядов подбирается так, чтобы общая
+       высота полосы осталась прежней (около 312 точек). */
+    var cell=Math.max(30,Math.min(46,Math.round(innerWidth/42)));
+    var cols=Math.ceil(innerWidth/cell),rows=Math.max(4,Math.round(312/cell));
     band.style.height=(rows*cell)+'px';
     band.style.gridTemplateColumns='repeat('+cols+',1fr)';
     band.style.gridTemplateRows='repeat('+rows+',1fr)';
