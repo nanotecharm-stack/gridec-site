@@ -736,7 +736,17 @@ h1{font-size:%%H1SIZE%%;margin-top:20px;text-wrap:balance;}
      88 px даёт подъём 6-7 % от высоты героя — середина рабочей полосы 5-8 %.
      Порог 760, а не 680: ниже подъём подвёл бы надглавие под шапку. Считано:
      при высоте окна 749 и меньше между ними остаётся меньше 18 px. */
-  .hgrid .hcol{top:-88px;}
+  /* ПОДЪЁМ БОЛЬШЕ НЕ ЧИСЛО, А РАСЧЁТ — см. placeHeroCol в скрипте.
+     Постоянные 88 px ставились, когда блок был ниже: заголовок в три строки и
+     абзац 16,5. С абзацем 20 и заголовком в четыре строки блок вырос, и те же
+     88 стали загонять его ПОД ШАПКУ. Замерено на 1440x810: над блоком оставалось
+     33 px у английского и 16 у армянского, а под ним пустовало 211 и 194.
+     Владелец назвал это «мало воздуха, зажато, особенно в армянской версии».
+     Теперь подъём берётся из ИЗЛИШКА: сперва отмеряется воздух под шапкой, и
+     только то, что осталось сверх него, идёт на оптический подъём. На больших
+     экранах излишка хватает и подъём остаётся полным, на тесных он тает сам.
+     Значение пишет скрипт; ноль здесь — безопасный запасной ход. */
+  .hgrid .hcol{top:0;}
 }
 /* Армянская версия поднимается тем же правилом. Отдельное исключение здесь
    стояло по ошибочному замеру: блок мерился по file:// без шрифтов и выходил
@@ -745,7 +755,12 @@ h1{font-size:%%H1SIZE%%;margin-top:20px;text-wrap:balance;}
    шапка кончается на 62. */
 /* Потолок — своя колонка, а не окно. Заголовок тянется по содержимому, и текст
    без ручных переносов иначе разливается на всю ширину героя, заезжая на фигуру. */
-.hero h1{color:var(--fg);width:max-content;max-width:100%;}
+/* max-width БОЛЬШЕ 100 %: заголовку позволено выйти за колонку в тихую часть
+   поля — ровно то, о чём говорит комментарий выше. При строгих 100 % на 1440
+   английский заголовок ломался на четыре строки, хотя на 1280 укладывался в
+   три: кегль растёт с окном быстрее, чем колонка. Лишняя строка — это 63 px
+   высоты блока, и именно её владелец увидел как нехватку воздуха. */
+.hero h1{color:var(--fg);width:max-content;max-width:calc(100% + 140px);}
 /* Акцентная часть заголовка. Раньше набиралась <em>/<i> ради цвета: разметка
    объявляла смысловое выделение там, где его нет, и экранный диктор менял на
    этом месте интонацию. Тег нейтральный, правило то же. */
@@ -2402,10 +2417,18 @@ var TAILK=0.22;
 function measureMask(){
   if(!W)return;
   var r=cv.parentElement.getBoundingClientRect(),far=0;
-  ['.hero h1','.hero .hp','.hero .acts'].forEach(function(sel){
-    var el=document.querySelector(sel);if(!el)return;
-    var b=el.getBoundingClientRect();if(b.width&&b.right>far)far=b.right;
-  });
+  function reach(el,text){
+    if(!el)return;
+    var list;
+    if(text){var rg=document.createRange();rg.selectNodeContents(el);list=rg.getClientRects();}
+    else list=[el.getBoundingClientRect()];
+    for(var i=0;i<list.length;i++)if(list[i].width&&list[i].right>far)far=list[i].right;
+  }
+  reach(document.querySelector('.hero h1'),true);
+  reach(document.querySelector('.hero .hp'),true);
+  /* Кнопки — сами кнопки, а не блок .acts: он тянется во всю колонку и его
+     пустая правая часть отодвигала бы ткань там, где отодвигать нечего. */
+  document.querySelectorAll('.hero .acts .btn').forEach(function(e){reach(e,false);});
   if(!far)return;
   /* ЗАХОД ПОД ТЕКСТ. Разгорание начинается на 210 точек ЛЕВЕЕ правого края
      текстового блока, а не правее его. Вместе с потолком ниже это и даёт
@@ -2435,6 +2458,7 @@ function measureMask(){
    поводом пересобираются отводы и показание — сюда же становится и граница.
    Полного size() здесь звать нельзя: он бы дёрнул размер холста без нужды. */
 function remeasureMask(){
+  placeHeroCol();          /* шрифты изменили высоту блока — подъём пересчитать */
   if(!SILK||!W)return;
   measureMask();
   var ez=evZone();
@@ -2848,8 +2872,29 @@ function silkFallback(){
   }
 }
 
+/* ВОЗДУХ ПЕРВОГО ЭКРАНА.
+   Порядок такой: сперва блок ставится на место без подъёма и меряется зазор
+   между низом шапки и надглавием. Из него вычитается воздух, который зазор
+   обязан сохранить, и остаток — но не больше 88 px — идёт на подъём.
+   Воздух: 11 % высоты окна, не меньше 80 и не больше 150 px. 11 % на 810 дают
+   89 px — примерно полторы строки заголовка, при которых блок перестаёт
+   казаться подвешенным к шапке.
+   Замер один, при пересчёте размеров, и после загрузки шрифтов ещё раз: до них
+   строки набраны подстановкой и высота блока другая. */
+function placeHeroCol(){
+  var col=document.querySelector('.hero .hcol');if(!col)return;
+  if(innerWidth<=960||innerHeight<760){col.style.top='';return;}
+  var hdr=document.querySelector('header .hin')||document.querySelector('header');
+  var mark=col.querySelector('.eyebrow')||col;
+  col.style.top='0px';                       /* мерим БЕЗ подъёма */
+  var gap=mark.getBoundingClientRect().top-(hdr?hdr.getBoundingClientRect().bottom:0);
+  var air=Math.min(150,Math.max(80,innerHeight*0.11));
+  var lift=Math.max(0,Math.min(88,gap-air));
+  col.style.top=(-Math.round(lift))+'px';
+}
 function size(){
   readWaveTheme();
+  placeHeroCol();
   dpr=Math.min(1.5,devicePixelRatio||1);
   var r=cv.parentElement.getBoundingClientRect();
   W=r.width;H=r.height;
