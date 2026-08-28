@@ -2550,16 +2550,14 @@ var SILK_VS=[
 '  float x=aU*uW;',
 '  float ph=aPhase+aI*6.2831853*uSpread;',
 '  float env=smoothstep(0.0,0.40,aU);',
-'  float br=1.0+0.055*sin(aU*2.1-uTime*0.30+aI*1.7);',
 '  float d=(aU-uSagX)/uSagW;',
 '  float sagE=exp(-d*d);',
-'  float amp=uBH*aAmp*env*br*(1.0-uSag*0.76*sagE);',
+'  float amp=uBH*aAmp*env*(1.0-uSag*0.76*sagE);',
 '  float k=6.2831853/uWave;',
 '  float t1=x*k-uTime*uOmega+ph;',
-'  float t2=x*k*0.37+uTime*uOmega*0.34+ph*0.55;',
 '  float yo=aYo*uBH*0.30*(1.0-uSag*0.42*sagE);',
-'  float y=uCY+yo+amp*(sin(t1)+0.10*sin(t2));',
-'  float dy=amp*(k*cos(t1)+0.10*k*0.37*cos(t2));',
+'  float y=uCY+yo+amp*(sin(t1)+0.055*sin(3.0*t1));',
+'  float dy=amp*k*(cos(t1)+0.165*cos(3.0*t1));',
 '  vec2 nrm=normalize(vec2(-dy,1.0));',
 '  float hwDev=aWide*(0.90+0.20*(1.0-aDepth))*uDPR;',
 '  float useDev=max(hwDev,0.50);',
@@ -2627,7 +2625,7 @@ function makeSilk(THREE,n,m){
     uniforms:{
       uW:{value:1},uH:{value:1},uCY:{value:0},uBH:{value:1},uTime:{value:0},
       uSag:{value:0},uSagX:{value:0.72},uSagW:{value:EV_W},uSpread:{value:1.2},
-      uWave:{value:640},uOmega:{value:0.90},uM0:{value:0.34},uM1:{value:0.66},
+      uWave:{value:640},uOmega:{value:1.10},uM0:{value:0.34},uM1:{value:0.66},
       uDPR:{value:1},uTU:{value:0.5},uTK:{value:TAILK},
       uBX:{value:0.42},uBY:{value:1e9},
       uC0:{value:new THREE.Color()},uC1:{value:new THREE.Color()},uC2:{value:new THREE.Color()}
@@ -2829,11 +2827,11 @@ function silkDraw(){
   var u=SILK.mesh.material.uniforms;
   u.uTime.value=tt;
   u.uSag.value=EV.sag;
-  /* Разброс ВНУТРИ потока, в долях периода. Не оборот: на обороте поток
-     размазывался в плетение и волны было не видно. От 0.09 (поток почти
-     нитка) до 0.20 (поток дышит) — этого хватает на объём и не хватает,
-     чтобы потерять форму волны. */
-  u.uSpread.value=0.09+0.11*(0.5+0.5*Math.sin(tt*0.048));
+  /* Разброс ВНУТРИ потока постоянный: он задаёт ТОЛЩИНУ потока, а толщина
+     следа на приборе не гуляет. Прежде он ходил от 0.09 до 0.20, и потоки то
+     набухали, то худели — это и читалось колыханием, а не ходом. 0.13 в долях
+     периода: поток остаётся объёмным и форму волны не теряет. */
+  u.uSpread.value=0.13;
   SILK.rnd.render(SILK.scene,SILK.cam);
 }
 function silkDrop(){
