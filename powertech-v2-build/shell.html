@@ -797,6 +797,15 @@ html[lang="hy"] .hero .hp{font-size:clamp(17px,1.6vw,21px);}
    работа композитора, раскладку она не трогает. */
 .silkev{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;
   pointer-events:none;opacity:0;}
+/* ПОД ШТОРКОЙ ПОЛЕ ГЕРОЯ СПРЯЧЕТСЯ СОВСЕМ.
+   Остановить его цикл мало: холст WebGL во весь экран продолжает склеиваться в
+   кадр вместе с полутысячей плашек перехода, и в Firefox это видно. Замерено
+   на одной и той же странице шириной 1440: со сценой дрожь перехода 340 мс,
+   без сцены 202. visibility, а не display: раскладка цела, прямоугольники
+   остаются верными, а рисовать браузеру нечего.
+   Признак — класс на КОРНЕ страницы: соседний селектор от #wipe тут не
+   годится, шторка лежит в body, а герой внутри main. */
+html.wipecover .stage{visibility:hidden;}
 .silkev .bk{fill:none;stroke:var(--brand-ink);}
 .silkev .bk.d{stroke-width:1;stroke-dasharray:3 4;opacity:.38;}   /* выноски */
 .silkev .bk.t{stroke-width:1.2;opacity:.7;}                       /* засечки */
@@ -888,9 +897,10 @@ header.on-dark .btn i{background:rgba(255,255,255,.22);}
    белые нити по всему полю в момент полного перекрытия.
    Перекрытие поднято с 2 до 6 %: даже без слоёв дорожки грида дробные, и двух
    процентов не хватало, чтобы закрыть шов. */
-#wipe i{background:var(--brand);transform:scale(0);transform-origin:center;transition:transform .32s cubic-bezier(.4,0,.2,1);}
-#wipe.go i{transform:scale(1.06);}
-#wipe.instant i{transition:none;}
+#wipe i{background:var(--brand);transform:scale(0);transform-origin:center;
+  transition:transform .32s cubic-bezier(.4,0,.2,1);transition-delay:var(--wu,0ms);}
+#wipe.go i{transform:scale(1.06);transition-delay:var(--wd,0ms);}
+#wipe.instant i{transition:none;transition-delay:0ms;}
 /* dithered pixel boundary: a band of squares that dissolves one section colour
    into the next — cantor8's actual device (static dither, not an animation) */
 .dith{position:relative;display:grid;width:100%;line-height:0;}
@@ -2366,6 +2376,20 @@ var PSMOVE=0;
    У WebGL кадр много дешевле прежнего холста, но потолок оставлен: он ничего
    не стоит и страхует слабые встроенные видеокарты. */
 var BAND_MS=0,BAND_SLOW=64,BAND_MOVE=90;
+/* ПОКА ИГРАЕТ ПЕРЕХОД, ГЕРОЙ НЕ РИСУЕТСЯ.
+   Нажатие на логотип накрывает экран сеткой плашек, перебрасывает страницу на
+   первый экран и разводит плашки обратно. Ровно в этот миг герой возвращается
+   в поле зрения и его цикл запускается на полную. Плашек около девятисот, у
+   каждой своя задержка перехода, и Firefox ведёт их ГЛАВНЫМ потоком: вместе с
+   кадром мембраны он перестаёт успевать. Замерено при нажатии на логотип —
+   кадр 13-14 мс в покое и провалы до 75 мс на переходе, тогда как в Chrome
+   ровные 7. Владелец это и увидел: «синий экран держится дольше, чем должен,
+   потом только появляются кубики».
+   Рисовать тут нечего: герой закрыт непрозрачной сеткой. Часы мембраны стоят
+   вместе с рисованием, поэтому по открытии ткань продолжается с того же места,
+   а не прыгает. Признак берём с самой сетки — класс `on` висит от начала
+   перекрытия до полного роспуска. */
+var wipeBox=null;
 /* ГДЕ ТКАНЬ ГАСНЕТ. Доля ширины здесь не годится: колонка текста на 1024 берёт
    почти половину экрана, а армянский абзац длиннее английского на треть — при
    любом одном числе ткань где-нибудь да заходила под буквы. Граница берётся с
@@ -2851,6 +2875,8 @@ function frame(ts){
   var dt=(ts-(frame.p||ts))/1000;if(!(dt>0)||dt>.05)dt=.016;frame.p=ts;
   if(rm)dt=0;
   var moving=PSMOVE&&(ts-PSMOVE)<=BAND_MOVE;
+  if(!wipeBox)wipeBox=document.getElementById('wipe');
+  if(wipeBox&&wipeBox.classList.contains('on')){heroRaf=0;return;}
   var drawNow=canvasOn&&(rm||!frame.d||ts-frame.d>=(moving?BAND_SLOW:BAND_MS));
   var wdt=0;
   if(drawNow){wdt=frame.d?(ts-frame.d)/1000:.016;if(!(wdt>0)||wdt>.05)wdt=.016;if(rm)wdt=0;}
@@ -3753,16 +3779,20 @@ function buildWipe(){
     var i=document.createElement('i');
     /* order: radial from the centre + a touch of jitter, so it reads organic */
     var d=Math.hypot(c-cx0,r-cy0)/maxD;
-    i.dataset.n=Math.min(1,d*0.86+Math.random()*0.14).toFixed(4);
+    var n=Math.min(1,d*0.86+Math.random()*0.14);
+    i.dataset.n=n.toFixed(4);
+    i.style.setProperty('--wd',(n*380).toFixed(0)+'ms');        /* накрытие */
+    /* РОСПУСК ТОЖЕ ОТ СЕРЕДИНЫ, а не от краёв. Прежде задержка шла обратной,
+       (1-n), и середина экрана — та, куда смотрит читатель, — освобождалась
+       ПОСЛЕДНЕЙ: она стояла сплошь синей 810 мс. Владелец это и назвал «синее
+       держится дольше, чем должно». Теперь середина уходит первой, и синее в
+       ней стоит 390 мс при той же общей длине перехода. */
+    i.style.setProperty('--wu',(n*420).toFixed(0)+'ms');          /* роспуск */
     wipeEl.appendChild(i);wCells.push(i);
   }
 }
 function wipeSet(covered,dur,cb){
   if(!wCells.length){if(cb)cb();return;}
-  wCells.forEach(function(i){
-    var n=+i.dataset.n;
-    i.style.transitionDelay=((covered?n:1-n)*dur).toFixed(0)+'ms';
-  });
   wipeEl.classList.toggle('go',covered);
   if(cb)setTimeout(cb,dur+330);
 }
@@ -3782,12 +3812,20 @@ function ensureWipe(){
    and a failsafe always tears it down. */
 var WIPE_MS=420;
 function wipeHide(){wipeEl.classList.remove('on','go','instant');
-  document.documentElement.classList.remove('wiping');}
+  document.documentElement.classList.remove('wiping','wipecover');
+  /* сетка ушла — герою снова есть что показывать */
+  if(typeof heroStart==='function')heroStart();}
 function wipeReveal(){
   if(rm||document.visibilityState!=='visible'){wipeHide();return;}
   ensureWipe();
   wipeEl.classList.add('on','go','instant');
-  wCells.forEach(function(i){i.style.transitionDelay='0ms';});
+  document.documentElement.classList.add('wipecover');
+  /* Встроенной записи нуля здесь больше нет. Задержки теперь живут в
+     переменных плашки, а встроенный стиль их перебивает — и перебивал
+     НАСОВСЕМ, потому что снимать его стало некому: прежде его затирал
+     следующий проход wipeSet, а тот теперь только меняет класс. Ступенчатость
+     от этого пропадала целиком, все плашки расходились разом. Ноль на время
+     мгновенной посадки даёт сам класс instant. */
   /* маскировка снимается в том же кадре, в котором встали плашки: экран уже
      покрыт, поэтому непокрытой страницы не видно ни одного кадра */
   document.documentElement.classList.remove('wiping');
@@ -3802,6 +3840,7 @@ function wipeCoverThen(go){
   var done=false,fire=function(){if(done)return;done=true;go();};
   ensureWipe();
   wipeEl.classList.add('on');
+  document.documentElement.classList.add('wipecover');
   requestAnimationFrame(function(){wipeSet(true,380,fire);});
   setTimeout(fire,1400);                      /* failsafe */
 }
