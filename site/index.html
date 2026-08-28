@@ -384,6 +384,8 @@ html.wipecover .stage{visibility:hidden;}
   transition:background-color .35s var(--e),opacity .35s var(--e);}
 .rd .sw.is-ev .ind{background:var(--brand-ink);opacity:1;}
 .rd .st{font-size:11px;letter-spacing:.17em;color:var(--brand-ink);}
+.rd .ts{display:block;margin-top:9px;font-family:'Departure Mono',monospace;
+  font-size:10px;letter-spacing:.14em;color:var(--fg-soft);opacity:.62;}
 header.on-dark .brand{color:#F6F1E9;}
 header.on-dark nav{box-shadow:inset 0 0 0 1px rgba(253,250,244,.28);background:rgba(22,46,82,.42);}
 header.on-dark nav a{color:rgba(240,234,224,.88);}
@@ -1034,6 +1036,7 @@ html[data-nav="5"] #hdr .btn{white-space:nowrap;}
     <span class="cp">RMS VOLTAGE · TYPICAL TRACE</span>
     <span class="vl"><b class="hv">230.1</b><i>V</i><b class="hz">50.00</b><i>Hz</i></span>
     <span class="sw"><i class="ind"></i><span class="st" id="stt"></span></span>
+    <span class="ts" id="tscale"></span>
   </div>
 </section>
 
@@ -1271,6 +1274,8 @@ function remeasureMask(){
   silkResize();placeBracket();
   if(rm)silkDraw();
 }
+var SLOWMO=150;
+var OMEGA=Math.PI*2/(0.02*SLOWMO);      
 var WAVE_K=0.24;               
 var EV_W=WAVE_K/2;             
 function evDur(){return Math.round(2*EV_W/WAVE_K*20);}   
@@ -1291,7 +1296,7 @@ function readWaveTheme(){
   if(a)MILK=a; if(b)GLOW=b;
 }
 function rgbArr(s){var p=s.split(',');return [(+p[0]||0)/255,(+p[1]||0)/255,(+p[2]||0)/255];}
-var EV={k:0,env:0,br:0,draw:0,lab:0};
+var EV={k:0,env:0,br:0,draw:0,lab:0,hold:0};
 function evDev(){return EVKIND[evK].dev*EV.k;}
 var EVKIND=[{dev:-0.34,thr:0.90,pu:'0.66'},
             {dev:+0.25,thr:1.10,pu:'1.25'}];
@@ -1419,7 +1424,7 @@ function makeSilk(THREE,n,m){
       uW:{value:1},uH:{value:1},uCY:{value:0},uBH:{value:1},uTime:{value:0},
       uDev:{value:0},uSagX:{value:0.72},uSagW:{value:EV_W},uSpread:{value:1.2},
       uEnvA:{value:0},
-      uWave:{value:640},uOmega:{value:1.90},uM0:{value:0.34},uM1:{value:0.66},
+      uWave:{value:640},uOmega:{value:OMEGA},uM0:{value:0.34},uM1:{value:0.66},
       uDPR:{value:1},uTU:{value:0.5},uTK:{value:TAILK},
       uBX:{value:0.42},uBY:{value:1e9},
       uC0:{value:new THREE.Color()},uC1:{value:new THREE.Color()},uC2:{value:new THREE.Color()}
@@ -1489,21 +1494,23 @@ function pickEvX(){
 function buildEvTl(){
   if(!window.gsap)return;
   if(evTl){evTl.kill();evTl=null;}
-  EV.k=0;EV.env=0;EV.br=0;EV.draw=0;EV.lab=0;
+  EV.k=0;EV.env=0;EV.br=0;EV.draw=0;EV.lab=0;EV.hold=0;
   var tl=window.gsap.timeline({repeat:-1,onRepeat:pickEvX});
-  tl.to(EV,{k:0,duration:2.6});
+  tl.to(EV,{k:0,duration:4.0});
   tl.addLabel('ev');
-  tl.to(EV,{k:1,duration:0.55,ease:'power2.inOut'},'ev');          
-  tl.to(EV,{env:1,duration:0.50,ease:'power1.out'},'ev+=0.25');    
-  tl.to(EV,{br:1,duration:0.50,ease:'power1.out'},'ev+=0.75');     
-  tl.to(EV,{draw:1,duration:0.80,ease:'power1.inOut'},'ev+=1.00'); 
-  tl.to(EV,{lab:1,duration:0.45,ease:'power1.out'},'ev+=1.70');    
-  tl.call(seamFire,null,'ev+=1.90');
-  tl.addLabel('out','ev+=3.30');
-  tl.to(EV,{k:0,duration:0.75,ease:'power2.inOut'},'out');         
-  tl.to(EV,{lab:0,duration:0.50,ease:'power1.inOut'},'out');
-  tl.to(EV,{draw:0,br:0,env:0,duration:0.90,ease:'power1.inOut'},'out+=0.20');
-  tl.to(EV,{k:0,duration:2.90},'out+=1.40');
+  tl.to(EV,{hold:1,duration:0.50,ease:'power2.inOut'},'ev');       
+  tl.to(EV,{k:1,duration:0.50,ease:'power2.inOut'},'ev');          
+  tl.to(EV,{env:1,duration:0.45,ease:'power1.out'},'ev+=0.30');    
+  tl.to(EV,{br:1,duration:0.45,ease:'power1.out'},'ev+=0.60');     
+  tl.to(EV,{draw:1,duration:0.70,ease:'power1.inOut'},'ev+=0.85'); 
+  tl.to(EV,{lab:1,duration:0.40,ease:'power1.out'},'ev+=1.45');    
+  tl.call(seamFire,null,'ev+=1.60');
+  tl.addLabel('out','ev+=2.60');
+  tl.to(EV,{lab:0,duration:0.40,ease:'power1.inOut'},'out');
+  tl.to(EV,{draw:0,br:0,env:0,duration:0.70,ease:'power1.inOut'},'out+=0.15');
+  tl.to(EV,{k:0,duration:0.60,ease:'power2.inOut'},'out+=0.45');   
+  tl.to(EV,{hold:0,duration:0.60,ease:'power2.inOut'},'out+=0.45');
+  tl.to(EV,{k:0,duration:2.60},'out+=1.20');
   evTl=tl;
 }
 function loadGsap(){
@@ -1538,8 +1545,10 @@ function silkInit(THREE){
   SILK={THREE:THREE,rnd:rnd,mesh:mesh,scene:scene,cam:cam};
   silkTheme();
   silkResize();
+  var ts=document.getElementById('tscale');
+  if(ts)ts.textContent='TIME x1/'+Math.round((Math.PI*2/OMEGA)/0.02);
   if(rm){                       
-    evK=0;EV.k=1;EV.env=1;EV.br=1;EV.draw=1;EV.lab=1;
+    evK=0;EV.k=1;EV.env=1;EV.br=1;EV.draw=1;EV.lab=1;EV.hold=1;
     var ez=evZone();evX=(ez[0]+ez[1])/2;sigX=-4+(W+8)*evX;   
     mesh.material.uniforms.uSagX.value=evX;
     mesh.material.uniforms.uDev.value=evDev();
@@ -1601,7 +1610,7 @@ function silkDrop(){
     try{SILK.rnd.forceContextLoss();}catch(e){}
     SILK=null;
   }
-  EV.k=0;EV.env=0;EV.br=0;EV.draw=0;EV.lab=0;
+  EV.k=0;EV.env=0;EV.br=0;EV.draw=0;EV.lab=0;EV.hold=0;
   BR={svg:null,line:null,drop:null,lab:null,thr:null,thrl:null,pu:null,d:'',o:'',l:''};
   var sv=document.getElementById('silkev');if(sv){sv.innerHTML='';sv.style.opacity='0';}
 }
@@ -1670,7 +1679,7 @@ function frame(ts){
   var drawNow=canvasOn&&(rm||!frame.d||ts-frame.d>=(moving?BAND_SLOW:BAND_MS));
   var wdt=0;
   if(drawNow){wdt=frame.d?(ts-frame.d)/1000:.016;if(!(wdt>0)||wdt>.05)wdt=.016;if(rm)wdt=0;}
-  tt+=wdt;
+  tt+=wdt*(1-EV.hold);
   seamStep(dt);
   if(SEAM.box){var seamOn=EV.br>0.02||SEAM.t>=0;
     SEAM.box.classList.toggle('lit',seamOn);
