@@ -791,6 +791,25 @@ html[lang="hy"] .hero .hp{font-size:clamp(17px,1.6vw,21px);}
   /* graphite hairlines; the light that travels them is the accent */
   --wv-line:13,14,19;--wv-glow:200,96,61;}
 #star{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;}
+/* МЕРНАЯ СКОБА. Живёт над мембраной отдельным SVG: подпись набирается
+   настоящей пиксельной гарнитурой, а не рисуется внутри WebGL, и остаётся
+   чёткой на любой плотности экрана. В кадре меняется только opacity — это
+   работа композитора, раскладку она не трогает. */
+.silkev{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;
+  pointer-events:none;opacity:0;}
+.silkev .bk{fill:none;stroke:var(--brand-ink);}
+.silkev .bk.d{stroke-width:1;stroke-dasharray:3 4;opacity:.38;}   /* выноски */
+.silkev .bk.t{stroke-width:1.2;opacity:.7;}                       /* засечки */
+/* Размерная линия и отвод ПИШУТСЯ: длина пути объявлена единицей, и кадру
+   остаётся сдвинуть штрих от 1 к 0. Ни замеров, ни пересчёта раскладки. */
+.silkev .bk.s{stroke-width:1.4;opacity:.8;stroke-dasharray:1;stroke-dashoffset:1;}
+.silkev .bt{fill:var(--brand-ink);opacity:0;font-family:'Departure Mono',monospace;
+  font-size:11px;letter-spacing:.08em;text-anchor:middle;}
+/* Отвод вниз, от размерной линии к сигнальной жиле: запись уходит из прибора.
+   Сквозной вертикали через ткань больше нет — она и читалась зажимом. */
+.silkev .bh{fill:none;stroke:var(--fg);stroke-width:3.4;opacity:.05;}
+.silkev .bw{fill:none;stroke:var(--fg);stroke-width:1;opacity:.22;
+  stroke-dasharray:1;stroke-dashoffset:1;}
 /* ПОКАЗАНИЕ.
    Привязано к КОЛЬЦУ, а не к низу сцены: обод заканчивается на 83,5% высоты
    квадратной сцены (50% центр + 33,5% радиус), и прежняя посадка по нижней кромке
@@ -2095,8 +2114,8 @@ html[data-nav="5"] #hdr .btn{white-space:nowrap;}
       <div class="acts"><button class="btn" data-open-form><span>%%CTA%%</span><i>&#8599;</i></button><a class="btn gh" href="#services"><span>%%HERO_CTA2%% &darr;</span></a></div>
     </div>
     <div class="stage">
-      <canvas id="star"></canvas>
-
+      <canvas id="star" aria-hidden="true"></canvas>
+      <svg class="silkev" id="silkev" aria-hidden="true" preserveAspectRatio="none"></svg>
     </div>
   </div>
   <div class="rd">
@@ -2311,287 +2330,552 @@ window.PT=%%DATA%%;
 var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
 var PT=window.PT;
 
-/* ============ DOT RELIEF — the hero centrepiece ============ */
-/* Точечный рельеф: водопад среднеквадратичного напряжения, как на экране
-   регистратора. Ширина — время внутри окна, глубина — прошедшие окна
-   усреднения, высота точки — напряжение. Событие поднимает гребень фирменным
-   цветом на переднем ряду и уезжает в глубину вместе с записью. Выбран
-   владельцем из трёх вариантов 2026-08-27 (страница variants в scratchpad). */
+/* ============ PHASE SILK — поле героя ============ */
+/* Три фазных потока со сдвигом 120°, взятые несколькими десятками линий, дают
+   одну пространственную мембрану. Тёмное в ней — не заливка, а сгущение линий.
+   В цикле около 10,5 с сеть один раз проваливается по напряжению: амплитуда на
+   коротком участке падает, ткань там стягивается, под ней встаёт мерная скоба
+   с подписью 180 MS. Реальные 180 мс показать нельзя — событие раскрывается в
+   условном замедлении примерно за полторы секунды.
+
+   ЧЕМ РИСУЕТСЯ. WebGL через Three.js: линии живут в видеокарте и считаются в
+   вершинном шейдере, поэтому кадр не отдаёт текстуру заново — именно этим
+   болел прежний холст 2D. Времена события ведёт GSAP, но НЕ по линии на твин:
+   таймлайн двигает два числа (провал и скобу), а сам ход мембраны считает
+   шейдер по своим часам.
+
+   Линия — не GL_LINES, а лента из двух вершин на отсчёт: толщина задаётся в
+   точках CSS и не зависит от плотности экрана. gl.lineWidth почти везде зажат
+   в единицу, и на retina линия вышла бы вдвое тоньше и бледнее.
+
+   НА ТЕЛЕФОНЕ СЦЕНЫ НЕТ ВОВСЕ. Ни Three.js, ни GSAP не загружаются: проверка
+   ширины стоит ДО загрузки, а не в стилях. */
+
 /* Состояние импульса события. Сам импульс живёт на сигнальной жиле, которую
-   строит buildSigRun; заводится из кадра холста при отклонении. */
+   строит buildSigRun; заводится из таймлайна события. */
 var SEAM={pulse:null,halo:null,len:0,t:-1,box:null,rail:null};
 
-var cv=document.getElementById('star'),cx=cv.getContext('2d');
+var cv=document.getElementById('star');
 var W=0,H=0,dpr=1,tt=0,CYp=0;
-var EV_FIRST=2.6,EV_EVERY=7.5,EV_DUR=1.5,evNext=EV_FIRST,evT=0,evX=0.76,EV_W=0.085;   /* стартовое положение — в той же зоне справа от текста */
-var sigX=0,BHv=0,bracketY=0,sigTop=0;   /* жила стоит там, где записано отклонение */
+var BHv=0,bracketY=0,sigTop=0,sigX=0;
 /* Отметка «страница только что двигалась». Ставится в кадровом проходе
-   прокрутки (scrollPaint), читается лентой героя. Ниже объяснено, зачем. */
+   прокрутки (scrollPaint), читается мембраной. */
 var PSMOVE=0;
-/* Потолок частоты ленты: BAND_MS в покое, BAND_SLOW пока страница едет.
-   BAND_MOVE — сколько миллисекунд после последнего сдвига страница ещё
-   считается едущей. */
-var BAND_MS=20,BAND_SLOW=100,BAND_MOVE=90;
-var MASK=0.52;   /* доля ширины, на которой лента гаснет под текстом */
-/* Границы зоны события. Слева — там, где лента перестаёт гаснуть под текстом.
-   Справа — не доходя до показания: жила спускается по точке фиксации и уводит
-   горизонталь влево, то есть прошла бы прямо через цифры. Ширина блока в двух
-   языках разная, поэтому предел берётся с него, а не задаётся числом. */
+/* Потолок частоты: BAND_MS в покое, BAND_SLOW пока страница едет. BAND_MOVE —
+   сколько миллисекунд после последнего сдвига страница ещё считается едущей.
+   У WebGL кадр много дешевле прежнего холста, но потолок оставлен: он ничего
+   не стоит и страхует слабые встроенные видеокарты. */
+var BAND_MS=0,BAND_SLOW=64,BAND_MOVE=90;
+/* ГДЕ ТКАНЬ ГАСНЕТ. Доля ширины здесь не годится: колонка текста на 1024 берёт
+   почти половину экрана, а армянский абзац длиннее английского на треть — при
+   любом одном числе ткань где-нибудь да заходила под буквы. Граница берётся с
+   САМОГО ТЕКСТА: правый край заголовка, абзаца и кнопок плюс отбивка. Замер
+   идёт только в size(), в кадре ничего не меряется. */
+var MASK=0.52,MASK1=0.82,TAILU=0.52,BTNU=0.42,BTNY=1e9;
+/* Потолок чернила под текстом. 0.22 — пятая часть силы: нить видно, читать
+   она не мешает. Ноль вернул бы прежний зазор, единица залила бы буквы. */
+var TAILK=0.22;
+function measureMask(){
+  if(!W)return;
+  var r=cv.parentElement.getBoundingClientRect(),far=0;
+  ['.hero h1','.hero .hp','.hero .acts'].forEach(function(sel){
+    var el=document.querySelector(sel);if(!el)return;
+    var b=el.getBoundingClientRect();if(b.width&&b.right>far)far=b.right;
+  });
+  if(!far)return;
+  /* ЗАХОД ПОД ТЕКСТ. Разгорание начинается на 210 точек ЛЕВЕЕ правого края
+     текстового блока, а не правее его. Вместе с потолком ниже это и даёт
+     «слегка заходит»: под буквами видны только самые прозрачные нити. */
+  MASK=Math.min(0.66,Math.max(0.10,(far-r.left-380)/W));
+  TAILU=(far-r.left+8)/W;
+  /* Прямоугольник кнопок: правый край в долях ширины, верх — в точках холста.
+     Берём сами кнопки, а не блок .acts: блок тянется во всю колонку, и его
+     пустая правая часть отрезала бы ткань там, где резать нечего. */
+  var bx=0,byy=1e9;
+  document.querySelectorAll('.hero .acts .btn').forEach(function(e){
+    var q=e.getBoundingClientRect();
+    if(q.right>bx)bx=q.right;
+    if(q.top<byy)byy=q.top;
+  });
+  BTNU=bx?(bx-r.left+26)/W:0;
+  BTNY=byy<1e8?(byy-r.top-10):1e9;
+  /* Разгорание короткое: на 0.30 ткань набирала полное чернило только к
+     трём четвертям экрана и левая половина поля пустовала. 0.18 держит
+     плавный вход и оставляет массу там, где ей место. */
+  MASK1=Math.min(0.94,MASK+0.18);
+}
+/* ПЕРЕСЧЁТ ГРАНИЦЫ ПОСЛЕ ЗАГРУЗКИ ШРИФТОВ.
+   Замер в size() идёт при разборе страницы, когда своих шрифтов ещё нет и
+   строки набраны подстановкой. Ширина у неё другая, и граница гашения выходит
+   не там: владелец увидел, как текст заходит на ткань. Дальше по файлу тем же
+   поводом пересобираются отводы и показание — сюда же становится и граница.
+   Полного size() здесь звать нельзя: он бы дёрнул размер холста без нужды. */
+function remeasureMask(){
+  if(!SILK||!W)return;
+  measureMask();
+  var ez=evZone();
+  if(evX<ez[0]||evX>ez[1]){evX=(ez[0]+ez[1])/2;sigX=-4+(W+8)*evX;   /* середина размера: оттуда и уходит запись */}
+  silkResize();placeBracket();
+  if(rm)silkDraw();
+}
+var EV_W=0.048;  /* полуширина зоны провала в долях ширины героя */
+var evX=0.72;
+/* Границы зоны события. Слева — там, где мембрана перестаёт гаснуть под
+   текстом. Справа — не доходя до показания: жила спускается по точке фиксации,
+   то есть прошла бы прямо через цифры. Ширина блока в двух языках разная,
+   поэтому предел берётся с него, а не задаётся числом. */
 function evZone(){
-  var lo=MASK+EV_W+0.04,hi=0.96-EV_W;
-  if(innerWidth<=960||!W)return [lo,hi];        /* там показание стоит в потоке */
+  /* Провал ставится там, где ткань уже НАБРАЛА ПЛОТНОСТЬ. Теперь разгорание
+     начинается ПОД текстом, поэтому отсчёт идёт не от него, а от правого края
+     текста: левее события быть не может — там чернило зажато потолком и
+     просадка не прочиталась бы, да и скоба легла бы на буквы. */
+  var lo=Math.max(MASK+0.12,TAILU+0.04)+EV_W,hi=0.96-EV_W;
+  if(innerWidth<=960||!W)return [lo,hi];
   var rd=document.querySelector('.rd'),hero=document.querySelector('.hero');
   if(!rd||!hero)return [lo,hi];
   var lim=(rd.getBoundingClientRect().left-hero.getBoundingClientRect().left-28)/W;
   hi=Math.min(hi,lim-EV_W);
   return [lo,Math.max(lo,hi)];
 }
-var MILK='255,251,249',GLOW='255,255,255';
-var TAU=Math.PI*2;
-/* Рельеф: ROWS окон в глубину, COLS точек в окне. 46 на 148 — 6 808 точек в
-   кадре, порядок прежней ленты (44 линии по 105 точек). История события — в
-   двух кольцах: сила гребня и его место в каждом ряду. Ряды сдвигаются на
-   ЧАСАХ ЛЕНТЫ tt, а не на кадрах: пока страница едет и лента редеет, запись
-   не ускоряется и не рвётся. */
-var ROWS=56,COLS=210,SHIFT_S=0.12,evRowK=new Array(ROWS).fill(0),
-    evRowX=new Array(ROWS).fill(.5),lastShift=0;
+/* Цвета берутся из стилей, а не пишутся числами: палитра сайта подставляется
+   сборкой, и литерал в скрипте остался бы терракотовым. */
+var MILK='13,14,19',GLOW='200,96,61';
 function readWaveTheme(){
   var cs=getComputedStyle(cv.parentElement);
   var a=(cs.getPropertyValue('--wv-line')||'').trim(),b=(cs.getPropertyValue('--wv-glow')||'').trim();
   if(a)MILK=a; if(b)GLOW=b;
 }
+function rgbArr(s){var p=s.split(',');return [(+p[0]||0)/255,(+p[1]||0)/255,(+p[2]||0)/255];}
+
+/* ---- состояние события. Двигает его GSAP, читают шейдер, скоба и показание. */
+var EV={sag:0,br:0,draw:0,lab:0};
+var evTl=null,SILK=null,silkPend=false;
+
+/* ============ МЕМБРАНА ============ */
+/* Раскладка линий считается один раз: три семейства по 120°, внутри семейства
+   фаза плавно уходит — от этого пучок то стягивается в узел, то раскрывается.
+   Доли по цвету взяты из брифа: около двух третей тихого графита, четверть
+   глубоких линий, несколько холодных акцентов. */
+function silkLayout(n){
+  var L=[],i;
+  for(i=0;i<n;i++){
+    var u=n>1?i/(n-1):0.5;
+    /* ФАЗА ИДЁТ ПО ПУЧКУ НЕПРЕРЫВНЫМ ОБОРОТОМ, а не тремя ступенями.
+       Три ступени по 120° давали три отдельные ленты, и они резали друг друга
+       крестами — ткани не получалось. Непрерывный оборот ЭТИ ЖЕ три фазы
+       содержит: линия на трети пучка отстоит от первой ровно на 120°, на двух
+       третях — на 240°. Семейство поэтому не задаётся, а читается положением. */
+    var fam=Math.min(2,Math.floor(u*3));
+    /* акценты — редкие и не подряд; глубокие — примерно каждая четвёртая */
+    var kind=(i%17===5)?2:((i%4===1)?1:0);
+    L.push({
+      u:u,
+      fam:fam,
+      phase:0.26*Math.sin(i*1.9),              /* мелкое дрожание: не идеальная лента */
+      amp:0.72+0.28*Math.sin(u*Math.PI)+0.05*Math.sin(i*2.3),
+      yo:(u-0.5)+0.18*Math.sin(i*1.31),        /* доля полувысоты, множится в шейдере */
+      depth:0.5+0.5*Math.sin(i*0.73),
+      kind:kind,
+      alpha:kind===2?(0.21+0.05*Math.sin(i*2.1))
+           :kind===1?(0.27+0.08*Math.sin(i*1.3))
+                    :(0.150+0.060*Math.sin(i*0.9)),
+      wide:kind===2?0.50:(kind===1?0.54:0.48)  /* полутолщина в точках CSS */
+    });
+  }
+  return L;
+}
+
+var SILK_VS=[
+'precision highp float;',
+'uniform float uW,uH,uCY,uBH,uTime,uSag,uSagX,uSagW,uSpread,uWave,uOmega,uM0,uM1,uDPR,uTU,uTK,uBX,uBY;',
+'uniform vec3 uC0,uC1,uC2;',
+'attribute float aU,aI,aPhase,aAmp,aYo,aDepth,aAlpha,aKind,aSide,aWide;',
+'varying float vA,vS,vHW,vEdge;',
+'varying vec3 vC;',
+'void main(){',
+'  float x=aU*uW;',
+'  float ph=aPhase+aI*6.2831853*uSpread;',
+'  float env=smoothstep(0.0,0.40,aU);',
+'  float br=1.0+0.055*sin(aU*2.1-uTime*0.30+aI*1.7);',
+'  float d=(aU-uSagX)/uSagW;',
+'  float sagE=exp(-d*d);',
+'  float amp=uBH*aAmp*env*br*(1.0-uSag*0.64*sagE);',
+'  float k=6.2831853/uWave;',
+'  float t1=x*k-uTime*uOmega+ph;',
+'  float t2=x*k*0.37+uTime*uOmega*0.34+ph*0.55;',
+'  float yo=aYo*uBH*0.30*(1.0-uSag*0.42*sagE);',
+'  float y=uCY+yo+amp*(sin(t1)+0.26*sin(t2));',
+'  float dy=amp*(k*cos(t1)+0.26*k*0.37*cos(t2));',
+'  vec2 nrm=normalize(vec2(-dy,1.0));',
+'  float hwDev=aWide*(0.90+0.20*(1.0-aDepth))*uDPR;',
+'  float useDev=max(hwDev,0.50);',
+'  float cov=hwDev/useDev;',   // тоньше точки — значит бледнее, а не тоньше
+'  float geoDev=useDev+0.75;',  // запас под мягкую кромку
+'  vec2 p=vec2(x,y)+nrm*aSide*(geoDev/uDPR);',
+'  vHW=useDev;vEdge=geoDev;',
+'  p.x+=(aDepth-0.5)*uW*0.010;',
+'  float cap=mix(uTK,1.0,smoothstep(uTU-0.05,uTU+0.06,aU));',
+'  float left=1.0-smoothstep(uBX-0.005,uBX+0.075,aU);',  // левее кнопок
+'  float below=smoothstep(uBY-26.0,uBY+8.0,y);',        // ниже их верхней кромки
+'  cap*=1.0-left*below;',
+'  vA=aAlpha*cov*smoothstep(uM0,uM1,aU)*cap*(0.62+0.38*(1.0-aDepth));',
+'  vS=aSide;',
+'  vC=aKind<0.5?uC0:(aKind<1.5?uC1:uC2);',
+'  gl_Position=projectionMatrix*modelViewMatrix*vec4(p,0.0,1.0);',
+'}'].join('\n');
+
+var SILK_FS=[
+'precision highp float;',
+'varying float vA,vS,vHW,vEdge;',
+'varying vec3 vC;',
+'void main(){',
+'  float dpx=abs(vS)*vEdge;',            // сколько точек экрана от осевой
+'  float e=clamp(vHW-dpx+0.5,0.0,1.0);', // коробочный фильтр шириной в точку
+'  gl_FragColor=vec4(vC,vA*e);',
+'}'].join('\n');
+
+function makeSilk(THREE,n,m){
+  var L=silkLayout(n),i,j,s;
+  var vcount=n*m*2;
+  var aU=new Float32Array(vcount),aI=new Float32Array(vcount),
+      aPh=new Float32Array(vcount),aAm=new Float32Array(vcount),
+      aYo=new Float32Array(vcount),aDp=new Float32Array(vcount),
+      aAl=new Float32Array(vcount),aKd=new Float32Array(vcount),
+      aSd=new Float32Array(vcount),aWd=new Float32Array(vcount);
+  var idx=new Uint16Array(n*(m-1)*6),ii=0,v=0;
+  for(i=0;i<n;i++){
+    var ln=L[i];
+    for(j=0;j<m;j++){
+      var u=j/(m-1);
+      for(s=0;s<2;s++){
+        aU[v]=u;aI[v]=ln.u;aPh[v]=ln.phase;aAm[v]=ln.amp;aYo[v]=ln.yo;
+        aDp[v]=ln.depth;aAl[v]=ln.alpha;aKd[v]=ln.kind;
+        aSd[v]=s?1:-1;aWd[v]=ln.wide;v++;
+      }
+    }
+    var base=i*m*2;
+    for(j=0;j<m-1;j++){
+      var a=base+j*2;
+      idx[ii++]=a;idx[ii++]=a+1;idx[ii++]=a+2;
+      idx[ii++]=a+1;idx[ii++]=a+3;idx[ii++]=a+2;
+    }
+  }
+  var g=new THREE.BufferGeometry();
+  function at(name,arr){g.setAttribute(name,new THREE.BufferAttribute(arr,1));}
+  at('aU',aU);at('aI',aI);at('aPhase',aPh);at('aAmp',aAm);at('aYo',aYo);
+  at('aDepth',aDp);at('aAlpha',aAl);at('aKind',aKd);at('aSide',aSd);at('aWide',aWd);
+  /* position нужен three для рамки отсечения; сами координаты считает шейдер */
+  g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(vcount*3),3));
+  g.setIndex(new THREE.BufferAttribute(idx,1));
+  g.boundingSphere=new THREE.Sphere(new THREE.Vector3(0,0,0),1e7);
+  var mat=new THREE.ShaderMaterial({
+    vertexShader:SILK_VS,fragmentShader:SILK_FS,
+    uniforms:{
+      uW:{value:1},uH:{value:1},uCY:{value:0},uBH:{value:1},uTime:{value:0},
+      uSag:{value:0},uSagX:{value:0.72},uSagW:{value:EV_W},uSpread:{value:1.2},
+      uWave:{value:640},uOmega:{value:0.72},uM0:{value:0.34},uM1:{value:0.66},
+      uDPR:{value:1},uTU:{value:0.5},uTK:{value:TAILK},
+      uBX:{value:0.42},uBY:{value:1e9},
+      uC0:{value:new THREE.Color()},uC1:{value:new THREE.Color()},uC2:{value:new THREE.Color()}
+    },
+    transparent:true,depthTest:false,depthWrite:false,
+    blending:THREE.NormalBlending
+  });
+  return new THREE.Mesh(g,mat);
+}
+
+/* ============ МЕРНАЯ СКОБА ============ */
+/* Скоба и подпись — обычный SVG над холстом, а не текст внутри WebGL: так
+   подпись набирается настоящей гарнитурой и остаётся чёткой на любом экране.
+   Геометрия переставляется ТОЛЬКО когда переехало событие или изменился
+   размер; в кадре меняется одна прозрачность, замеров страницы это не требует. */
+/* ============ ОБМЕР СОБЫТИЯ ============
+   ПОЧЕМУ ИМЕННО ТАК. Прежний обмер стоял двумя высокими штриховыми стойками ПО
+   БОКАМ ткани и вертикалью НАСКВОЗЬ через неё, и появлялся одновременно с
+   провалом. Владелец прочитал это ровно наоборот замыслу: будто ткань
+   проседает ОТ ТОГО, что её сдавили. Так и есть — две стойки по бокам это
+   форма зажима, а совпадение по времени довершает дело.
+
+   Теперь обмер НИЧЕГО НЕ КАСАЕТСЯ. Он целиком под тканью: короткие выноски
+   начинаются в пустоте ниже провала, размерная линия лежит ещё ниже, на её
+   концах засечки. Сквозной вертикали больше нет — отвод уходит ВНИЗ от
+   размерной линии к сигнальной жиле, то есть запись покидает прибор, а не
+   втыкается в сеть. Отвод идёт из СЕРЕДИНЫ размера — так его поставил
+   владелец, — а подпись поэтому сидит НАД размерной линией: под линией
+   центральный отвод разрезал бы её между «180» и «MS». Над линией её место и
+   по чертёжному обычаю. И порядок во времени обратный прежнему: сперва сеть
+   проседает, и лишь почти через секунду обмер начинает писаться слева
+   направо. Причина видна раньше следствия. */
+function placeBracket(){
+  var svg=document.getElementById('silkev');if(!svg||!W)return;
+  var ba=(evX-EV_W)*W,bb=(evX+EV_W)*W,by=bracketY,top=CYp+BHv*0.62;
+  var dn=sigTop-4;
+  svg.setAttribute('viewBox','0 0 '+Math.round(W)+' '+Math.round(H));
+  svg.innerHTML=
+    '<path class="bk d" d="M'+ba.toFixed(1)+','+top.toFixed(1)+'V'+by.toFixed(1)+
+      'M'+bb.toFixed(1)+','+top.toFixed(1)+'V'+by.toFixed(1)+'"/>'+
+    '<path class="bk t" d="M'+ba.toFixed(1)+','+(by-4).toFixed(1)+'v8'+
+      'M'+bb.toFixed(1)+','+(by-4).toFixed(1)+'v8"/>'+
+    '<path class="bk s" id="bkline" pathLength="1" d="M'+ba.toFixed(1)+','+by.toFixed(1)+
+      'H'+bb.toFixed(1)+'"/>'+
+    '<text class="bt" id="bklab" x="'+((ba+bb)/2).toFixed(1)+'" y="'+(by-9).toFixed(1)+
+      '">180 MS</text>'+
+    '<path class="bh" d="M'+sigX.toFixed(1)+','+by.toFixed(1)+'V'+dn.toFixed(1)+'"/>'+
+    '<path class="bw" id="bkdrop" pathLength="1" d="M'+sigX.toFixed(1)+','+by.toFixed(1)+
+      'V'+dn.toFixed(1)+'"/>';
+  BR.svg=svg;
+  BR.line=document.getElementById('bkline');
+  BR.drop=document.getElementById('bkdrop');
+  BR.lab=document.getElementById('bklab');
+  /* Память сравнения обнуляется ВМЕСТЕ с узлами. Без этого brApply видит те же
+     числа, что и до перестановки, и ничего не пишет — а новые узлы пришли
+     чистыми: линия не прочерчена, подпись прозрачна. Ровно так при reduce
+     пропадали размерная линия и «180 MS» после пересчёта по шрифтам. */
+  BR.d=BR.o=BR.l='';
+  brApply();
+}
+/* Проставить обмеру текущее состояние события. Зовётся и из кадра, и сразу
+   после перестановки узлов. Числа запоминаются строкой: кадр сравнивает с ней
+   и не трогает стиль, пока значение то же. */
+function brApply(){
+  if(!BR.svg)return;
+  var o=EV.br.toFixed(3),d=(1-EV.draw).toFixed(4),l=EV.lab.toFixed(3);
+  if(BR.o!==o){BR.o=o;BR.svg.style.opacity=o;}
+  if(BR.d!==d){BR.d=d;
+    if(BR.line)BR.line.style.strokeDashoffset=d;
+    if(BR.drop)BR.drop.style.strokeDashoffset=d;}
+  if(BR.l!==l&&BR.lab){BR.l=l;BR.lab.style.opacity=l;}
+}
+/* Узлы обмера собираются один раз при перестановке: в кадре они только
+   получают новое число, без поиска по дереву. */
+var BR={svg:null,line:null,drop:null,lab:null,d:'',o:'',l:''};
+function pickEvX(){
+  var ez=evZone();
+  evX=ez[0]+Math.random()*(ez[1]-ez[0]);
+  sigX=-4+(W+8)*evX;   /* середина размера: оттуда и уходит запись */
+  if(SILK)SILK.mesh.material.uniforms.uSagX.value=evX;
+  buildSigRun();placeBracket();
+}
+
+/* ============ ВРЕМЕНА СОБЫТИЯ ============ */
+/* Один цикл — 10,5 с: три секунды спокойного хода, полторы на раскрытие
+   провала, полторы на фиксацию, полторы на возврат и три с лишним на покой.
+   Начало и конец совпадают: провал возвращается ровно в ноль, поэтому шва не
+   видно. Кривые только sine/power1 — без отскока и перелёта. */
+function buildEvTl(){
+  if(!window.gsap)return;
+  if(evTl){evTl.kill();evTl=null;}
+  EV.sag=0;EV.br=0;EV.draw=0;EV.lab=0;
+  var tl=window.gsap.timeline({repeat:-1,onRepeat:pickEvX});
+  tl.to(EV,{sag:0,duration:3.0});
+  tl.addLabel('ev');
+  /* сеть проседает — сама, без единой посторонней линии на экране */
+  tl.to(EV,{sag:1,duration:1.30,ease:'sine.inOut'},'ev');
+  /* прибор замечает: выноски проступают в пустоте ПОД провалом */
+  tl.to(EV,{br:1,duration:0.55,ease:'power1.out'},'ev+=0.90');
+  /* размерная линия пишется слева направо */
+  tl.to(EV,{draw:1,duration:0.80,ease:'power1.inOut'},'ev+=1.15');
+  /* и только теперь длительность */
+  tl.to(EV,{lab:1,duration:0.45,ease:'power1.out'},'ev+=1.85');
+  /* запись уходит по жиле в первый раздел */
+  tl.call(seamFire,null,'ev+=2.05');
+  tl.addLabel('out','ev+=3.30');
+  tl.to(EV,{sag:0,duration:1.50,ease:'sine.inOut'},'out');
+  tl.to(EV,{lab:0,duration:0.55,ease:'power1.inOut'},'out');
+  tl.to(EV,{draw:0,br:0,duration:1.00,ease:'power1.inOut'},'out+=0.20');
+  tl.to(EV,{sag:0,duration:2.90},'out+=1.50');
+  evTl=tl;
+}
+
+/* ============ ЗАПУСК И СНОС СЦЕНЫ ============ */
+/* Сцена создаётся только на десктопе и только один раз. При переходе через
+   порог 960 она сносится целиком: таймлайн убит, кадр отменён, геометрия,
+   материал и renderer освобождены, контекст WebGL потерян. Обратно — заново. */
+function loadGsap(){
+  return new Promise(function(ok,no){
+    if(window.gsap)return ok();
+    var s=document.createElement('script');
+    s.src='/vendor/gsap.min.js';s.async=true;
+    s.onload=ok;s.onerror=no;document.head.appendChild(s);
+  });
+}
+function silkLoad(){
+  if(SILK||silkPend||!heroFxOn())return;
+  silkPend=true;
+  Promise.all([import('/vendor/three.module.min.js'),loadGsap()]).then(function(r){
+    silkPend=false;
+    if(!heroFxOn())return;                 /* окно успело уехать в мобильную ширину */
+    silkInit(r[0]);
+  }).catch(function(){silkPend=false;silkFallback();});
+}
+function silkInit(THREE){
+  var rnd;
+  try{
+    rnd=new THREE.WebGLRenderer({canvas:cv,alpha:true,antialias:false,
+      powerPreference:'low-power'});
+  }catch(e){silkFallback();return;}
+  if(!rnd){silkFallback();return;}
+  rnd.setClearAlpha(0);
+  /* потолок плотности 1.5: выше глазу ничего не прибавляется, а работа растёт квадратом */
+  rnd.setPixelRatio(Math.min(1.5,devicePixelRatio||1));
+  var mesh=makeSilk(THREE,64,180);
+  var scene=new THREE.Scene();scene.add(mesh);
+  var cam=new THREE.OrthographicCamera(0,1,0,1,-10,10);
+  SILK={THREE:THREE,rnd:rnd,mesh:mesh,scene:scene,cam:cam};
+  silkTheme();
+  silkResize();
+  if(rm){                       /* спокойный кадр с видимым событием и без хода */
+    EV.sag=0.85;EV.br=1;EV.draw=1;EV.lab=1;
+    var ez=evZone();evX=(ez[0]+ez[1])/2;sigX=-4+(W+8)*evX;   /* середина размера: оттуда и уходит запись */
+    mesh.material.uniforms.uSagX.value=evX;
+    mesh.material.uniforms.uSag.value=EV.sag;
+    buildSigRun();placeBracket();   /* placeBracket сам проставит состояние */
+    silkDraw();
+    /* Показание согласуется с кадром. Кадр без хода показывает зафиксированное
+       отклонение — скоба и подпись стоят, — а цифры остались бы на номинале, и
+       первый экран сам себе противоречил бы. Кадровый проход при reduce не
+       идёт, поэтому значения ставятся здесь, один раз. */
+    var hv=document.querySelector('.hv'),hz=document.querySelector('.hz'),
+        stt=document.getElementById('stt');
+    if(hv)hv.textContent=(230.0-EV.sag*78).toFixed(1);
+    if(hz)hz.textContent=(50.00-EV.sag*0.05).toFixed(2);
+    if(stt){stt.textContent=PT.rdDip;
+      if(stt.parentElement)stt.parentElement.classList.add('is-ev');}
+    return;
+  }
+  /* Сцена поднимается асинхронно и почти всегда ПОЗЖЕ шрифтов, то есть
+     пересчёт по document.fonts к этому мигу уже прошёл впустую. Меряем ещё раз
+     здесь, на готовом тексте. */
+  measureMask();silkResize();
+  buildEvTl();
+  pickEvX();
+  heroStart();
+}
+function silkTheme(){
+  if(!SILK)return;
+  var u=SILK.mesh.material.uniforms,a=rgbArr(MILK),b=rgbArr(GLOW);
+  u.uC0.value.setRGB(a[0],a[1],a[2]);
+  u.uC1.value.setRGB(a[0],a[1],a[2]);
+  u.uC2.value.setRGB(b[0],b[1],b[2]);
+}
+function silkResize(){
+  if(!SILK||!W)return;
+  SILK.rnd.setSize(W,H,false);
+  SILK.mesh.material.uniforms.uDPR.value=SILK.rnd.getPixelRatio();
+  var c=SILK.cam;c.left=0;c.right=W;c.top=0;c.bottom=H;c.updateProjectionMatrix();
+  var u=SILK.mesh.material.uniforms;
+  u.uW.value=W;u.uH.value=H;u.uCY.value=CYp;u.uBH.value=BHv;
+  u.uSagW.value=EV_W;u.uSagX.value=evX;u.uM0.value=MASK;u.uM1.value=MASK1;u.uTU.value=TAILU;u.uTK.value=TAILK;u.uBX.value=BTNU;u.uBY.value=BTNY;
+  /* длина волны привязана к ширине окна: на широком экране гребней остаётся
+     столько же, а не вдвое больше */
+  u.uWave.value=Math.max(660,W*0.86);
+}
+function silkDraw(){
+  if(!SILK)return;
+  var u=SILK.mesh.material.uniforms;
+  u.uTime.value=tt;
+  u.uSag.value=EV.sag;
+  /* Разбег фаз гуляет очень медленно: от полуоборота (пучок стягивается в
+     узел) до полного (все три фазы разведены). Крайние значения не случайны:
+     на 1.0 ткань показывает ровно трёхфазную систему. */
+  u.uSpread.value=0.56+0.34*(0.5+0.5*Math.sin(tt*0.048));
+  SILK.rnd.render(SILK.scene,SILK.cam);
+}
+function silkDrop(){
+  if(evTl){evTl.kill();evTl=null;}
+  if(heroRaf){cancelAnimationFrame(heroRaf);heroRaf=0;}
+  if(SILK){
+    SILK.scene.remove(SILK.mesh);
+    SILK.mesh.geometry.dispose();
+    SILK.mesh.material.dispose();
+    SILK.rnd.dispose();
+    try{SILK.rnd.forceContextLoss();}catch(e){}
+    SILK=null;
+  }
+  EV.sag=0;EV.br=0;EV.draw=0;EV.lab=0;
+  BR={svg:null,line:null,drop:null,lab:null,d:'',o:'',l:''};
+  var sv=document.getElementById('silkev');if(sv){sv.innerHTML='';sv.style.opacity='0';}
+}
+/* Запасной путь: WebGL не поднялся. Мембрана рисуется один раз на 2D-холсте,
+   без хода — герой не остаётся пустым. */
+function silkFallback(){
+  if(SILK||!heroFxOn()||!W)return;
+  var cx;try{cx=cv.getContext('2d');}catch(e){return;}
+  if(!cx)return;
+  var d=Math.min(1.5,devicePixelRatio||1);
+  cv.width=Math.round(W*d);cv.height=Math.round(H*d);
+  cx.setTransform(d,0,0,d,0,0);cx.clearRect(0,0,W,H);
+  var L=silkLayout(40),wave=Math.max(660,W*0.86),k=Math.PI*2/wave,sp=0.7,i,j;
+  for(i=0;i<L.length;i++){
+    var ln=L[i];cx.beginPath();
+    for(j=0;j<=160;j++){
+      var u=j/160,x=u*W,ph=ln.phase+ln.u*Math.PI*2*sp;
+      var e=Math.max(0,Math.min(1,u/0.40));e=e*e*(3-2*e);
+      var amp=BHv*ln.amp*e;
+      var y=CYp+ln.yo*BHv*0.30+amp*(Math.sin(x*k+ph)+0.34*Math.sin(x*k*0.41+ph*0.62));
+      if(j)cx.lineTo(x,y);else cx.moveTo(x,y);
+      if(j===160){
+        var mm=Math.max(0,Math.min(1,(0.80-MASK)/(MASK1-MASK)));
+        if(0.80<TAILU)mm*=TAILK;
+        cx.strokeStyle='rgba('+(ln.kind===2?GLOW:MILK)+','+(ln.alpha*0.9*mm).toFixed(3)+')';
+        cx.lineWidth=ln.wide*2;cx.stroke();
+      }
+    }
+  }
+}
+
 function size(){
   readWaveTheme();
-  dpr=Math.min(2,devicePixelRatio||1);
+  dpr=Math.min(1.5,devicePixelRatio||1);
   var r=cv.parentElement.getBoundingClientRect();
   W=r.width;H=r.height;
-  cv.width=Math.max(1,Math.round(W*dpr));cv.height=Math.max(1,Math.round(H*dpr));
-  cx.setTransform(dpr,0,0,dpr,0,0);
-  /* 0.50 и 0.174 — прежние центр и полувысота ленты, пересчитанные от
-     полной высоты героя вместо прежних 58%. Рисунок не сдвинулся. */
-  CYp=H*0.50;
-  BHv=H*0.174;
-  bracketY=CYp+BHv*1.32;   /* поперечина скобы */
-  sigTop=bracketY+28;      /* жила начинается под подписью длительности */
+  CYp=H*0.53;
+  BHv=H*0.135;            /* полувысота мембраны: полоса шире прежней ленты */
+  bracketY=CYp+BHv*1.10;  /* поперечина скобы — под тканью */
+  sigTop=bracketY+28;     /* жила начинается под подписью длительности */
+  measureMask();
   var ez0=evZone();
-  if(evX<ez0[0]||evX>ez0[1])evX=(ez0[0]+ez0[1])/2;   /* и старт, и после ресайза */
-  sigX=-4+(W+8)*evX;       /* точка фиксации в координатах холста */
+  if(evX<ez0[0]||evX>ez0[1])evX=(ez0[0]+ez0[1])/2;
+  sigX=-4+(W+8)*evX;   /* середина размера: оттуда и уходит запись */
   placeReadout();buildSigRun();
-  if(rm&&heroFxOn())requestAnimationFrame(frame);   /* после ресайза кадр надо перерисовать */
-  heroStart();                          /* поворот мог вернуть ленту на экран */
+  if(!heroFxOn()){silkDrop();return;}
+  if(SILK){silkTheme();silkResize();placeBracket();
+    if(rm)silkDraw();else heroStart();return;}
+  silkLoad();
 }
+
 function frame(ts){
-  /* ============ ПОТОЛОК ЧАСТОТЫ ЛЕНТЫ ============
-     Один кадр ленты — это 44 линии по 105 точек: 4620 точек, около 18 тысяч
-     синусов и 44 длинных мазка по холсту во всю ширину героя. На экране со
-     144 кадрами в секунду браузер просит эту работу 144 раза в секунду, и не
-     успевает: замерено в Firefox 154 — когда лента на экране и страница просто
-     СТОИТ, 94-98 % кадров выходят длиннее 10 мс, а сам кадр идёт 14-21 мс
-     вместо 6,9. Внизу страницы, где ленты нет, тот же замер даёт 1,6 %.
-
-     Глазу столько и не нужно: волна плывёт медленно. Порог 13 мс отсекает
-     лишнее и сам подстраивается под экран — при 144 Гц лента обновляется 72
-     раза в секунду, при 120 и 240 Гц — 60, а при обычных 60 Гц не меняется
-     ничего, там каждый кадр и так укладывается. Ход остаётся ровным: dt мы не
-     трогаем на пропущенном кадре, поэтому волна плывёт с прежней скоростью.
-     Прокрутка при этом идёт своим чередом — она не ждёт холста. */
+  /* Часы мембраны идут только на тех кадрах, где она рисуется, и шаг ограничен
+     пятьюдесятью миллисекундами: пропустили полсекунды — ткань сдвинется на
+     пятьдесят, то есть останется на месте и поедет дальше плавно, без рывка. */
   var dt=(ts-(frame.p||ts))/1000;if(!(dt>0)||dt>.05)dt=.016;frame.p=ts;
-  if(rm)dt=0;            /* при reduce рисуем один неподвижный кадр, а не пустоту */
-  /* ============ ПОКА СТРАНИЦА ЕДЕТ — ЛЕНТУ НЕ ПЕРЕРИСОВЫВАЕМ ============
-     Владелец проверил четыре подозреваемых по одному на живой странице с
-     переключателями: зерно, косой свет, размытие шапки и лента. Приговор
-     однозначный — «лента героя: вкл лагает, выкл не лагает». Остальные трое
-     невиновны.
-
-     Приборы этого не показывали НИ РАЗУ: и кадр главного потока, и смещения
-     раскладки были чисты, родная прокрутка давала 0 % провалов — столько же,
-     сколько простая страница без единого эффекта. Цена не в главном потоке.
-     Холст героя это примерно 1,9 миллиона точек, то есть около семи мегабайт;
-     каждая перерисовка отдаёт эту текстуру в видеокарту заново. На 72 кадрах
-     в секунду выходит поток порядка полугигабайта в секунду, и спотыкается
-     композитор, а не скрипт. В замерах такого не видно, в глазах видно.
-
-     Лечение — не в том, чтобы лента замерла, а в том, чтобы она РЕДЕЛА. Пока
-     страница едет, лента рисуется не чаще раза в сто миллисекунд вместо
-     полусотни раз в секунду: расход падает вшестеро, а волна остаётся живой.
-
-     Сперва тут стояла полная остановка, и она дёрганье убрала, — но владелец
-     потом сказал: «при прокрутке со второй на херо анимация на секунду стоит
-     и поздно запускается, это сильно заметно». Замер подтвердил: подъём длится
-     около 1200 мс, и все 1200 лента стоит.
-
-     Четыре поведения он проверил сам, на живой странице с переключателями
-     (клавиши 1..4, см. make-band-try.py). Выбрал третье — вот это. Замер в
-     Edge на подъёме со второго раздела наверх:
-
-       поведение            лента стояла   кадр страницы   поздних
-       полная остановка        1236 мс         7 мс          0.6 %
-       пауза короче            1138 мс         7 мс          0 %
-       РЕДКИЕ КАДРЫ на ходу      35 мс         7 мс          3.4 %
-       рисовать всегда           21 мс        28 мс         81 %
-
-     Последняя строка — то самое дёрганье: кадр страницы вырастает вчетверо.
-     Выбранное поведение держит страницу наравне с полной остановкой.
-
-     Чтобы на остановке волна не прыгнула, у неё СВОИ часы: tt идёт только на тех
-     кадрах, где лента рисуется, и шаг ограничен пятьюдесятью миллисекундами.
-     Пропустили полсекунды — волна сдвинется на пятьдесят миллисекунд, то есть
-     останется на месте и поедет дальше плавно. Жила и события живут на обычном
-     dt, они дешёвые. */
+  if(rm)dt=0;
   var moving=PSMOVE&&(ts-PSMOVE)<=BAND_MOVE;
   var drawNow=canvasOn&&(rm||!frame.d||ts-frame.d>=(moving?BAND_SLOW:BAND_MS));
   var wdt=0;
   if(drawNow){wdt=frame.d?(ts-frame.d)/1000:.016;if(!(wdt>0)||wdt>.05)wdt=.016;if(rm)wdt=0;}
   tt+=wdt;
-  if(tt>=evNext){
-    evT=EV_DUR;
-    var ez=evZone();
-    evX=ez[0]+Math.random()*(ez[1]-ez[0]);
-    evNext=tt+EV_EVERY;
-    sigX=-4+(W+8)*evX;buildSigRun();   /* жила переезжает к новой точке */
-    seamFire();
-  }
   seamStep(dt);
-  if(SEAM.box){var seamOn=evT>0||SEAM.t>=0;
+  if(SEAM.box){var seamOn=EV.br>0.02||SEAM.t>=0;
     SEAM.box.classList.toggle('lit',seamOn);
     if(SEAM.rail)SEAM.rail.classList.toggle('lit',seamOn);}
-  if(evT>0)evT=Math.max(0,evT-dt);
-  var evP=evT>0?Math.sin((1-evT/EV_DUR)*Math.PI):0;
-  /* ============ РИСУЕМ ТОЛЬКО КОГДА ХОЛСТ НА ЭКРАНЕ ============
-     Всё выше — счёт времени, события, шаг сигнальной жилы, зажигание отвода
-     первого раздела, показание. Это копейки, и это должно идти всегда, пока
-     хоть что-то из ведомого движения на виду: отвод тянется от кромки героя
-     вниз почти на восемьсот точек, то есть на ВТОРОЙ экран.
+  var evP=EV.sag;
+  /* Прозрачность скобы — единственное, что меняется в кадре: это композитор,
+     а не пересчёт раскладки. */
+  brApply();
+  if(drawNow){frame.d=ts;silkDraw();}
 
-     Всё ниже — перерисовка холста в 1,8 миллиона точек. Раньше она шла вместе
-     с жилой, то есть и на втором экране, где холста уже НЕ ВИДНО. Кадр main
-     потока при этом оставался в норме (замеры показывали 0-3 % провалов), но
-     каждый кадр в GPU уезжала текстура на семь мегабайт — впустую. Владелец
-     видел дёрганье там, где приборы молчали.
-
-     Теперь два выключателя вместо одного: heroSeen держит ХОД (объединение
-     холста и отвода), canvasOn разрешает РИСОВАНИЕ (только сам холст, запас
-     небольшой). Потолок частоты стоит здесь же: не чаще раза в 13 мс. */
-  if(drawNow){
-  frame.d=ts;
-  cx.clearRect(0,0,W,H);
-  cx.lineCap='round';cx.lineJoin='round';
-
-  /* ---- лента: одна волна, взятая сорока четырьмя сдвигами фазы ----
-     Тёмные места — не заливка, а сгущение линий: вес и прозрачность у всех
-     одинаковые. Сдвиг между крайними линиями гуляет от четверти периода до
-     полного, поэтому лента то стягивается в узел, то раскрывается веером.
-     Вторая, более медленная волна складывает её саму на себя. */
-  var BX0=-4,BX1=W+4,BH=BHv;
-  /* ---- рельеф: передний ряд во всю ширину, глубина уходит вправо-вверх ----
-     Высота точки — «напряжение»: ровный фон, широкий массив в середине окна
-     и гребень события из кольца истории. Тёмное здесь — не заливка, а
-     сгущение точек, как в присланном владельцем референсе.
-
-     ЦЕНА КАДРА. Урок ленты: стоимость держит ЧИСЛО обращений к холсту, а не
-     пиксели (44 мазка — 93 % длинных кадров, 11 — 0 %). Поэтому точки НЕ
-     рисуются по одной — 6 808 вызовов было бы дороже старых сорока четырёх.
-     Они складываются в пути rect() и красятся ГРУППАМИ: ряды идут парами по
-     прозрачности (23 ступени глубины), цвет делит их на спокойные и горящие.
-     Худший кадр — 46 заливок, обычный — около 25: тот же порядок, что NB=8
-     у ленты, с запасом на событие. */
-  if(tt-lastShift>=SHIFT_S){
-    lastShift=tt;
-    evRowK.pop();evRowK.unshift(evP);
-    evRowX.pop();evRowX.unshift(evX);
-  }
-  var base=CYp+BH*1.30,amp=BH*1.75,rby=(BH*1.55)/ROWS,rbx=(W*0.14)/ROWS;
-  var r0,i0,u0,vv,kk,dd0,px,py,hotRow;
-  for(r0=ROWS-1;r0>=0;r0-=2){
-    var fade=0.30+0.70*(1-r0/ROWS);
-    /* два прохода по паре рядов: спокойные точки одним путём, горящие другим */
-    var pass;
-    for(pass=0;pass<2;pass++){
-      var any=false;
-      cx.beginPath();
-      var rr,r2;
-      for(r2=0;r2<2;r2++){
-        rr=r0-r2;if(rr<0)continue;
-        kk=evRowK[rr];
-        for(i0=0;i0<COLS;i0++){
-          u0=i0/COLS;
-          hotRow=kk>0.12&&Math.abs(u0-evRowX[rr])<EV_W*1.3;
-          if((pass===1)!==hotRow)continue;
-          vv=0.10
-            +0.20*(0.5+0.5*Math.sin(i0*0.53+tt*0.35+rr*0.9))
-                 *(0.5+0.5*Math.sin(i0*0.171-rr*0.47))
-            +0.72*Math.exp(-Math.pow((u0-0.74)/0.17,2))
-                 *(0.62+0.38*Math.sin(i0*0.09+tt*0.22+rr*0.33))
-            +0.26*Math.exp(-Math.pow((u0-0.60)/0.10,2))
-                 *(0.5+0.5*Math.sin(i0*0.23-rr*0.5));
-          if(kk>0){dd0=(u0-evRowX[rr])/EV_W;vv+=kk*0.95*Math.exp(-dd0*dd0);}
-          px=BX0+(BX1-BX0)*u0+rr*rbx;
-          if(px>W+6)continue;
-          py=base-vv*amp-rr*rby;
-          cx.rect(px,py,1.6,1.6);any=true;
-        }
-      }
-      if(!any)continue;
-      cx.fillStyle=pass?'rgba('+GLOW+','+(0.95*fade).toFixed(3)+')'
-                       :'rgba('+MILK+','+(0.80*fade).toFixed(3)+')';
-      cx.fill();
-    }
-  }
-  cx.save();
-  if(evP>0){
-    /* скоба с длительностью — под передним рядом, где гребень и родился */
-    var ba=BX0+(BX1-BX0)*(evX-EV_W),bb=BX0+(BX1-BX0)*(evX+EV_W),by=CYp+BH*1.32;
-    cx.save();cx.setLineDash([3,4]);
-    cx.strokeStyle='rgba('+GLOW+','+(evP*0.45).toFixed(3)+')';cx.lineWidth=1;
-    cx.beginPath();cx.moveTo(ba,CYp-BH*1.24);cx.lineTo(ba,by);
-    cx.moveTo(bb,CYp-BH*1.24);cx.lineTo(bb,by);cx.stroke();cx.restore();
-    cx.strokeStyle='rgba('+GLOW+','+(evP*0.75).toFixed(3)+')';cx.lineWidth=1.4;
-    cx.beginPath();cx.moveTo(ba,by);cx.lineTo(bb,by);cx.stroke();
-    cx.font='11px "Departure Mono",monospace';
-    cx.textAlign='center';cx.textBaseline='middle';
-    cx.fillStyle='rgba('+GLOW+','+(evP*0.85).toFixed(3)+')';
-    cx.fillText('180 MS',(ba+bb)/2,by+14);
-    /* Спуск от точки фиксации — до поперечины скобы и не дальше. Гаснет вместе
-       с ней: постоянная линия через весь герой читалась случайной, а не частью
-       события. */
-    cx.beginPath();cx.moveTo(sigX,CYp);cx.lineTo(sigX,by);
-    cx.strokeStyle='rgba('+MILK+','+(0.10*evP).toFixed(3)+')';
-    cx.lineWidth=3.4;cx.stroke();
-    cx.strokeStyle='rgba('+MILK+','+(0.42*evP).toFixed(3)+')';
-    cx.lineWidth=1;cx.stroke();
-    /* поперечина в самой точке: отсюда снят отсчёт */
-    cx.beginPath();cx.moveTo(sigX-7,CYp);cx.lineTo(sigX+7,CYp);
-    cx.strokeStyle='rgba('+GLOW+','+(0.9*evP).toFixed(3)+')';
-    cx.lineWidth=1.4;cx.stroke();
-  }
-  cx.restore();
-
-  /* В широком варианте лента проходит под заголовком и съедает текст. Гасим её
-     слева градиентом по маске: это один проход по холсту, а не разбиение каждой
-     из сорока четырёх линий на отрезки с разной прозрачностью. */
-  if(innerWidth>960){
-    var mg=cx.createLinearGradient(0,0,W*MASK,0);
-    mg.addColorStop(0,'rgba(0,0,0,1)');
-    mg.addColorStop(0.62,'rgba(0,0,0,.72)');
-    mg.addColorStop(1,'rgba(0,0,0,0)');
-    cx.save();cx.globalCompositeOperation='destination-out';
-    cx.fillStyle=mg;cx.fillRect(0,0,W*MASK,H);cx.restore();
-  }
-  }   /* конец рисования; ниже снова копейки, они идут всегда */
-
-
-  /* readout follows the same event, steadily */
+  /* показание идёт за тем же событием, спокойно */
   if(!frame.hm||ts-frame.hm>500){frame.hm=ts;
     /* просадка до 0,66 о.е. — ровно та, что показывает вектор на диаграмме */
     var vTxt=(230.0-evP*78).toFixed(1),fTxt=(50.00-evP*.05).toFixed(2),
-        /* спокойное состояние словом не подписывается: остаётся только индикатор */
         sTxt=evP>.15?PT.rdDip:'';
     var hv=document.querySelector('.hv'),hz=document.querySelector('.hz'),stt=document.getElementById('stt');
     if(hv&&hv.textContent!==vTxt)hv.textContent=vTxt;
     if(hz&&hz.textContent!==fTxt)hz.textContent=fTxt;
     if(stt&&stt.textContent!==sTxt)stt.textContent=sTxt;
     if(stt&&stt.parentElement)stt.parentElement.classList.toggle('is-ev',evP>.15);}
-  if(!rm&&heroFxOn()&&heroSeen)heroRaf=requestAnimationFrame(frame);else heroRaf=0;
+  if(!rm&&heroFxOn()&&heroSeen&&SILK)heroRaf=requestAnimationFrame(frame);else heroRaf=0;
 }
 /* Лента считается только там, где она видна. На телефоне она скрыта стилями,
    и рисовать её кадры — работа впустую: сорок четыре линии по сто четыре шага
@@ -2606,6 +2890,24 @@ function heroStart(){
 }
 size();
 heroStart();
+/* Наблюдатель за размером сцены. Общий обработчик resize ниже уже вызывает
+   size(), но он ждёт 220 мс и слушает ОКНО. Сцена же может изменить размер и
+   без него: полоса прокрутки, зум, смена шрифта. Наблюдатель ловит это сразу
+   и делает ровно одну вещь — пересчитывает камеру. Сравнение с прежними
+   числами обязательно: без него первое же срабатывание при вставке в дерево
+   ушло бы в круг. */
+if(window.ResizeObserver){
+  var stEl=cv&&cv.parentElement;
+  if(stEl)new ResizeObserver(function(){
+    if(!SILK)return;
+    var r=stEl.getBoundingClientRect();
+    if(Math.abs(r.width-W)<0.5&&Math.abs(r.height-H)<0.5)return;
+    W=r.width;H=r.height;CYp=H*0.53;BHv=H*0.135;
+    bracketY=CYp+BHv*1.10;sigTop=bracketY+28;sigX=-4+(W+8)*evX;   /* середина размера: оттуда и уходит запись */
+    silkResize();placeBracket();
+    if(rm)silkDraw();
+  }).observe(stEl);
+}
 /* ============ ХОЛСТ РИСУЕТ, ТОЛЬКО КОГДА ЕГО ВИДНО ============
    Кадр героя перерисовывался ВСЕГДА: сорок четыре линии по сто пять точек,
    каждый кадр, всё время пока открыта вкладка — даже когда читатель ушёл на
@@ -4227,8 +4529,8 @@ addEventListener('resize',function(){clearTimeout(size.t);size.t=setTimeout(func
 /* После пересборки состояние надо нанести заново: списки только что сменились,
    а прокрутка осталась на месте, и обычная проверка «не сдвинулись — не рисуем»
    пропустила бы кадр. */
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){buildRails();placeReadout();buildSigRun();scrollRepaint();});
-addEventListener('load',function(){buildRails();layoutSuite();placeReadout();buildSigRun();scrollRepaint();});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){buildRails();placeReadout();buildSigRun();remeasureMask();scrollRepaint();});
+addEventListener('load',function(){buildRails();layoutSuite();placeReadout();buildSigRun();remeasureMask();scrollRepaint();});
 /* ============ ПОВОРОТ ТЕЛЕФОНА ============ */
 /* После поворота Safari на iPhone оставляет закреплённой шапке ПРЕЖНЕЕ место
    для нажатий: кнопка нарисована там, где нужно, а палец попадает мимо — по

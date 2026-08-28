@@ -1602,6 +1602,14 @@ if os.path.exists(_stale):
 
 for fn in DEPLOY_FONTS:
     deploy_asset(os.path.join(FONTS, fn), os.path.join(DEPLOY, 'fonts', fn))
+
+# Библиотеки поля героя. Лежат в репозитории, а не тянутся с чужого сервера:
+# сайт статический, и внешний адрес добавил бы к первому экрану чужой домен,
+# чужой срок жизни кэша и чужую доступность. Грузятся ТОЛЬКО на десктопе и
+# ТОЛЬКО по требованию — на телефоне за ними никто не идёт.
+DEPLOY_VENDOR = ['three.module.min.js', 'gsap.min.js']
+for fn in DEPLOY_VENDOR:
+    deploy_asset(os.path.join(HERE, 'vendor', fn), os.path.join(DEPLOY, 'vendor', fn))
 make_small_images()
 for fn in IMG_FILES + IMG_SMALL:
     deploy_asset(os.path.join(IMGS_OUT, fn), os.path.join(DEPLOY, 'uploads', 'img', fn))
