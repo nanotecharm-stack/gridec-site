@@ -2466,7 +2466,7 @@ function remeasureMask(){
   silkResize();placeBracket();
   if(rm)silkDraw();
 }
-var EV_W=0.048;  /* полуширина зоны провала в долях ширины героя */
+var EV_W=0.062;  /* полуширина зоны провала в долях ширины героя */
 var evX=0.72;
 /* Границы зоны события. Слева — там, где мембрана перестаёт гаснуть под
    текстом. Справа — не доходя до показания: жила спускается по точке фиксации,
@@ -2508,18 +2508,24 @@ function silkLayout(n){
   var L=[],i;
   for(i=0;i<n;i++){
     var u=n>1?i/(n-1):0.5;
-    /* ФАЗА ИДЁТ ПО ПУЧКУ НЕПРЕРЫВНЫМ ОБОРОТОМ, а не тремя ступенями.
-       Три ступени по 120° давали три отдельные ленты, и они резали друг друга
-       крестами — ткани не получалось. Непрерывный оборот ЭТИ ЖЕ три фазы
-       содержит: линия на трети пучка отстоит от первой ровно на 120°, на двух
-       третях — на 240°. Семейство поэтому не задаётся, а читается положением. */
-    var fam=Math.min(2,Math.floor(u*3));
+    /* ТРИ ПОТОКА, А НЕ ОДИН РАЗМАЗАННЫЙ.
+       Непрерывный оборот фазы по всему пучку давал ткань, но владелец назвал её
+       «сплошной рекой»: отдельной волны в ней не разобрать. Возвращаем три
+       семейства по 120°, но внутри семейства разброс МАЛЕНЬКИЙ — тогда каждый
+       поток читается одной волной, нарисованной двумя десятками волосяных
+       линий, а три потока вместе — трёхфазной системой.
+       Семейства чередуются (i%3), а не идут блоками: иначе цвет и глубина
+       собрались бы в три полосы. */
+    var fam=i%3;
+    var uin=(Math.floor(i/3))/Math.max(1,Math.ceil(n/3)-1);   /* место ВНУТРИ потока */
     /* акценты — редкие и не подряд; глубокие — примерно каждая четвёртая */
     var kind=(i%17===5)?2:((i%4===1)?1:0);
     L.push({
-      u:u,
+      u:uin,
       fam:fam,
-      phase:0.26*Math.sin(i*1.9),              /* мелкое дрожание: не идеальная лента */
+      /* базовый сдвиг потока плюс мелкое дрожание, чтобы поток не был идеально
+         ровной лентой; дрожание меньше десятой доли периода */
+      phase:fam*(Math.PI*2/3)+0.055*Math.sin(i*1.9),
       amp:0.72+0.28*Math.sin(u*Math.PI)+0.05*Math.sin(i*2.3),
       yo:(u-0.5)+0.18*Math.sin(i*1.31),        /* доля полувысоты, множится в шейдере */
       depth:0.5+0.5*Math.sin(i*0.73),
@@ -2547,13 +2553,13 @@ var SILK_VS=[
 '  float br=1.0+0.055*sin(aU*2.1-uTime*0.30+aI*1.7);',
 '  float d=(aU-uSagX)/uSagW;',
 '  float sagE=exp(-d*d);',
-'  float amp=uBH*aAmp*env*br*(1.0-uSag*0.64*sagE);',
+'  float amp=uBH*aAmp*env*br*(1.0-uSag*0.76*sagE);',
 '  float k=6.2831853/uWave;',
 '  float t1=x*k-uTime*uOmega+ph;',
 '  float t2=x*k*0.37+uTime*uOmega*0.34+ph*0.55;',
 '  float yo=aYo*uBH*0.30*(1.0-uSag*0.42*sagE);',
-'  float y=uCY+yo+amp*(sin(t1)+0.26*sin(t2));',
-'  float dy=amp*(k*cos(t1)+0.26*k*0.37*cos(t2));',
+'  float y=uCY+yo+amp*(sin(t1)+0.10*sin(t2));',
+'  float dy=amp*(k*cos(t1)+0.10*k*0.37*cos(t2));',
 '  vec2 nrm=normalize(vec2(-dy,1.0));',
 '  float hwDev=aWide*(0.90+0.20*(1.0-aDepth))*uDPR;',
 '  float useDev=max(hwDev,0.50);',
@@ -2621,7 +2627,7 @@ function makeSilk(THREE,n,m){
     uniforms:{
       uW:{value:1},uH:{value:1},uCY:{value:0},uBH:{value:1},uTime:{value:0},
       uSag:{value:0},uSagX:{value:0.72},uSagW:{value:EV_W},uSpread:{value:1.2},
-      uWave:{value:640},uOmega:{value:0.72},uM0:{value:0.34},uM1:{value:0.66},
+      uWave:{value:640},uOmega:{value:0.90},uM0:{value:0.34},uM1:{value:0.66},
       uDPR:{value:1},uTU:{value:0.5},uTK:{value:TAILK},
       uBX:{value:0.42},uBY:{value:1e9},
       uC0:{value:new THREE.Color()},uC1:{value:new THREE.Color()},uC2:{value:new THREE.Color()}
@@ -2656,7 +2662,7 @@ function makeSilk(THREE,n,m){
    направо. Причина видна раньше следствия. */
 function placeBracket(){
   var svg=document.getElementById('silkev');if(!svg||!W)return;
-  var ba=(evX-EV_W)*W,bb=(evX+EV_W)*W,by=bracketY,top=CYp+BHv*0.62;
+  var ba=(evX-EV_W)*W,bb=(evX+EV_W)*W,by=bracketY,top=CYp+BHv*1.16;
   var dn=sigTop-4;
   svg.setAttribute('viewBox','0 0 '+Math.round(W)+' '+Math.round(H));
   svg.innerHTML=
@@ -2816,17 +2822,18 @@ function silkResize(){
   u.uSagW.value=EV_W;u.uSagX.value=evX;u.uM0.value=MASK;u.uM1.value=MASK1;u.uTU.value=TAILU;u.uTK.value=TAILK;u.uBX.value=BTNU;u.uBY.value=BTNY;
   /* длина волны привязана к ширине окна: на широком экране гребней остаётся
      столько же, а не вдвое больше */
-  u.uWave.value=Math.max(660,W*0.86);
+  u.uWave.value=Math.max(360,W*0.42);
 }
 function silkDraw(){
   if(!SILK)return;
   var u=SILK.mesh.material.uniforms;
   u.uTime.value=tt;
   u.uSag.value=EV.sag;
-  /* Разбег фаз гуляет очень медленно: от полуоборота (пучок стягивается в
-     узел) до полного (все три фазы разведены). Крайние значения не случайны:
-     на 1.0 ткань показывает ровно трёхфазную систему. */
-  u.uSpread.value=0.56+0.34*(0.5+0.5*Math.sin(tt*0.048));
+  /* Разброс ВНУТРИ потока, в долях периода. Не оборот: на обороте поток
+     размазывался в плетение и волны было не видно. От 0.09 (поток почти
+     нитка) до 0.20 (поток дышит) — этого хватает на объём и не хватает,
+     чтобы потерять форму волны. */
+  u.uSpread.value=0.09+0.11*(0.5+0.5*Math.sin(tt*0.048));
   SILK.rnd.render(SILK.scene,SILK.cam);
 }
 function silkDrop(){
@@ -2853,7 +2860,7 @@ function silkFallback(){
   var d=Math.min(1.5,devicePixelRatio||1);
   cv.width=Math.round(W*d);cv.height=Math.round(H*d);
   cx.setTransform(d,0,0,d,0,0);cx.clearRect(0,0,W,H);
-  var L=silkLayout(40),wave=Math.max(660,W*0.86),k=Math.PI*2/wave,sp=0.7,i,j;
+  var L=silkLayout(40),wave=Math.max(360,W*0.42),k=Math.PI*2/wave,sp=0.15,i,j;
   for(i=0;i<L.length;i++){
     var ln=L[i];cx.beginPath();
     for(j=0;j<=160;j++){
@@ -2899,8 +2906,8 @@ function size(){
   var r=cv.parentElement.getBoundingClientRect();
   W=r.width;H=r.height;
   CYp=H*0.53;
-  BHv=H*0.135;            /* полувысота мембраны: полоса шире прежней ленты */
-  bracketY=CYp+BHv*1.10;  /* поперечина скобы — под тканью */
+  BHv=H*0.115;            /* полувысота волны: круче — и гребни читаются частоколом */
+  bracketY=CYp+BHv*1.62;  /* поперечина скобы — под самым нижним размахом */
   sigTop=bracketY+28;     /* жила начинается под подписью длительности */
   measureMask();
   var ez0=evZone();
